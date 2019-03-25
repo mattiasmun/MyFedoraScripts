@@ -1,8 +1,10 @@
 #!/bin/bash
-xdotool key --clearmodifiers Alt+Tab
+wmctrl -a "Bos Wars"
 sleep 1
 for((i=0;i<$1;i++))
 do
+	sleep 0.02
+	xdotool key Return
 	sleep 0.02
 	xdotool type gimme
 	sleep 0.02
