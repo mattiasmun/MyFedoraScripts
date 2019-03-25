@@ -1,9 +1,0 @@
-#!/bin/bash
-wmctrl -a "0 A.D. | Transifex Editor"
-for((i=0;i<$1;i++))
-do
-	sleep 3
-	xdotool key BackSpace
-	sleep 0.1
-	xdotool key Tab
-done
