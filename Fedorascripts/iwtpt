@@ -1,0 +1,11 @@
+#!/bin/bash
+wmctrl -a "0 A.D."
+for((i=0;i<$1;i++))
+do
+	sleep 0.08
+	xdotool key Return
+	sleep 0.08
+	xdotool type iwanttopwnthem
+	sleep 0.08
+	xdotool key Return
+done
