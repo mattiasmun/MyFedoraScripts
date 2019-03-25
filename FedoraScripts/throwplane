@@ -1,0 +1,12 @@
+#!/bin/bash
+xdotool key --clearmodifiers Alt+Tab
+sleep 1
+xdotool mousemove --sync 430 650 mousedown 1
+sleep 0.1
+xdotool mousemove --sync 230 650
+sleep 0.1
+xdotool mousemove --sync 528 524
+sleep 0.03
+xdotool mousemove --sync 826 398
+sleep 0.03
+xdotool mousemove --sync 1124 272 mouseup 1

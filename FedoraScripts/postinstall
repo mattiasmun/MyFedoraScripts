@@ -1,0 +1,11 @@
+#!/bin/bash
+update-alternatives --config java
+update-alternatives --config javac
+update-alternatives --config jre_openjdk
+update-alternatives --config java_sdk_openjdk
+update-alternatives --list | grep jvm
+nano /etc/dnf/automatic.conf
+nano /usr/lib/systemd/system/dnf-automatic.timer
+nano /usr/lib/systemd/system/fstrim.timer
+systemctl enable --now dnf-automatic.timer fstrim.timer
+systemctl list-timers --all
