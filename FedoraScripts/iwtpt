@@ -7,5 +7,9 @@ do
 	sleep 0.02
 	xdotool type iwanttopwnthem
 	sleep 0.02
+	xdotool key space
+	sleep 0.02
+	xdotool type $2
+	sleep 0.02
 	xdotool key Return
 done
