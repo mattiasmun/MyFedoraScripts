@@ -3,16 +3,16 @@ xdotool key --clearmodifiers Alt+Tab
 sleep 1
 for((i=0;i<$1;i++))
 do
-	sleep $2
+	sleep 0.02
 	xdotool type gimme
-	sleep $2
+	sleep 0.02
 	xdotool key space
-	sleep $2
+	sleep 0.02
 	xdotool type unit-artil
-	sleep $2
+	sleep 0.02
 	xdotool key space
-	sleep $2
-	xdotool type $3
-	sleep $2
+	sleep 0.02
+	xdotool type $2
+	sleep 0.02
 	xdotool key Return
 done
