@@ -5,11 +5,11 @@ for((i=0;i<$1;i++))
 do
 	sleep 0.2
 	xdotool mousemove --sync 120 173 click 1
-	sleep 0.9
+	sleep 0.2
 	xdotool mousemove --sync 168 173 click 1
-	sleep 0.6
+	sleep 0.2
 	xdotool mousemove --sync 440 440 click 1
-	sleep 0.3
+	sleep 0.2
 	xdotool mousemove --sync 460 460 click 1
 	sleep 0.2
 	xdotool key p
