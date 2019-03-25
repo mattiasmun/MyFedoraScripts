@@ -1,0 +1,12 @@
+#!/bin/bash
+xdotool key --clearmodifiers Alt+Tab
+sleep 1
+for((i=0;i<$1;i++))
+do
+	sleep 0.1
+	xdotool key Return
+	sleep 0.1
+	xdotool key Up
+	sleep 0.1
+	xdotool key Return
+done
