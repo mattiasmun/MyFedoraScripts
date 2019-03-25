@@ -1,8 +1,0 @@
-#!/bin/bash
-wmctrl -a firefox
-sleep 1.0
-for((i=0;i<$1;i++))
-do
-	sleep 0.024
-	xdotool mousemove --sync 426 961 click 1
-done

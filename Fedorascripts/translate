@@ -1,6 +1,0 @@
-#!/bin/bash
-source_file=translatefrom
-target_file=translateto
-xclip -o -selection clipboard > $source_file
-trans -b -e bing en:sv -i $source_file > $target_file
-xclip -i $target_file -selection clipboard
