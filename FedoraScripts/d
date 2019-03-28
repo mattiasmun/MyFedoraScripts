@@ -1,6 +1,6 @@
 #!/bin/bash
 sleep $1h
-./CloseAll
+CloseAll
 sleep 5s
 #shutdown now
 
