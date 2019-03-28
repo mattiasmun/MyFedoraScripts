@@ -1,3 +1,4 @@
+#!/bin/bash
 WIN_IDs=$(wmctrl -l | grep -vwE "Desktop$|cinnamon-panel$|Docky$" | cut -f1 -d' ')
 for i in $WIN_IDs; do wmctrl -ic "$i"; done
 
