@@ -1,2 +1,6 @@
 #!/bin/bash
-sleep $1h; wmctrl -c evolution; wmctrl -c firefox; sleep 5s; shutdown now
+sleep $1h
+./CloseAll
+sleep 5s
+#shutdown now
+
