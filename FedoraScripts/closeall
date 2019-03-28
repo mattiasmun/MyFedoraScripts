@@ -2,6 +2,6 @@
 for i in {1..50}
 do
 	xdotool key --clearmodifiers Alt+Tab
-	wmctrl -c :ACTIVE:
 	sleep 0.1
+	wmctrl -c :ACTIVE:
 done
