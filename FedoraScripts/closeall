@@ -1,6 +1,7 @@
 #!/bin/bash
-for i in {1..30}
+for i in {1..50}
 do
+	xdotool key --clearmodifiers Alt+Tab
 	wmctrl -c :ACTIVE:
 	sleep 0.1
 done
