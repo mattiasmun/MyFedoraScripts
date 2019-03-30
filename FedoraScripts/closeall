@@ -1,17 +1,17 @@
 #!/bin/bash
-trycatch
+source trycatch
 for i in {1..10}
 do
 	for i in $(wmctrl -l | awk '{print $1}')
 	do
-		try
+		trycatch.try
 		(
 			echo $i
 			wmctrl -ai i &
 			sleep 0.1
 			wmctrl -ci i &
 		)
-		catch || {
+		trycatch.catch || {
 			sleep 0.1
 		}
 	done
