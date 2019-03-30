@@ -1,18 +1,19 @@
 #!/bin/bash
 source trycatch
-for i in {1..10}
+for i in {1..20}
 do
 	for i in $(wmctrl -l | awk '{print $1}')
 	do
 		try
 		(
-			echo $i
-			wmctrl -ai i &
-			sleep 0.1
-			wmctrl -ci i &
+			wmctrl -ai i
+			sleep 0.05
+			wmctrl -ci i
 		)
 		catch || {
-			sleep 0.1
+			sleep 0.05
+			xdotool key --clearmodifiers Alt+F4
 		}
+		sleep 0.01
 	done
 done
