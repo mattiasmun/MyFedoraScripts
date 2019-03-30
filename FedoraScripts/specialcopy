@@ -1,5 +1,5 @@
 #!/bin/bash
-sleep 0.2
+sleep 0.1
 xdotool key --clearmodifiers Ctrl+c
-sleep 0.2
+sleep 0.1
 translate
