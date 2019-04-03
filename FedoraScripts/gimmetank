@@ -1,0 +1,20 @@
+#!/bin/bash
+wmctrl -a "Bos Wars"
+sleep 1
+for((i=0;i<$1;i++))
+do
+	sleep 0.02
+	xdotool key Return
+	sleep 0.02
+	xdotool type gimme
+	sleep 0.02
+	xdotool key space
+	sleep 0.02
+	xdotool type unit-tank
+	sleep 0.02
+	xdotool key space
+	sleep 0.02
+	xdotool type $2
+	sleep 0.02
+	xdotool key Return
+done
