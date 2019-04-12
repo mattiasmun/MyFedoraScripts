@@ -35,4 +35,16 @@ function iteratex()
 
 #iteratey 220 84 14
 #iteratey 254 500 14
-iteratex 149 255 10
+#iteratex 149 255 10
+#iteratex 115 670 10
+#iteratey 286 148 10
+#iteratey 318 436 10
+#iteratex 211 318 6
+#iteratex 179 605 6
+iteratey 350 212 6
+iteratey 381 370 6
+iteratex 275 382 2
+iteratex 275 414 2
+iteratex 275 446 2
+iteratex 275 478 2
+iteratex 242 541 2
