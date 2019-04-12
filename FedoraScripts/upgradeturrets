@@ -11,7 +11,7 @@ function upgrade()
 	done
 }
 
-function iterate()
+function iteratey()
 {
 	x=$1+32*$3+1
 	for((i=$1;i<$x;i+=32))
@@ -22,6 +22,17 @@ function iterate()
 	done
 }
 
-#iterate 220 84 14
-#iterate 254 500 14
-iterate 149 255 10
+function iteratex()
+{
+	x=$1+32*$3+1
+	for((i=$1;i<$x;i+=32))
+	do
+		sleep 0.1
+		xdotool mousemove --sync $i $2 click 1
+		upgrade
+	done
+}
+
+#iteratey 220 84 14
+#iteratey 254 500 14
+iteratex 149 255 10
