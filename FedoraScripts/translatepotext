@@ -1,14 +1,17 @@
 #!/bin/bash
 wmctrl -a "Translation Editor"
 sleep 1
+xdotool key --clearmodifiers Alt+Next
 for((i=0;i<$1;i++))
 do
 	sleep 0.1
-	xdotool mousemove --sync 11 1285 click --repeat 3 1
+	xdotool mousemove --sync 11 1320 click --repeat 3 1
 	specialcopy
-	xdotool mousemove --sync 11 1363 click 1
+	xdotool mousemove --sync 11 1395 click 1
 	sleep 0.1
 	xdotool key --clearmodifiers Ctrl+v
+	sleep 0.1
+	xdotool key BackSpace
 	sleep 0.1
 	xdotool key --clearmodifiers Alt+Next
 	sleep 1
