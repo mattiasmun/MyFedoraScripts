@@ -11,9 +11,17 @@ function upgrade()
 	done
 }
 
-for((i=220;i<671;i+=32))
-do
-	sleep 0.1
-	xdotool mousemove --sync 84 $i click 1
-	upgrade
-done
+function iterate()
+{
+	x=$1+32*$3+1
+	for((i=$1;i<$x;i+=32))
+	do
+		sleep 0.1
+		xdotool mousemove --sync $2 $i click 1
+		upgrade
+	done
+}
+
+#iterate 220 84 14
+#iterate 254 500 14
+iterate 149 255 10
