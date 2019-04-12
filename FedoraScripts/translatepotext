@@ -1,7 +1,6 @@
 #!/bin/bash
 wmctrl -a "Translation Editor"
 sleep 1
-xdotool key --clearmodifiers Alt+Next
 for((i=0;i<$1;i++))
 do
 	sleep 0.1
