@@ -1,12 +1,6 @@
 #!/bin/bash
 wmctrl -a firefox
 sleep 1.0
-for((i=220;i<671;i+=32))
-do
-	sleep 0.1
-	xdotool mousemove --sync 84 $i click 1
-	upgrade()
-done
 
 function upgrade()
 {
@@ -16,3 +10,10 @@ function upgrade()
 		xdotool mousemove --sync 597 519 click 1
 	done
 }
+
+for((i=220;i<671;i+=32))
+do
+	sleep 0.1
+	xdotool mousemove --sync 84 $i click 1
+	upgrade
+done
