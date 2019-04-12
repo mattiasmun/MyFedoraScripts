@@ -4,7 +4,7 @@ sleep 1.0
 
 function upgrade()
 {
-	for((j=0;j<34;j++))
+	for((j=0;j<12;j++))
 	do
 		sleep 0.08
 		xdotool mousemove --sync 597 519 click 1
