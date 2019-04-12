@@ -6,7 +6,7 @@ function upgrade()
 {
 	for((j=0;j<34;j++))
 	do
-		sleep 0.1
+		sleep 0.08
 		xdotool mousemove --sync 597 519 click 1
 	done
 }
@@ -16,7 +16,7 @@ function iteratey()
 	x=$1+32*$3+1
 	for((i=$1;i<$x;i+=32))
 	do
-		sleep 0.1
+		sleep 0.08
 		xdotool mousemove --sync $2 $i click 1
 		upgrade
 	done
@@ -27,20 +27,20 @@ function iteratex()
 	x=$1+32*$3+1
 	for((i=$1;i<$x;i+=32))
 	do
-		sleep 0.1
+		sleep 0.08
 		xdotool mousemove --sync $i $2 click 1
 		upgrade
 	done
 }
 
-#iteratey 220 84 14
-#iteratey 254 500 14
-#iteratex 149 255 10
-#iteratex 115 670 10
-#iteratey 286 148 10
-#iteratey 318 436 10
-#iteratex 211 318 6
-#iteratex 179 605 6
+iteratey 220 84 14
+iteratey 254 500 14
+iteratex 149 255 10
+iteratex 115 670 10
+iteratey 286 148 10
+iteratey 318 436 10
+iteratex 211 318 6
+iteratex 179 605 6
 iteratey 350 212 6
 iteratey 381 370 6
 iteratex 275 382 2
