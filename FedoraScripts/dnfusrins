@@ -1,6 +1,5 @@
 #!/bin/bash
-dnf repoquery --userinstalled
-#for((i=0;i<$1;i++))
-#do
-#	sleep 0.05
-#done
+echo '#!/bin/bash' > progs
+echo 'dnf install -y' >> progs
+dnf repoquery --userinstalled --queryformat '%{name}' >> progs
+perl -i -pe's/\n/ \\\n/g' progs
