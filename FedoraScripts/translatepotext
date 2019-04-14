@@ -6,7 +6,7 @@ do
 	sleep 0.1
 	xdotool mousemove --sync 11 1320 click --repeat 3 1
 	specialcopy
-	xdotool mousemove --sync 11 1395 click 1
+	xdotool mousemove --sync 11 1395 click --repeat 3 1
 	sleep 0.1
 	xdotool key --clearmodifiers Ctrl+v
 	sleep 0.1
