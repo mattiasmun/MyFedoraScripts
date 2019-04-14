@@ -1,0 +1,6 @@
+#!/bin/bash
+dnf repoquery --userinstalled
+#for((i=0;i<$1;i++))
+#do
+#	sleep 0.05
+#done
