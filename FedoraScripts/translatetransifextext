@@ -10,6 +10,8 @@ do
 	sleep 0.1
 	xdotool key --clearmodifiers Ctrl+v
 	sleep 0.1
+	xdotool key Delete
+	sleep 0.1
 	xdotool key Tab
 	sleep 4
 done
