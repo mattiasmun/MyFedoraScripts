@@ -1,5 +1,6 @@
 #!/bin/bash
-dnf install -y 0ad \
+dnf install -y \
+0ad \
 VirtualBox \
 anaconda \
 anaconda-install-env-deps \
@@ -15,6 +16,7 @@ eclipse-jdt \
 espeak \
 ffmpeg-libs \
 firefox \
+gameconqueror \
 gbrainy \
 gimp \
 git \
@@ -33,6 +35,7 @@ gtranslator \
 hardinfo \
 htop \
 hunspell-sv \
+intltool \
 java-11-openjdk-devel \
 kmod-VirtualBox-5.0.5-200.fc29.x86_64 \
 kmod-VirtualBox-5.0.6-200.fc29.x86_64 \
@@ -46,6 +49,7 @@ langpacks-sv \
 libreoffice-help-sv \
 libreoffice-langpack-sv \
 livecd-tools \
+meld \
 memtest86+ \
 metacity \
 opencc \
@@ -54,12 +58,12 @@ p7zip-plugins \
 python3-IPy \
 python3-gmpy2 \
 python3-sh \
+readline-devel \
 redshift-gtk \
 rpmfusion-free-release \
 rpmfusion-nonfree-release \
 rpmsphere-release \
 samba-libs \
-scanmem \
 syslinux \
 translate-shell \
 translate-toolkit \
