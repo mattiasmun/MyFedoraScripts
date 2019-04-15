@@ -1,10 +1,10 @@
 #!/bin/bash
-wmctrl -a "0 A.D. | Transifex Editor"
+wmctrl -a "Transifex Editor"
 sleep 1
 for((i=0;i<$1;i++))
 do
 	sleep 0.1
-	xdotool mousemove --sync 1213 301 click 1
+	xdotool mousemove --sync 1225 301 click 1
 	sleep 0.1
 	xdotool key --clearmodifiers Ctrl+a
 	specialcopy
