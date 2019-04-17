@@ -58,6 +58,7 @@ p7zip-plugins \
 python3-IPy \
 python3-gmpy2 \
 python3-sh \
+pyxtrlock \
 readline-devel \
 redshift-gtk \
 rpmfusion-free-release \
