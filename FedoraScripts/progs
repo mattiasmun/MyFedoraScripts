@@ -37,13 +37,7 @@ htop \
 hunspell-sv \
 intltool \
 java-11-openjdk-devel \
-kmod-VirtualBox-5.0.5-200.fc29.x86_64 \
-kmod-VirtualBox-5.0.6-200.fc29.x86_64 \
-kmod-VirtualBox-5.0.7-200.fc29.x86_64 \
 kmod-nvidia \
-kmod-nvidia-5.0.5-200.fc29.x86_64 \
-kmod-nvidia-5.0.6-200.fc29.x86_64 \
-kmod-nvidia-5.0.7-200.fc29.x86_64 \
 langpacks-en \
 langpacks-sv \
 libreoffice-help-sv \
