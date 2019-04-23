@@ -6,8 +6,11 @@ function type
 {
 	xdotool key t
 	sleep 0.3
-	xdotool type 'brainiac '
-	xdotool type $1
+	mstr='brainiac '$1
+	xclip -i $mstr -selection clipboard
+	xdotool key --clearmodifiers Ctrl+v
+	#xdotool type 'brainiac '
+	#xdotool type $1
 	sleep 0.03
 	xdotool key Return
 }
