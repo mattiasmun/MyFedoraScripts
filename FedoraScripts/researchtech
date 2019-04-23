@@ -1,4 +1,6 @@
 #!/bin/bash
+sleep 1
+wmctrl -a "0 A.D."
 xdotool type 'brainiac advanced_unit_bonus'
 xdotool type 'brainiac armor_cav_01'
 xdotool type 'brainiac armor_cav_02'
