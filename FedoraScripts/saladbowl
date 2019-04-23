@@ -2,18 +2,12 @@
 wmctrl -a "0 A.D."
 for((i=0;i<$1;i++))
 do
-	sleep 0.02
+	sleep 0.1
 	xdotool key Return
-	sleep 0.02
 	xdotool type salad
-	sleep 0.02
 	xdotool key space
-	sleep 0.02
 	xdotool type bowl
-	sleep 0.02
 	xdotool key space
-	sleep 0.02
 	xdotool type $2
-	sleep 0.02
 	xdotool key Return
 done
