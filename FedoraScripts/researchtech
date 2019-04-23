@@ -2,7 +2,7 @@
 sleep 1
 wmctrl -a "0 A.D."
 
-function type()
+function type
 {
 	xdotool key t
 	sleep 0.3
@@ -10,137 +10,137 @@ function type()
 	xdotool key Return
 }
 
-type('brainiac advanced_unit_bonus')
-type('brainiac armor_cav_01')
-type('brainiac armor_cav_02')
-type('brainiac armor_cav_chamfron')
-type('brainiac armor_hero_01')
-type('brainiac armor_infantry_01')
-type('brainiac armor_infantry_02')
-type('brainiac armor_infantry_hack_01')
-type('brainiac armor_infantry_hack_02')
-type('brainiac armor_infantry_hack_03')
-type('brainiac armor_infantry_hack_04')
-type('brainiac armor_infantryspearmen_pierce_01')
-type('brainiac armor_infantryspearmen_pierce_02')
-type('brainiac armor_infantryspearmen_pierce_03')
-type('brainiac armor_infantryspearmen_pierce_04')
-type('brainiac armor_ship_hullsheathing')
-type('brainiac armor_ship_hypozomata')
-type('brainiac armor_ship_reinforcedhull')
-type('brainiac attack_cav_lance')
-type('brainiac attack_cavalry_melee_01')
-type('brainiac attack_cavalry_melee_02')
-type('brainiac attack_cavalry_ranged_01')
-type('brainiac attack_cavalry_ranged_02')
-type('brainiac attack_champions_elite')
-type('brainiac attack_infantry_melee_01')
-type('brainiac attack_infantry_melee_02')
-type('brainiac attack_infantry_ranged_01')
-type('brainiac attack_infantry_ranged_02')
-type('brainiac attack_soldiers_will')
-type('brainiac attack_steel_working')
-type('brainiac buildtime_walls_rubble')
-type('brainiac elite_unit_bonus')
-type('brainiac gather_animals_stockbreeding')
-type('brainiac gather_capacity_basket')
-type('brainiac gather_capacity_carts')
-type('brainiac gather_capacity_fishing')
-type('brainiac gather_capacity_wheelbarrow')
-type('brainiac gather_farming_fertilizer')
-type('brainiac gather_farming_plows')
-type('brainiac gather_farming_training')
-type('brainiac gather_fishing_net')
-type('brainiac gather_lumbering_ironaxes')
-type('brainiac gather_lumbering_sharpaxes')
-type('brainiac gather_lumbering_strongeraxes')
-type('brainiac gather_mining_serfs')
-type('brainiac gather_mining_servants')
-type('brainiac gather_mining_shaftmining')
-type('brainiac gather_mining_silvermining')
-type('brainiac gather_mining_slaves')
-type('brainiac gather_mining_wedgemallet')
-type('brainiac gather_wicker_baskets')
-type('brainiac heal_barracks')
-type('brainiac heal_range')
-type('brainiac heal_range_2')
-type('brainiac heal_rate')
-type('brainiac heal_rate_2')
-type('brainiac heal_temple')
-type('brainiac health_females_01')
-type('brainiac health_regen_units')
-type('brainiac health_walls_geometric_masonry')
-type('brainiac melee_inf_sidearms')
-type('brainiac melee_inf_spearheads')
-type('brainiac pair_cav_01')
-type('brainiac pair_champ_02')
-type('brainiac pair_gather_01')
-type('brainiac pair_gather_02')
-type('brainiac pair_gather_03')
-type('brainiac pair_gather_wood_01')
-type('brainiac pair_heal_01')
-type('brainiac pair_heal_02')
-type('brainiac pair_heal_03')
-type('brainiac pair_house_01')
-type('brainiac pair_house_02')
-type('brainiac pair_inf_01')
-type('brainiac pair_inf_02')
-type('brainiac pair_inf_armor_01')
-type('brainiac pair_inf_armor_02')
-type('brainiac pair_inf_armor_03')
-type('brainiac pair_inf_armor_04	')
-type('brainiac pair_levy_01')
-type('brainiac pair_siege_attack_cost')
-type('brainiac pair_siege_attack_pack')
-type('brainiac pair_siege_cost_armor')
-type('brainiac pair_tower_01')
-type('brainiac pair_walls_01')
-type('brainiac phase_city')
-type('brainiac phase_city_athen')
-type('brainiac phase_city_generic')
-type('brainiac phase_town')
-type('brainiac phase_town_athen')
-type('brainiac phase_town_generic')
-type('brainiac phase_village')
-type('brainiac pop_civic_01')
-type('brainiac pop_civic_02')
-type('brainiac pop_house_01')
-type('brainiac pop_house_02')
-type('brainiac pop_wonder')
-type('brainiac ranged_inf_irregulars')
-type('brainiac ranged_inf_skirmishers')
-type('brainiac siege_armor')
-type('brainiac siege_attack')
-type('brainiac siege_bolt_accuracy')
-type('brainiac siege_cost_metal')
-type('brainiac siege_cost_wood')
-type('brainiac siege_packing')
-type('brainiac speed_cavalry_01')
-type('brainiac speed_cavalry_02')
-type('brainiac spy_counter')
-type('brainiac tower_armour')
-type('brainiac tower_crenellations')
-type('brainiac tower_decay')
-type('brainiac tower_murderholes')
-type('brainiac tower_range')
-type('brainiac tower_vision')
-type('brainiac tower_watch')
-type('brainiac trade_commercial_treaty')
-type('brainiac trade_convoys_armor')
-type('brainiac trade_convoys_speed')
-type('brainiac trade_gain_01')
-type('brainiac trade_gain_02')
-type('brainiac training_conscription')
-type('brainiac training_levy_cavalry')
-type('brainiac training_levy_infantry')
-type('brainiac training_naval_architects')
-type('brainiac unlock_champion_units')
-type('brainiac unlock_females_house')
-type('brainiac unlock_shared_dropsites')
-type('brainiac unlock_shared_los')
-type('brainiac unlock_spies')
-type('brainiac upgrade_rank_advanced_cavalry')
-type('brainiac upgrade_rank_advanced_infantry')
-type('brainiac upgrade_rank_advanced_mercenary')
-type('brainiac upgrade_rank_elite_cavalry')
-type('brainiac upgrade_rank_elite_infantry')
+type 'brainiac advanced_unit_bonus'
+type 'brainiac armor_cav_01'
+type 'brainiac armor_cav_02'
+type 'brainiac armor_cav_chamfron'
+type 'brainiac armor_hero_01'
+type 'brainiac armor_infantry_01'
+type 'brainiac armor_infantry_02'
+type 'brainiac armor_infantry_hack_01'
+type 'brainiac armor_infantry_hack_02'
+type 'brainiac armor_infantry_hack_03'
+type 'brainiac armor_infantry_hack_04'
+type 'brainiac armor_infantryspearmen_pierce_01'
+type 'brainiac armor_infantryspearmen_pierce_02'
+type 'brainiac armor_infantryspearmen_pierce_03'
+type 'brainiac armor_infantryspearmen_pierce_04'
+type 'brainiac armor_ship_hullsheathing'
+type 'brainiac armor_ship_hypozomata'
+type 'brainiac armor_ship_reinforcedhull'
+type 'brainiac attack_cav_lance '
+type 'brainiac attack_cavalry_melee_01'
+type 'brainiac attack_cavalry_melee_02'
+type 'brainiac attack_cavalry_ranged_01'
+type 'brainiac attack_cavalry_ranged_02'
+type 'brainiac attack_champions_elite '
+type 'brainiac attack_infantry_melee_01'
+type 'brainiac attack_infantry_melee_02'
+type 'brainiac attack_infantry_ranged_01'
+type 'brainiac attack_infantry_ranged_02'
+type 'brainiac attack_soldiers_will'
+type 'brainiac attack_steel_working'
+type 'brainiac buildtime_walls_rubble '
+type 'brainiac elite_unit_bonus'
+type 'brainiac gather_animals_stockbreeding'
+type 'brainiac gather_capacity_basket'
+type 'brainiac gather_capacity_carts'
+type 'brainiac gather_capacity_fishing'
+type 'brainiac gather_capacity_wheelbarrow'
+type 'brainiac gather_farming_fertilizer'
+type 'brainiac gather_farming_plows'
+type 'brainiac gather_farming_training'
+type 'brainiac gather_fishing_net'
+type 'brainiac gather_lumbering_ironaxes'
+type 'brainiac gather_lumbering_sharpaxes'
+type 'brainiac gather_lumbering_strongeraxes'
+type 'brainiac gather_mining_serfs'
+type 'brainiac gather_mining_servants'
+type 'brainiac gather_mining_shaftmining'
+type 'brainiac gather_mining_silvermining'
+type 'brainiac gather_mining_slaves'
+type 'brainiac gather_mining_wedgemallet'
+type 'brainiac gather_wicker_baskets'
+type 'brainiac heal_barracks'
+type 'brainiac heal_range '
+type 'brainiac heal_range_2'
+type 'brainiac heal_rate '
+type 'brainiac heal_rate_2'
+type 'brainiac heal_temple '
+type 'brainiac health_females_01'
+type 'brainiac health_regen_units'
+type 'brainiac health_walls_geometric_masonry'
+type 'brainiac melee_inf_sidearms'
+type 'brainiac melee_inf_spearheads'
+type 'brainiac pair_cav_01'
+type 'brainiac pair_champ_02'
+type 'brainiac pair_gather_01'
+type 'brainiac pair_gather_02'
+type 'brainiac pair_gather_03'
+type 'brainiac pair_gather_wood_01'
+type 'brainiac pair_heal_01'
+type 'brainiac pair_heal_02'
+type 'brainiac pair_heal_03'
+type 'brainiac pair_house_01'
+type 'brainiac pair_house_02'
+type 'brainiac pair_inf_01'
+type 'brainiac pair_inf_02'
+type 'brainiac pair_inf_armor_01'
+type 'brainiac pair_inf_armor_02'
+type 'brainiac pair_inf_armor_03'
+type 'brainiac pair_inf_armor_04	'
+type 'brainiac pair_levy_01'
+type 'brainiac pair_siege_attack_cost'
+type 'brainiac pair_siege_attack_pack'
+type 'brainiac pair_siege_cost_armor'
+type 'brainiac pair_tower_01'
+type 'brainiac pair_walls_01'
+type 'brainiac phase_city'
+type 'brainiac phase_city_athen'
+type 'brainiac phase_city_generic'
+type 'brainiac phase_town'
+type 'brainiac phase_town_athen'
+type 'brainiac phase_town_generic'
+type 'brainiac phase_village '
+type 'brainiac pop_civic_01'
+type 'brainiac pop_civic_02'
+type 'brainiac pop_house_01'
+type 'brainiac pop_house_02'
+type 'brainiac pop_wonder'
+type 'brainiac ranged_inf_irregulars'
+type 'brainiac ranged_inf_skirmishers'
+type 'brainiac siege_armor'
+type 'brainiac siege_attack'
+type 'brainiac siege_bolt_accuracy'
+type 'brainiac siege_cost_metal'
+type 'brainiac siege_cost_wood'
+type 'brainiac siege_packing'
+type 'brainiac speed_cavalry_01'
+type 'brainiac speed_cavalry_02'
+type 'brainiac spy_counter'
+type 'brainiac tower_armour'
+type 'brainiac tower_crenellations'
+type 'brainiac tower_decay'
+type 'brainiac tower_murderholes'
+type 'brainiac tower_range '
+type 'brainiac tower_vision'
+type 'brainiac tower_watch'
+type 'brainiac trade_commercial_treaty'
+type 'brainiac trade_convoys_armor'
+type 'brainiac trade_convoys_speed'
+type 'brainiac trade_gain_01'
+type 'brainiac trade_gain_02'
+type 'brainiac training_conscription'
+type 'brainiac training_levy_cavalry'
+type 'brainiac training_levy_infantry'
+type 'brainiac training_naval_architects'
+type 'brainiac unlock_champion_units'
+type 'brainiac unlock_females_house '
+type 'brainiac unlock_shared_dropsites'
+type 'brainiac unlock_shared_los'
+type 'brainiac unlock_spies'
+type 'brainiac upgrade_rank_advanced_cavalry'
+type 'brainiac upgrade_rank_advanced_infantry'
+type 'brainiac upgrade_rank_advanced_mercenary'
+type 'brainiac upgrade_rank_elite_cavalry'
+type 'brainiac upgrade_rank_elite_infantry'
