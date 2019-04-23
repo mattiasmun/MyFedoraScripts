@@ -3,12 +3,11 @@ sleep 1
 wmctrl -a "0 A.D."
 for((i=0;i<$1;i++))
 do
-	mstr='salad bowl '$2
-#	echo $mstr > $HOME/typestr
+#	echo 'salad bowl '$2 > $HOME/typestr
 #	xclip -i $HOME/typestr -selection clipboard
 	xdotool key t
 	sleep 0.3
-	xdotool type $mstr
+	xdotool type 'salad bowl '$2
 	sleep 0.03
 	xdotool key Return
 done

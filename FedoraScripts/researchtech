@@ -4,12 +4,11 @@ wmctrl -a "0 A.D."
 
 function type
 {
-	mstr='brainiac '$1
-#	echo $mstr > $HOME/typestr
+#	echo 'brainiac '$1 > $HOME/typestr
 #	xclip -i $HOME/typestr -selection clipboard
 	xdotool key t
 	sleep 0.3
-	xdotool type $mstr
+	xdotool type 'brainiac '$1
 	sleep 0.03
 	xdotool key Return
 }
