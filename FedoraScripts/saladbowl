@@ -1,5 +1,6 @@
 #!/bin/bash
 wmctrl -a "0 A.D."
+sleep 1
 for((i=0;i<$1;i++))
 do
 	xdotool key Return
