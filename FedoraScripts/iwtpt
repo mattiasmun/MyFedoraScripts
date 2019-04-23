@@ -4,11 +4,11 @@ wmctrl -a "0 A.D."
 for((i=0;i<$1;i++))
 do
 	mstr='iwanttopwnthem '$2
-	echo $mstr > $HOME/typestr
-	xclip -i $HOME/typestr -selection clipboard
+#	echo $mstr > $HOME/typestr
+#	xclip -i $HOME/typestr -selection clipboard
 	xdotool key t
 	sleep 0.3
-	xdotool key --clearmodifiers Ctrl+v
+	xdotool type $mstr
 	sleep 0.03
 	xdotool key Return
 done
