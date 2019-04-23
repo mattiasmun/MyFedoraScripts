@@ -4,9 +4,8 @@ wmctrl -a "0 A.D."
 for((i=0;i<$1;i++))
 do
 	xdotool key t
-	sleep 1
-	xdotool type iwanttopwnthem
-	xdotool key space
+	sleep 0.3
+	xdotool type 'iwanttopwnthem '
 	xdotool type $2
 	xdotool key Return
 done
