@@ -1,5 +1,6 @@
 #!/bin/bash
 source trycatch
+sleep 0.5
 xdotool key --clearmodifiers Alt+Tab
 sleep 1.0
 for((i=0;i<$1;i++))
