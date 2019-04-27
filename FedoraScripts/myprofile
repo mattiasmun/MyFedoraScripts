@@ -1,2 +1,2 @@
 #!/bin/bash
-echo 'PATH="$PATH:$HOME/Dokument/MyFedoraScripts/FedoraScripts";export PATH' >> $HOME/.bash_profile
+echo 'PATH="$PATH:$HOME/Bash/MyFedoraScripts/FedoraScripts";export PATH' >> $HOME/.bash_profile
