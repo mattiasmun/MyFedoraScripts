@@ -1,9 +1,8 @@
 #!/bin/bash
 source trycatch
 sleep 0.5
-sleep 10 &
-x=$(pidof -s sleep)
-kill -TSTP $x &
+#x=$(pidof -s sleep)
+#kill -STOP $x
 for((i=0;i<$1;i++))
 do
 	sleep 0.2
@@ -22,4 +21,4 @@ do
 		echo "catch"
 	}
 done
-kill -CONT $x &
+#kill -CONT $x
