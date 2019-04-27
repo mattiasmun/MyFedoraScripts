@@ -1,8 +1,4 @@
 #!/bin/bash
-xdotool key --clearmodifiers Alt+Tab
-sleep 1.0
-for((i=0;i<$1;i++))
-do
-	sleep 0.4
-	xdotool key 1
-done
+sleep 0.3
+pyxtrlock
+systemctl suspend
