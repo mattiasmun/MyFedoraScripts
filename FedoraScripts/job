@@ -3,7 +3,6 @@ source trycatch
 sleep 0.5
 sleep 10 &
 x=$(pidof -s sleep)
-echo $x
 kill -TSTP $x &
 for((i=0;i<$1;i++))
 do
