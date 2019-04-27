@@ -1,4 +1,5 @@
 #!/bin/bash
 sleep 0.3
 pyxtrlock
+sleep 0.2
 systemctl hibernate
