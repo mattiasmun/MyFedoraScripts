@@ -6,8 +6,9 @@ do
 #	echo 'salad bowl '$2 > $HOME/typestr
 #	xclip -i $HOME/typestr -selection clipboard
 	xdotool key t
-	sleep 0.3
+	sleep 0.2
+#	xdotool key Ctrl+v
 	xdotool type 'salad bowl '$2
-	sleep 0.03
+	sleep 0.02
 	xdotool key Return
 done
