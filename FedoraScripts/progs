@@ -53,6 +53,7 @@ python3-IPy \
 python3-gmpy2 \
 python3-sh \
 pyxtrlock \
+qshutdown \
 readline-devel \
 redshift-gtk \
 rpmfusion-free-release \
@@ -65,6 +66,7 @@ translate-toolkit \
 vala \
 vlc \
 wmctrl \
+xautolock \
 xclip \
 xdotool \
 xforms
