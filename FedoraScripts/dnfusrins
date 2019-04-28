@@ -1,5 +1,5 @@
 #!/bin/bash
-dir=$HOME/Dokument/MyFedoraScripts/FedoraScripts
+dir=$HOME/Bash/MyFedoraScripts/FedoraScripts
 echo '#!/bin/bash' > $dir/progs
 echo 'dnf install -y \' >> $dir/progs
 dnf repoquery --userinstalled --queryformat '%{name} \' >> $dir/progs
