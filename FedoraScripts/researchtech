@@ -14,16 +14,20 @@ function type
 	xdotool key Return
 }
 
+xdotool key t
+sleep 0.2
+xdotool type 'back to the future'
+sleep 0.02
+xdotool key t
+sleep 0.2
+xdotool type 'back to the future'
+sleep 0.02
 #type 'phase_town'
 #type 'phase_town_athen'
-type 'phase_town_generic'
-type 'phase_town_generic'
+#type 'phase_town_generic'
 #type 'phase_city'
 #type 'phase_city_athen'
-type 'phase_city_generic'
-type 'phase_city_generic'
-type 'phase_city_generic'
-type 'phase_city_generic'
+#type 'phase_city_generic'
 type 'pop_wonder'
 type 'pop_wonder'
 type 'pop_wonder'
