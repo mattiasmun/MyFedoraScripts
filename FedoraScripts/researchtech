@@ -2,26 +2,34 @@
 sleep 1
 wmctrl -a "0 A.D."
 
-function type
+function a
 {
-#	echo 'brainiac '$1 > $HOME/typestr
-#	xclip -i $HOME/typestr -selection clipboard
 	xdotool key t
 	sleep 0.2
-#	xdotool key Ctrl+v
-	xdotool type 'brainiac '$1
+}
+
+function b
+{
 	sleep 0.02
 	xdotool key Return
 }
 
-xdotool key t
-sleep 0.2
+function type
+{
+#	echo 'brainiac '$1 > $HOME/typestr
+#	xclip -i $HOME/typestr -selection clipboard
+	a
+#	xdotool key Ctrl+v
+	xdotool type 'brainiac '$1
+	b
+}
+
+a
 xdotool type 'back to the future'
-sleep 0.02
-xdotool key t
-sleep 0.2
+b
+a
 xdotool type 'back to the future'
-sleep 0.02
+b
 #type 'phase_town'
 #type 'phase_town_athen'
 #type 'phase_town_generic'
