@@ -52,6 +52,7 @@ opencc \
 p7zip \
 p7zip-plugins \
 python3-IPy \
+python3-dnf-plugin-system-upgrade \
 python3-gmpy2 \
 python3-sh \
 pyxtrlock \
