@@ -1,4 +1,7 @@
 #!/bin/bash
+dir=$PWD
+cd $1
 git commit -am 'edit'
 git push
 git status
+cd $dir
