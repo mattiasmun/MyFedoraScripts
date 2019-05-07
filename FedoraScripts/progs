@@ -47,6 +47,7 @@ livecd-tools \
 meld \
 memtest86+ \
 metacity \
+nodejs \
 opencc \
 p7zip \
 p7zip-plugins \
@@ -61,6 +62,7 @@ rpmfusion-free-release \
 rpmfusion-nonfree-release \
 rpmsphere-release \
 samba-libs \
+spin-kickstarts \
 syslinux \
 translate-shell \
 translate-toolkit \

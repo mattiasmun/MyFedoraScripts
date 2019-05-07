@@ -1,0 +1,3 @@
+#!/bin/bash
+sleep 0.3
+dnf system-upgrade download --refresh --releasever=30
