@@ -1,2 +1,2 @@
 #!/bin/bash
-dnf system-upgrade download --refresh --allowerasing --releasever=30 -y
+dnf system-upgrade download --refresh --allowerasing --releasever=$1 -y

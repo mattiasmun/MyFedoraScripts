@@ -1,2 +1,2 @@
 #!/bin/bash
-livecd-iso-to-disk --reset-mbr $HOME/Hämtningar/Fedora-Xfce-Live-x86_64-30/Fedora-Xfce-Live-x86_64-30-1.2.iso /dev/sd$1
+livecd-iso-to-disk --reset-mbr $HOME/Hämtningar/Fedora-Xfce-Live-x86_64-$1/Fedora-Xfce-Live-x86_64-$1-$2.iso /dev/sd$1
