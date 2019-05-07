@@ -1,6 +1,4 @@
 #!/bin/bash
-dnf -y mark install xdotool
-dnf -y remove clipit
 dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 dnf -y install https://github.com/rpmsphere/r/raw/master/noarch/rpmsphere-release-29-2.noarch.rpm
 dnf -y upgrade
