@@ -1,3 +1,2 @@
 #!/bin/bash
-sleep 0.3
 dnf system-upgrade download --refresh --allowerasing --releasever=30 -y

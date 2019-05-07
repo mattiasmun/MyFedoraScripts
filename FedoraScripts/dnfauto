@@ -1,0 +1,2 @@
+#!/bin/bash
+perl -pi -e 's/1h/6m/g' /usr/lib/systemd/system/dnf-automatic.timer
