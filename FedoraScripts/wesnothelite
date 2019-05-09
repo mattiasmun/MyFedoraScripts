@@ -1,0 +1,14 @@
+#!/bin/bash
+sleep 1
+wmctrl -a "0 A.D."
+for((i=0;i<$1;i++))
+do
+#	echo 'iwanttopwnthem '$2 > $HOME/typestr
+#	xclip -i $HOME/typestr -selection clipboard
+	xdotool key t
+	sleep 0.2
+#	xdotool key Ctrl+v
+	xdotool type 'iwanttopwnthem '$2
+	sleep 0.02
+	xdotool key Return
+done
