@@ -11,7 +11,7 @@ function mymethod
 	xdotool key Ctrl+v
 	sleep 0.02
 	xdotool key Return
-	sleep 5
+	sleep 1
 }
 
 #debug
