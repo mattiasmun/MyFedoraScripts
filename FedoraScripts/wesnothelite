@@ -4,17 +4,17 @@ wmctrl -a "Kampen om Wesnoth"
 
 mymethod
 {
-	
+	xclip -i $HOME/typestr -selection clipboard
+	xdotool key colon
+	sleep 0.2
+	xdotool key Ctrl+v
+	sleep 0.02
+	xdotool key Return
 }
 
 for((i=0;i<$1;i++))
 do
 	echo 'unit max_hitpoints=500' > $HOME/typestr
-	xclip -i $HOME/typestr -selection clipboard
-	xdotool key colon
-	sleep 0.2
-	xdotool key Ctrl+v
-#	xdotool type 'iwanttopwnthem '$2
-	sleep 0.02
-	xdotool key Return
+	mymethod
+#	xdotool type 'unit max_hitpoints=500'
 done
