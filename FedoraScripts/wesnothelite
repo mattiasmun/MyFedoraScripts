@@ -1,6 +1,12 @@
 #!/bin/bash
 sleep 1
 wmctrl -a "Kampen om Wesnoth"
+
+mymethod
+{
+	
+}
+
 for((i=0;i<$1;i++))
 do
 	echo 'unit max_hitpoints=500' > $HOME/typestr

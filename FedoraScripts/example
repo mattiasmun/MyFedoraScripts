@@ -3,16 +3,22 @@ source trycatch
 sleep 0.5
 xdotool key --clearmodifiers Alt+Tab
 sleep 1
+
+function mouse
+{
+	xdotool mousemove --sync $1 $2 click 1
+}
+
 for((i=0;i<$1;i++))
 do
 	sleep 0.2
-	xdotool mousemove --sync 120 173 click 1
+	mouse 120 173
 	sleep 0.2
-	xdotool mousemove --sync 168 173 click 1
+	mouse 168 173
 	sleep 0.2
-	xdotool mousemove --sync 440 440 click 1
+	mouse 440 440
 	sleep 0.2
-	xdotool mousemove --sync 460 460 click 1
+	mouse 460 460
 	sleep 0.2
 	xdotool key p
 	sleep 0.2
