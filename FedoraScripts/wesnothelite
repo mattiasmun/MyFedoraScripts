@@ -15,10 +15,10 @@ function mymethod
 }
 
 #debug
-echo 'unit advances=5' > $HOME/typestr
-mymethod
-sleep 5
-echo 'unit experience=9999' > $HOME/typestr
+#echo 'unit advances=5' > $HOME/typestr
+#mymethod
+#sleep 5
+echo 'unit experience=19999' > $HOME/typestr
 mymethod
 #xdotool type 'unit max_hitpoints=500'
 echo 'unit max_hitpoints=500' > $HOME/typestr
