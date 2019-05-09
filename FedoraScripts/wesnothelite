@@ -12,7 +12,14 @@ function mymethod
 	xdotool key Return
 }
 
+#xdotool type 'unit max_hitpoints=500'
 echo 'unit max_hitpoints=500' > $HOME/typestr
 mymethod
-#xdotool type 'unit max_hitpoints=500'
-
+echo 'unit hitpoints=500' > $HOME/typestr
+mymethod
+echo 'unit max_moves=30' > $HOME/typestr
+mymethod
+echo 'unit advances=5' > $HOME/typestr
+mymethod
+echo 'unit experience=9999' > $HOME/typestr
+mymethod
