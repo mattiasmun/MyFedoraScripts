@@ -11,18 +11,19 @@ function mymethod
 	xdotool key Ctrl+v
 	sleep 0.02
 	xdotool key Return
-	sleep 4
+	sleep 5
 }
 
-echo 'unit max_moves=30' > $HOME/typestr
-mymethod
+#debug
 echo 'unit advances=5' > $HOME/typestr
 mymethod
-sleep 4
+sleep 5
 echo 'unit experience=9999' > $HOME/typestr
 mymethod
 #xdotool type 'unit max_hitpoints=500'
 echo 'unit max_hitpoints=500' > $HOME/typestr
 mymethod
 echo 'unit hitpoints=500' > $HOME/typestr
+mymethod
+echo 'unit max_moves=30' > $HOME/typestr
 mymethod
