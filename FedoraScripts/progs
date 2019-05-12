@@ -1,4 +1,4 @@
-#!/binbash
+#!/bin/bash
 dnf install -y \
 0ad \
 VirtualBox \
@@ -116,3 +116,4 @@ xclip \
 xdotool \
 xforms \
 xz-lzma-compat \
+[\b]
