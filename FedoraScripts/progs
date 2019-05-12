@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/binbash
 dnf install -y \
 0ad \
 VirtualBox \
@@ -51,7 +51,11 @@ hunspell-sv \
 intltool \
 java-11-openjdk-devel \
 jitterentropy \
+kmod-VirtualBox-5.0.10-200.fc29.x86_64 \
+kmod-VirtualBox-5.0.11-300.fc30.x86_64 \
 kmod-nvidia \
+kmod-nvidia-5.0.10-200.fc29.x86_64 \
+kmod-nvidia-5.0.11-300.fc30.x86_64 \
 langpacks-en \
 langpacks-sv \
 libhandy \
@@ -111,4 +115,4 @@ xautolock \
 xclip \
 xdotool \
 xforms \
-xz-lzma-compat
+xz-lzma-compat \
