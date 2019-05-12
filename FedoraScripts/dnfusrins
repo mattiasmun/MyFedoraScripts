@@ -3,4 +3,5 @@ file=$HOME/Bash/MyFedoraScripts/FedoraScripts/progs
 echo '#!/bin/bash' > $file
 echo 'dnf install -y \' >> $file
 dnf repoquery --userinstalled --queryformat '%{name} \' >> $file
-echo '[\b]' >> $file
+a =~ '[\b]'
+echo  $a >> $file
