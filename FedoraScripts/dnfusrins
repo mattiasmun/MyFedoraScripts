@@ -1,6 +1,6 @@
 #!/bin/bash
 file=$HOME/Bash/MyFedoraScripts/FedoraScripts/progs
 echo '#!/bin/bash' > $file
-data='dnf install -y '
+data='sudo dnf install -y '
 que=$(dnf repoquery --userinstalled --queryformat '%{name}')
 echo $data$que >> $file
