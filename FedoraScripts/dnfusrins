@@ -1,8 +1,6 @@
 #!/bin/bash
 file=$HOME/Bash/MyFedoraScripts/FedoraScripts/progs
 echo '#!/bin/bash' > $file
-echo 'dnf install -y \' >> $file
-dnf repoquery --userinstalled --queryformat '%{name} \' >> $file
-a=''
-[[ $a=~'[\b][\b][\b][\b]' ]]
-echo $a >> $file
+data='dnf install -y '
+que=$(dnf repoquery --userinstalled --queryformat '%{name}')
+echo $data$que >> $file
