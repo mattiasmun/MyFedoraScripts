@@ -1,5 +1,6 @@
 #!/bin/bash
-dir=$HOME/Bash/MyFedoraScripts/FedoraScripts
-echo '#!/bin/bash' > $dir/progs
-echo 'dnf install -y \' >> $dir/progs
-dnf repoquery --userinstalled --queryformat '%{name} \' >> $dir/progs
+file=$HOME/Bash/MyFedoraScripts/FedoraScripts/progs
+echo '#!/bin/bash' > $file
+echo 'dnf install -y \' >> $file
+dnf repoquery --userinstalled --queryformat '%{name} \' >> $file
+gawk -i inplace -v RS='^$' -v ORS= '{$0=gensub(/\/([^\/]*)$/,"\\1","")}1' $file
