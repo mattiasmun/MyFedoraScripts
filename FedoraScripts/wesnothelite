@@ -2,10 +2,11 @@
 sleep 1
 wmctrl -a "Kampen om Wesnoth"
 sleep 2
+f=$HOME/typestr
 
 function mymethod
 {
-	xclip -i $HOME/typestr -selection clipboard
+	xclip -i $f -selection clipboard
 	xdotool key colon
 	sleep 0.2
 	xdotool key Ctrl+v
@@ -15,15 +16,15 @@ function mymethod
 }
 
 #debug
-echo 'unit advances=5' > $HOME/typestr
+echo 'unit advances=5' > $f
 mymethod
 sleep 8
-echo 'unit experience=19999' > $HOME/typestr
+echo 'unit experience=19999' > $f
 mymethod
 #xdotool type 'unit max_hitpoints=2000'
-echo 'unit max_hitpoints=2000' > $HOME/typestr
+echo 'unit max_hitpoints=2000' > $f
 mymethod
-#echo 'unit hitpoints=2000' > $HOME/typestr
+#echo 'unit hitpoints=2000' > $f
 #mymethod
-echo 'unit max_moves=40' > $HOME/typestr
+echo 'unit max_moves=40' > $f
 mymethod
