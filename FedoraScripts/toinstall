@@ -2,7 +2,8 @@
 sudo dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 sudo dnf -y install https://github.com/rpmsphere/r/raw/master/noarch/rpmsphere-release-29-2.noarch.rpm
 sudo dnf -y upgrade
-myprofile
-progs
+cd ${0:0: -9}
+./myprofile
+./progs
 sudo dnf -y groupupdate core multimedia sound-and-video workstation-product-environment
 shutdown -r now
