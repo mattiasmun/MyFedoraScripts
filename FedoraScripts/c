@@ -1,3 +1,4 @@
 #!/bin/bash
 cat /etc/motd && ls -al /etc/motd && systemctl list-timers dnf-a* --all && dnf check -C && dnf repoquery -C --unneeded
-cat /usr/lib/systemd/system/dnf-automatic.timer | grep Boot
+cat /usr/lib/systemd/system/dnf-automatic.timer | grep OnBoot
+cat /usr/lib/systemd/system/dnf-automatic.timer | grep OnUnit
