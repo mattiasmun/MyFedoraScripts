@@ -5,7 +5,7 @@ sudo update-alternatives --config jre_openjdk
 sudo update-alternatives --config java_sdk_openjdk
 sudo update-alternatives --list | grep jvm
 sudo nano /etc/dnf/automatic.conf
-sudo nano /usr/lib/systemd/system/dnf-automatic.timer
+dnfauto
 sudo nano /usr/lib/systemd/system/fstrim.timer
 sudo systemctl enable --now dnf-automatic.timer fstrim.timer
 systemctl list-timers --all
