@@ -4,5 +4,5 @@ sudo dnf -y install https://github.com/rpmsphere/r/raw/master/noarch/rpmsphere-r
 sudo dnf -y upgrade
 myprofile
 progs
-sudo dnf -y groupupdate -y core multimedia sound-and-video workstation-product-environment
+sudo dnf -y groupupdate core multimedia sound-and-video workstation-product-environment
 shutdown -r now
