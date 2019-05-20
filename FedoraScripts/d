@@ -1,4 +1,4 @@
 #!/bin/bash
 sleep $1h
 closeall
-shutdown now
+shutdown -r now
