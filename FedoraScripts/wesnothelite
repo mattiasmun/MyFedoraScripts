@@ -8,11 +8,11 @@ function mymethod
 {
 	xclip -i $f -selection clipboard
 	xdotool key colon
-	sleep 0.2
+	sleep 0.5
 	xdotool key Ctrl+v
-	sleep 0.02
+	sleep 0.5
 	xdotool key Return
-	sleep 2
+	sleep 0.5
 }
 
 #debug
