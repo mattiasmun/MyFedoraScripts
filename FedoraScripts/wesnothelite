@@ -16,12 +16,12 @@ function mymethod
 }
 
 #debug
-echo 'unit max_hitpoints=2000' > $f
-mymethod
 echo 'unit advances=5' > $f
 mymethod
 sleep 8
 echo 'unit experience=19999' > $f
+mymethod
+echo 'unit max_hitpoints=2000' > $f
 mymethod
 #echo 'unit hitpoints=2000' > $f
 #mymethod
