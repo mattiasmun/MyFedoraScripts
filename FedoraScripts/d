@@ -2,4 +2,4 @@
 sleep $1h
 closeall
 logout
-shutdown -r now
+shutdown now
