@@ -1,2 +1,4 @@
 #!/bin/bash
-wget https://torrent.fedoraproject.org/torrents/Fedora-Xfce-Live-x86_64-$1.torrent
+file=Fedora-Xfce-Live-x86_64-$1.torrent
+wget https://torrent.fedoraproject.org/torrents/$file
+xdg-open $file
