@@ -1,3 +1,2 @@
 #!/bin/bash
-#wget https://torrent.fedoraproject.org/torrents/Fedora-Xfce-Live-x86_64-$1.torrent
 sudo livecd-iso-to-disk --reset-mbr $HOME/Hämtningar/Fedora-Xfce-Live-x86_64-$1/Fedora-Xfce-Live-x86_64-$1-$2.iso /dev/sd${3}1

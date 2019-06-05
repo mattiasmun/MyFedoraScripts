@@ -1,0 +1,2 @@
+#!/bin/bash
+wget https://torrent.fedoraproject.org/torrents/Fedora-Xfce-Live-x86_64-$1.torrent
