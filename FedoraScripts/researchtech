@@ -16,10 +16,7 @@ function b
 
 function type
 {
-#	echo 'brainiac '$1 > $HOME/typestr
-#	xclip -i $HOME/typestr -selection clipboard
 	a
-#	xdotool key Ctrl+v
 	xdotool type 'brainiac '$1
 	b
 }
