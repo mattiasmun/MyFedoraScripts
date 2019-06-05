@@ -1,16 +1,16 @@
 #!/bin/bash
-sleep 1
+sleep 0.5
 wmctrl -a "0 A.D."
 
 function a
 {
 	xdotool key t
-	sleep 0.2
+	sleep 0.3
 }
 
 function b
 {
-	sleep 0.02
+	sleep 0.03
 	xdotool key Return
 }
 
@@ -30,15 +30,6 @@ b
 a
 xdotool type 'back to the future'
 b
-#type 'phase_town'
-#type 'phase_town_athen'
-#type 'phase_town_generic'
-#type 'phase_city'
-#type 'phase_city_athen'
-#type 'phase_city_generic'
-type 'pop_wonder'
-type 'pop_wonder'
-type 'pop_wonder'
 type 'pop_wonder'
 type 'armor_cav_01'
 type 'armor_cav_02'
