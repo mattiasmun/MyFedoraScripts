@@ -21,12 +21,47 @@ function type
 	b
 }
 
-a
-xdotool type 'back to the future'
-b
-a
-xdotool type 'back to the future'
-b
+function type1
+{
+	a
+	xdotool type 'back to the future'
+	b
+}
+
+function type2
+{
+	a
+	xdotool type 'TARDIS'
+	b
+}
+
+function type3
+{
+	a
+	xdotool type 'the hive master'
+	b
+}
+
+function type4
+{
+	a
+	xdotool type 'jame jam'
+	b
+}
+
+function type5
+{
+	a
+	xdotool type 'i am too busy'
+	b
+}
+
+type1
+type1
+type2
+type3
+type4
+type5
 type 'armor_cav_01'
 type 'armor_cav_02'
 type 'armor_cav_chamfron'
