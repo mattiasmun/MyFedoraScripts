@@ -1,7 +1,7 @@
 #!/bin/bash
 source trycatch
 #xdotool key --clearmodifiers Alt+Tab
-sleep 1
+sleep 0.5
 
 function mouse
 {
@@ -12,14 +12,6 @@ for((i=0;i<$1;i++))
 do
 	sleep 0.2
 	mouse 120 173
-	sleep 0.2
-	mouse 168 173
-	sleep 0.2
-	mouse 440 440
-	sleep 0.2
-	mouse 460 460
-	sleep 0.2
-	xdotool key p
 	sleep 0.2
 	xdotool key a
 	try
