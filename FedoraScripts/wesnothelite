@@ -1,7 +1,7 @@
 #!/bin/bash
-sleep 1
+sleep 0.5
 wmctrl -a "Kampen om Wesnoth"
-sleep 2
+sleep 1
 f=$HOME/typestr
 
 function mymethod
@@ -23,7 +23,5 @@ echo 'unit experience=19999' > $f
 mymethod
 echo 'unit max_hitpoints=2000' > $f
 mymethod
-#echo 'unit hitpoints=2000' > $f
-#mymethod
 echo 'unit max_moves=40' > $f
 mymethod
