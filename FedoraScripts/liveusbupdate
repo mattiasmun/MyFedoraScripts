@@ -1,5 +1,5 @@
 #!/bin/bash
-cd $HOME/Links/LIVE/MyFedoraScripts
+cd /run/media/$USER/LIVE/MyFedoraScripts
 sudo git pull --rebase
-cd $HOME/Links/LIVE1/MyFedoraScripts
+cd /run/media/$USER/LIVE1/MyFedoraScripts
 sudo git pull --rebase
