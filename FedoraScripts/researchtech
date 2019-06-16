@@ -19,6 +19,7 @@ function type
 #	a
 #	xdotool type --delay 30 'brainiac '$1
 #	b
+	echo > /dev/null
 }
 
 function type1
