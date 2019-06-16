@@ -5,54 +5,54 @@ wmctrl -a "0 A.D."
 function a
 {
 	xdotool key t
-	sleep 0.3
+	sleep 0.1
 }
 
 function b
 {
-	sleep 0.03
+	sleep 0.9
 	xdotool key Return
 }
 
 function type
 {
 	a
-	xdotool type 'brainiac '$1
+	xdotool type --delay 30 'brainiac '$1
 	b
 }
 
 function type1
 {
 	a
-	xdotool type 'back to the future'
+	xdotool type --delay 30 'back to the future'
 	b
 }
 
 function type2
 {
 	a
-	xdotool type 'TARDIS'
+	xdotool type --delay 30 'TARDIS'
 	b
 }
 
 function type3
 {
 	a
-	xdotool type 'the hive master'
+	xdotool type --delay 30 'the hive master'
 	b
 }
 
 function type4
 {
 	a
-	xdotool type 'jame jam'
+	xdotool type --delay 30 'jame jam'
 	b
 }
 
 function type5
 {
 	a
-	xdotool type 'i am too busy'
+	xdotool type --delay 30 'i am too busy'
 	b
 }
 
