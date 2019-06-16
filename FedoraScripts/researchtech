@@ -16,9 +16,9 @@ function b
 
 function type
 {
-	a
-	xdotool type --delay 30 'brainiac '$1
-	b
+#	a
+#	xdotool type --delay 30 'brainiac '$1
+#	b
 }
 
 function type1
