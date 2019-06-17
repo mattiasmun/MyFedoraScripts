@@ -1,6 +1,6 @@
 #!/bin/bash
 sleep 0.5
-#wmctrl -a "0 A.D."
+wmctrl -a "0 A.D."
 
 arr=('a')
 
@@ -12,7 +12,7 @@ function a
 
 function b
 {
-	sleep 0.9
+	sleep 0.1
 	xdotool key Return
 }
 
@@ -20,11 +20,11 @@ function type
 {
 #	a
 	length=${#arr[@]}
-#	xdotool type --delay 30 'brainiac '${arr[0]}
+#	xdotool type --delay 15 'brainiac '${arr[0]}
 #	for((i=1;i<length;i++))
 #	do
 #		xdotool key underscore
-#		xdotool type --delay 30 ${arr[i]}
+#		xdotool type --delay 15 ${arr[i]}
 #	done
 #	b
 }
@@ -32,35 +32,35 @@ function type
 function type1
 {
 	a
-	xdotool type --delay 30 'back to the future'
+	xdotool type --delay 15 'back to the future'
 	b
 }
 
 function type2
 {
 	a
-	xdotool type --delay 30 'TARDIS'
+	xdotool type --delay 15 'TARDIS'
 	b
 }
 
 function type3
 {
 	a
-	xdotool type --delay 30 'the hive master'
+	xdotool type --delay 15 'the hive master'
 	b
 }
 
 function type4
 {
 	a
-	xdotool type --delay 30 'jame jam'
+	xdotool type --delay 15 'jame jam'
 	b
 }
 
 function type5
 {
 	a
-	xdotool type --delay 30 'i am too busy'
+	xdotool type --delay 15 'i am too busy'
 	b
 }
 
@@ -70,8 +70,7 @@ type2
 type3
 type4
 type5
-arr=('armor' 'cav' '01')
-type
+arr=('armor' 'cav' '01');type
 type 'armor_cav_02'
 type 'armor_cav_chamfron'
 type 'armor_hero_01'
