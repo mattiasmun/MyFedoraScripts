@@ -1,6 +1,7 @@
 #!/bin/bash
 sleep 0.5
 wmctrl -a "0 A.D."
+sleep 0.5
 
 arr=('a')
 
