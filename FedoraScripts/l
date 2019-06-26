@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -gho
+ls -gho $1
