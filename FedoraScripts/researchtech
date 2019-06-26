@@ -20,12 +20,12 @@ function b
 function type
 {
 	a
-	length=${#arr[@]}
+	len=${#arr[@]}
 	xdotool type --delay 15 'brainiac '${arr[0]}
-	for((i=1;i<length;i++))
+	for i in ${arr[@]:1:len}
 	do
 		xdotool key underscore
-		xdotool type --delay 15 ${arr[i]}
+		xdotool type --delay 15 $i
 	done
 	b
 }
