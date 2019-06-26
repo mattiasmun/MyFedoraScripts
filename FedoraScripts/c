@@ -1,6 +1,6 @@
 #!/bin/bash
 cat /etc/motd
-ls -al /etc/motd
+echo 'Modified: '$(stat -c %y /etc/motd)
 systemctl list-timers dnf-a* --all
 cat /usr/lib/systemd/system/dnf-automatic.timer | grep OnBoot
 cat /usr/lib/systemd/system/dnf-automatic.timer | grep OnUnit
