@@ -1,6 +1,9 @@
 #!/bin/bash
 cat /etc/motd
-echo 'Modified: '$(stat -c %y /etc/motd)
+string=$(stat -c %y /etc/motd)
+string=${string::19}
+string='Modified: '$string
+echo $string
 systemctl list-timers dnf-a* --all
 cat /usr/lib/systemd/system/dnf-automatic.timer | grep OnBoot
 cat /usr/lib/systemd/system/dnf-automatic.timer | grep OnUnit
