@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -gho $1
+ls -gho --color=auto $1
