@@ -37,11 +37,11 @@ echo 'unit experience=999999' > $f
 loop
 echo 'unit max_moves=90' > $f
 loop
-for i in range {1..40}
+for i in range {1..60}
 do
 	xdotool key aring
 done
-for i in range {1..12}
+for i in range {1..18}
 do
 	xdotool key adiaeresis
 done
