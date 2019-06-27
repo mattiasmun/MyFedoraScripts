@@ -3,7 +3,7 @@ sleep 0.5
 wmctrl -a "Kampen om Wesnoth"
 sleep 1
 f=$HOME/typestr
-xdotool mousemove --sync 500 500 click 1
+xdotool mousemove --sync --window %1 500 500 click 1
 
 function mymethod
 {
