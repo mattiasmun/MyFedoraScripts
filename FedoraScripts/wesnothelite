@@ -3,6 +3,7 @@ sleep 0.5
 wmctrl -a "Kampen om Wesnoth"
 sleep 1
 f=$HOME/typestr
+n=3
 
 function mymethod
 {
@@ -15,25 +16,27 @@ function mymethod
 	sleep 0.5
 }
 
+function loop
+{
+	for((i=0;i<$n;i++))
+	do
+		mymethod
+	done
+}
+
 #debug
 echo 'unit advances=5' > $f
-mymethod
+loop
 sleep 5
 echo 'unit max_hitpoints=9000' > $f
-mymethod
-mymethod
-mymethod
+loop
 echo 'unit advances=5' > $f
-mymethod
+loop
 sleep 5
 echo 'unit experience=999999' > $f
-mymethod
-mymethod
-mymethod
+loop
 echo 'unit max_moves=90' > $f
-mymethod
-mymethod
-mymethod
+loop
 for i in range {1..40}
 do
 	xdotool key aring
