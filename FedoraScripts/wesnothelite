@@ -28,3 +28,11 @@ echo 'unit experience=999999' > $f
 mymethod
 echo 'unit max_moves=90' > $f
 mymethod
+for i in range {1..40}
+do
+	xdotool key å
+done
+for i in range {1..12}
+do
+	xdotool key ä
+done
