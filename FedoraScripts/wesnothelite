@@ -7,17 +7,16 @@ n=3
 
 function mymethod
 {
-	xclip -i $f -selection clipboard
 	xdotool key colon
 	sleep 0.5
 	xdotool key Ctrl+v
 	sleep 0.5
 	xdotool key Return
-	sleep 0.5
 }
 
 function loop
 {
+	xclip -i $f -selection clipboard
 	for((i=0;i<$n;i++))
 	do
 		mymethod
