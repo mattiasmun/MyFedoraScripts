@@ -1,4 +1,7 @@
 #!/bin/bash
 wmctrl -a $USER@
 sleep 0.3
-xdotool key --clearmodifiers Ctrl+c
+for i in {1..5}
+do
+	xdotool key --clearmodifiers Ctrl+c
+done
