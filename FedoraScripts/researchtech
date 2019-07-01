@@ -2,18 +2,17 @@
 sleep 0.4
 wmctrl -a "0 A.D."
 sleep 0.4
-
 arr=('a')
 
 function a
 {
 	xdotool key t
-	sleep 0.04
+	sleep 0.1
 }
 
 function b
 {
-	sleep 0.4
+	sleep 0.5
 	xdotool key Return
 }
 
@@ -65,147 +64,158 @@ function type5
 	b
 }
 
-type1
-type1
-type2
-type3
-type4
-type5
-arr=('armor' 'cav' '01');type
-arr=('armor' 'cav' '02');type
-arr=('armor' 'cav' 'chamfron');type
-arr=('armor' 'hero' '01');type
-arr=('armor' 'infantry' '01');type
-arr=('armor' 'infantry' '02');type
-arr=('armor' 'infantry' 'hack' '01');type
-arr=('armor' 'infantry' 'hack' '02');type
-arr=('armor' 'infantry' 'hack' '03');type
-arr=('armor' 'infantry' 'hack' '04');type
-arr=('armor' 'infantryspearmen' 'pierce' '01');type
-arr=('armor' 'infantryspearmen' 'pierce' '02');type
-arr=('armor' 'infantryspearmen' 'pierce' '03');type
-arr=('armor' 'infantryspearmen' 'pierce' '04');type
-arr=('armor' 'ship' 'hullsheathing');type
-arr=('armor' 'ship' 'hypozomata');type
-arr=('armor' 'ship' 'reinforcedhull');type
-arr=('attack' 'cav' 'lance');type
-arr=('attack' 'cavalry' 'melee' '01');type
-arr=('attack' 'cavalry' 'melee' '02');type
-arr=('attack' 'cavalry' 'ranged' '01');type
-arr=('attack' 'cavalry' 'ranged' '02');type
-arr=('attack' 'champions' 'elite');type
-arr=('attack' 'infantry' 'melee' '01');type
-arr=('attack' 'infantry' 'melee' '02');type
-arr=('attack' 'infantry' 'ranged' '01');type
-arr=('attack' 'infantry' 'ranged' '02');type
-arr=('attack' 'soldiers' 'will');type
-arr=('attack' 'steel' 'working');type
-arr=('gather' 'animals' 'stockbreeding');type
-arr=('gather' 'capacity' 'basket');type
-arr=('gather' 'capacity' 'carts');type
-arr=('gather' 'capacity' 'fishing');type
-arr=('gather' 'capacity' 'wheelbarrow');type
-arr=('gather' 'farming' 'fertilizer');type
-arr=('gather' 'farming' 'plows');type
-arr=('gather' 'farming' 'training');type
-arr=('gather' 'fishing' 'net');type
-arr=('gather' 'lumbering' 'ironaxes');type
-arr=('gather' 'lumbering' 'sharpaxes');type
-arr=('gather' 'lumbering' 'strongeraxes');type
-arr=('gather' 'mining' 'serfs');type
-arr=('gather' 'mining' 'servants');type
-arr=('gather' 'mining' 'shaftmining');type
-arr=('gather' 'mining' 'silvermining');type
-arr=('gather' 'mining' 'slaves');type
-arr=('gather' 'mining' 'wedgemallet');type
-arr=('gather' 'wicker' 'baskets');type
-arr=('heal' 'barracks');type
-arr=('heal' 'range');type
-arr=('heal' 'range' '2');type
-arr=('heal' 'rate');type
-arr=('heal' 'rate' '2');type
-arr=('heal' 'temple');type
-arr=('health' 'females' '01');type
-arr=('health' 'regen' 'units');type
-arr=('health' 'walls' 'geometric' 'masonry');type
-arr=('melee' 'inf' 'sidearms');type
-arr=('melee' 'inf' 'spearheads');type
-arr=('pop' 'civic' '01');type
-arr=('pop' 'civic' '02');type
-arr=('pop' 'house' '01');type
-arr=('pop' 'house' '02');type
-arr=('pop' 'wonder');type
-arr=('ranged' 'inf' 'irregulars');type
-arr=('ranged' 'inf' 'skirmishers');type
-arr=('siege' 'armor');type
-arr=('siege' 'attack');type
-arr=('siege' 'bolt' 'accuracy');type
-arr=('siege' 'cost' 'metal');type
-arr=('siege' 'cost' 'wood');type
-arr=('siege' 'packing');type
-arr=('speed' 'cavalry' '01');type
-arr=('speed' 'cavalry' '02');type
-arr=('spy' 'counter');type
-arr=('tower' 'armour');type
-arr=('tower' 'crenellations');type
-arr=('tower' 'decay');type
-arr=('tower' 'murderholes');type
-arr=('tower' 'range');type
-arr=('tower' 'vision');type
-arr=('tower' 'watch');type
-arr=('trade' 'commercial' 'treaty');type
-arr=('trade' 'convoys' 'armor');type
-arr=('trade' 'convoys' 'speed');type
-arr=('trade' 'gain' '01');type
-arr=('trade' 'gain' '02');type
-arr=('training' 'conscription');type
-arr=('training' 'naval' 'architects');type
-arr=('unlock' 'champion' 'units');type
-arr=('unlock' 'females' 'house');type
-arr=('unlock' 'shared' 'dropsites');type
-arr=('unlock' 'shared' 'los');type
-arr=('unlock' 'spies');type
-arr=('upgrade' 'rank' 'advanced' 'cavalry');type
-arr=('upgrade' 'rank' 'advanced' 'infantry');type
-arr=('upgrade' 'rank' 'advanced' 'mercenary');type
-arr=('upgrade' 'rank' 'elite' 'cavalry');type
-arr=('upgrade' 'rank' 'elite' 'infantry');type
-arr=('cost' 'celt' 'mercs');type
-arr=('cost' 'celt' 'mercs' '2');type
-arr=('cost' 'iberian' 'mercs');type
-arr=('cost' 'iberian' 'mercs' '2');type
-arr=('cost' 'italian' 'mercs');type
-arr=('cost' 'italian' 'mercs' '2');type
-arr=('special' 'colonisation');type
-arr=('special' 'exploration');type
-arr=('training' 'phoenician' 'naval' 'architects');type
-arr=('traintime' 'celt' 'mercs');type
-arr=('traintime' 'celt' 'mercs' '2');type
-arr=('traintime' 'iberian' 'mercs');type
-arr=('traintime' 'iberian' 'mercs' '2');type
-arr=('traintime' 'italian' 'mercs');type
-arr=('traintime' 'italian' 'mercs' '2');type
-arr=('upgrade' 'rank' 'advanced' 'celts');type
-arr=('upgrade' 'rank' 'advanced' 'iberian');type
-arr=('upgrade' 'rank' 'advanced' 'italiote');type
-arr=('upgrade' 'rank' 'elite' 'celts');type
-arr=('upgrade' 'rank' 'elite' 'iberian');type
-arr=('upgrade' 'rank' 'elite' 'italiote');type
-arr=('special' 'hellenistic' 'metropolis');type
-arr=('special' 'parade' 'of' 'daphne');type
-arr=('special' 'war' 'horses');type
-arr=('unlock' 'reform' 'army');type
-arr=('unlock' 'traditional' 'army');type
-arr=('upgrade' 'mace' 'silvershields');type
-arr=('attack' 'inf' 'spearfighting');type
-arr=('spartans' 'agoge');type
-arr=('special' 'iphicratean' 'reforms');type
-arr=('special' 'long' 'walls');type
-arr=('monumental' 'architecture');type
-arr=('upgrade' 'rank' 'elite' 'healer');type
-arr=('persian' 'architecture');type
-arr=('special' 'equine' 'transports');type
-arr=('training' 'conscription' 'cavalry');type
-arr=('training' 'conscription' 'infantry');type
-arr=('decay' 'logistics');type
-arr=('vision' 'sibylline');type
+function cheat
+{
+	type1
+	type1
+	type2
+	type3
+	type4
+	type5
+}
+
+function techs
+{
+	arr=('armor' 'cav' '01');type
+	arr=('armor' 'cav' '02');type
+	arr=('armor' 'cav' 'chamfron');type
+	arr=('armor' 'hero' '01');type
+	arr=('armor' 'infantry' '01');type
+	arr=('armor' 'infantry' '02');type
+	arr=('armor' 'infantry' 'hack' '01');type
+	arr=('armor' 'infantry' 'hack' '02');type
+	arr=('armor' 'infantry' 'hack' '03');type
+	arr=('armor' 'infantry' 'hack' '04');type
+	arr=('armor' 'infantryspearmen' 'pierce' '01');type
+	arr=('armor' 'infantryspearmen' 'pierce' '02');type
+	arr=('armor' 'infantryspearmen' 'pierce' '03');type
+	arr=('armor' 'infantryspearmen' 'pierce' '04');type
+	arr=('armor' 'ship' 'hullsheathing');type
+	arr=('armor' 'ship' 'hypozomata');type
+	arr=('armor' 'ship' 'reinforcedhull');type
+	arr=('attack' 'cav' 'lance');type
+	arr=('attack' 'cavalry' 'melee' '01');type
+	arr=('attack' 'cavalry' 'melee' '02');type
+	arr=('attack' 'cavalry' 'ranged' '01');type
+	arr=('attack' 'cavalry' 'ranged' '02');type
+	arr=('attack' 'champions' 'elite');type
+	arr=('attack' 'infantry' 'melee' '01');type
+	arr=('attack' 'infantry' 'melee' '02');type
+	arr=('attack' 'infantry' 'ranged' '01');type
+	arr=('attack' 'infantry' 'ranged' '02');type
+	arr=('attack' 'soldiers' 'will');type
+	arr=('attack' 'steel' 'working');type
+	arr=('gather' 'animals' 'stockbreeding');type
+	arr=('gather' 'capacity' 'basket');type
+	arr=('gather' 'capacity' 'carts');type
+	arr=('gather' 'capacity' 'fishing');type
+	arr=('gather' 'capacity' 'wheelbarrow');type
+	arr=('gather' 'farming' 'fertilizer');type
+	arr=('gather' 'farming' 'plows');type
+	arr=('gather' 'farming' 'training');type
+	arr=('gather' 'fishing' 'net');type
+	arr=('gather' 'lumbering' 'ironaxes');type
+	arr=('gather' 'lumbering' 'sharpaxes');type
+	arr=('gather' 'lumbering' 'strongeraxes');type
+	arr=('gather' 'mining' 'serfs');type
+	arr=('gather' 'mining' 'servants');type
+	arr=('gather' 'mining' 'shaftmining');type
+	arr=('gather' 'mining' 'silvermining');type
+	arr=('gather' 'mining' 'slaves');type
+	arr=('gather' 'mining' 'wedgemallet');type
+	arr=('gather' 'wicker' 'baskets');type
+	arr=('heal' 'barracks');type
+	arr=('heal' 'range');type
+	arr=('heal' 'range' '2');type
+	arr=('heal' 'rate');type
+	arr=('heal' 'rate' '2');type
+	arr=('heal' 'temple');type
+	arr=('health' 'females' '01');type
+	arr=('health' 'regen' 'units');type
+	arr=('health' 'walls' 'geometric' 'masonry');type
+	arr=('melee' 'inf' 'sidearms');type
+	arr=('melee' 'inf' 'spearheads');type
+	arr=('pop' 'civic' '01');type
+	arr=('pop' 'civic' '02');type
+	arr=('pop' 'house' '01');type
+	arr=('pop' 'house' '02');type
+	arr=('pop' 'wonder');type
+	arr=('ranged' 'inf' 'irregulars');type
+	arr=('ranged' 'inf' 'skirmishers');type
+	arr=('siege' 'armor');type
+	arr=('siege' 'attack');type
+	arr=('siege' 'bolt' 'accuracy');type
+	arr=('siege' 'cost' 'metal');type
+	arr=('siege' 'cost' 'wood');type
+	arr=('siege' 'packing');type
+	arr=('speed' 'cavalry' '01');type
+	arr=('speed' 'cavalry' '02');type
+	arr=('spy' 'counter');type
+	arr=('tower' 'armour');type
+	arr=('tower' 'crenellations');type
+	arr=('tower' 'decay');type
+	arr=('tower' 'murderholes');type
+	arr=('tower' 'range');type
+	arr=('tower' 'vision');type
+	arr=('tower' 'watch');type
+	arr=('trade' 'commercial' 'treaty');type
+	arr=('trade' 'convoys' 'armor');type
+	arr=('trade' 'convoys' 'speed');type
+	arr=('trade' 'gain' '01');type
+	arr=('trade' 'gain' '02');type
+	arr=('training' 'conscription');type
+	arr=('training' 'naval' 'architects');type
+	arr=('unlock' 'champion' 'units');type
+	arr=('unlock' 'females' 'house');type
+	arr=('unlock' 'shared' 'dropsites');type
+	arr=('unlock' 'shared' 'los');type
+	arr=('unlock' 'spies');type
+	arr=('upgrade' 'rank' 'advanced' 'cavalry');type
+	arr=('upgrade' 'rank' 'advanced' 'infantry');type
+	arr=('upgrade' 'rank' 'advanced' 'mercenary');type
+	arr=('upgrade' 'rank' 'elite' 'cavalry');type
+	arr=('upgrade' 'rank' 'elite' 'infantry');type
+	arr=('cost' 'celt' 'mercs');type
+	arr=('cost' 'celt' 'mercs' '2');type
+	arr=('cost' 'iberian' 'mercs');type
+	arr=('cost' 'iberian' 'mercs' '2');type
+	arr=('cost' 'italian' 'mercs');type
+	arr=('cost' 'italian' 'mercs' '2');type
+	arr=('special' 'colonisation');type
+	arr=('special' 'exploration');type
+	arr=('training' 'phoenician' 'naval' 'architects');type
+	arr=('traintime' 'celt' 'mercs');type
+	arr=('traintime' 'celt' 'mercs' '2');type
+	arr=('traintime' 'iberian' 'mercs');type
+	arr=('traintime' 'iberian' 'mercs' '2');type
+	arr=('traintime' 'italian' 'mercs');type
+	arr=('traintime' 'italian' 'mercs' '2');type
+	arr=('upgrade' 'rank' 'advanced' 'celts');type
+	arr=('upgrade' 'rank' 'advanced' 'iberian');type
+	arr=('upgrade' 'rank' 'advanced' 'italiote');type
+	arr=('upgrade' 'rank' 'elite' 'celts');type
+	arr=('upgrade' 'rank' 'elite' 'iberian');type
+	arr=('upgrade' 'rank' 'elite' 'italiote');type
+	arr=('special' 'hellenistic' 'metropolis');type
+	arr=('special' 'parade' 'of' 'daphne');type
+	arr=('special' 'war' 'horses');type
+	arr=('unlock' 'reform' 'army');type
+	arr=('unlock' 'traditional' 'army');type
+	arr=('upgrade' 'mace' 'silvershields');type
+	arr=('attack' 'inf' 'spearfighting');type
+	arr=('spartans' 'agoge');type
+	arr=('special' 'iphicratean' 'reforms');type
+	arr=('special' 'long' 'walls');type
+	arr=('monumental' 'architecture');type
+	arr=('upgrade' 'rank' 'elite' 'healer');type
+	arr=('persian' 'architecture');type
+	arr=('special' 'equine' 'transports');type
+	arr=('training' 'conscription' 'cavalry');type
+	arr=('training' 'conscription' 'infantry');type
+	arr=('decay' 'logistics');type
+	arr=('vision' 'sibylline');type
+}
+
+cheat
+techs
+techs
