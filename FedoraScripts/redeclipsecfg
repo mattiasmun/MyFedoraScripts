@@ -13,19 +13,21 @@ function tof1
 
 tof1 'bothurtstop 1'
 tof1 'botoffset 6'
-tof1 'botskillmax 35'
-tof1 'botskillmin 34'
+tof1 'botskillmax 30'
+tof1 'botskillmin 30'
 tof1 'botspeed 15'
 tof1 'dronemaxcarry 1'
 tof1 'dronespeed 15'
 tof1 'gruntmaxcarry 1'
 tof1 'gruntspeed 15'
 tof1 'jumpspeed 110.0'
+tof1 'plasmadisabled 1'
 tof1 'playerhealth 999999999'
 tof1 'playerhurtstop 1'
 tof1 'playermaxcarry 7'
 tof1 'playerweight 25.0'
 tof1 'turrethurtstop 1'
 tof1 'turretmaxcarry 1'
+tof1 'zapperdisabled 1'
 
 cp $f1 $f2
