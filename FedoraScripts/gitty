@@ -2,6 +2,6 @@
 dir=$PWD
 cd $1
 git commit -am 'edit'
-git push
 git pull --rebase
+git push
 cd $dir
