@@ -5,7 +5,7 @@ str=${str::19}
 str='Modified: '$str
 echo $str
 systemctl list-timers dnf-a* --all
-cat /usr/lib/systemd/system/dnf-automatic.timer | grep OnBoot
-cat /usr/lib/systemd/system/dnf-automatic.timer | grep OnUnit
+grep OnBoot /usr/lib/systemd/system/dnf-automatic.timer
+grep OnUnit /usr/lib/systemd/system/dnf-automatic.timer
 dnf check -C
 dnf repoquery -C --unneeded
