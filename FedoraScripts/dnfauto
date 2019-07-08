@@ -1,3 +1,4 @@
 #!/bin/bash
-sudo perl -pi -e 's/1h/6m/g' /usr/lib/systemd/system/dnf-automatic.timer
-sudo perl -pi -e 's/1d/2h/g' /usr/lib/systemd/system/dnf-automatic.timer
+f=/usr/lib/systemd/system/dnf-automatic.timer
+sudo perl -pi -e 's/1h/6m/g' $f
+sudo perl -pi -e 's/1d/2h/g' $f
