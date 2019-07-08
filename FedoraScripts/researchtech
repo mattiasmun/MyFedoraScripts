@@ -24,6 +24,7 @@ function type
 	for i in ${arr[@]:1:len}
 	do
 		xdotool key underscore
+		sleep 0.1
 		xdotool type $i
 	done
 	b
@@ -250,4 +251,3 @@ function techs
 
 cheat
 techs
-#techs
