@@ -12,7 +12,7 @@ function a
 
 function b
 {
-	sleep 0.5
+	sleep 0.1
 	xdotool key Return
 }
 
@@ -29,49 +29,81 @@ function type
 	b
 }
 
-function type1
+function type01
 {
 	a
 	xdotool type --delay 15 'back to the future'
 	b
 }
 
-function type2
+function type02
 {
 	a
 	xdotool type --delay 15 'TARDIS'
 	b
 }
 
-function type3
+function type03
 {
 	a
 	xdotool type --delay 15 'the hive master'
 	b
 }
 
-function type4
+function type04
 {
 	a
 	xdotool type --delay 15 'jame jam'
 	b
 }
 
-function type5
+function type05
 {
 	a
 	xdotool type --delay 15 'i am too busy'
 	b
 }
 
+function type06
+{
+	a
+	xdotool type --delay 15 'i want pizza 999999'
+	b
+}
+
+function type07
+{
+	a
+	xdotool type --delay 15 'bring me my axe 999999'
+	b
+}
+
+function type08
+{
+	a
+	xdotool type --delay 15 'your money or your life 999999'
+	b
+}
+
+function type09
+{
+	a
+	xdotool type --delay 15 'i see a mountain here 999999'
+	b
+}
+
 function cheat
 {
-	type1
-	type1
-	type2
-	type3
-	type4
-	type5
+	type01
+	type01
+	type02
+	type03
+	type04
+	type05
+	type06
+	type07
+	type08
+	type09
 }
 
 function techs
@@ -217,5 +249,5 @@ function techs
 }
 
 cheat
-techs
-techs
+#techs
+#techs
