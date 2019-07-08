@@ -3,7 +3,7 @@ sudo update-alternatives --config java
 sudo update-alternatives --config javac
 sudo update-alternatives --config jre_openjdk
 sudo update-alternatives --config java_sdk_openjdk
-sudo update-alternatives --list | grep jvm
+update-alternatives --list | grep jvm
 sudo nano /etc/dnf/automatic.conf
 dnfauto
 sudo nano /usr/lib/systemd/system/fstrim.timer
