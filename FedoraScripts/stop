@@ -1,7 +1,2 @@
 #!/bin/bash
-wmctrl -a $USER@
-sleep 0.3
-for i in {1..1}
-do
-	xdotool key --clearmodifiers Ctrl+c
-done
+kill $(pidof -s bash)
