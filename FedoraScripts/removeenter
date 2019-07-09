@@ -1,5 +1,5 @@
 #!/bin/bash
-wmctrl -a "Transifex Editor"
+wmctrl -a 'Transifex Editor'
 for((i=0;i<$1;i++))
 do
 	sleep 3

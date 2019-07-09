@@ -2,7 +2,7 @@
 wmctrl -a firefox
 sleep 1.0
 
-function upgrade()
+function upgrade
 {
 	for((j=0;j<12;j++))
 	do
@@ -11,7 +11,7 @@ function upgrade()
 	done
 }
 
-function iteratey()
+function iteratey
 {
 	x=$1+32*$3+1
 	for((i=$1;i<$x;i+=32))
@@ -22,7 +22,7 @@ function iteratey()
 	done
 }
 
-function iteratex()
+function iteratex
 {
 	x=$1+32*$3+1
 	for((i=$1;i<$x;i+=32))

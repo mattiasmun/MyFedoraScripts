@@ -16,9 +16,9 @@ do
 	xdotool key a
 	try
 	(
-		echo "try"
+		echo 'try'
 	)
 	catch || {
-		echo "catch"
+		echo 'catch'
 	}
 done
