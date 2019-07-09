@@ -1,5 +1,5 @@
 #!/bin/bash
-wmctrl -a "Kampen om Wesnoth"
+wmctrl -a 'Kampen om Wesnoth'
 sleep 1
 f=$HOME/typestr
 n=3

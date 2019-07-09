@@ -1,5 +1,5 @@
 #!/bin/bash
-wmctrl -a "Translation Editor"
+wmctrl -a 'Translation Editor'
 sleep 1
 for((i=0;i<$1;i++))
 do
