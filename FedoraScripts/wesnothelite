@@ -1,11 +1,11 @@
 #!/bin/bash
-sleep 0.5
 wmctrl -a "Kampen om Wesnoth"
 sleep 1
 f=$HOME/typestr
 n=3
+s=''
 
-function mymethod
+function enter
 {
 	xdotool key colon
 	sleep 0.3
@@ -19,28 +19,29 @@ function loop
 	xclip -i $f -selection clipboard
 	for((i=0;i<$n;i++))
 	do
-		mymethod
+		enter
 	done
 }
 
+function start
+{
+	echo $s > $f
+	loop
+}
+
 #debug
-echo 'unit advances=5' > $f
-loop
+s='unit advances=5';start
 sleep 5
-echo 'unit max_hitpoints=9000' > $f
-loop
-echo 'unit advances=5' > $f
-loop
+s='unit max_hitpoints=9000';start
+s='unit advances=5';start
 sleep 5
-echo 'unit experience=999999' > $f
-loop
-echo 'unit max_moves=90' > $f
-loop
-for i in {1..60}
+s='unit experience=999999';start
+s='unit max_moves=90';start
+for i in {1..200}
 do
 	xdotool key aring
 done
-for i in {1..18}
+for i in {1..60}
 do
 	xdotool key adiaeresis
 done
