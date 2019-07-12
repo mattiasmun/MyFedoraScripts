@@ -7,3 +7,6 @@ que=$(dnf repoquery --userinstalled --queryformat '%{name}')
 echo $data$que >> $f
 fold -s -w80 $f > $f2
 perl -pi -e 's/\ \n/\ \\\n/g' $f2
+rm $f
+mv $f2 $f
+chmod 0775 $f
