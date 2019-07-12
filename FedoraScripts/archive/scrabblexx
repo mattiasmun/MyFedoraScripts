@@ -1,68 +1,65 @@
 #!/bin/bash
-for((i=0;i<1;i++))
-do
-	xdotool keyup Return
-	wmctrl -a firefox
-	sleep 1
-	xdotool mousemove --sync 120 173 click 1
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool mousemove --sync 168 173 click --repeat 2 --delay 75 1
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-	sleep 0.15
-	xdotool key x
-done
+xdotool keyup Return
+wmctrl -a firefox
+sleep 0.5
+xdotool mousemove --sync 120 173 click 1
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool mousemove --sync 168 173 click --repeat 2 --delay 75 1
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
+sleep 0.15
+xdotool key x
