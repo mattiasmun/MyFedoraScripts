@@ -4,4 +4,4 @@ echo '#!/bin/bash' > $f
 data='sudo dnf -y install '
 que=$(dnf repoquery --userinstalled --queryformat '%{name}')
 echo $data$que >> $f
-fold -s -w80 $f
+fold -s -w80 $f > ${f}2
