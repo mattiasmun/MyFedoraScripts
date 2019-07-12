@@ -1,5 +1,6 @@
 #!/bin/bash
-sleep 0.1
+#sleep 0.1
+xdotool keyup Return
 wmctrl -a '0 A.D.'
 sleep 0.3
 arr=('a')
