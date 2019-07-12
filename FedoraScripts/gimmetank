@@ -1,4 +1,5 @@
 #!/bin/bash
+xdotool keyup Return
 wmctrl -a 'Bos Wars'
 for((i=0;i<$1;i++))
 do
