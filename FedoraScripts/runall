@@ -1,3 +1,10 @@
 #!/bin/bash
-cd $HOME/.config/autostart
-xdg-open *.desktop
+firefox %u
+geany %F
+gnome-calculator
+evolution %U
+nautilus --new-window %U
+gnome-software %U
+gnome-terminal
+qshutdown
+rhythmbox %U
