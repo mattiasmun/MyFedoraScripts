@@ -1,5 +1,5 @@
 #!/bin/bash
-closeall
+blanklock
 sleep 0.3
 logout
 sleep 0.2
