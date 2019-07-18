@@ -1,10 +1,10 @@
 #!/bin/bash
-firefox
-evolution
-gnome-terminal
-geany
-gnome-calculator
-nautilus
-gnome-software
-rhythmbox
-qshutdown
+firefox &
+evolution &
+gnome-terminal &
+geany &
+gnome-calculator &
+nautilus &
+gnome-software &
+rhythmbox &
+qshutdown &
