@@ -1,2 +1,2 @@
 #!/bin/bash
-xautolock -locker $HOME/Bash/MyFedoraScripts/FedoraScripts/blanklock &
+xautolock -time 1 -locker blanklock &
