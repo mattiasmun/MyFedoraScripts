@@ -1,2 +1,0 @@
-#!/bin/bash
-xautolock -time 1 -locker blanklock &
