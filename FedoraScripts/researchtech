@@ -19,7 +19,7 @@ function b
 function type
 {
 	a
-	len=${arr[@]}
+	len=${#arr[@]}
 	xdotool type 'brainiac '${arr[0]}
 	for i in ${arr[@]:1:len}
 	do
