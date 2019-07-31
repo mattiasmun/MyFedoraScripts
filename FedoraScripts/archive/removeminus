@@ -1,6 +1,7 @@
 #!/bin/bash
 xdotool keyup Return
 wmctrl -a 'Transifex Editor'
+sleep 0.3
 for((i=0;i<$1;i++))
 do
 	sleep 4
