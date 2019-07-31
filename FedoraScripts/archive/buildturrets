@@ -1,7 +1,7 @@
 #!/bin/bash
 xdotool keyup Return
 wmctrl -a firefox
-sleep 1.0
+sleep 0.3
 
 function iteratey
 {
