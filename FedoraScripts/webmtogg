@@ -2,14 +2,9 @@
 format='webm'
 len=${#format}
 len=$((-len))
-#find . -type f -iname '*.'$format -exec bash -c 'FILE="$1"; ffmpeg -i "${FILE}" -vn -y "${FILE}.ogg";' _ '{}' \;
 
 while IFS= read -r f <&3
 do
     g=${f::len}'ogg'
-    f='"'$f'"'
-    g='"'$g'"'
-    echo $f
-    echo $g
-	ffmpeg -i $f -vn -y $g
+	ffmpeg -i "${f}" -vn -y "${g}"
 done 3< <(find . -type f -iname '*.'$format)
