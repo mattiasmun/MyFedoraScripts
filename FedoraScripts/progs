@@ -16,9 +16,9 @@ kmod-nvidia kmod-nvidia-5.1.19-300.fc30.x86_64 \
 kmod-nvidia-5.1.20-300.fc30.x86_64 kmod-nvidia-5.2.7-200.fc30.x86_64 ksirk \
 langpacks-en langpacks-sv libhandy libopusenc libpmem libreoffice-help-sv \
 libreoffice-langpack-sv libselinux-devel libsepol-devel libvala livecd-tools \
-mariadb-connector-c mariadb-connector-c-config meld memtest86+ metacity \
-mkpasswd opencc opus-tools opusfile p7zip p7zip-plugins pbzip2 pcre2-devel \
-pcre2-utf32 perl-File-Path-Tiny plymouth-theme-spinner python3-IPy \
+mariadb-connector-c mariadb-connector-c-config megaglest meld memtest86+ \
+metacity mkpasswd opencc opus-tools opusfile p7zip p7zip-plugins pbzip2 \
+pcre2-devel pcre2-utf32 perl-File-Path-Tiny plymouth-theme-spinner python3-IPy \
 python3-dnf-plugin-system-upgrade python3-gmpy2 python3-sh pyxtrlock qshutdown \
 readline-devel redeclipse redshift-gtk rpmfusion-free-release \
 rpmfusion-nonfree-release rpmsphere-release samba-libs smc-anjalioldlipi-fonts \
