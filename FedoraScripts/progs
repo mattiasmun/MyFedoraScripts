@@ -4,8 +4,7 @@ anaconda anaconda-install-env-deps audacity blivet-gui boswars bsd-games clamav 
 ctags dbus-broker dconf-editor deja-dup dkms dnf-automatic dracut-live \
 dracut-squash espeak f30-backgrounds-base f30-backgrounds-gnome \
 fedora-obsolete-packages fedora-release-common ffmpeg ffmpeg-libs firefox fstrm \
-gameconqueror gbrainy gcr-base gimp git gnome-power-manager gnome-screensaver \
-gnome-shell-extension-poweroptions gnome-sudoku gnome-tweaks \
+gameconqueror gbrainy gcr-base gimp git gnome-sudoku gnome-tweaks \
 google-chrome-stable gparted gpaste-ui gshutdown gstreamer-ffmpeg \
 gstreamer-plugins-bad-free gstreamer-plugins-espeak gstreamer-plugins-ugly \
 gtk2-immodule-xim gtk3-immodule-xim gtranslator guile22 hardinfo htop \
