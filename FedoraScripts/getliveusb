@@ -1,4 +1,4 @@
 #!/bin/bash
-f=Fedora-Xfce-Live-x86_64-$1.torrent
+f=Fedora-Games-Live-x86_64-$1.torrent
 wget https://torrent.fedoraproject.org/torrents/$f
 xdg-open $f
