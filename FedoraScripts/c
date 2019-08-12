@@ -8,5 +8,5 @@ systemctl list-timers dnf-a* --all
 f=/usr/lib/systemd/system/dnf-automatic.timer
 grep OnBoot $f
 grep OnUnit $f
-dnf check -C
-dnf repoquery -C --unneeded
+dnf check
+dnf repoquery --unneeded
