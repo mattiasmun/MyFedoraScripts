@@ -24,4 +24,4 @@ rpmfusion-nonfree-release rpmsphere-release samba-libs smc-anjalioldlipi-fonts \
 smc-dyuthi-fonts smc-rachana-fonts smc-raghumalayalamsans-fonts \
 smc-suruma-fonts source-highlight spin-kickstarts subversion syslinux \
 systemd-rpm-macros translate-shell translate-toolkit vala vlc wesnoth whois-nls \
-wmctrl xclip xdotool xforms xlockmore-gtk xz-lzma-compat youtube-dl
+wmctrl xbl xclip xdotool xforms xlockmore-gtk xz-lzma-compat youtube-dl
