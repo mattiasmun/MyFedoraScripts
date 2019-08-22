@@ -5,5 +5,5 @@ sleep 0.3
 for((i=0;i<$1;i++))
 do
 	sleep 0.024
-	xdotool mousemove --sync 426 961 click 1
+	xdotool mousemove --sync 466 339 click 1
 done
