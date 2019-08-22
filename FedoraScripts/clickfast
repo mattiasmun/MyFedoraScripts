@@ -1,6 +1,6 @@
 #!/bin/bash
 xdotool keyup Return
-wmctrl -a $1
+wmctrl -a '$1'
 sleep 0.3
 for((i=0;i<$2;i++))
 do
