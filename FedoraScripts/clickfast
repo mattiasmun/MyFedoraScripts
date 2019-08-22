@@ -1,8 +1,8 @@
 #!/bin/bash
 xdotool keyup Return
-wmctrl -a firefox
+wmctrl -a $1
 sleep 0.3
-for((i=0;i<$1;i++))
+for((i=0;i<$2;i++))
 do
 	sleep 0.024
 	xdotool mousemove --sync 466 339 click 1
