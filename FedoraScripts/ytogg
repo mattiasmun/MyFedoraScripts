@@ -7,5 +7,5 @@ while IFS= read -r f <&3
 do
     g=${f::len}'ogg'
 	ffmpeg -i "${f}" -vn -y "${g}"
-	rm $f
+	rm "$f"
 done 3< <(find . -type f -iname '*.'$format)
