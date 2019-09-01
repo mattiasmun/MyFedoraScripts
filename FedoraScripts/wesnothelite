@@ -2,7 +2,8 @@
 xdotool keyup Return
 wmctrl -a 'Kampen om Wesnoth'
 sleep 0.3
-f=$HOME/typestr
+x=$((999999-RANDOM))
+f=$HOME/s$x
 n=3
 s=''
 
@@ -46,3 +47,4 @@ for i in {1..60}
 do
 	xdotool key adiaeresis
 done
+rm "$f"
