@@ -1,7 +1,8 @@
 #!/bin/bash
-xdotool key --clearmodifiers Alt+Tab
-sleep 1
-for((i=0;i<$1;i++))
+xdotool keyup Return
+wmctrl -a "$1"
+sleep 0.3
+for((i=0;i<$2;i++))
 do
 	xdotool key Return
 	sleep 0.2
