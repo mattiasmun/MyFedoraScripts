@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo livecd-iso-to-disk --reset-mbr $HOME/Hämtningar/Fedora-Games-Live-x86_64-$1/Fedora-Games-Live-x86_64-${1}*.iso /dev/sd${2}1
+sudo livecd-iso-to-disk --force --reset-mbr $HOME/Hämtningar/Fedora-Games-Live-x86_64-$1/Fedora-Games-Live-x86_64-${1}*.iso /dev/sd${2}1
