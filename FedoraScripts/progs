@@ -10,9 +10,9 @@ gstreamer-plugins-bad-free gstreamer-plugins-espeak gstreamer-plugins-ugly \
 gtick gtk2-immodule-xim gtk3-immodule-xim gtranslator guile22 hardinfo htop \
 hunspell-sv intel-gmmlib intel-media-driver intltool java-11-openjdk-devel \
 jitterentropy kmod-VirtualBox-5.2.11-200.fc30.x86_64 \
-kmod-VirtualBox-5.2.13-200.fc30.x86_64 kmod-VirtualBox-5.2.9-200.fc30.x86_64 \
+kmod-VirtualBox-5.2.13-200.fc30.x86_64 kmod-VirtualBox-5.2.14-200.fc30.x86_64 \
 kmod-nvidia kmod-nvidia-5.2.11-200.fc30.x86_64 \
-kmod-nvidia-5.2.13-200.fc30.x86_64 kmod-nvidia-5.2.9-200.fc30.x86_64 ksirk \
+kmod-nvidia-5.2.13-200.fc30.x86_64 kmod-nvidia-5.2.14-200.fc30.x86_64 ksirk \
 langpacks-en langpacks-sv libhandy libopusenc libpmem libreoffice-help-sv \
 libreoffice-langpack-sv libselinux-devel libsepol-devel libvala livecd-tools \
 mariadb-connector-c mariadb-connector-c-config megaglest meld memtest86+ \
