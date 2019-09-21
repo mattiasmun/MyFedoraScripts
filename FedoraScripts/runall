@@ -2,6 +2,7 @@
 evolution &
 firefox &
 geany &
+gio-launch-desktop gnome-control-center display &
 gnome-calculator &
 #gnome-software &
 gnome-terminal &
