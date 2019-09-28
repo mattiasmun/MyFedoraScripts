@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=qshutdown
+Name[de_DE]=qshutdown
+Exec=$HOME/Bash/MyFedoraScripts/FedoraScripts/runall
+Terminal=false
+Type=Application
+Icon=red_glasses
+Categories=Utility
+Name[sv_SE]=runall
