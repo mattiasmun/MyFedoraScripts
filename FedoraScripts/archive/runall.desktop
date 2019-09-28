@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=runall
-Exec=$HOME/Bash/MyFedoraScripts/FedoraScripts/runall
+Exec=runall
 Terminal=false
 Type=Application
 Icon=red_glasses
