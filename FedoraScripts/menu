@@ -1,7 +1,7 @@
 #!/bin/bash
 # choose 'choice 1' 'choice 2' ...
-#   Prints menu to standard error. Prompts with PS3.
-#   Reads REPLY from standard input. Sets CHOICE.
+#	Prints menu to standard error. Prompts with PS3.
+#	Reads REPLY from standard input. Sets CHOICE.
 function choose {
 	CHOICE=						# Default CHOICE is empty string.
 	[[ $# -gt 0 ]] || return	# Return if "$@" is empty.
