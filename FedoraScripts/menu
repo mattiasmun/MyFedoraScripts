@@ -5,7 +5,8 @@
 function choose {
 	CHOICE=						# Default CHOICE is empty string.
 	[[ $# -gt 0 ]] || return	# Return if "$@" is empty.
-	select CHOICE; do			# Select from "$@".
+	select CHOICE				# Select from "$@".
+	do
 		case $CHOICE in
 		'fee fie' | 'huff and puff' | 'mirror mirror' | 'tick tock')
 			break
