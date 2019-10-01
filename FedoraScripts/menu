@@ -6,23 +6,31 @@ function choose {
 	CHOICE=						# Default CHOICE is empty string.
 	[[ $# -gt 0 ]] || return	# Return if "$@" is empty.
 	select CHOICE; do			# Select from "$@".
-		if [[ -n $CHOICE ]]; then
+		case $CHOICE in
+		'fee fie' | 'huff and puff' | 'mirror mirror' | 'tick tock')
 			break
-		else
+			;;
+		'exit')
+			exit
+			;;
+		*)
 			echo Invalid choice.
-		fi
+			;;
+		esac
 	done
 }
 
 function list {
 	PS3='Which is from the three pigs: '
-	choose 'fee fie' 'huff and puff' 'mirror mirror' 'tick tock'
-	[[ -n $CHOICE ]] && echo You chose: $CHOICE
-	[[ -z $CHOICE ]] && echo No input.
+	choose 'fee fie' 'huff and puff' 'mirror mirror' 'tick tock' 'exit'
+	if [[ -n $CHOICE ]]
+	then
+		echo You chose: ${CHOICE}.
+	fi
 }
 
 while true
 do
 	list
-	sleep 0.1
+	echo -----------------------------------
 done
