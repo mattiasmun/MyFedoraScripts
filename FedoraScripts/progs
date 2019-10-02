@@ -14,14 +14,15 @@ kmod-VirtualBox-5.2.17-200.fc30.x86_64 kmod-nvidia \
 kmod-nvidia-5.2.15-200.fc30.x86_64 kmod-nvidia-5.2.16-200.fc30.x86_64 \
 kmod-nvidia-5.2.17-200.fc30.x86_64 ksirk langpacks-en langpacks-sv libhandy \
 libopusenc libpmem libreoffice-help-sv libreoffice-langpack-sv libselinux-devel \
-libsepol-devel libvala livecd-tools mariadb-connector-c \
+libsepol-devel libvala livecd-tools lollypop mariadb-connector-c \
 mariadb-connector-c-config megaglest meld memtest86+ metacity mkpasswd opencc \
 openttd opus-tools opusfile p7zip p7zip-plugins pbzip2 pcre2-devel pcre2-utf32 \
 pdfarranger perl-File-Path-Tiny plymouth-theme-spinner python3-IPy \
 python3-dnf-plugin-system-upgrade python3-gmpy2 python3-sh pyxtrlock qshutdown \
-quadrapassel readline-devel redeclipse redshift-gtk rpmfusion-free-release \
-rpmfusion-nonfree-release rpmsphere-release samba-libs smc-anjalioldlipi-fonts \
-smc-dyuthi-fonts smc-rachana-fonts smc-raghumalayalamsans-fonts \
-smc-suruma-fonts source-highlight spin-kickstarts subversion syslinux \
-systemd-rpm-macros translate-shell translate-toolkit vala vlc wesnoth whois-nls \
-wmctrl xbl xclip xdotool xforms xlockmore-gtk xz-lzma-compat youtube-dl
+quadrapassel quodlibet readline-devel redeclipse redshift-gtk \
+rpmfusion-free-release rpmfusion-nonfree-release rpmsphere-release samba-libs \
+smc-anjalioldlipi-fonts smc-dyuthi-fonts smc-rachana-fonts \
+smc-raghumalayalamsans-fonts smc-suruma-fonts source-highlight spin-kickstarts \
+subversion syslinux systemd-rpm-macros translate-shell translate-toolkit vala \
+vlc wesnoth whois-nls wmctrl xbl xclip xdotool xforms xlockmore-gtk \
+xz-lzma-compat youtube-dl
