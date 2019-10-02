@@ -12,7 +12,7 @@ intel-media-driver intltool java-11-openjdk-devel jitterentropy \
 kmod-VirtualBox-5.2.15-200.fc30.x86_64 kmod-VirtualBox-5.2.16-200.fc30.x86_64 \
 kmod-VirtualBox-5.2.17-200.fc30.x86_64 kmod-nvidia \
 kmod-nvidia-5.2.15-200.fc30.x86_64 kmod-nvidia-5.2.16-200.fc30.x86_64 \
-kmod-nvidia-5.2.17-200.fc30.x86_64 ksirk langpacks-en langpacks-sv libhandy \
+kmod-nvidia-5.2.17-200.fc30.x86_64 langpacks-en langpacks-sv libhandy \
 libopusenc libpmem libreoffice-help-sv libreoffice-langpack-sv libselinux-devel \
 libsepol-devel libvala livecd-tools lollypop mariadb-connector-c \
 mariadb-connector-c-config megaglest meld memtest86+ metacity mkpasswd opencc \
