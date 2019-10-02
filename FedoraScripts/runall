@@ -20,4 +20,4 @@ nautilus &
 sleep 0.01
 qshutdown &
 sleep 0.01
-rhythmbox &
+quodlibet &
