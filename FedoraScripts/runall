@@ -14,8 +14,8 @@ sleep 0.01
 #sleep 0.01
 gnome-terminal &
 sleep 0.01
-gtick &
-sleep 0.01
+#gtick &
+#sleep 0.01
 nautilus &
 sleep 0.01
 qshutdown &
