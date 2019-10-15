@@ -1,28 +1,34 @@
 #!/bin/bash
-sudo dnf -y install 0ad VirtualBox adobe-source-code-pro-fonts alternatives \
-anaconda anaconda-install-env-deps audacity blivet-gui boswars bsd-games clamav \
-ctags dbus-broker dconf-editor deja-dup dkms dnf-automatic dracut-live \
-dracut-squash espeak f30-backgrounds-base f30-backgrounds-gnome \
-fedora-obsolete-packages fedora-release-common ffmpeg ffmpeg-libs firefox fstrm \
-gameconqueror gbrainy gcr-base gimp git gno3dtet gnome-sudoku gnome-tweaks \
-gnucash gparted gpaste-ui gshutdown gstreamer-ffmpeg gstreamer-plugins-bad-free \
-gstreamer-plugins-espeak gstreamer-plugins-ugly gtick gtk2-immodule-xim \
-gtk3-immodule-xim gtranslator guile22 hardinfo htop hunspell-sv iagno \
-intel-gmmlib intel-media-driver intltool java-11-openjdk-devel jitterentropy \
-kmod-VirtualBox-5.2.15-200.fc30.x86_64 kmod-VirtualBox-5.2.16-200.fc30.x86_64 \
-kmod-VirtualBox-5.2.17-200.fc30.x86_64 kmod-nvidia \
-kmod-nvidia-5.2.15-200.fc30.x86_64 kmod-nvidia-5.2.16-200.fc30.x86_64 \
-kmod-nvidia-5.2.17-200.fc30.x86_64 langpacks-en langpacks-sv \
-libgnome-games-support libhandy libopusenc libpmem libreoffice-help-sv \
-libreoffice-langpack-sv libselinux-devel libsepol-devel libvala livecd-tools \
-lollypop mariadb-connector-c mariadb-connector-c-config megaglest meld \
-memtest86+ metacity mkpasswd opencc openttd opus-tools opusfile p7zip \
-p7zip-plugins pbzip2 pcre2-devel pcre2-utf32 pdfarranger perl-File-Path-Tiny \
-plymouth-theme-spinner puzzles python3-IPy python3-dnf-plugin-system-upgrade \
-python3-gmpy2 python3-sh pyxtrlock qshutdown quadrapassel quodlibet \
-readline-devel redeclipse redshift-gtk rpmfusion-free-release \
-rpmfusion-nonfree-release rpmsphere-release samba-libs smc-anjalioldlipi-fonts \
-smc-dyuthi-fonts smc-rachana-fonts smc-raghumalayalamsans-fonts \
-smc-suruma-fonts source-highlight spin-kickstarts subversion syslinux \
-systemd-rpm-macros translate-shell translate-toolkit vala vlc wesnoth whois-nls \
+sudo dnf -y install 0ad SDL2_image SDL2_mixer SDL2_ttf VirtualBox \
+adobe-source-code-pro-fonts aisleriot alsa-ucm alternatives anaconda \
+anaconda-install-env-deps audacity bleachbit blivet-gui boost-program-options \
+boost-random boost-regex boswars bsd-games clamav compat-lua-libs \
+compat-tolua++ ctags dbus-broker dconf-editor deja-dup distribution-gpg-keys \
+dkms dnf-automatic dracut-live dracut-squash espeak f30-backgrounds-base \
+f30-backgrounds-gnome fedora-obsolete-packages fedora-release-common \
+fedora-workstation-repositories ffmpeg ffmpeg-libs firefox fstrm gameconqueror \
+gbrainy gcr-base geany geany-libgeany ghex ghex-libs gimp git gno3dtet \
+gnome-python2 gnome-sudoku gnome-tweaks gnucash gparted gpaste-ui gshutdown \
+gstreamer-ffmpeg gstreamer-plugins-bad-free gstreamer-plugins-espeak \
+gstreamer-plugins-ugly gtick gtk2-immodule-xim gtk3-immodule-xim gtksourceview4 \
+gtranslator guile22 hardinfo htop hunspell-sv iagno intel-gmmlib \
+intel-media-driver intltool java-11-openjdk-devel jitterentropy kernel \
+kernel-core kernel-debug-devel kernel-devel kernel-modules kernel-modules-extra \
+kmod-VirtualBox-5.2.16-200.fc30.x86_64 kmod-VirtualBox-5.2.17-200.fc30.x86_64 \
+kmod-VirtualBox-5.2.18-200.fc30.x86_64 kmod-nvidia \
+kmod-nvidia-5.2.16-200.fc30.x86_64 kmod-nvidia-5.2.17-200.fc30.x86_64 \
+kmod-nvidia-5.2.18-200.fc30.x86_64 langpacks-en langpacks-sv libgda \
+libgda-sqlite libgnome-games-support libhandy libopusenc libpmem \
+libreoffice-help-sv libreoffice-langpack-sv libselinux-devel libsepol-devel \
+libvala libvarlink-util livecd-tools lollypop mariadb-connector-c \
+mariadb-connector-c-config megaglest meld memtest86+ metacity mkpasswd opencc \
+openttd opus-tools opusfile p7zip p7zip-plugins pbzip2 pcre2-devel pcre2-utf32 \
+pdfarranger perl-File-Path-Tiny plymouth-theme-spinner puzzles pygobject2 \
+pygtk2 python3-IPy python3-dnf-plugin-system-upgrade python3-gmpy2 python3-sh \
+pyxtrlock qshutdown quadrapassel quodlibet readline-devel redeclipse \
+redeclipse-data redshift-gtk rpmfusion-free-release rpmfusion-nonfree-release \
+rpmsphere-release samba-libs smc-anjalioldlipi-fonts smc-dyuthi-fonts \
+smc-rachana-fonts smc-raghumalayalamsans-fonts smc-suruma-fonts \
+source-highlight spin-kickstarts subversion syslinux systemd-rpm-macros \
+translate-shell translate-toolkit vala vlc wesnoth wesnoth-data whois-nls \
 wmctrl xbl xclip xdotool xforms xlockmore-gtk xz-lzma-compat youtube-dl
