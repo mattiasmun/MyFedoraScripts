@@ -1,0 +1,16 @@
+#!/bin/bash
+eval $(xdotool getmouselocation --shell)
+xdotool keyup Return
+wmctrl -a "$1"
+sleep 0.3
+for((i=0;i<$2;i++))
+do
+	sleep 0.2
+	xdotool mousemove --sync $X $((Y+i*14)) click 1
+	sleep 0.2
+	xdotool key Down
+	sleep 0.2
+	xdotool key Down
+	sleep 0.2
+	xdotool key Down
+done
