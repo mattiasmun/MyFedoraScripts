@@ -4,7 +4,7 @@ xdotool keyup Return
 wmctrl -a "$1"
 sleep 0.3
 a=$2
-a0=6
+a0=5
 a1=$((a/a0))
 a2=0
 if (( $a1 < 1 ))
@@ -26,5 +26,6 @@ do
 	done
 	xdotool key Next
 	sleep 0.4
+	Y=$((Y+208))
 	a=$((a-a0))
 done
