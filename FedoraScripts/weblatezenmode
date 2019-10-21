@@ -14,7 +14,6 @@ do
 	then
 		a2=$a
 	fi
-	echo $a2
 	for((j=0;j<$a2;j++))
 	do
 		xdotool mousemove --sync $X $((Y+j*292)) click 1
