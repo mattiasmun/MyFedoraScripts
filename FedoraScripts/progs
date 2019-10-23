@@ -14,10 +14,10 @@ gstreamer-plugins-ugly gtick gtk2-immodule-xim gtk3-immodule-xim gtksourceview4 
 gtranslator guile22 hardinfo htop hunspell-sv iagno intel-gmmlib \
 intel-media-driver intltool java-11-openjdk-devel jitterentropy kernel \
 kernel-core kernel-debug-devel kernel-devel kernel-modules kernel-modules-extra \
-kmod-VirtualBox-5.2.16-200.fc30.x86_64 kmod-VirtualBox-5.2.17-200.fc30.x86_64 \
-kmod-VirtualBox-5.2.18-200.fc30.x86_64 kmod-nvidia \
-kmod-nvidia-5.2.16-200.fc30.x86_64 kmod-nvidia-5.2.17-200.fc30.x86_64 \
-kmod-nvidia-5.2.18-200.fc30.x86_64 langpacks-en langpacks-sv libgda \
+kmod-VirtualBox-5.2.18-200.fc30.x86_64 kmod-VirtualBox-5.3.5-200.fc30.x86_64 \
+kmod-VirtualBox-5.3.6-200.fc30.x86_64 kmod-nvidia \
+kmod-nvidia-5.2.18-200.fc30.x86_64 kmod-nvidia-5.3.5-200.fc30.x86_64 \
+kmod-nvidia-5.3.6-200.fc30.x86_64 langpacks-en langpacks-sv libgda \
 libgda-sqlite libgnome-games-support libhandy libopusenc libpmem \
 libreoffice-help-sv libreoffice-langpack-sv libselinux-devel libsepol-devel \
 libvala libvarlink-util livecd-tools lollypop mariadb-connector-c \
