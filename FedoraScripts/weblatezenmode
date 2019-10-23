@@ -17,7 +17,7 @@ do
 	for((j=0;j<$a2;j++))
 	do
 		xdotool mousemove --sync $X $((Y+j*292)) click 1
-		sleep 0.2
+		sleep 0.3
 	done
 	xdotool key Next
 	sleep 2
