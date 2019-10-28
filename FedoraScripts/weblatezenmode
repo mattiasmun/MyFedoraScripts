@@ -31,7 +31,7 @@ do
 		a0=4
 	fi
 	a=$((a-a0))
-	test $a -gt 0 && sleep 5
+	test $a -gt 0 && sleep $((a0+1))
 done
 : '
 1262
