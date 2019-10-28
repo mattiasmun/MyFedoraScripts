@@ -7,7 +7,7 @@ a=$2
 a0=5
 a1=0
 a2=292
-a3=1262
+a3=83
 for((i=0;a>0;i++))
 do
 	a1=$a0
@@ -21,17 +21,18 @@ do
 		sleep 0.3
 	done
 	xdotool key Next
+	a=$((a-a0))
+	test $a -gt 0 && sleep $((a0*7/5))
 	if (( $Y < 226 ))
 	then
-		Y=$((Y+208))
+		test $a0 = 4 && Y=$((Y+a2))
+		Y=$((Y-a3))
 		a0=5
 	else
 		test $a0 = 5 && Y=$((Y+a2))
-		Y=$((Y-83))
+		Y=$((Y-a3))
 		a0=4
 	fi
-	a=$((a-a0))
-	test $a -gt 0 && sleep $((a0+1))
 done
 : '
 1262
