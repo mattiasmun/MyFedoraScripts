@@ -4,9 +4,11 @@ xdotool keyup Return
 wmctrl -a "$1"
 sleep 0.3
 a=$2
-a0=4
-a1=$((a/a0+1))
+a0=5
 a2=0
+a3=292
+a4=1262
+a1=$((a*a3/a4+1))
 for((i=0;i<$a1 && a>0;i++))
 do
 	a2=$a0
@@ -16,7 +18,7 @@ do
 	fi
 	for((j=0;j<$a2;j++))
 	do
-		xdotool mousemove --sync $X $((Y+j*292)) click 1
+		xdotool mousemove --sync $X $((Y+j*a3)) click 1
 		sleep 0.3
 	done
 	xdotool key Next
@@ -26,6 +28,7 @@ do
 		Y=$((Y+208))
 		a0=5
 	else
+		test $a0 = 5 && Y=$((Y+a3))
 		Y=$((Y-83))
 		a0=4
 	fi
