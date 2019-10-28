@@ -9,7 +9,7 @@ a2=0
 a3=292
 a4=1262
 a1=$((a*a3/a4+1))
-for((i=0;i<$a1 && a>0;i++))
+for((i=0;a>0;i++))
 do
 	a2=$a0
 	if (( $a < $a0 ))
@@ -22,7 +22,6 @@ do
 		sleep 0.3
 	done
 	xdotool key Next
-	sleep 5
 	if (( $Y < 226 ))
 	then
 		Y=$((Y+208))
@@ -33,6 +32,7 @@ do
 		a0=4
 	fi
 	a=$((a-a0))
+	test $a -gt 0 && sleep 5
 done
 : '
 1262
