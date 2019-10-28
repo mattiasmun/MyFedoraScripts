@@ -26,7 +26,6 @@ do
 		Y=$((Y+208))
 		a0=4
 	else
-	then
 		Y=$((Y-80))
 		a0=5
 	fi
