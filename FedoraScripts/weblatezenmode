@@ -23,10 +23,9 @@ do
 	xdotool key Next
 	a=$((a-a0))
 	test $a -gt 0 && sleep $((a0*7/5))
-	if (( $Y < 226 ))
+	if (( $Y < 266 ))
 	then
-		test $a0 = 4 && Y=$((Y+a2))
-		Y=$((Y-a3))
+		Y=$((Y+a2-a3))
 		a0=5
 	else
 		test $a0 = 5 && Y=$((Y+a2))
