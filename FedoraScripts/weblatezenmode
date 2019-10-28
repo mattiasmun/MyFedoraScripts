@@ -20,13 +20,13 @@ do
 		sleep 0.3
 	done
 	xdotool key Next
-	sleep 2
+	sleep 5
 	if (( $Y < 226 ))
 	then
 		Y=$((Y+208))
 		a0=4
 	else
-		Y=$((Y-80))
+		Y=$((Y-81))
 		a0=5
 	fi
 	a=$((a-a0))
