@@ -1,12 +1,14 @@
 #!/bin/bash
 source yesno
+v=$(rpm -E %fedora)
+v=$((v+1))
 
 function closeandreboot {
 	closeall
-	sudo dnf system-upgrade reboot
+	sudo -A dnf system-upgrade reboot
 }
 
-sudo dnf -y system-upgrade download --refresh --allowerasing --releasever=$1
+sudo dnf -y system-upgrade download --refresh --allowerasing --releasever=$v
 if confirm
 then
 	closeandreboot &
