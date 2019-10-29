@@ -2,9 +2,9 @@
 d=/run/media/"$USER"/LIVE/MyFedoraScripts
 if [ ! -d "$d" ]
 then
-	mkdir -p "$d"
+	sudo mkdir -p "$d"
 	cd "$d"
 	cd ..
-	git clone https://github.com/mattiasmun/MyFedoraScripts.git
+	sudo git clone https://github.com/mattiasmun/MyFedoraScripts.git
 fi
 sudo git pull --rebase
