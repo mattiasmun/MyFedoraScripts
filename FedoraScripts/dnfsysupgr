@@ -1,6 +1,6 @@
 #!/bin/bash
 source yesno
-sudo dnf -y system-upgrade download --refresh --allowerasing --releasever=$1
+#sudo dnf -y system-upgrade download --refresh --allowerasing --releasever=$1
 if confirm
 then
 	closeall
