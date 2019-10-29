@@ -2,7 +2,7 @@
 function confirm {
 	while true
 	do
-		read -r -p "Are You Sure? [Y/n] " input
+		read -r -p "$1" input
 
 		case $input in
 		[yY][eE][sS]|[yY])
