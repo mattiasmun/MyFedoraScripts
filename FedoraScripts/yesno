@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function confirm {
+	while true
+	do
+		read -r -p "Are You Sure? [Y/n] " input
+
+		case $input in
+			[yY][eE][sS]|[yY])
+		return true
+		;;
+			[nN][oO]|[nN])
+		return false
+		;;
+			*)
+		echo "Invalid input..."
+		;;
+		esac
+	done
+}
