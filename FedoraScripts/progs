@@ -1,36 +1,43 @@
 #!/bin/bash
-sudo dnf -y install 0ad VirtualBox adobe-source-code-pro-fonts alternatives \
-anaconda anaconda-install-env-deps audacity binutils-gold blivet-gui boswars \
-bsd-games clamav compat-readline5 crun ctags dbus-broker dconf-editor deja-dup \
-dkms dnf-automatic dracut-live dracut-squash espeak f30-backgrounds-base \
-f30-backgrounds-gnome f31-backgrounds-base f31-backgrounds-gnome fdk-aac \
-fedora-obsolete-packages fedora-release-common ffmpeg ffmpeg-libs firefox fstrm \
-gameconqueror gbrainy gcr-base gimp git gno3dtet \
-gnome-shell-extension-horizontal-workspaces gnome-sudoku gnome-tweaks gnucash \
-gparted gpaste-ui gshutdown gstreamer-plugins-bad-free gstreamer-plugins-espeak \
-gtick gtk2-immodule-xim gtk3-immodule-xim gtranslator guile22 hardinfo htop \
-hunspell-sv iagno intel-gmmlib intel-media-driver intltool \
-java-11-openjdk-devel jitterentropy kmod-VirtualBox-5.3.6-200.fc30.x86_64 \
-kmod-VirtualBox-5.3.7-200.fc30.x86_64 kmod-VirtualBox-5.3.7-301.fc31.x86_64 \
-kmod-nvidia kmod-nvidia-5.3.6-200.fc30.x86_64 kmod-nvidia-5.3.7-200.fc30.x86_64 \
+sudo dnf -y install 0ad VirtualBox adobe-source-code-pro-fonts \
+alternatives anaconda anaconda-install-env-deps audacity binutils-gold \
+blivet-gui boswars bsd-games clamav compat-readline5 crun ctags \
+dbus-broker dconf-editor deja-dup dkms dnf-automatic dracut-live \
+dracut-squash espeak f30-backgrounds-base f30-backgrounds-gnome \
+f31-backgrounds-base f31-backgrounds-gnome fdk-aac \
+fedora-obsolete-packages fedora-release-common ffmpeg ffmpeg-libs \
+firefox fstrm gameconqueror gbrainy gcr-base gimp git gno3dtet \
+gnome-shell-extension-horizontal-workspaces gnome-sudoku gnome-tweaks \
+gnucash gparted gpaste-ui gshutdown gstreamer-plugins-bad-free \
+gstreamer-plugins-espeak gtick gtk2-immodule-xim gtk3-immodule-xim \
+gtranslator guile22 hardinfo htop hunspell-sv iagno intel-gmmlib \
+intel-media-driver intltool java-11-openjdk-devel jitterentropy \
+kmod-VirtualBox-5.3.6-200.fc30.x86_64 \
+kmod-VirtualBox-5.3.7-200.fc30.x86_64 \
+kmod-VirtualBox-5.3.7-301.fc31.x86_64 kmod-nvidia \
+kmod-nvidia-5.3.6-200.fc30.x86_64 kmod-nvidia-5.3.7-200.fc30.x86_64 \
 kmod-nvidia-5.3.7-301.fc31.x86_64 langpacks-core-en langpacks-core-sv \
 langpacks-en langpacks-sv libgnome-games-support libhandy libical-glib \
-libopusenc libpmem libreoffice-help-sv libreoffice-langpack-sv libselinux-devel \
-libsepol-devel libslirp libtextstyle libvala libwpe livecd-tools lollypop \
-mariadb-connector-c mariadb-connector-c-config megaglest meld memtest86+ \
-metacity mkpasswd opencc openttd opus-tools opusfile p7zip p7zip-plugins pbzip2 \
-pcre2-devel pcre2-utf32 pdfarranger perl-File-Path-Tiny plymouth-theme-spinner \
-puzzles python3-IPy python3-PyDrive python3-bcrypt python3-boto python3-cheroot \
-python3-dnf-plugin-system-upgrade python3-dropbox python3-fasteners \
-python3-future python3-gflags python3-gmpy2 python3-google-api-client \
-python3-httplib2 python3-lockfile python3-more-itertools python3-oauth2client \
-python3-paramiko python3-pexpect python3-ptyprocess python3-pyasn1 \
-python3-pyasn1-modules python3-pynacl python3-rsa python3-sh python3-soupsieve \
-python3-trustme python3-uritemplate pyxtrlock qshutdown quadrapassel quodlibet \
-readline-devel redeclipse redshift-gtk rpmfusion-free-obsolete-packages \
-rpmfusion-free-release rpmfusion-nonfree-release rpmsphere-release samba-libs \
+libopusenc libpmem libreoffice-help-sv libreoffice-langpack-sv \
+libselinux-devel libsepol-devel libslirp libtextstyle libvala libwpe \
+livecd-tools lollypop mariadb-connector-c mariadb-connector-c-config \
+megaglest meld memtest86+ metacity mkpasswd opencc openttd opus-tools \
+opusfile p7zip p7zip-plugins pbzip2 pcre2-devel pcre2-utf32 \
+pdfarranger perl-File-Path-Tiny plymouth-theme-spinner puzzles \
+python3-IPy python3-PyDrive python3-bcrypt python3-boto \
+python3-cheroot python3-dnf-plugin-system-upgrade python3-dropbox \
+python3-fasteners python3-future python3-gflags python3-gmpy2 \
+python3-google-api-client python3-httplib2 python3-lockfile \
+python3-more-itertools python3-oauth2client python3-paramiko \
+python3-pexpect python3-ptyprocess python3-pyasn1 \
+python3-pyasn1-modules python3-pynacl python3-rsa python3-sh \
+python3-soupsieve python3-trustme python3-uritemplate pyxtrlock \
+qshutdown quadrapassel quodlibet readline-devel redeclipse \
+redshift-gtk rpmfusion-free-obsolete-packages rpmfusion-free-release \
+rpmfusion-nonfree-release rpmsphere-release samba-libs \
 smc-anjalioldlipi-fonts smc-dyuthi-fonts smc-rachana-fonts \
-smc-raghumalayalamsans-fonts smc-suruma-fonts source-highlight spin-kickstarts \
-subversion syslinux systemd-rpm-macros translate-shell translate-toolkit tss2 \
-vala vim-filesystem vlc wesnoth whois-nls wmctrl wpebackend-fdo xbl xclip \
-xdotool xforms xlockmore-gtk xz-lzma-compat youtube-dl yum
+smc-raghumalayalamsans-fonts smc-suruma-fonts source-highlight \
+spin-kickstarts subversion syslinux systemd-rpm-macros translate-shell \
+translate-toolkit tss2 vala vim-filesystem vlc wesnoth whois-nls \
+wmctrl wpebackend-fdo xbl xclip xdotool xforms xlockmore-gtk \
+xz-lzma-compat youtube-dl yum
