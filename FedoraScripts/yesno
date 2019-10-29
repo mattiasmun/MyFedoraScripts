@@ -5,15 +5,15 @@ function confirm {
 		read -r -p "Are You Sure? [Y/n] " input
 
 		case $input in
-			[yY][eE][sS]|[yY])
-		return true
-		;;
-			[nN][oO]|[nN])
-		return false
-		;;
-			*)
-		echo "Invalid input..."
-		;;
+		[yY][eE][sS]|[yY])
+			return 1
+			;;
+		[nN][oO]|[nN])
+			return 0
+			;;
+		*)
+			echo "Invalid input..."
+			;;
 		esac
 	done
 }
