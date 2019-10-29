@@ -3,6 +3,10 @@ source yesno
 sudo dnf -y system-upgrade download --refresh --allowerasing --releasever=$1
 if confirm
 then
-	sudo -s
-	(closeall; dnf system-upgrade reboot) &
+	closeandreboot &
 fi
+
+function closeandreboot {
+	closeall
+	sudo dnf system-upgrade reboot
+}
