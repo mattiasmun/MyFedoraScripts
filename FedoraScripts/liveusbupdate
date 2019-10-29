@@ -1,3 +1,10 @@
 #!/bin/bash
-cd /run/media/$USER/LIVE/MyFedoraScripts
+d=/run/media/"$USER"/LIVE/MyFedoraScripts
+if [ ! -d "$d" ]
+then
+	mkdir -p "$d"
+	cd "$d"
+	cd ..
+	git clone https://github.com/mattiasmun/MyFedoraScripts.git
+fi
 sudo git pull --rebase
