@@ -1,5 +1,6 @@
 #!/bin/bash
 d=/dev/sd"$2"1
+f="$HOME"/Hämtningar/Fedora-Workstation-Live-x86_64-"$1"/Fedora-Workstation-Live-x86_64-"$1"*.iso
 sudo umount "$d"
 sudo mkfs.ext4 "$d"
-sudo livecd-iso-to-disk --force --reset-mbr $HOME/Hämtningar/Fedora-Workstation-Live-x86_64-"$1"/Fedora-Workstation-Live-x86_64-"$1"*.iso "$d"
+sudo livecd-iso-to-disk --force --reset-mbr "$f" "$d"

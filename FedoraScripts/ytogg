@@ -1,5 +1,5 @@
 #!/bin/bash
-format=$1
+format="$1"
 len=${#format}
 len=$((-len))
 
@@ -8,4 +8,4 @@ do
     g=${f::len}'ogg'
 	ffmpeg -i "$f" -vn -y "$g"
 	rm "$f"
-done 3< <(find . -type f -iname '*.'$format)
+done 3< <(find . -type f -iname '*.'"$format")
