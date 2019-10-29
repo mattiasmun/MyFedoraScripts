@@ -8,7 +8,7 @@ function closeandreboot {
 	sudo -A dnf system-upgrade reboot
 }
 
-sudo dnf -y system-upgrade download --refresh --allowerasing --releasever=$v
+sudo dnf -y system-upgrade download --refresh --allowerasing --releasever="$v"
 if confirm 'Reboot to perform system upgrade now[Y/n]? '
 then
 	closeandreboot &
