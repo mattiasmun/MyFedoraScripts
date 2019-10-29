@@ -1,7 +1,7 @@
 #!/bin/bash
-dir=$HOME/Translate
-source_file=$dir/translatefrom
-target_file=$dir/translateto
-xclip -o -selection clipboard > $source_file
-trans -b -e bing en:sv -i $source_file > $target_file
-xclip -i $target_file -selection clipboard
+dir="$HOME"/Translate
+source_file="$dir"/translatefrom
+target_file="$dir"/translateto
+xclip -o -selection clipboard > "$source_file"
+trans -b -e bing en:sv -i "$source_file" > "$target_file"
+xclip -i "$target_file" -selection clipboard

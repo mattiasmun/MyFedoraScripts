@@ -25,7 +25,7 @@ function type
 	do
 		xdotool key underscore
 		sleep 0.1
-		xdotool type $i
+		xdotool type "$i"
 	done
 	b
 }

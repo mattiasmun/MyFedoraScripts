@@ -1,2 +1,4 @@
 #!/bin/bash
-ls -Agho --color=auto $1
+x="$1"
+[ -z "$x" ] && x='.'
+ls -Agho --color=auto "$x"

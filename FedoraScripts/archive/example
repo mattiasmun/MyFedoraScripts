@@ -6,10 +6,10 @@ sleep 0.5
 
 function mouse
 {
-	xdotool mousemove --sync $2 $3 click 1
+	xdotool mousemove --sync "$2" "$3" click 1
 }
 
-for((i=0;i<$4;i++))
+for((i=0;i<"$4";i++))
 do
 	sleep 0.2
 	mouse 120 173
