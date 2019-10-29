@@ -13,11 +13,11 @@ function choose {
 	[[ $# -gt 0 ]] || return	# Return if "$@" is empty.
 	select CHOICE				# Select from "$@".
 	do
-		case $CHOICE in
-		$s00 | $s01 | $s02 | $s03)
+		case "$CHOICE" in
+		"$s00" | "$s01" | "$s02" | "$s03")
 			break
 			;;
-		$s04)
+		"$s04")
 			exit
 			;;
 		*)
@@ -32,7 +32,7 @@ function list {
 	choose "$s00" "$s01" "$s02" "$s03" "$s04"
 	if [[ -n $CHOICE ]]
 	then
-		echo You chose: ${CHOICE}.
+		echo You chose: "$CHOICE".
 	fi
 }
 

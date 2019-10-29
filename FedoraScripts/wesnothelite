@@ -3,7 +3,7 @@ xdotool keyup Return
 wmctrl -a 'Kampen om Wesnoth'
 sleep 0.3
 x=$((2**15*RANDOM+RANDOM))
-f=$HOME/s$x
+f="$HOME"/s"$x"
 n=3
 s=''
 
@@ -18,7 +18,7 @@ function enter
 
 function loop
 {
-	for((i=0;i<$n;i++))
+	for((i=0;i<n;i++))
 	do
 		enter
 	done
@@ -26,8 +26,8 @@ function loop
 
 function start
 {
-	echo $s > $f
-	xclip -i $f -selection clipboard
+	echo "$s" > "$f"
+	xclip -i "$f" -selection clipboard
 	loop
 }
 

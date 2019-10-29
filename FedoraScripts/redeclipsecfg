@@ -1,20 +1,20 @@
 #!/bin/bash
-d=$HOME/.redeclipse
-mkdir -p $d
-f1=$d/autoexec.cfg
-f2=$d/vars.cfg
+d="$HOME"/.redeclipse
+mkdir -p "$d"
+f1="$d"/autoexec.cfg
+f2="$d"/vars.cfg
 
-> $f1
+> "$f1"
 
 function tof1
 {
-	echo $1 >> $f1
+	echo "$1" >> "$f1"
 }
 
 tof1 'bothurtstop 1'
 tof1 'botoffset 21'
-tof1 'botskillmax 40'
-tof1 'botskillmin 40'
+tof1 'botskillmax 50'
+tof1 'botskillmin 50'
 tof1 'botspawndelay 63000'
 tof1 'botspawndelaybomber 63000'
 tof1 'botspawndelaycapture 63000'
@@ -23,7 +23,7 @@ tof1 'botspawndelaygauntlet 63000'
 tof1 'botspeed 20'
 tof1 'botteamdamage 4'
 tof1 'burndamage 30'
-tof1 'defendbuffarea 320'
+tof1 'defendbuffarea 400'
 tof1 'defendbuffdamage 2'
 tof1 'defendbuffshield 2'
 tof1 'defendregendelay 800'
@@ -38,11 +38,11 @@ tof1 'plasmadisabled 1'
 tof1 'playerhealth 99999999'
 tof1 'playerhurtstop 1'
 tof1 'playermaxcarry 7'
-tof1 'playerspeed 150'
+tof1 'playerspeed 250'
 tof1 'playerteamdamage 4'
 tof1 'playerweight 50.0'
 tof1 'turrethurtstop 1'
 tof1 'turretmaxcarry 1'
 tof1 'zapperdisabled 1'
 
-cp $f1 $f2
+cp "$f1" "$f2"

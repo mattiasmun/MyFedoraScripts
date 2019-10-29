@@ -14,22 +14,22 @@ function upgrade
 
 function iteratey
 {
-	x=$1+32*$3+1
-	for((i=$1;i<$x;i+=32))
+	x="$1"+32*"$3"+1
+	for((i="$1";i<x;i+=32))
 	do
 		sleep 0.05
-		xdotool mousemove --sync $2 $i click 1
+		xdotool mousemove --sync "$2" "$i" click 1
 		upgrade
 	done
 }
 
 function iteratex
 {
-	x=$1+32*$3+1
-	for((i=$1;i<$x;i+=32))
+	x="$1"+32*"$3"+1
+	for((i="$1";i<x;i+=32))
 	do
 		sleep 0.05
-		xdotool mousemove --sync $i $2 click 1
+		xdotool mousemove --sync "$i" "$2" click 1
 		upgrade
 	done
 }

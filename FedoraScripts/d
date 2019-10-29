@@ -1,5 +1,5 @@
 #!/bin/bash
-sleep $1h
+sleep "$1"h
 closeall
 sleep 0.42
 shutdown now

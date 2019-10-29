@@ -1,11 +1,8 @@
 #!/bin/bash
-f=$HOME/Bash/MyFedoraScripts/FedoraScripts/progs
-f2=${f}2
-echo '#!/bin/bash' > $f
+f="$HOME"/Bash/MyFedoraScripts/FedoraScripts/progs
+echo '#!/bin/bash' > "$f"
 data='sudo dnf -y install '
-que=$(dnf repoquery --userinstalled --queryformat '%{name}')
-echo $data$que >> $f
-fold -s -w71 $f > $f2
-perl -pi -e 's/\ \n/\ \\\n/g' $f2
-mv $f2 $f
-chmod +x $f
+que=$(dnf repoquery --userinstalled --queryformat '%{name} \')
+que=${que::-2}
+echo "$data$que" >> "$f"
+chmod +x "$f"
