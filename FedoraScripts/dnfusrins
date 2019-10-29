@@ -5,7 +5,7 @@ echo '#!/bin/bash' > $f
 data='sudo dnf -y install '
 que=$(dnf repoquery --userinstalled --queryformat '%{name}')
 echo $data$que >> $f
-fold -s -w80 $f > $f2
+fold -s -w71 $f > $f2
 perl -pi -e 's/\ \n/\ \\\n/g' $f2
 mv $f2 $f
 chmod +x $f
