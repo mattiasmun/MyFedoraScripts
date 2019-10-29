@@ -1,5 +1,5 @@
 #!/bin/bash
 sleep $1h
 closeall
-sleep 0.5
+sleep 0.42
 shutdown now
