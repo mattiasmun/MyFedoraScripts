@@ -1,15 +1,15 @@
 #!/bin/bash
 source trycatch
 #xdotool key --clearmodifiers Alt+Tab
-#wmctrl -a "$2"
+#wmctrl -a "$1"
 sleep 0.5
 
 function mouse
 {
-	xdotool mousemove --sync $1 $2 click 1
+	xdotool mousemove --sync $2 $3 click 1
 }
 
-for((i=0;i<$1;i++))
+for((i=0;i<$4;i++))
 do
 	sleep 0.2
 	mouse 120 173
