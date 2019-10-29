@@ -1,12 +1,13 @@
 #!/bin/bash
 source yesno
-sudo dnf -y system-upgrade download --refresh --allowerasing --releasever=$1
-if confirm
-then
-	closeandreboot &
-fi
 
 function closeandreboot {
 	closeall
 	sudo dnf system-upgrade reboot
 }
+
+sudo dnf -y system-upgrade download --refresh --allowerasing --releasever=$1
+if confirm
+then
+	closeandreboot &
+fi
