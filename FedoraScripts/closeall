@@ -1,5 +1,5 @@
 #!/bin/bash
-sleep 1
+sleep 0.3
 for i in {1..9}
 do
 	for i in $(wmctrl -l | awk '{print $1}')
