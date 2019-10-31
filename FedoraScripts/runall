@@ -6,8 +6,8 @@ firefox &
 sleep 0.01
 geany &
 sleep 0.01
-gio-launch-desktop gnome-control-center display &
-sleep 0.01
+#gio-launch-desktop gnome-control-center display &
+#sleep 0.01
 gnome-calculator &
 sleep 0.01
 #gnome-software &
