@@ -1,19 +1,19 @@
 #!/bin/bash
 function confirm {
-	while true
-	do
-		read -r -p "$1" input
+  while true
+  do
+    read -r -p "$1" input
 
-		case "$input" in
-		[yY][eE][sS]|[yY])
-			return 0
-			;;
-		[nN][oO]|[nN])
-			return 1
-			;;
-		*)
-			echo "Invalid input..."
-			;;
-		esac
-	done
+    case "$input" in
+    [yY][eE][sS]|[yY])
+      return 0
+      ;;
+    [nN][oO]|[nN])
+      return 1
+      ;;
+    *)
+      echo "Invalid input..."
+      ;;
+    esac
+  done
 }

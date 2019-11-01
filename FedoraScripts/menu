@@ -1,7 +1,7 @@
 #!/bin/bash
 # choose 'choice 1' 'choice 2' ...
-#	Prints menu to standard error. Prompts with PS3.
-#	Reads REPLY from standard input. Sets CHOICE.
+#  Prints menu to standard error. Prompts with PS3.
+#  Reads REPLY from standard input. Sets CHOICE.
 s00='fee fie'
 s01='huff and puff'
 s02='mirror mirror'
@@ -9,35 +9,35 @@ s03='tick tock'
 s04='exit'
 
 function choose {
-	CHOICE=						# Default CHOICE is empty string.
-	[[ $# -gt 0 ]] || return	# Return if "$@" is empty.
-	select CHOICE				# Select from "$@".
-	do
-		case "$CHOICE" in
-		"$s00" | "$s01" | "$s02" | "$s03")
-			break
-			;;
-		"$s04")
-			exit
-			;;
-		*)
-			echo Invalid choice.
-			;;
-		esac
-	done
+  CHOICE=            # Default CHOICE is empty string.
+  [[ $# -gt 0 ]] || return  # Return if "$@" is empty.
+  select CHOICE        # Select from "$@".
+  do
+    case "$CHOICE" in
+    "$s00" | "$s01" | "$s02" | "$s03")
+      break
+      ;;
+    "$s04")
+      exit
+      ;;
+    *)
+      echo Invalid choice.
+      ;;
+    esac
+  done
 }
 
 function list {
-	PS3='Which is from the three pigs: '
-	choose "$s00" "$s01" "$s02" "$s03" "$s04"
-	if [[ -n $CHOICE ]]
-	then
-		echo You chose: "$CHOICE".
-	fi
+  PS3='Which is from the three pigs: '
+  choose "$s00" "$s01" "$s02" "$s03" "$s04"
+  if [[ -n $CHOICE ]]
+  then
+    echo You chose: "$CHOICE".
+  fi
 }
 
 while true
 do
-	list
-	echo -----------------------------------
+  list
+  echo -----------------------------------
 done

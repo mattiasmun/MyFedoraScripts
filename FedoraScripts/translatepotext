@@ -4,19 +4,19 @@ wmctrl -a 'Translation Editor'
 sleep 0.3
 for((i=0;i<$1;i++))
 do
-	sleep 0.1
-	xdotool mousemove --sync 11 1320 click 1
-	sleep 0.1
-	xdotool key --clearmodifiers Ctrl+a
-	specialcopy
-	xdotool key Tab
-	sleep 0.1
-	xdotool key --clearmodifiers Ctrl+a
-	sleep 0.1
-	xdotool key --clearmodifiers Ctrl+v
-	sleep 0.1
-	xdotool key BackSpace
-	sleep 0.1
-	xdotool key --clearmodifiers Alt+Next
-	sleep 1
+  sleep 0.1
+  xdotool mousemove --sync 11 1320 click 1
+  sleep 0.1
+  xdotool key --clearmodifiers Ctrl+a
+  specialcopy
+  xdotool key Tab
+  sleep 0.1
+  xdotool key --clearmodifiers Ctrl+a
+  sleep 0.1
+  xdotool key --clearmodifiers Ctrl+v
+  sleep 0.1
+  xdotool key BackSpace
+  sleep 0.1
+  xdotool key --clearmodifiers Alt+Next
+  sleep 1
 done

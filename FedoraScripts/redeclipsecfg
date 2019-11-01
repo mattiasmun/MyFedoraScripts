@@ -8,7 +8,7 @@ f2="$d"/vars.cfg
 
 function tof1
 {
-	echo "$1" >> "$f1"
+  echo "$1" >> "$f1"
 }
 
 tof1 'bothurtstop 1'

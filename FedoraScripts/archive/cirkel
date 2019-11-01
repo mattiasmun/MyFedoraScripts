@@ -4,12 +4,12 @@ wmctrl -a "$1"
 sleep 0.3
 for((i=0;i<$2;i++))
 do
-	xdotool key Right
-	sleep 0.03
-	xdotool key Up
-	sleep 0.03
-	xdotool key Left
-	sleep 0.03
-	xdotool key Down
-	sleep 0.03
+  xdotool key Right
+  sleep 0.03
+  xdotool key Up
+  sleep 0.03
+  xdotool key Left
+  sleep 0.03
+  xdotool key Down
+  sleep 0.03
 done

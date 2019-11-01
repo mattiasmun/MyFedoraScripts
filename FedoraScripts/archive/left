@@ -3,26 +3,26 @@ xdotool key --clearmodifiers Alt+Tab
 sleep 1
 for((i=0;i<$1;i++))
 do
-	sleep 0.26
-	xdotool key Left
-	sleep 0.26
-	xdotool key Right
-	sleep 0.26
-	xdotool key Left
-	sleep 0.26
-	xdotool key Right
-	sleep 0.26
-	xdotool key Left
-	sleep 0.26
-	xdotool key Right
-	sleep 0.26
-	xdotool key Left
-	sleep 0.26
-	xdotool key Right
-	sleep 0.26
-	xdotool key Left
-	sleep 0.26
-	xdotool key Right
-	sleep 0.26
-	xdotool key Left
+  sleep 0.26
+  xdotool key Left
+  sleep 0.26
+  xdotool key Right
+  sleep 0.26
+  xdotool key Left
+  sleep 0.26
+  xdotool key Right
+  sleep 0.26
+  xdotool key Left
+  sleep 0.26
+  xdotool key Right
+  sleep 0.26
+  xdotool key Left
+  sleep 0.26
+  xdotool key Right
+  sleep 0.26
+  xdotool key Left
+  sleep 0.26
+  xdotool key Right
+  sleep 0.26
+  xdotool key Left
 done
