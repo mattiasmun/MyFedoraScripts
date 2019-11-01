@@ -1,5 +1,5 @@
 #!/bin/bash
-eval $(xdotool getmouselocation --shell)
+eval "$(xdotool getmouselocation --shell)"
 xdotool keyup Return
 wmctrl -a "$1"
 sleep 0.3
@@ -17,11 +17,11 @@ do
 	fi
 	for((j=0;j<a1;j++))
 	do
-		xdotool mousemove --sync "$X" $((Y+j*a2)) click 1
+		xdotool mousemove --sync "$X" "$((Y+j*a2))" click 1
 		sleep 0.28
 	done
-	a=$((a-a0))
-	test "$a" -gt 0 && sleep $((a0/2))
+	a="$((a-a0))"
+	test "$a" -gt 0 && sleep "$((a0/2))"
 done
 : '
 1262
