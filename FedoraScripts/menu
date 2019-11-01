@@ -8,7 +8,8 @@ s02='mirror mirror'
 s03='tick tock'
 s04='exit'
 
-function choose {
+function choose
+{
   CHOICE=            # Default CHOICE is empty string.
   [[ $# -gt 0 ]] || return  # Return if "$@" is empty.
   select CHOICE        # Select from "$@".
@@ -27,7 +28,8 @@ function choose {
   done
 }
 
-function list {
+function list
+{
   PS3='Which is from the three pigs: '
   choose "$s00" "$s01" "$s02" "$s03" "$s04"
   if [[ -n $CHOICE ]]

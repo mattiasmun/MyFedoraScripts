@@ -1,5 +1,6 @@
 #!/bin/bash
-function confirm {
+function confirm
+{
   while true
   do
     read -r -p "$1" input
