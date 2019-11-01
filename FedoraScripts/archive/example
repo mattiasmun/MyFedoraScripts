@@ -15,11 +15,4 @@ do
 	mouse 120 173
 	sleep 0.2
 	xdotool key a
-	try
-	(
-		echo 'try'
-	)
-	catch || {
-		echo 'catch'
-	}
 done
