@@ -1,7 +1,7 @@
 #!/bin/bash
 source yesno
-v=$(rpm -E %fedora)
-v=$((v+1))
+v="$(rpm -E %fedora)"
+v="$((v+1))"
 
 function closeandreboot {
 	closeall

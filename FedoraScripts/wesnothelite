@@ -2,7 +2,7 @@
 xdotool keyup Return
 wmctrl -a 'Kampen om Wesnoth'
 sleep 0.3
-x=$((2**15*RANDOM+RANDOM))
+x="$((2**15*RANDOM+RANDOM))"
 f="$HOME"/s"$x"
 n=3
 s=''
