@@ -4,9 +4,9 @@ wmctrl -a 'Bos Wars'
 sleep 0.3
 for((i=0;i<$1;i++))
 do
-	xdotool key Return
-	sleep 0.2
-	xdotool type 'gimme unit-cannon '$2
-	sleep 0.02
-	xdotool key Return
+  xdotool key Return
+  sleep 0.2
+  xdotool type 'gimme unit-cannon '$2
+  sleep 0.02
+  xdotool key Return
 done

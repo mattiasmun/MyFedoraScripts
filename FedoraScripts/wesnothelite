@@ -9,26 +9,26 @@ s=''
 
 function enter
 {
-	xdotool key colon
-	sleep 0.3
-	xdotool key Ctrl+v
-	sleep 0.3
-	xdotool key Return
+  xdotool key colon
+  sleep 0.3
+  xdotool key Ctrl+v
+  sleep 0.3
+  xdotool key Return
 }
 
 function loop
 {
-	for((i=0;i<n;i++))
-	do
-		enter
-	done
+  for((i=0;i<n;i++))
+  do
+    enter
+  done
 }
 
 function start
 {
-	echo "$s" > "$f"
-	xclip -i "$f" -selection clipboard
-	loop
+  echo "$s" > "$f"
+  xclip -i "$f" -selection clipboard
+  loop
 }
 
 #debug
@@ -41,10 +41,10 @@ s='unit experience=999999';start
 s='unit max_moves=90';start
 for i in {1..200}
 do
-	xdotool key aring
+  xdotool key aring
 done
 for i in {1..60}
 do
-	xdotool key adiaeresis
+  xdotool key adiaeresis
 done
 rm "$f"
