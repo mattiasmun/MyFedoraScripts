@@ -1,5 +1,4 @@
 #!/bin/bash
-source trycatch
 #xdotool key --clearmodifiers Alt+Tab
 #wmctrl -a "$1"
 sleep 0.5
