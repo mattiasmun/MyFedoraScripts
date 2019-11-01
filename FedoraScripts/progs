@@ -22,8 +22,6 @@ dnf-automatic \
 dracut-live \
 dracut-squash \
 espeak \
-f30-backgrounds-base \
-f30-backgrounds-gnome \
 f31-backgrounds-base \
 f31-backgrounds-gnome \
 fdk-aac \
