@@ -1,0 +1,10 @@
+#!/bin/bash
+sleep "$1"h
+
+function close_and_reboot
+{
+  closeall
+  systemctl reboot
+}
+
+close_and_reboot &
