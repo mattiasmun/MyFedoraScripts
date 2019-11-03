@@ -4,7 +4,7 @@ sleep "$1"h
 function close_and_shutdown
 {
   closeall
-  shutdown now
+  systemctl poweroff
 }
 
 close_and_shutdown &
