@@ -1,5 +1,10 @@
 #!/bin/bash
 sleep "$1"h
-closeall
-sleep 0.42
-shutdown now
+
+function close_and_shutdown
+{
+  closeall
+  shutdown now
+}
+
+close_and_shutdown &

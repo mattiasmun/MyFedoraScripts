@@ -3,7 +3,7 @@ source yesno
 v="$(rpm -E %fedora)"
 v="$((v+1))"
 
-function closeandreboot
+function close_and_reboot
 {
   closeall
   sudo -A dnf system-upgrade reboot
@@ -12,5 +12,5 @@ function closeandreboot
 sudo dnf -y system-upgrade download --refresh --allowerasing --releasever="$v"
 if confirm 'Reboot to perform system upgrade now[Y/n]? '
 then
-  closeandreboot &
+  close_and_reboot &
 fi
