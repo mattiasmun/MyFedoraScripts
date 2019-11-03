@@ -1,10 +1,10 @@
 #!/bin/bash
 sleep "$1"h
 
-function close_and_shutdown
+function close_and_poweroff
 {
   closeall
   systemctl poweroff
 }
 
-close_and_shutdown &
+close_and_poweroff &
