@@ -8,3 +8,4 @@ do
     xdotool key --clearmodifiers Alt+F4
   done
 done
+sleep 0.42
