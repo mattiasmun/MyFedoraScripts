@@ -1,8 +1,10 @@
 #!/bin/bash
-sleep "$1"h
+x="$1"
+[ -z "$x" ] && x=0
 
 function close_and_poweroff
 {
+  sleep "$x"
   closeall
   systemctl poweroff
 }
