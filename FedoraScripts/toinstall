@@ -8,4 +8,4 @@ cd "${0:0: -9}"
 ./bashprofile
 ./progs
 sudo dnf -y groupupdate core multimedia sound-and-video workstation-product-environment
-shutdown -r now
+./rebootsoon
