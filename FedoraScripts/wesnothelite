@@ -37,6 +37,7 @@ sleep 5
 s='unit max_hitpoints=9000';start
 s='unit hitpoints=9000';start
 s='unit max_moves=299';start
+: '
 for i in {1..200}
 do
   xdotool key aring
@@ -45,4 +46,6 @@ for i in {1..60}
 do
   xdotool key adiaeresis
 done
+'
+
 rm "$f"
