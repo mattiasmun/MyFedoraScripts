@@ -35,7 +35,8 @@ function start
 s='unit advances=25';start
 sleep 5
 s='unit max_hitpoints=9000';start
-s='unit max_moves=90';start
+s='unit hitpoints=9000';start
+s='unit max_moves=299';start
 for i in {1..200}
 do
   xdotool key aring
