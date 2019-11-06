@@ -1,21 +1,20 @@
 #!/bin/bash
-d=/run/media/"$USER"/LIVE/MyFedoraScripts
-if [ ! -d "$d" ]
-then
-  sudo mkdir -p "$d"
+s=''
+function luu
+{
+  d=/run/media/"$USER"/LIVE/"$s"
+  if [ ! -d "$d" ]
+  then
+    sudo mkdir -p "$d"
+    cd "$d"
+    cd ..
+    sudo git clone https://github.com/mattiasmun/"$s".git
+  fi
   cd "$d"
-  cd ..
-  sudo git clone https://github.com/mattiasmun/MyFedoraScripts.git
-fi
-cd "$d"
-sudo git pull --rebase
-d2=/run/media/"$USER"/LIVE/noscriptsettings
-if [ ! -d "$d2" ]
-then
-  sudo mkdir -p "$d2"
-  cd "$d2"
-  cd ..
-  sudo git clone https://github.com/mattiasmun/noscriptsettings.git
-fi
-cd "$d2"
-sudo git pull --rebase
+  sudo git pull --rebase
+}
+
+s='MyFedoraScripts'
+luu
+s='noscriptsettings'
+luu
