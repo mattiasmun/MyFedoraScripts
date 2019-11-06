@@ -9,3 +9,13 @@ then
 fi
 cd "$d"
 sudo git pull --rebase
+d2=/run/media/"$USER"/LIVE/noscriptsettings
+if [ ! -d "$d2" ]
+then
+  sudo mkdir -p "$d2"
+  cd "$d2"
+  cd ..
+  sudo git clone https://github.com/mattiasmun/noscriptsettings.git
+fi
+cd "$d2"
+sudo git pull --rebase
