@@ -59,13 +59,13 @@ intel-media-driver \
 intltool \
 java-11-openjdk-devel \
 jitterentropy \
-kmod-VirtualBox-5.3.7-200.fc30.x86_64 \
 kmod-VirtualBox-5.3.7-301.fc31.x86_64 \
 kmod-VirtualBox-5.3.8-300.fc31.x86_64 \
+kmod-VirtualBox-5.3.9-300.fc31.x86_64 \
 kmod-nvidia \
-kmod-nvidia-5.3.7-200.fc30.x86_64 \
 kmod-nvidia-5.3.7-301.fc31.x86_64 \
 kmod-nvidia-5.3.8-300.fc31.x86_64 \
+kmod-nvidia-5.3.9-300.fc31.x86_64 \
 langpacks-core-en \
 langpacks-core-sv \
 langpacks-en \
