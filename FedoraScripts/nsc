@@ -1,0 +1,8 @@
+#!/bin/bash
+x="$HOME"
+y="$x/Hämtningar/noscript_data.txt"
+if [[ -e "$y" ]]
+then
+  mv "$y" "$x/Git/noscriptsettings/"
+  gitty "$x/Git/noscriptsettings"
+fi
