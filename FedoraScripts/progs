@@ -87,11 +87,11 @@ kernel-modules \
 kernel-modules-extra \
 kmod-VirtualBox-5.3.11-300.fc31.x86_64 \
 kmod-VirtualBox-5.3.12-300.fc31.x86_64 \
-kmod-VirtualBox-5.3.9-300.fc31.x86_64 \
+kmod-VirtualBox-5.3.13-300.fc31.x86_64 \
 kmod-nvidia \
 kmod-nvidia-5.3.11-300.fc31.x86_64 \
 kmod-nvidia-5.3.12-300.fc31.x86_64 \
-kmod-nvidia-5.3.9-300.fc31.x86_64 \
+kmod-nvidia-5.3.13-300.fc31.x86_64 \
 langpacks-core-en \
 langpacks-core-sv \
 langpacks-en \
