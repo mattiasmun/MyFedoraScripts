@@ -120,6 +120,7 @@ meld \
 memtest86+ \
 metacity \
 mkpasswd \
+ocrmypdf \
 opencc \
 openssh-askpass \
 openttd \
@@ -187,6 +188,7 @@ spin-kickstarts \
 subversion \
 syslinux \
 systemd-rpm-macros \
+tesseract-langpack-swe \
 translate-shell \
 translate-toolkit \
 tss2 \
