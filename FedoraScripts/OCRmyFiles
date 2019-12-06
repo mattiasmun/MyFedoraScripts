@@ -24,13 +24,13 @@ outputDirDefault="/var/OCR/Output"
 # More information about command line arguments for OCRmyPDF: https://ocrmypdf.readthedocs.io/en/latest/cookbook.html
 # -l deu+eng: Gives a hint for OCRmyPDF which languages are contained in the PDF (requires the corresponding tesseract language files to be installed)
 # --output-type pdf: Creates a standard PDF as output (OCRmyPDF creates PDF/A documents by default)
-ocrmypdfCmdArgs="-l swe --output-type pdf"
+ocrmypdfCmdArgs="-l swe --redo-ocr"
 
 # General command line arguments for tesseract calls (ONLY when converting image files to PDF).
 # Modify these to fit yout needs.
 # -l deu+eng: Gives a hint for tesseract which languages are contained in the image (requires the corresponding tesseract language files to be installed)
 # pdf: Ouput should be PDF
-imageConvertCmdArgs="-l swe pdf"
+imageConvertCmdArgs="-l swe --redo-ocr pdf"
 
 countPDF=0
 countImage=0
