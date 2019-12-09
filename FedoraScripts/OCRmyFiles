@@ -2,18 +2,18 @@
 
 # Bash script for adding a text layer to PDF files and converting images in PDFs (with OCR).
 # Requirements:
-# 	- OCRmyPDF: https://github.com/jbarlow83/OCRmyPDF
-# 		Install instructions: https://ocrmypdf.readthedocs.io/en/latest/installation.html
-#	- Tesseract: https://github.com/tesseract-ocr/
-#		This is installed with OCRmyPDF automatically
-#	- Tesseract language files
-#		e.g. "apt-get install tesseract-ocr-deu" for German language
+#  - OCRmyPDF: https://github.com/jbarlow83/OCRmyPDF
+#    Install instructions: https://ocrmypdf.readthedocs.io/en/latest/installation.html
+#  - Tesseract: https://github.com/tesseract-ocr/
+#    This is installed with OCRmyPDF automatically
+#  - Tesseract language files
+#    e.g. "apt-get install tesseract-ocr-deu" for German language
 # Usage:
-#	- OCRmyFiles.sh (no parameter): using default directories for input/output
-#	- OCRmyFiles.sh <inputDir> <outputDir>: using specified directories for input/output
+#  - OCRmyFiles.sh (no parameter): using default directories for input/output
+#  - OCRmyFiles.sh <inputDir> <outputDir>: using specified directories for input/output
 #
 # Remarks:
-# 	- After OCR, all files from the input directory are deleted. If you want to keep the input files, just comment out the call of the function 'cleanup_inputDir' at the end of the script.
+#  - After OCR, all files from the input directory are deleted. If you want to keep the input files, just comment out the call of the function 'cleanup_inputDir' at the end of the script.
 
 # Default input/output directories
 inputDirDefault="/var/OCR/Input"
@@ -39,18 +39,18 @@ countCopy=0
 # Function for error messages
 errorecho() { cat <<< "$@" 1>&2; }
 
-inputDir=$1
-outputDir=$2
+inputDir="$1"
+outputDir="$2"
 
 #
 # Check for parameters
 #
 if [ $# != "0" ] && [ $# != "2" ]
 then
-    errorecho "ERROR: Wrong number of parameters!"
-	errorecho "Usage: OCRmyPDF-script.sh (no parameter): using default directories for input/output"
-	errorecho "Usage: OCRmyPDF-script.sh <inputDir> <outputDir>: using specified directories for input/output"
-    exit 1
+  errorecho "ERROR: Wrong number of parameters!"
+  errorecho "Usage: OCRmyPDF-script.sh (no parameter): using default directories for input/output"
+  errorecho "Usage: OCRmyPDF-script.sh <inputDir> <outputDir>: using specified directories for input/output"
+  exit 1
 fi
 
 #
@@ -58,9 +58,9 @@ fi
 #
 if ! hash ocrmypdf 2>/dev/null;
 then
-    errorecho "ERROR: OCRmyPDF is not available!"
-	errorecho "Is OCRmyPDF installed?"
-    exit 1
+  errorecho "ERROR: OCRmyPDF is not available!"
+  errorecho "Is OCRmyPDF installed?"
+  exit 1
 fi
 
 #
@@ -68,16 +68,16 @@ fi
 #
 if [ -z "${inputDir}" ]
 then
-	inputDir=${inputDirDefault}
-	echo "No input directory given, using the default input directory ${inputDir}"
-	echo
+  inputDir="${inputDirDefault}"
+  echo "No input directory given, using the default input directory ${inputDir}"
+  echo
 fi
 
 if [ -z "${outputDir}" ]
 then
-	outputDir=${outputDirDefault}
-	echo "No output directory given, using the default output directory ${outputDir}"
-	echo
+  outputDir="${outputDirDefault}"
+  echo "No output directory given, using the default output directory ${outputDir}"
+  echo
 fi
 
 #
@@ -85,15 +85,15 @@ fi
 #
 if [ ! -d "${inputDir}" ]
 then
-	errorecho "ERROR: The input directory ${inputDir} does not exist!"
-	exit 1
+  errorecho "ERROR: The input directory ${inputDir} does not exist!"
+  exit 1
 fi
 
 if [ ! -d "${outputDir}" ]
 then
-	echo "The output directory does not exist -> creating ${outputDir}"
-	mkdir -p "${outputDir}"
-	echo
+  echo "The output directory does not exist -> creating ${outputDir}"
+  mkdir -p "${outputDir}"
+  echo
 fi
 
 #
@@ -107,11 +107,11 @@ runningdir="${outputDir}/.ocrmyfiles_running.lock"
 
 if mkdir "$lockdir"
 then
-     # Remove lockdir when the script finishes
-     trap cleanup_locks 0
+  # Remove lockdir when the script finishes
+  trap cleanup_locks 0
 else
-     errorecho "Script is currently running for input directory ${inputDir}, aborting..."
-     exit 1
+  errorecho "Script is currently running for input directory ${inputDir}, aborting..."
+  exit 1
 fi
 
 # Create a "lock" directory in output directory to indicate that the script is currently running
@@ -119,71 +119,74 @@ runningdir="${outputDir}/.ocrmyfiles_running.lock"
 mkdir "$runningdir"
 
 # Function to clean up locks
-function cleanup_locks {
-	rm -rf "$lockdir"
-	rm -rf "$runningdir"
+function cleanup_locks
+{
+  rm -rf "$lockdir"
+  rm -rf "$runningdir"
 }
 
 # Function to clean up the input directory
-function cleanup_inputDir {
-        rm -rf "${inputDir:?}"/*
+function cleanup_inputDir
+{
+  rm -rf "${inputDir:?}"/*
 }
 
 #
 # Function to read the input directory and OCR all contained PDFs resursively
 #
-ocr_recursive() {
-    for i in "$1"/*;do
-		tmp="${i//"$inputDir"/""}"
+function ocr_recursive
+{
+  for i in "$1"/*;do
+  tmp="${i//"$inputDir"/""}"
 
-		# Skip lock directory
-		if  [ "$i" = "$lockdir" ]; then
-			continue
-		fi
+  # Skip lock directory
+  if  [ "$i" = "$lockdir" ]; then
+    continue
+  fi
 
-        if [ -d "$i" ]; then
-			mkdir -p "${outputDir}${tmp}"
-			ocr_recursive "$i"
-        elif [ -f "$i" ]; then
-			fileType="$(file -b "$i")"
+    if [ -d "$i" ]; then
+    mkdir -p "${outputDir}${tmp}"
+    ocr_recursive "$i"
+    elif [ -f "$i" ]; then
+    fileType="$(file -b "$i")"
 
-			if [ -f "${outputDir}${tmp%.*}.pdf" ]; then
-				# If the file already exist in the output directory, skip it.
-				echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping..."
-				continue
-			fi
+    if [ -f "${outputDir}${tmp%.*}.pdf" ]; then
+    # If the file already exist in the output directory, skip it.
+    echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping..."
+    continue
+    fi
 
-			if [ "${fileType%%,*}" == "PDF document" ]; then
-				# It's a PDF file -> OCR it
-				echo "Processing (PDF) $i -> ${outputDir}${tmp}"
+    if [ "${fileType%%,*}" == "PDF document" ]; then
+    # It's a PDF file -> OCR it
+    echo "Processing (PDF) $i -> ${outputDir}${tmp}"
 
-				if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
-				then
-					# Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
-					cp "${i}" "${outputDir}${tmp}"
-				fi
+    if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
+    then
+      # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
+      cp "${i}" "${outputDir}${tmp}"
+    fi
 
-				echo "Done"
-				echo
-				countPDF=$((countPDF + 1))
-			elif  [[ "${fileType}" = *"image data"* ]]; then
-				# It's an image -> convert to PDF and OCR it
-				echo "Processing (image) $i -> ${outputDir}${tmp%.*}.pdf"
-				fullpath="${outputDir}${tmp}"
-				tesseract "${i}" "${fullpath%.*}" ${imageConvertCmdArgs}
-				echo "Done"
-				echo
-				countImage=$((countImage + 1))
-			else
-				# Other file types -> just copy to output directory.
-				echo "Copy $i -> ${outputDir}${tmp}"
-				cp "${i}" "${outputDir}${tmp}"
-				echo "Done"
-				echo
-				countCopy=$((countCopy + 1))
-			fi
-        fi
-    done
+    echo "Done"
+    echo
+    countPDF=$((countPDF + 1))
+    elif  [[ "${fileType}" = *"image data"* ]]; then
+    # It's an image -> convert to PDF and OCR it
+    echo "Processing (image) $i -> ${outputDir}${tmp%.*}.pdf"
+    fullpath="${outputDir}${tmp}"
+    tesseract "${i}" "${fullpath%.*}" ${imageConvertCmdArgs}
+    echo "Done"
+    echo
+    countImage=$((countImage + 1))
+    else
+    # Other file types -> just copy to output directory.
+    echo "Copy $i -> ${outputDir}${tmp}"
+    cp "${i}" "${outputDir}${tmp}"
+    echo "Done"
+    echo
+    countCopy=$((countCopy + 1))
+    fi
+    fi
+  done
 }
 
 shopt -s dotglob
