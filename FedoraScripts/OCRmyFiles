@@ -136,40 +136,47 @@ function cleanup_inputDir
 #
 function ocr_recursive
 {
-  for i in "$1"/*;do
+  for i in "$1"/*
+  do
     tmp="${i//"$inputDir"/""}"
 
     # Skip lock directory
-    if  [ "$i" = "$lockdir" ]; then
+    if  [ "$i" = "$lockdir" ]
+    then
       continue
     fi
 
-    if [ -d "$i" ]; then
+    if [ -d "$i" ]
+    then
       mkdir -p "${outputDir}${tmp}"
       ocr_recursive "$i"
-    elif [ -f "$i" ]; then
+    elif [ -f "$i" ]
+    then
       fileType="$(file -b "$i")"
 
-    if [ -f "${outputDir}${tmp%.*}.pdf" ]; then
-      # If the file already exist in the output directory, skip it.
-      echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping..."
-      continue
-    fi
-
-    if [ "${fileType%%,*}" == "PDF document" ]; then
-      # It's a PDF file -> OCR it
-      echo "Processing (PDF) $i -> ${outputDir}${tmp}"
-
-      if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
+      if [ -f "${outputDir}${tmp%.*}.pdf" ]
       then
-        # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
-        cp "${i}" "${outputDir}${tmp}"
+        # If the file already exist in the output directory, skip it.
+        echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping..."
+        continue
       fi
 
-      echo "Done"
-      echo
-      countPDF=$((countPDF + 1))
-      elif  [[ "${fileType}" = *"image data"* ]]; then
+      if [ "${fileType%%,*}" == "PDF document" ]
+      then
+        # It's a PDF file -> OCR it
+        echo "Processing (PDF) $i -> ${outputDir}${tmp}"
+
+        if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
+        then
+          # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
+          cp "${i}" "${outputDir}${tmp}"
+        fi
+
+        echo "Done"
+        echo
+        countPDF=$((countPDF + 1))
+      elif  [[ "${fileType}" = *"image data"* ]]
+      then
         # It's an image -> convert to PDF and OCR it
         echo "Processing (image) $i -> ${outputDir}${tmp%.*}.pdf"
         fullpath="${outputDir}${tmp}"
