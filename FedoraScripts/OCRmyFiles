@@ -166,7 +166,7 @@ function ocr_recursive
         # It's a PDF file -> OCR it
         echo "Processing (PDF) $i -> ${outputDir}${tmp}"
 
-        if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
+        if ! ocrmypdf "${ocrmypdfCmdArgs}" "${i}" "${outputDir}${tmp}"
         then
           # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
           cp "${i}" "${outputDir}${tmp}"
@@ -174,23 +174,23 @@ function ocr_recursive
 
         echo "Done"
         echo
-        countPDF=$((countPDF + 1))
+        countPDF="$((countPDF + 1))"
       elif  [[ "${fileType}" = *"image data"* ]]
       then
         # It's an image -> convert to PDF and OCR it
         echo "Processing (image) $i -> ${outputDir}${tmp%.*}.pdf"
         fullpath="${outputDir}${tmp}"
-        tesseract "${i}" "${fullpath%.*}" ${imageConvertCmdArgs}
+        tesseract "${i}" "${fullpath%.*}" "${imageConvertCmdArgs}"
         echo "Done"
         echo
-        countImage=$((countImage + 1))
+        countImage="$((countImage + 1))"
       else
         # Other file types -> just copy to output directory.
         echo "Copy $i -> ${outputDir}${tmp}"
         cp "${i}" "${outputDir}${tmp}"
         echo "Done"
         echo
-        countCopy=$((countCopy + 1))
+        countCopy="$((countCopy + 1))"
       fi
     fi
   done
