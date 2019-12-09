@@ -30,7 +30,7 @@ ocrmypdfCmdArgs="-l swe --redo-ocr"
 # Modify these to fit yout needs.
 # -l deu+eng: Gives a hint for tesseract which languages are contained in the image (requires the corresponding tesseract language files to be installed)
 # pdf: Ouput should be PDF
-imageConvertCmdArgs="-l swe --redo-ocr pdf"
+imageConvertCmdArgs="-l swe pdf"
 
 countPDF=0
 countImage=0
@@ -137,54 +137,54 @@ function cleanup_inputDir
 function ocr_recursive
 {
   for i in "$1"/*;do
-  tmp="${i//"$inputDir"/""}"
+    tmp="${i//"$inputDir"/""}"
 
-  # Skip lock directory
-  if  [ "$i" = "$lockdir" ]; then
-    continue
-  fi
+    # Skip lock directory
+    if  [ "$i" = "$lockdir" ]; then
+      continue
+    fi
 
     if [ -d "$i" ]; then
-    mkdir -p "${outputDir}${tmp}"
-    ocr_recursive "$i"
+      mkdir -p "${outputDir}${tmp}"
+      ocr_recursive "$i"
     elif [ -f "$i" ]; then
-    fileType="$(file -b "$i")"
+      fileType="$(file -b "$i")"
 
     if [ -f "${outputDir}${tmp%.*}.pdf" ]; then
-    # If the file already exist in the output directory, skip it.
-    echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping..."
-    continue
+      # If the file already exist in the output directory, skip it.
+      echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping..."
+      continue
     fi
 
     if [ "${fileType%%,*}" == "PDF document" ]; then
-    # It's a PDF file -> OCR it
-    echo "Processing (PDF) $i -> ${outputDir}${tmp}"
+      # It's a PDF file -> OCR it
+      echo "Processing (PDF) $i -> ${outputDir}${tmp}"
 
-    if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
-    then
-      # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
-      cp "${i}" "${outputDir}${tmp}"
-    fi
+      if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
+      then
+        # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
+        cp "${i}" "${outputDir}${tmp}"
+      fi
 
-    echo "Done"
-    echo
-    countPDF=$((countPDF + 1))
-    elif  [[ "${fileType}" = *"image data"* ]]; then
-    # It's an image -> convert to PDF and OCR it
-    echo "Processing (image) $i -> ${outputDir}${tmp%.*}.pdf"
-    fullpath="${outputDir}${tmp}"
-    tesseract "${i}" "${fullpath%.*}" ${imageConvertCmdArgs}
-    echo "Done"
-    echo
-    countImage=$((countImage + 1))
-    else
-    # Other file types -> just copy to output directory.
-    echo "Copy $i -> ${outputDir}${tmp}"
-    cp "${i}" "${outputDir}${tmp}"
-    echo "Done"
-    echo
-    countCopy=$((countCopy + 1))
-    fi
+      echo "Done"
+      echo
+      countPDF=$((countPDF + 1))
+      elif  [[ "${fileType}" = *"image data"* ]]; then
+        # It's an image -> convert to PDF and OCR it
+        echo "Processing (image) $i -> ${outputDir}${tmp%.*}.pdf"
+        fullpath="${outputDir}${tmp}"
+        tesseract "${i}" "${fullpath%.*}" ${imageConvertCmdArgs}
+        echo "Done"
+        echo
+        countImage=$((countImage + 1))
+      else
+        # Other file types -> just copy to output directory.
+        echo "Copy $i -> ${outputDir}${tmp}"
+        cp "${i}" "${outputDir}${tmp}"
+        echo "Done"
+        echo
+        countCopy=$((countCopy + 1))
+      fi
     fi
   done
 }
