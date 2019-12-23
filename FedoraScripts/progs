@@ -38,6 +38,8 @@ espeak \
 f31-backgrounds-base \
 f31-backgrounds-gnome \
 fahclient \
+fahcontrol \
+fahviewer \
 fdk-aac \
 fedora-obsolete-packages \
 fedora-release-common \
