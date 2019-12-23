@@ -37,6 +37,7 @@ dracut-squash \
 espeak \
 f31-backgrounds-base \
 f31-backgrounds-gnome \
+fahclient \
 fdk-aac \
 fedora-obsolete-packages \
 fedora-release-common \
@@ -87,13 +88,13 @@ kernel-debug-devel \
 kernel-devel \
 kernel-modules \
 kernel-modules-extra \
-kmod-VirtualBox-5.3.13-300.fc31.x86_64 \
 kmod-VirtualBox-5.3.14-300.fc31.x86_64 \
 kmod-VirtualBox-5.3.15-300.fc31.x86_64 \
+kmod-VirtualBox-5.3.16-300.fc31.x86_64 \
 kmod-nvidia \
-kmod-nvidia-5.3.13-300.fc31.x86_64 \
 kmod-nvidia-5.3.14-300.fc31.x86_64 \
 kmod-nvidia-5.3.15-300.fc31.x86_64 \
+kmod-nvidia-5.3.16-300.fc31.x86_64 \
 langpacks-core-en \
 langpacks-core-sv \
 langpacks-en \
