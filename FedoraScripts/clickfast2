@@ -6,9 +6,6 @@ wmctrl -a "$1"
 sleep 0.3
 for((i=0;i<"$2";i++))
 do
-  $(xdotool << EOF
-  mousemove --sync "$X" "$Y" click 1 sleep 0.008
-  mousemove --sync "$X2" "$Y" click 1 sleep 0.008
-EOF
-  )
+  xdotool mousemove --sync "$X" "$Y" click 1 sleep 0.008
+  xdotool mousemove --sync "$X2" "$Y" click 1 sleep 0.008
 done
