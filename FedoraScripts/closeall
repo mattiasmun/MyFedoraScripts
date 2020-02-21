@@ -1,16 +1,19 @@
 #!/bin/bash
-sleep 0.3
+sleep 0.5
+
+x="$(wmctrl -l | awk '{print $2}')"
+x=${#x}
+x="$(((x+1)/2))"
 
 function _closeall {
 	for i in {1..9}
 	do
-		for j in "$(wmctrl -l | awk '{print $1}')"
+		for j in `seq 1 "$x"`
 		do
-			sleep 0.42
 			xdotool key --clearmodifiers Alt+F4
+			sleep 0.4
 		done
 	done
-	sleep 0.42
 	if [ "$2" == 1 ]
 	then
 		systemctl "$1"
