@@ -3,16 +3,12 @@ sleep 0.5
 
 x="$(wmctrl -l | awk '{print $2}')"
 x="${#x}"
-x="$(((x+1)/2))"
 
 function _closeall {
-	for i in {1..9}
+	for i in `seq 1 "$x"`
 	do
-		for j in `seq 1 "$x"`
-		do
-			xdotool key --clearmodifiers Alt+F4
-			sleep 0.4
-		done
+		xdotool key --clearmodifiers Alt+F4
+		sleep 0.4
 	done
 	if [ "$2" == 1 ]
 	then
