@@ -1,6 +1,6 @@
 #!/bin/bash
 eval "$(xdotool getmouselocation --shell)"
-X2=$((X+104))
+X2="$((X+104))"
 xdotool keyup Return
 wmctrl -a "$1"
 sleep 0.3
