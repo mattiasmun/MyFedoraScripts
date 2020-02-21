@@ -11,6 +11,10 @@ function _closeall {
 		done
 	done
 	sleep 0.42
+	if [ "$2" == 1 ]
+	then
+		systemctl "$1"
+	fi
 }
 
-_closeall &
+_closeall "$1" "$2" &
