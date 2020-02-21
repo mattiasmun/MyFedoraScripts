@@ -2,7 +2,7 @@
 sleep 0.5
 
 x="$(wmctrl -l | awk '{print $2}')"
-x=${#x}
+x="${#x}"
 x="$(((x+1)/2))"
 
 function _closeall {
