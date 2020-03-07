@@ -2,7 +2,7 @@
 s=''
 function luu
 {
-  d=/run/media/"$USER"/LIVE/"$s"
+  d=/run/media/"$USER"/"18327 MiB"/"$s"
   if [ ! -d "$d" ]
   then
     sudo mkdir -p "$d"
