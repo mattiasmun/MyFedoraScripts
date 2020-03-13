@@ -12,7 +12,6 @@ function tof1
 }
 
 tof1 'bothurtstop 1'
-tof1 'botoffset 21'
 tof1 'botskillmax 50'
 tof1 'botskillmin 50'
 tof1 'botspawndelay 63000'
