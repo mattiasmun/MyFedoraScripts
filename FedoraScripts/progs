@@ -90,13 +90,13 @@ kernel-debug-devel \
 kernel-devel \
 kernel-modules \
 kernel-modules-extra \
-kmod-VirtualBox-5.5.5-200.fc31.x86_64 \
 kmod-VirtualBox-5.5.6-201.fc31.x86_64 \
 kmod-VirtualBox-5.5.7-200.fc31.x86_64 \
+kmod-VirtualBox-5.5.8-200.fc31.x86_64 \
 kmod-nvidia \
-kmod-nvidia-5.5.5-200.fc31.x86_64 \
 kmod-nvidia-5.5.6-201.fc31.x86_64 \
 kmod-nvidia-5.5.7-200.fc31.x86_64 \
+kmod-nvidia-5.5.8-200.fc31.x86_64 \
 langpacks-core-en \
 langpacks-core-sv \
 langpacks-en \
