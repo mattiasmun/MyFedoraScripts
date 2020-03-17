@@ -18,7 +18,6 @@ blivet-gui \
 boost-program-options \
 boost-random \
 boost-regex \
-boswars \
 bsd-games \
 clamav \
 compat-lua-libs \
