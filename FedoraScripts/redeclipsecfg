@@ -12,6 +12,7 @@ function tof1
 }
 
 tof1 'bothurtstop 1'
+tof1 'botoffset 20'
 tof1 'botskillmax 50'
 tof1 'botskillmin 50'
 tof1 'botspawndelay 63000'
@@ -38,7 +39,7 @@ tof1 'gravity 30'
 tof1 'gruntmaxcarry 1'
 tof1 'gruntspeed 10'
 tof1 'jumpspeed 100.0'
-tof1 'numplayers 40'
+tof1 'numplayers 41'
 tof1 'plasmadisabled 1'
 tof1 'playerhealth 99999999'
 tof1 'playerhurtstop 1'
