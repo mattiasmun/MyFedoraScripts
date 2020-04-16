@@ -23,6 +23,7 @@ clamav \
 compat-lua-libs \
 compat-readline5 \
 compat-tolua++ \
+conda \
 crun \
 ctags \
 dbus-broker \
@@ -90,13 +91,13 @@ kernel-debug-devel \
 kernel-devel \
 kernel-modules \
 kernel-modules-extra \
-kmod-VirtualBox-5.5.11-200.fc31.x86_64 \
 kmod-VirtualBox-5.5.13-200.fc31.x86_64 \
 kmod-VirtualBox-5.5.15-200.fc31.x86_64 \
+kmod-VirtualBox-5.5.16-200.fc31.x86_64 \
 kmod-nvidia \
-kmod-nvidia-5.5.11-200.fc31.x86_64 \
 kmod-nvidia-5.5.13-200.fc31.x86_64 \
 kmod-nvidia-5.5.15-200.fc31.x86_64 \
+kmod-nvidia-5.5.16-200.fc31.x86_64 \
 langpacks-core-en \
 langpacks-core-sv \
 langpacks-en \
@@ -148,6 +149,7 @@ python3-abrt-addon \
 python3-bcrypt \
 python3-boto \
 python3-cheroot \
+python3-devel \
 python3-dnf-plugin-system-upgrade \
 python3-dropbox \
 python3-fasteners \
@@ -157,13 +159,18 @@ python3-gmpy2 \
 python3-google-api-client \
 python3-httplib2 \
 python3-lockfile \
+python3-matplotlib \
 python3-more-itertools \
+python3-numpy \
 python3-oauth2client \
+python3-opencv \
 python3-paramiko \
 python3-pexpect \
 python3-ptyprocess \
 python3-pyasn1 \
 python3-pyasn1-modules \
+python3-pygame \
+python3-pygpu \
 python3-pynacl \
 python3-rsa \
 python3-sh \
@@ -183,6 +190,7 @@ rpmfusion-free-release \
 rpmfusion-nonfree-release \
 rpmsphere-release \
 samba-libs \
+scrot \
 smc-anjalioldlipi-fonts \
 smc-dyuthi-fonts \
 smc-rachana-fonts \
@@ -194,6 +202,7 @@ subversion \
 syslinux \
 systemd-rpm-macros \
 tesseract-langpack-swe \
+torch \
 translate-shell \
 translate-toolkit \
 tss2 \
