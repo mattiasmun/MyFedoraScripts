@@ -133,6 +133,7 @@ pcre2-devel \
 pcre2-utf32 \
 pdfarranger \
 perl-File-Path-Tiny \
+perl-macros \
 plymouth-theme-spinner \
 puzzles \
 pygobject2 \
