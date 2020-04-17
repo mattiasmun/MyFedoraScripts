@@ -22,7 +22,6 @@ clamav \
 compat-lua-libs \
 compat-readline5 \
 compat-tolua++ \
-conda \
 crun \
 ctags \
 dbus-broker \
