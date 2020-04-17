@@ -3,4 +3,4 @@ xdotool keyup Return
 wmctrl -a "$1"
 x="$((2**15*RANDOM+RANDOM))"
 v="${HOME}/Video/screenrec${x}.mkv"
-ffmpeg -f x11grab -hwaccel cuvid -video_size 2560x1440 -framerate 60 -i "${DISPLAY}" -f alsa -i default -c:v hevc_nvenc -b:v 9M -maxrate:v 18M -bufsize:v 64M -preset medium -c:a vorbis "${v}"
+ffmpeg -f x11grab -hwaccel cuvid -video_size 2560x1440 -framerate 60 -i "${DISPLAY}" -f alsa -i default -c:v hevc_nvenc -b:v 9M -maxrate:v 18M -bufsize:v 64M -preset medium -c:a libvorbis "${v}"
