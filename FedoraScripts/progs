@@ -13,7 +13,6 @@ anaconda-install-env-deps \
 audacity \
 avidemux \
 binutils-gold \
-bleachbit \
 blivet-gui \
 boost-program-options \
 boost-random \
@@ -37,9 +36,6 @@ dracut-squash \
 espeak \
 f31-backgrounds-base \
 f31-backgrounds-gnome \
-fahclient \
-fahcontrol \
-fahviewer \
 fdk-aac \
 fedora-obsolete-packages \
 fedora-release-common \
@@ -68,7 +64,6 @@ gnome-tweaks \
 gnucash \
 gparted \
 gpaste-ui \
-gstreamer-plugins-bad-free \
 gstreamer-plugins-espeak \
 gtick \
 gtk2-immodule-xim \
@@ -202,7 +197,6 @@ subversion \
 syslinux \
 systemd-rpm-macros \
 tesseract-langpack-swe \
-torch \
 translate-shell \
 translate-toolkit \
 tss2 \
