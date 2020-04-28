@@ -9,8 +9,9 @@ dnfauto
 sudo nano /usr/lib/systemd/system/fstrim.timer
 sudo systemctl enable --now dnf-automatic.timer fstrim.timer
 systemctl list-timers --all
+cp /etc/sudo.conf .
 s='Path askpass /usr/libexec/openssh/gnome-ssh-askpass'
-echo "$s" > sudo.conf
+echo "$s" >> sudo.conf
 chmod 0644 sudo.conf
 sudo chown root:root sudo.conf
 sudo mv sudo.conf /etc/sudo.conf
