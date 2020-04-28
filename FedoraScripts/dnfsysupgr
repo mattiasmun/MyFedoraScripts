@@ -6,11 +6,10 @@ v="$((v+1))"
 function close_and_dnf_reboot
 {
   closeall
-  dnf system-upgrade reboot
+  sudo -A dnf system-upgrade reboot
 }
 
-sudo -s
-dnf -y system-upgrade download --refresh --allowerasing --releasever="$v"
+sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever="$v"
 if confirm 'Reboot to perform system upgrade now[Y/n]? '
 then
   close_and_dnf_reboot &
