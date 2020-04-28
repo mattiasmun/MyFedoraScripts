@@ -1,8 +1,13 @@
 #!/bin/bash
 sudo dnf -y install dkms git kernel-devel
-sudo git clone https://github.com/cilynx/rtl88x2bu.git /usr/src/
-cd rtl88x2bu
+g="${HOME}/Git"
+mkdir -p "$g"
+cd "$g"
+sudo git clone https://github.com/cilynx/rtl88x2bu.git
+cd "rtl88x2bu"
 VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
+cd /usr/src/
+sudo ln -s "$g/rtl88x2bu" "rtl88x2bu-${VER}"
 sudo dkms add -m rtl88x2bu -v "${VER}"
 sudo dkms build -m rtl88x2bu -v "${VER}"
 sudo dkms install -m rtl88x2bu -v "${VER}"
