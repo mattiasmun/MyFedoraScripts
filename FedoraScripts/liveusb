@@ -1,7 +1,8 @@
 #!/bin/bash
 d="/dev/sd${2}1"
+x=$(xdg-user-dir "DOWNLOAD")
 n="/Fedora-Workstation-Live-x86_64-${1}"
-f="${HOME}/Hämtningar${n}${n}-1.6.iso"
+f="${x}${n}${n}-1.6.iso"
 ls -al "${d}"
 ls -al "${f}"
 #sudo umount "${d}"
