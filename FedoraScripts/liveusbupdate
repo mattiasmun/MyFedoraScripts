@@ -6,8 +6,7 @@ function luu
   if [ ! -d "${d}" ]
   then
     sudo mkdir -p "${d}"
-    cd "${d}"
-    cd ..
+    cd "${d}/.."
     sudo git clone "https://github.com/mattiasmun/${s}.git"
   fi
   cd "${d}"
