@@ -1,9 +1,9 @@
 #!/bin/bash
 d="/dev/sd${2}1"
-n="Fedora-Workstation-Live-x86_64-${1}"
-f="${HOME}/Hämtningar/${n}/${n}-1.6.iso"
-ll "${d}"
-ll "${f}"
+n="/Fedora-Workstation-Live-x86_64-${1}"
+f="${HOME}/Hämtningar${n}${n}-1.6.iso"
+ls -al "${d}"
+ls -al "${f}"
 #sudo umount "${d}"
 #sudo mkfs.ext4 "${d}"
 #sudo livecd-iso-to-disk --force --reset-mbr "${f}" "${d}"
