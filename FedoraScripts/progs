@@ -46,6 +46,7 @@ fstrm \
 gameconqueror \
 gbrainy \
 gcr-base \
+gdbm \
 geany \
 geany-libgeany \
 ghex \
@@ -115,6 +116,7 @@ mariadb-connector-c \
 mariadb-connector-c-config \
 meld \
 memtest86+ \
+mesa-libOpenCL \
 metacity \
 mkpasswd \
 ocrmypdf \
@@ -163,6 +165,7 @@ python3-pyasn1-modules \
 python3-pygame \
 python3-pygpu \
 python3-pynacl \
+python3-pyopencl \
 python3-rsa \
 python3-sh \
 python3-soupsieve \
