@@ -4,7 +4,7 @@ n="rtl88x2bu"
 g="${HOME}/Git"
 mkdir -p "${g}"
 cd "${g}"
-sudo git clone "https://github.com/cilynx/${n}.git"
+git clone "https://github.com/cilynx/${n}.git"
 cd "${n}"
 VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
 cd "/usr/src"
