@@ -3,14 +3,14 @@ s=''
 function luu
 {
   d="/run/media/${USER}/18327 MiB/${s}"
-  if [ ! -d "$d" ]
+  if [ ! -d "${d}" ]
   then
-    sudo mkdir -p "$d"
-    cd "$d"
+    sudo mkdir -p "${d}"
+    cd "${d}"
     cd ..
     sudo git clone "https://github.com/mattiasmun/${s}.git"
   fi
-  cd "$d"
+  cd "${d}"
   sudo git pull --rebase
 }
 
