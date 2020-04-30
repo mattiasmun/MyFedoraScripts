@@ -4,7 +4,7 @@ import subprocess
 import sys
 import time
 
-gui.PAUSE = 0.01
+gui.PAUSE = 0.005
 gui.FAILSAFE = True
 
 gui.keyUp('return')
@@ -19,4 +19,3 @@ time.sleep(0.3)
 n=int(sys.argv[2])
 for i in range(n):
 	gui.click(x=x, y=y)
-	time.sleep(0.008)
