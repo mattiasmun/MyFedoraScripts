@@ -1,0 +1,22 @@
+#!/bin/python3
+import pyautogui as gui
+import subprocess
+import sys
+import time
+
+pyautogui.PAUSE = 0.01
+pyautogui.FAILSAFE = True
+
+gui.keyup('return')
+
+x, y = gui.position()
+
+s=str(sys.argv[1])
+subprocess.run(["wmctrl", "-a", s])
+
+time.sleep(0.3)
+
+n=int(sys.argv[2])
+for i in range(n):
+	gui.click(x=x, y=y)
+	time.sleep(0.008)
