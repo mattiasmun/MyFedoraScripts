@@ -4,10 +4,10 @@ import subprocess
 import sys
 import time
 
-pyautogui.PAUSE = 0.01
-pyautogui.FAILSAFE = True
+gui.PAUSE = 0.01
+gui.FAILSAFE = True
 
-gui.keyup('return')
+gui.keyUp('return')
 
 x, y = gui.position()
 
