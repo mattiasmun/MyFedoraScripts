@@ -8,11 +8,12 @@ gui.PAUSE = 0.005
 gui.FAILSAFE = True
 
 gui.keyUp('return')
-
+gui.hotkey('alt', 'tab')
 x, y = gui.position()
 
 s=str(sys.argv[1])
-subprocess.run(["wmctrl", "-a", s])
+l=["wmctrl", "-a", s]
+subprocess.run(l)
 
 time.sleep(0.3)
 
