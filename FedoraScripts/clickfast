@@ -1,9 +1,4 @@
 #!/bin/bash
-eval "$(xdotool getmouselocation --shell)"
-xdotool keyup Return
 wmctrl -a "$1"
 sleep 0.3
-for((i=0;i<"$2";i++))
-do
-  xdotool mousemove --sync "$X" "$Y" click 1 sleep 0.008
-done
+clickfastp "$2"
