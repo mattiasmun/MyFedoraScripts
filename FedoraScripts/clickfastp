@@ -4,7 +4,7 @@ import subprocess
 import sys
 import time
 
-gui.PAUSE = 0.005
+gui.PAUSE = 0.02
 gui.FAILSAFE = True
 
 gui.keyUp('return')
