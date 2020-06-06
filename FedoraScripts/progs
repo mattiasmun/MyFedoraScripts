@@ -81,13 +81,13 @@ kernel-debug-devel \
 kernel-devel \
 kernel-modules \
 kernel-modules-extra \
-kmod-VirtualBox-5.6.11-300.fc32.x86_64 \
-kmod-VirtualBox-5.6.12-300.fc32.x86_64 \
 kmod-VirtualBox-5.6.13-300.fc32.x86_64 \
+kmod-VirtualBox-5.6.14-300.fc32.x86_64 \
+kmod-VirtualBox-5.6.15-300.fc32.x86_64 \
 kmod-nvidia \
-kmod-nvidia-5.6.11-300.fc32.x86_64 \
-kmod-nvidia-5.6.12-300.fc32.x86_64 \
 kmod-nvidia-5.6.13-300.fc32.x86_64 \
+kmod-nvidia-5.6.14-300.fc32.x86_64 \
+kmod-nvidia-5.6.15-300.fc32.x86_64 \
 langpacks-core-en \
 langpacks-core-sv \
 langpacks-en \
@@ -120,6 +120,7 @@ mkpasswd \
 ocrmypdf \
 opencc \
 openssh-askpass \
+openttd \
 opus-tools \
 opusfile \
 p7zip \
