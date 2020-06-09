@@ -7,7 +7,6 @@ import time
 gui.PAUSE = 0.02
 gui.FAILSAFE = True
 
-gui.keyUp('return')
 x, y = gui.position()
 
 n=int(sys.argv[1])
