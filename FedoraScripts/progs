@@ -157,6 +157,7 @@ python3-oauth2client \
 python3-opencv \
 python3-paramiko \
 python3-pexpect \
+python3-plumbum \
 python3-ptyprocess \
 python3-pyasn1 \
 python3-pyasn1-modules \
