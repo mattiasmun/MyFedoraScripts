@@ -1,5 +1,23 @@
-#!/bin/bash
-xdotool keyup Return
-wmctrl -a "$1"
-sleep 1
-clickfastp "$2"
+#!/bin/python3
+from plumbum import local
+from plumbum import FG, BG
+import pyautogui as gui
+import subprocess
+import sys
+import time
+
+gui.PAUSE = 0.02
+gui.FAILSAFE = True
+
+gui.keyUp('enter')
+
+wmctrl = local["wmctrl"]
+wmctrl["-a", "firefox"] & FG
+
+time.sleep(0.1)
+
+x, y = gui.position()
+
+n = int(sys.argv[1])
+for i in range(n):
+	gui.click(x=x, y=y)
