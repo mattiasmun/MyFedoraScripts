@@ -23,8 +23,16 @@ for i in A:
 	lx += [i[1]]
 	ly += [i[2]]
 
-endps = (5,6)
+def get_endpoints(_list):
+	a, b, _min = 0, 1, _list[1]
+	for i in range(2, len(_list)):
+		x = _list[i]
+		if x < _min:
+			b, _min = i, x
+	return (a, b)
+
 matrix = make_dist_matrix(lx, ly)
+endps = get_endpoints(matrix[0])
 path = solve_tsp(matrix, endpoints = endps)
 
 print(path)
@@ -33,20 +41,19 @@ for i in path:
 	print(A[i])
 
 """
-[5, 4, 0, 1, 3, 2, 7, 8, 9, 10, 12, 13, 11, 6]
-
-Gamla Erikslätt flygplats
-Östra Ängelhammar
-Stora Malbro flygplats
-Ängelhammar flygplats
-Titskrona flygplats
-Nya Grörtsala helikopterplats
-Drotbyn flygplats
-Gnylvalla flygplats
-Tratthammar flygplats
-Sandudde flygplats
-Nävköping flygplats
-Oskarberg flygplats
-Krånnbukten flygplats
-Sprippkulle flygplats
+[0, 4, 5, 6, 13, 11, 10, 12, 9, 8, 7, 2, 3, 1]
+['0 Stora Malbro flygplats', 77, 15]
+['4 Östra Ängelhammar', 49, 48]
+['5 Gamla Erikslätt flygplats', 12, 67]
+['6 Sprippkulle flygplats', 12, 89]
+['13 Oskarberg flygplats', 20, 193]
+['11 Krånnbukten flygplats', 41, 203]
+['10 Sandudde flygplats', 61, 227]
+['12 Nävköping flygplats', 17, 234]
+['9 Tratthammar flygplats', 100, 251]
+['8 Gnylvalla flygplats', 92, 204]
+['7 Drotbyn flygplats', 89, 166]
+['2 Nya Grörtsala helikopterplats', 116, 64]
+['3 Titskrona flygplats', 77, 76]
+['1 Ängelhammar flygplats', 83, 46]
 """
