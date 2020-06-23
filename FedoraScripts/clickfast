@@ -12,7 +12,7 @@ gui.FAILSAFE = True
 gui.keyUp('enter')
 
 wmctrl = local["wmctrl"]
-wmctrl["-aFx", "Navigator.Firefox"] & FG
+wmctrl["-ax", "Navigator.Firefox"] & FG
 
 time.sleep(0.1)
 
