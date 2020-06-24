@@ -4,7 +4,7 @@ from tsp_solver.demo.tsp import make_dist_matrix
 
 A = [['0 Gamla Erikslätt flygplats', 12, 67]]
 A += [['1 Ängelhammar flygplats', 83, 46]]
-A += [['2 Nya Grörtsala helikopterplats', 116, 64]]
+A += [['2 Nya Grörtsala flygplats', 116, 64]]
 A += [['3 Titskrona flygplats', 77, 76]]
 A += [['4 Östra Ängelhammar', 49, 48]]
 A += [['5 Stora Malbro flygplats', 77, 15]]
@@ -47,7 +47,7 @@ for i in path:
 ['5 Stora Malbro flygplats', 77, 15]
 ['1 Ängelhammar flygplats', 83, 46]
 ['3 Titskrona flygplats', 77, 76]
-['2 Nya Grörtsala helikopterplats', 116, 64]
+['2 Nya Grörtsala flygplats', 116, 64]
 ['7 Drotbyn flygplats', 89, 166]
 ['8 Gnylvalla flygplats', 92, 204]
 ['9 Tratthammar flygplats', 100, 251]
