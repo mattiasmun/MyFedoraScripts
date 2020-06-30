@@ -2,20 +2,21 @@
 from tsp_solver.greedy_numpy import solve_tsp
 from tsp_solver.demo.tsp import make_dist_matrix
 
-A = [['0 Gamla Erikslätt flygplats', 12, 67]]
-A += [['1 Ängelhammar flygplats', 83, 46]]
-A += [['2 Nya Grörtsala flygplats', 116, 64]]
-A += [['3 Titskrona flygplats', 77, 76]]
-A += [['4 Fludvalla flygplats', 52, 52]]
-A += [['5 Stora Malbro flygplats', 77, 15]]
-A += [['6 Sprippkulle flygplats', 12, 89]]
-A += [['7 Drotbyn flygplats', 89, 166]]
-A += [['8 Gnylvalla flygplats', 92, 204]]
-A += [['9 Tratthammar flygplats', 100, 251]]
-A += [['10 Sandudde flygplats', 61, 227]]
-A += [['11 Krånnbukten flygplats', 41, 203]]
-A += [['12 Nävköping flygplats', 17, 234]]
-A += [['13 Oskarberg flygplats', 20, 193]]
+A = [['0 Feppsala', 23, 23]]
+A += [['1 Neppby', 63, 23]]
+A += [['2 Truttborg', 103, 23]]
+A += [['3 Peppby', 103, 75]]
+A += [['4 Brurpby', 63, 75]]
+A += [['5 Oskarbro', 23, 75]]
+A += [['6 Fjunnberg', 23, 127]]
+A += [['7 Storsvik', 63, 127]]
+A += [['8 Uppvalla', 103, 127]]
+A += [['9 Klingberg', 103, 179]]
+A += [['10 Österarp', 63, 179]]
+A += [['11 Oskarberg', 23, 179]]
+A += [['12 Landhus', 23, 231]]
+A += [['13 Snunnspång', 63, 231]]
+A += [['14 Bärthamn', 103, 231]]
 
 lx, ly = [], []
 
@@ -35,13 +36,10 @@ matrix = make_dist_matrix(lx, ly)
 endps = get_endpoints(matrix[0])
 path = solve_tsp(matrix, endpoints = endps)
 
-print(path)
-
 for i in path:
 	print(A[i])
 
 """
-[0, 4, 5, 1, 3, 2, 7, 8, 10, 9, 12, 13, 11, 6]
 ['0 Gamla Erikslätt flygplats', 12, 67]
 ['4 Fludvalla flygplats', 52, 52]
 ['5 Stora Malbro flygplats', 77, 15]
