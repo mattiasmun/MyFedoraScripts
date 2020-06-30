@@ -38,20 +38,3 @@ path = solve_tsp(matrix, endpoints = endps)
 
 for i in path:
 	print(A[i])
-
-"""
-['0 Gamla Erikslätt flygplats', 12, 67]
-['4 Fludvalla flygplats', 52, 52]
-['5 Stora Malbro flygplats', 77, 15]
-['1 Ängelhammar flygplats', 83, 46]
-['3 Titskrona flygplats', 77, 76]
-['2 Nya Grörtsala flygplats', 116, 64]
-['7 Drotbyn flygplats', 89, 166]
-['8 Gnylvalla flygplats', 92, 204]
-['10 Sandudde flygplats', 61, 227]
-['9 Tratthammar flygplats', 100, 251]
-['12 Nävköping flygplats', 17, 234]
-['13 Oskarberg flygplats', 20, 193]
-['11 Krånnbukten flygplats', 41, 203]
-['6 Sprippkulle flygplats', 12, 89]
-"""
