@@ -2,7 +2,6 @@
 from plumbum import local
 from plumbum import FG, BG
 import pyautogui as gui
-import subprocess
 import sys
 import time
 
