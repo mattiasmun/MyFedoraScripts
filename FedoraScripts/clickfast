@@ -11,12 +11,12 @@ gui.FAILSAFE = True
 gui.keyUp('enter')
 
 wmctrl = local["wmctrl"]
-wmctrl["-ax", "Navigator.Firefox"] & FG
+wmctrl["-xa", sys.argv[1]] & FG
 
 time.sleep(0.1)
 
 x, y = gui.position()
 
-n = int(sys.argv[1])
+n = int(sys.argv[2])
 for i in range(n):
 	gui.click(x=x, y=y)
