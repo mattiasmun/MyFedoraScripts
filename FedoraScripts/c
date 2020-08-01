@@ -3,7 +3,7 @@ cat /etc/motd
 str="$(stat -c %y /etc/motd)"
 str="${str::19}"
 str='Modified: '"$str"
-echo "$str"
+center "$str"
 systemctl list-timers dnf-a* --all
 f=/usr/lib/systemd/system/dnf-automatic.timer
 grep OnBoot "$f"
