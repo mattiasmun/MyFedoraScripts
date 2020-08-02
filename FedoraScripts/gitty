@@ -1,7 +1,5 @@
 #!/bin/bash
-dir="$PWD"
 cd "$1"
 git commit -am 'edit'
 git pull --rebase
 git push
-cd "$dir"
