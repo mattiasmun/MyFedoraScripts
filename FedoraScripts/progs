@@ -32,8 +32,6 @@ dnf-automatic \
 dracut-live \
 dracut-squash \
 espeak \
-f31-backgrounds-base \
-f31-backgrounds-gnome \
 fdk-aac \
 fedora-release-common \
 fedora-workstation-repositories \
