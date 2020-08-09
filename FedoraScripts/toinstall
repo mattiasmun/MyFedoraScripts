@@ -1,12 +1,25 @@
 #!/bin/bash
 v="$(rpm -E %fedora)"
-sudo dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-"$v".noarch.rpm \
-	https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$v".noarch.rpm
-sudo dnf -y install https://github.com/rpmsphere/noarch/blob/master/r/rpmsphere-release-32-1.noarch.rpm?raw=true
+sudo dnf -y install 'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-'"$v"'.noarch.rpm' \
+	'https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-'"$v"'.noarch.rpm'
+sudo dnf -y install 'https://github.com/rpmsphere/noarch/blob/master/r/rpmsphere-release-32-1.noarch.rpm?raw=true'
 sudo dnf -y upgrade
-cd "${0:0: -9}"
+
+here="${0:0: -9}"
+cd "$here"
 ./bashprofile
 ./progs
-sudo dnf -y groupupdate core multimedia sound-and-video workstation-product-environment
-sudo pip install tsp-solver2 PyAutoGUI
+
+cd "$HOME"
+mkdir -p 'Bash'
+mkdir -p 'Git'
+cd 'Bash'
+git clone 'https://github.com/mattiasmun/MyFedoraScripts.git'
+cd '../Git'
+git clone 'https://github.com/mattiasmun/noscriptsettings.git'
+
+cd "$here"
+sudo dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
+	'workstation-product-environment'
+sudo pip install 'tsp-solver2' 'PyAutoGUI'
 ./rebootsoon
