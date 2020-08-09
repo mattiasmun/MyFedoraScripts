@@ -3,15 +3,15 @@ sudo update-alternatives --config java
 sudo update-alternatives --config javac
 sudo update-alternatives --config jre_openjdk
 sudo update-alternatives --config java_sdk_openjdk
-update-alternatives --list | grep jvm
-sudo nano /etc/dnf/automatic.conf
-dnfauto
-sudo nano /usr/lib/systemd/system/fstrim.timer
-sudo systemctl enable --now dnf-automatic.timer fstrim.timer
+update-alternatives --list | grep 'jvm'
+sudo nano '/etc/dnf/automatic.conf'
+sudo systemctl edit 'fstrim.service'
+sudo systemctl enable --now 'dnf-automatic.timer' 'fstrim.timer'
+systemctl daemon-reload
 systemctl list-timers --all
-cp /etc/sudo.conf .
+cp '/etc/sudo.conf' .
 s='Path askpass /usr/libexec/openssh/gnome-ssh-askpass'
-echo "$s" >> sudo.conf
-chmod 0644 sudo.conf
-sudo chown root:root sudo.conf
-sudo mv sudo.conf /etc/sudo.conf
+echo "$s" >> 'sudo.conf'
+chmod 0644 'sudo.conf'
+sudo chown root:root 'sudo.conf'
+sudo mv 'sudo.conf' '/etc/sudo.conf'
