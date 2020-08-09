@@ -1,8 +1,8 @@
 #!/bin/bash
 v="$(rpm -E %fedora)"
 sudo dnf -y install 'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-'"$v"'.noarch.rpm' \
-	'https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-'"$v"'.noarch.rpm'
-sudo dnf -y install 'https://github.com/rpmsphere/noarch/blob/master/r/rpmsphere-release-32-1.noarch.rpm?raw=true'
+	'https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-'"$v"'.noarch.rpm' \
+	'https://github.com/rpmsphere/noarch/blob/master/r/rpmsphere-release-32-1.noarch.rpm?raw=true'
 sudo dnf -y upgrade
 
 here="${0:0: -9}"
