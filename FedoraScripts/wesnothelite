@@ -4,13 +4,13 @@ wmctrl -a 'Kampen om Wesnoth'
 sleep 0.3
 x="$((2**15*RANDOM+RANDOM))"
 f="/tmp/s$x"
-n=3
+n=4
 s=''
 
 function enter
 {
   xdotool key colon
-  sleep 0.3
+  sleep 0.25
   xdotool key Ctrl+v
   sleep 0.3
   xdotool key Return
@@ -33,9 +33,9 @@ function start
 
 #debug
 s='unit advances=25';start
-sleep 5
-s='unit max_hitpoints=9000';start
-s='unit hitpoints=9000';start
+sleep 4
+s='unit max_hitpoints=99999';start
+s='unit hitpoints=99999';start
 s='unit max_moves=299';start
 : '
 for i in {1..200}
