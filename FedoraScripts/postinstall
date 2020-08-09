@@ -11,7 +11,7 @@ sudo chown root:root '/usr/sbin/fstrimz'
 sudo nano '/etc/dnf/automatic.conf'
 sudo systemctl edit 'fstrim.service'
 sudo systemctl enable --now 'dnf-automatic.timer' 'fstrim.timer'
-systemctl daemon-reload
+sudo systemctl daemon-reload
 systemctl list-timers --all
 
 cp '/etc/sudo.conf' .
