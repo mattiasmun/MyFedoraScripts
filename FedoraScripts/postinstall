@@ -5,7 +5,8 @@ sudo update-alternatives --config jre_openjdk
 sudo update-alternatives --config java_sdk_openjdk
 update-alternatives --list | grep 'jvm'
 
-cd "${0:0: -11}"
+here="${0:0: -11}"
+cd "$here"
 sudo cp 'archive/fstrimz' '/usr/sbin/'
 sudo chown root:root '/usr/sbin/fstrimz'
 sudo nano '/etc/dnf/automatic.conf'
