@@ -5,12 +5,12 @@ source yesno
 
 function close_and_dnf_reboot
 {
-  closeall
-  sudo -A dnf system-upgrade reboot
+	closeall
+	sudo -A dnf system-upgrade reboot
 }
 
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever="$1"
 if confirm 'Reboot to perform system upgrade now[Y/n]? '
 then
-  close_and_dnf_reboot &
+	close_and_dnf_reboot &
 fi
