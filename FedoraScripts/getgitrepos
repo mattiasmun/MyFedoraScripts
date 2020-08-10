@@ -1,4 +1,9 @@
 #!/bin/bash
+here="${0:0: -11}"
+cd "$here"
+
+./gitcfg
+
 cd "$HOME"
 mkdir -p 'Bash'
 mkdir -p 'Git'
