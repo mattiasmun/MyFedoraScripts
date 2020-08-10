@@ -1,2 +1,2 @@
 #!/bin/bash
-closeandwhat "poweroff" $1
+closeandwhat "poweroff" "$1"
