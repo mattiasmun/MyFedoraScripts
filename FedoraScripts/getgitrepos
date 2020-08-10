@@ -1,0 +1,10 @@
+#!/bin/bash
+cd "$HOME"
+mkdir -p 'Bash'
+mkdir -p 'Git'
+
+cd 'Bash'
+git clone 'https://github.com/mattiasmun/MyFedoraScripts.git'
+
+cd '../Git'
+git clone 'https://github.com/mattiasmun/noscriptsettings.git'

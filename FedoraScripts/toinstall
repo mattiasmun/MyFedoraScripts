@@ -6,19 +6,10 @@ sudo dnf -y install 'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-
 	'git'
 sudo dnf -y upgrade
 
-cd "$HOME"
-mkdir -p 'Bash'
-mkdir -p 'Git'
-
-cd 'Bash'
-git clone 'https://github.com/mattiasmun/MyFedoraScripts.git'
-
-cd '../Git'
-git clone 'https://github.com/mattiasmun/noscriptsettings.git'
-
 here="${0:0: -9}"
 cd "$here"
 
+./getgitrepos
 ./bashprofile
 ./progs
 
