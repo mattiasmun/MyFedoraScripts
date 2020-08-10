@@ -1,2 +1,2 @@
 #!/bin/bash
-closeandwhat "reboot" $1
+closeandwhat "reboot" "$1"

@@ -7,10 +7,14 @@ update-alternatives --list | grep 'jvm'
 
 here="${0:0: -11}"
 cd "$here"
+
 sudo cp 'archive/fstrimz' '/usr/sbin/'
 sudo chown root:root '/usr/sbin/fstrimz'
+
 sudo nano '/etc/dnf/automatic.conf'
+
 sudo systemctl edit 'fstrim.service'
+
 sudo systemctl enable --now 'dnf-automatic.timer' 'fstrim.timer'
 sudo systemctl daemon-reload
 systemctl list-timers --all
@@ -18,6 +22,7 @@ systemctl list-timers --all
 cp '/etc/sudo.conf' .
 s='Path askpass /usr/libexec/openssh/gnome-ssh-askpass'
 echo "$s" >> 'sudo.conf'
+
 chmod 0644 'sudo.conf'
 sudo chown root:root 'sudo.conf'
 sudo mv 'sudo.conf' '/etc/sudo.conf'
