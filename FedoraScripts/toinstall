@@ -10,7 +10,7 @@ here="${0:0: -9}"
 cd "$here"
 
 ./getgitrepos
-./bashprofile
+./bashprofileandautostart
 ./progs
 
 sudo dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
