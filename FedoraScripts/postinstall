@@ -1,8 +1,8 @@
 #!/bin/bash
-sudo update-alternatives --config java
-sudo update-alternatives --config javac
-sudo update-alternatives --config jre_openjdk
-sudo update-alternatives --config java_sdk_openjdk
+sudo update-alternatives --config 'java'
+sudo update-alternatives --config 'javac'
+sudo update-alternatives --config 'jre_openjdk'
+sudo update-alternatives --config 'java_sdk_openjdk'
 update-alternatives --list | grep 'jvm'
 
 here="${0:0: -11}"
@@ -13,6 +13,8 @@ sudo chown root:root '/usr/sbin/fstrimz'
 
 sudo nano '/etc/dnf/automatic.conf'
 
+f='/usr/lib/systemd/system/fstrim.service'
+xclip -i "$f" -selection clipboard
 sudo systemctl edit 'fstrim.service'
 
 sudo systemctl enable --now 'dnf-automatic.timer' 'fstrim.timer'
