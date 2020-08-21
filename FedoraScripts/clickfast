@@ -17,6 +17,8 @@ time.sleep(0.1)
 
 _x, _y = gui.position()
 
-n = int(sys.argv[2])
-for i in range(n):
+t_len_s = int(sys.argv[2])
+t_end = time.monotonic() + t_len_s
+
+while time.monotonic() < t_end:
 	gui.click(x=_x, y=_y)
