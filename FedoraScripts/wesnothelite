@@ -33,9 +33,9 @@ function start
 
 #debug
 s='unit advances=25';start
-sleep 4
+sleep 2.2
 s='unit max_hitpoints=99999';start
-s='unit hitpoints=99999';start
+#s='unit hitpoints=99999';start
 s='unit max_moves=299';start
 : '
 for i in {1..200}
