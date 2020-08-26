@@ -203,6 +203,7 @@ xclip \
 xdotool \
 xforms \
 xlockmore-gtk \
+xorg-x11-drv-nvidia-cuda \
 xz-lzma-compat \
 youtube-dl \
 yum
