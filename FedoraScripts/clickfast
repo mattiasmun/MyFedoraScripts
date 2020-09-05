@@ -1,6 +1,5 @@
 #!/bin/python3
-from plumbum import local
-from plumbum import FG, BG
+from plumbum import local, FG, BG
 import pyautogui as gui
 import sys
 import time
