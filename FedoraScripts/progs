@@ -149,6 +149,7 @@ python3-numpy \
 python3-oauth2client \
 python3-opencv \
 python3-paramiko \
+python3-pdfkit \
 python3-pexpect \
 python3-plumbum \
 python3-ptyprocess \
