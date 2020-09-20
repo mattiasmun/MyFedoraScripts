@@ -23,6 +23,8 @@ compat-readline5 \
 compat-tolua++ \
 crun \
 ctags \
+cuda-repo-fedora29 \
+cuda-toolkit-10-2 \
 dbus-broker \
 dconf-editor \
 deja-dup \
@@ -85,6 +87,8 @@ langpacks-core-en \
 langpacks-core-sv \
 langpacks-en \
 langpacks-sv \
+libcudnn7 \
+libcudnn8 \
 libgda \
 libgda-sqlite \
 libgnome-games-support \
@@ -160,6 +164,7 @@ python3-pygpu \
 python3-pynacl \
 python3-pyopencl \
 python3-rsa \
+python3-scikit-image \
 python3-scipy \
 python3-sh \
 python3-soupsieve \
