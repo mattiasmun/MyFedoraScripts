@@ -159,6 +159,7 @@ python3-pygpu \
 python3-pynacl \
 python3-pyopencl \
 python3-rsa \
+python3-scipy \
 python3-sh \
 python3-soupsieve \
 python3-trustme \
