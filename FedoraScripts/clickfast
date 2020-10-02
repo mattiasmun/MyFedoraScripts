@@ -23,6 +23,6 @@ t_len = float(t_len)
 t_len = round(t_len, 9)
 t_end = time.monotonic() + t_len
 
-while time.monotonic() < t_end and _x0 == _x and _y0 == y: #and gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8):
+while time.monotonic() < t_end and _x0 == _x and _y0 == _y: #and gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8):
 	gui.click(x=_x0, y=_y0)
 	_x, _y = gui.position()
