@@ -14,12 +14,15 @@ wmctrl["-xa", sys.argv[1]] & FG
 
 time.sleep(0.1)
 
-_x, _y = gui.position()
+_x0, _y0 = gui.position()
+_x, _y = _x0, _y0
+#pix = gui.pixel(_x0, _y0)
 
 t_len = eval(sys.argv[2])
 t_len = float(t_len)
 t_len = round(t_len, 9)
 t_end = time.monotonic() + t_len
 
-while time.monotonic() < t_end:
-	gui.click(x=_x, y=_y)
+while time.monotonic() < t_end and _x0 == _x and _y0 == y: #and gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8):
+	gui.click(x=_x0, y=_y0)
+	_x, _y = gui.position()
