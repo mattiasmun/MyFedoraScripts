@@ -1,6 +1,6 @@
 #!/bin/bash
 sleep 0.01
-evolution &
+geary &
 sleep 0.01
 firefox &
 sleep 0.01
@@ -18,6 +18,6 @@ sleep 0.01
 #sleep 0.01
 nautilus &
 sleep 0.01
-qshutdown &
-sleep 0.01
+#qshutdown &
+#sleep 0.01
 quodlibet &
