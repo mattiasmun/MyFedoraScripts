@@ -23,8 +23,6 @@ compat-readline5 \
 compat-tolua++ \
 crun \
 ctags \
-cuda-repo-fedora29 \
-cuda-toolkit-10-2 \
 dbus-broker \
 dconf-editor \
 deja-dup \
@@ -53,7 +51,6 @@ ghex \
 ghex-libs \
 gimp \
 git \
-gnome-mastermind \
 gnome-shell-extension-horizontal-workspaces \
 gnome-sudoku \
 gnome-tweaks \
@@ -67,7 +64,6 @@ gtk3-immodule-xim \
 gtksourceview4 \
 gtranslator \
 guile22 \
-hardinfo \
 htop \
 hunspell-sv \
 iagno \
@@ -87,8 +83,6 @@ langpacks-core-en \
 langpacks-core-sv \
 langpacks-en \
 langpacks-sv \
-libcudnn7 \
-libcudnn8 \
 libgda \
 libgda-sqlite \
 libgnome-games-support \
@@ -171,17 +165,13 @@ python3-soupsieve \
 python3-trustme \
 python3-uritemplate \
 pyxtrlock \
-qshutdown \
 quadrapassel \
 quodlibet \
 readline-devel \
 redshift-gtk \
-rpmfusion-free-obsolete-packages \
 rpmfusion-free-release \
 rpmfusion-nonfree-release \
-rpmsphere-release \
 samba-libs \
-scrot \
 simplescreenrecorder \
 smc-anjalioldlipi-fonts \
 smc-dyuthi-fonts \
@@ -207,7 +197,6 @@ whois-nls \
 wkhtmltopdf \
 wmctrl \
 wpebackend-fdo \
-xbl \
 xclip \
 xdotool \
 xforms \
