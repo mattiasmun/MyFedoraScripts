@@ -45,7 +45,7 @@ outputDir="$2"
 #
 # Check for parameters
 #
-if [ $# != "0" ] && [ $# != "2" ]
+if [[ $# != "0" ]] && [[ $# != "2" ]]
 then
   errorecho "ERROR: Wrong number of parameters!"
   errorecho "Usage: OCRmyPDF-script.sh (no parameter): using default directories for input/output"
@@ -66,14 +66,14 @@ fi
 #
 # Use default directories if none were specified
 #
-if [ -z "${inputDir}" ]
+if [[ -z "${inputDir}" ]]
 then
   inputDir="${inputDirDefault}"
   echo "No input directory given, using the default input directory ${inputDir}"
   echo
 fi
 
-if [ -z "${outputDir}" ]
+if [[ -z "${outputDir}" ]]
 then
   outputDir="${outputDirDefault}"
   echo "No output directory given, using the default output directory ${outputDir}"
@@ -83,13 +83,13 @@ fi
 #
 # Check if directories already exist
 #
-if [ ! -d "${inputDir}" ]
+if [[ ! -d "${inputDir}" ]]
 then
   errorecho "ERROR: The input directory ${inputDir} does not exist!"
   exit 1
 fi
 
-if [ ! -d "${outputDir}" ]
+if [[ ! -d "${outputDir}" ]]
 then
   echo "The output directory does not exist -> creating ${outputDir}"
   mkdir -p "${outputDir}"
@@ -138,35 +138,35 @@ function ocr_recursive
 {
   for i in "$1"/*
   do
-    tmp="${i//"$inputDir"/""}"
+    tmp="${i//""$inputDir""/""}"
 
     # Skip lock directory
-    if  [ "$i" = "$lockdir" ]
+    if  [[ "$i" = "$lockdir" ]]
     then
       continue
     fi
 
-    if [ -d "$i" ]
+    if [[ -d "$i" ]]
     then
       mkdir -p "${outputDir}${tmp}"
       ocr_recursive "$i"
-    elif [ -f "$i" ]
+    elif [[ -f "$i" ]]
     then
       fileType="$(file -b "$i")"
 
-      if [ -f "${outputDir}${tmp%.*}.pdf" ]
+      if [[ -f "${outputDir}${tmp%.*}.pdf" ]]
       then
         # If the file already exist in the output directory, skip it.
         echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping..."
         continue
       fi
 
-      if [ "${fileType%%,*}" == "PDF document" ]
+      if [[ "${fileType%%,*}" == "PDF document" ]]
       then
         # It's a PDF file -> OCR it
         echo "Processing (PDF) $i -> ${outputDir}${tmp}"
 
-        if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
+        if ! ocrmypdf "${ocrmypdfCmdArgs}" "${i}" "${outputDir}${tmp}"
         then
           # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
           cp "${i}" "${outputDir}${tmp}"
@@ -180,7 +180,7 @@ function ocr_recursive
         # It's an image -> convert to PDF and OCR it
         echo "Processing (image) $i -> ${outputDir}${tmp%.*}.pdf"
         fullpath="${outputDir}${tmp}"
-        tesseract "${i}" "${fullpath%.*}" ${imageConvertCmdArgs}
+        tesseract "${i}" "${fullpath%.*}" "${imageConvertCmdArgs}"
         echo "Done"
         echo
         countImage="$((countImage + 1))"

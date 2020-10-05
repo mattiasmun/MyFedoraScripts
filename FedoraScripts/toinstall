@@ -1,8 +1,9 @@
 #!/bin/bash
 v="$(rpm -E %fedora)"
-sudo dnf -y install 'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-'"$v"'.noarch.rpm' \
-	'https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-'"$v"'.noarch.rpm' \
-	'git'
+sudo dnf -y install 'git' \
+  'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-'"$v"'.noarch.rpm' \
+  'https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-'"$v"'.noarch.rpm'
+
 sudo dnf -y upgrade
 
 here="${0:0: -9}"
