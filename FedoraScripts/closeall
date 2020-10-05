@@ -5,15 +5,15 @@ x="$(wmctrl -l | awk '{print $2}')"
 x="${#x}"
 
 function _closeall {
-	for i in `seq 1 "$x"`
-	do
-		xdotool key --clearmodifiers Alt+F4
-		sleep 0.4
-	done
-	if [ "$2" == 1 ]
-	then
-		systemctl "$1"
-	fi
+  for i in `seq 1 "$x"`
+  do
+    xdotool key --clearmodifiers "Alt+F4"
+    sleep 0.4
+  done
+  if [[ "$2" == 1 ]]
+  then
+    systemctl "$1"
+  fi
 }
 
 _closeall "$1" "$2" &

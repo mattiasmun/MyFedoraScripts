@@ -21,10 +21,15 @@ sudo systemctl enable --now 'dnf-automatic.timer' 'fstrim.timer'
 sudo systemctl daemon-reload
 systemctl list-timers --all
 
-cp '/etc/sudo.conf' .
-s='Path askpass /usr/libexec/openssh/gnome-ssh-askpass'
-echo "$s" >> 'sudo.conf'
+s='sudo.conf'
+if [[ -e "$s"]]
+then
+  cp '/etc/'"$s" .
+fi
 
-chmod 0644 'sudo.conf'
-sudo chown root:root 'sudo.conf'
-sudo mv 'sudo.conf' '/etc/sudo.conf'
+t='Path askpass /usr/libexec/openssh/gnome-ssh-askpass'
+echo "$t" >> "$s"
+
+chmod 0644 "$s"
+sudo chown root:root "$s"
+sudo mv "$s" '/etc/'"$s"

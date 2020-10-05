@@ -32,7 +32,7 @@ function list
 {
   PS3='Which is from the three pigs: '
   choose "$s00" "$s01" "$s02" "$s03" "$s04"
-  if [[ -n $CHOICE ]]
+  if [[ -n "$CHOICE" ]]
   then
     echo You chose: "$CHOICE".
   fi
