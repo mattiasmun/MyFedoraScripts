@@ -1,8 +1,8 @@
 #!/bin/bash
 y="$1"
-[ -z "$y" ] && y="poweroff"
+[[ -z "$y" ]] && y="poweroff"
 x="$2"
-[ -z "$x" ] && x=0
+[[ -z "$x" ]] && x=0
 
 
 function close_and_what
