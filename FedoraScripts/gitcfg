@@ -1,2 +1,4 @@
 #!/bin/bash
 git config --global credential.helper store
+git config --global user.email "mattiasmun@gmail.com"
+git config --global user.name "Mattias Münster"
