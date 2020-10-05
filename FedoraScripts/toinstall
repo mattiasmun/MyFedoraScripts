@@ -14,5 +14,5 @@ cd "$here"
 ./progs
 
 sudo dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
-	'workstation-product-environment'
+  'workstation-product-environment'
 sudo pip install 'tsp-solver2' 'PyAutoGUI'
