@@ -9,9 +9,12 @@ sudo dnf -y upgrade
 cd "${0:0: -9}"
 
 ./getgitrepos
+
 ./bashprofileandautostart
+
 ./progs
 
 sudo dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
   'workstation-product-environment'
+  
 sudo pip install 'tsp-solver2' 'PyAutoGUI'
