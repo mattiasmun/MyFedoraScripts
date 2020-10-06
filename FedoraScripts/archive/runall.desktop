@@ -3,5 +3,5 @@ Name=runall
 Exec=runall
 Terminal=false
 Type=Application
-Icon=red_glasses
+Icon=redshift
 Categories=Utility
