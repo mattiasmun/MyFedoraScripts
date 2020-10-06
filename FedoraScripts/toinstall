@@ -6,8 +6,7 @@ sudo dnf -y install 'git' \
 
 sudo dnf -y upgrade
 
-here="${0:0: -9}"
-cd "$here"
+cd "${0:0: -9}"
 
 ./getgitrepos
 ./bashprofileandautostart

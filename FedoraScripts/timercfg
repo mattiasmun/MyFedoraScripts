@@ -1,0 +1,13 @@
+#!/bin/bash
+sudo cp 'archive/fstrimz' '/usr/sbin/'
+sudo chown root:root '/usr/sbin/fstrimz'
+
+sudo nano '/etc/dnf/automatic.conf'
+
+f='/usr/lib/systemd/system/fstrim.service'
+xclip -i "$f" -selection clipboard
+sudo systemctl edit 'fstrim.service'
+
+sudo systemctl enable --now 'dnf-automatic.timer' 'fstrim.timer'
+sudo systemctl daemon-reload
+systemctl list-timers --all

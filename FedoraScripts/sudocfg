@@ -1,0 +1,13 @@
+#!/bin/bash
+s='sudo.conf'
+if [[ -e '/etc/'"$s"]]
+then
+  cp '/etc/'"$s" .
+fi
+
+t='Path askpass /usr/libexec/openssh/gnome-ssh-askpass'
+echo "$t" >> "$s"
+
+chmod 0644 "$s"
+sudo chown root:root "$s"
+sudo mv "$s" '/etc/'"$s"
