@@ -23,6 +23,7 @@ deja-dup \
 distribution-gpg-keys \
 dkms \
 dnf-automatic \
+dnfdragora \
 dracut-live \
 easytag \
 espeak \
