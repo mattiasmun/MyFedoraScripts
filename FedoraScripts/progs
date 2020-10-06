@@ -150,6 +150,7 @@ subversion \
 tesseract-langpack-swe \
 translate-shell \
 translate-toolkit \
+transmission-gtk \
 vala \
 vim-filesystem \
 vlc \
