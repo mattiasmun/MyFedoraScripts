@@ -1,31 +1,8 @@
 #!/bin/bash
-here="${0:0: -11}"
-cd "$here"
+cd "${0:0: -11}"
 
 ./javacfg
 
-sudo cp 'archive/fstrimz' '/usr/sbin/'
-sudo chown root:root '/usr/sbin/fstrimz'
+./timercfg
 
-sudo nano '/etc/dnf/automatic.conf'
-
-f='/usr/lib/systemd/system/fstrim.service'
-xclip -i "$f" -selection clipboard
-sudo systemctl edit 'fstrim.service'
-
-sudo systemctl enable --now 'dnf-automatic.timer' 'fstrim.timer'
-sudo systemctl daemon-reload
-systemctl list-timers --all
-
-s='sudo.conf'
-if [[ -e '/etc/'"$s"]]
-then
-  cp '/etc/'"$s" .
-fi
-
-t='Path askpass /usr/libexec/openssh/gnome-ssh-askpass'
-echo "$t" >> "$s"
-
-chmod 0644 "$s"
-sudo chown root:root "$s"
-sudo mv "$s" '/etc/'"$s"
+./sudocfg
