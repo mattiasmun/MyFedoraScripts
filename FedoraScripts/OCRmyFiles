@@ -166,7 +166,7 @@ function ocr_recursive
         # It's a PDF file -> OCR it
         echo "Processing (PDF) $i -> ${outputDir}${tmp}"
 
-        if ! ocrmypdf "${ocrmypdfCmdArgs}" "${i}" "${outputDir}${tmp}"
+        if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
         then
           # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
           cp "${i}" "${outputDir}${tmp}"
