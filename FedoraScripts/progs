@@ -59,6 +59,7 @@ intel-media-driver \
 intltool \
 java-11-openjdk-devel \
 kernel \
+kernel-core \
 kernel-debug-devel \
 kernel-devel \
 kernel-modules \
