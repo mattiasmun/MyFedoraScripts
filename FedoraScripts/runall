@@ -1,23 +1,23 @@
 #!/bin/bash
-sleep 0.01
+sleep 0.1
 geary &
-sleep 0.01
+sleep 0.1
 firefox &
-sleep 0.01
+sleep 0.1
 geany &
-sleep 0.01
+sleep 0.1
 #gio-launch-desktop gnome-control-center display &
-#sleep 0.01
+#sleep 0.1
 gnome-calculator &
-sleep 0.01
+sleep 0.1
 #gnome-software &
-#sleep 0.01
+#sleep 0.1
 gnome-terminal &
-sleep 0.01
+sleep 0.1
 #gtick &
-#sleep 0.01
+#sleep 0.1
 nautilus &
-sleep 0.01
+sleep 0.1
 #qshutdown &
-#sleep 0.01
+#sleep 0.1
 quodlibet &

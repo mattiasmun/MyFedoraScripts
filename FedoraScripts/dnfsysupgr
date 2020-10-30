@@ -6,6 +6,7 @@ v="$((v+1))"
 function close_and_dnf_reboot
 {
 	closeall
+	wait
 	sudo -A dnf system-upgrade reboot
 }
 
