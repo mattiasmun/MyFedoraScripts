@@ -58,6 +58,7 @@ intel-gmmlib \
 intel-media-driver \
 intltool \
 java-11-openjdk-devel \
+java-latest-openjdk \
 kernel \
 kernel-core \
 kernel-debug-devel \
