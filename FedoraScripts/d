@@ -1,2 +1,11 @@
 #!/bin/bash
-closeandwhat "poweroff" "$1"
+x="$1"
+[[ -z "$x" ]] && x=0
+
+function _poweroff
+{
+  sleep "$x"
+  closeall 1
+}
+
+_poweroff &

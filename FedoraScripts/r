@@ -1,2 +1,11 @@
 #!/bin/bash
-closeandwhat "reboot" "$1"
+x="$1"
+[[ -z "$x" ]] && x=0
+
+function _reboot
+{
+  sleep "$x"
+  closeall 2
+}
+
+_reboot &
