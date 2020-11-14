@@ -6,7 +6,6 @@ v="$((v+1))"
 function close_and_dnf_reboot
 {
 	closeall 3
-	sudo -A dnf system-upgrade reboot
 }
 
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever="$v"
