@@ -5,7 +5,7 @@ v="$((v+1))"
 
 function close_and_dnf_reboot
 {
-	closeall
+	closeall 3
 	sudo -A dnf system-upgrade reboot
 }
 
