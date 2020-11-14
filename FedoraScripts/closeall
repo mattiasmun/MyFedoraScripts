@@ -4,7 +4,8 @@ sleep 0.5
 x="$(wmctrl -l | awk '{print $2}')"
 x="${#x}"
 
-function _closeall {
+function _closeall
+{
   for i in `seq 1 "$x"`
   do
     xdotool key --clearmodifiers "Alt+F4"
