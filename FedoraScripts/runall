@@ -1,5 +1,7 @@
 #!/bin/bash
 sleep 0.1
+quodlibet &
+sleep 0.1
 geary &
 sleep 0.1
 firefox &
@@ -12,12 +14,16 @@ gnome-calculator &
 sleep 0.1
 #gnome-software &
 #sleep 0.1
-gnome-terminal &
-sleep 0.1
 #gtick &
 #sleep 0.1
 nautilus &
 sleep 0.1
 #qshutdown &
 #sleep 0.1
-quodlibet &
+gnome-terminal &
+sleep 0.1
+
+flatpak update -y
+sleep 0.1
+flatpak uninstall --unused -y &
+sleep 0.1
