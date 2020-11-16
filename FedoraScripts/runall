@@ -25,5 +25,5 @@ sleep 0.1
 
 flatpak update -y
 sleep 0.1
-flatpak uninstall --unused -y &
+flatpak uninstall --unused -y
 sleep 0.1
