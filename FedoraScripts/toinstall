@@ -17,4 +17,4 @@ cd "${0:0: -9}"
 sudo dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
   'workstation-product-environment'
   
-pip install 'metronome-py' 'PyAutoGUI' 'tsp-solver2'
+pip install 'PyAutoGUI' 'tsp-solver2'
