@@ -2,7 +2,7 @@
 sleep 0.1
 quodlibet &
 sleep 0.1
-geary &
+thunderbird &
 sleep 0.1
 firefox &
 sleep 0.1
