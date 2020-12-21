@@ -22,7 +22,6 @@ _max_len = 6
 
 t_len = eval(sys.argv[2])
 t_len = float(t_len)
-t_len = round(t_len, 9)
 t_end = time.monotonic() + t_len
 
 def _check():
