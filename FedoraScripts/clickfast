@@ -31,7 +31,7 @@ def _check():
 	_distance = sqrt(_delta_x * _delta_x + _delta_y * _delta_y)
 	_boolean = _distance <= _max_len
 	_boolean = time.monotonic() < t_end and _boolean
-#	_boolean = gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8) and _boolean
+#	_boolean = gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8) and _booleanx
 	return _boolean
 
 while _check():
