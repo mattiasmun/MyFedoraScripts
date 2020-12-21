@@ -1,4 +1,5 @@
 #!/bin/python3
+from math import sqrt
 from plumbum import local, FG, BG
 import pyautogui as gui
 import sys
@@ -16,6 +17,7 @@ time.sleep(0.1)
 
 _x0, _y0 = gui.position()
 _x, _y = _x0, _y0
+_max_len = 6
 #pix = gui.pixel(_x0, _y0)
 
 t_len = eval(sys.argv[2])
@@ -23,6 +25,16 @@ t_len = float(t_len)
 t_len = round(t_len, 9)
 t_end = time.monotonic() + t_len
 
-while time.monotonic() < t_end and _x0 == _x and _y0 == _y: #and gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8):
-	gui.click(x=_x0, y=_y0)
+def _check():
 	_x, _y = gui.position()
+	_delta_x = _x0 - _x
+	_delta_y = _y0 - _y
+	_distance = sqrt(_delta_x * _delta_x + _delta_y * _delta_y)
+	_boolean = _distance <= _max_len
+	_boolean = time.monotonic() < t_end and _boolean
+#	_boolean = gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8) and _boolean
+	return _boolean
+
+while _check():
+	gui.click(x=_x0, y=_y0)
+	
