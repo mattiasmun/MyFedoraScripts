@@ -36,4 +36,3 @@ def _check():
 
 while _check():
 	gui.click(x=_x0, y=_y0)
-	
