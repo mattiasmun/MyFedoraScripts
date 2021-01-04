@@ -18,6 +18,7 @@ time.sleep(0.1)
 _x0, _y0 = gui.position()
 _x, _y = _x0, _y0
 _max_len = 10
+_next, _iter = (0, 0)
 
 def _check():
 	_x, _y = gui.position()
