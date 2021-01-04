@@ -55,3 +55,4 @@ def _check():
 while _check():
 	gui.moveTo(_x0, _y0)
 	gui.write(_next)
+	gui.press('enter')
