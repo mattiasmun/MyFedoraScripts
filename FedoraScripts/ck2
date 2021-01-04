@@ -18,17 +18,7 @@ time.sleep(0.1)
 _x0, _y0 = gui.position()
 _x, _y = _x0, _y0
 _max_len = 10
-_next, _iter = (0, iter([0]))
-
-def _check():
-	_x, _y = gui.position()
-	_d_x = _x0 - _x
-	_d_y = _y0 - _y
-	_dist = sqrt(_d_x * _d_x + _d_y * _d_y)
-	_bool = _dist <= _max_len
-	_next = next(_iter, 0)
-	_bool = _next != 0 and _bool
-	return _bool
+_next = '.'
 
 _id = sys.argv[1]
 _dip = str(100 - int(sys.argv[2]))
@@ -36,6 +26,7 @@ _mar = str(100 - int(sys.argv[3]))
 _ste = str(100 - int(sys.argv[4]))
 _int = str(100 - int(sys.argv[5]))
 _lea = str(100 - int(sys.argv[6]))
+
 _list = [['add_diplomacy ' + _id + ' ' + _dip]]
 _list += [['add_martial ' + _id + ' ' + _mar]]
 _list += [['add_stewardship ' + _id + ' ' + _ste]]
@@ -49,6 +40,16 @@ _list += [['add_trait genius ' + _id]]
 _list += [['add_trait strong ' + _id]]
 
 _iter = iter(_list)
+
+def _check():
+	_x, _y = gui.position()
+	_d_x = _x0 - _x
+	_d_y = _y0 - _y
+	_dist = sqrt(_d_x * _d_x + _d_y * _d_y)
+	_bool = _dist <= _max_len
+	_next = next(_iter, 0)
+	_bool = _next != 0 and _bool
+	return _bool
 
 while _check():
 	gui.moveTo(_x0, _y0)
