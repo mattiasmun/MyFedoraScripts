@@ -18,6 +18,7 @@ time.sleep(0.1)
 _x0, _y0 = gui.position()
 _x, _y = _x0, _y0
 _max_len = 10
+_next = '.'
 
 def _check():
 	_x, _y = gui.position()
@@ -25,6 +26,8 @@ def _check():
 	_d_y = _y0 - _y
 	_dist = sqrt(_d_x * _d_x + _d_y * _d_y)
 	_bool = _dist <= _max_len
+	_next = next(_iter, 0)
+	_bool = _next != 0 and _bool
 	return _bool
 
 _id = sys.argv[1]
@@ -43,9 +46,10 @@ _list += [['add_trait duelist ' + _id]]
 _list += [['add_trait hunter ' + _id]]
 _list += [['add_trait brilliant_strategist ' + _id]]
 _list += [['add_trait genius ' + _id]]
+_list += [['add_trait strong ' + _id]]
 
 _iter = iter(_list)
 
 while _check():
 	gui.moveTo(_x0, _y0)
-	gui.write(next(_iter))
+	gui.write(_next)
