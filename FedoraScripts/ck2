@@ -38,6 +38,7 @@ _list += ['add_trait hunter ' + _id]
 _list += ['add_trait brilliant_strategist ' + _id]
 _list += ['add_trait genius ' + _id]
 _list += ['add_trait strong ' + _id]
+_list += ['add_trait brave ' + _id]
 
 _iter = iter(_list)
 
