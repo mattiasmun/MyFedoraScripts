@@ -11,18 +11,13 @@ gui.FAILSAFE = True
 gui.keyUp('enter')
 
 wmctrl = local['wmctrl']
-wmctrl['-xa', sys.argv[1]] & FG
+wmctrl['-xa', 'ck2.ck2'] & FG
 
 time.sleep(0.1)
 
 _x0, _y0 = gui.position()
 _x, _y = _x0, _y0
-_max_len = 6
-#pix = gui.pixel(_x0, _y0)
-
-t_len = eval(sys.argv[2])
-t_len = float(t_len)
-t_end = time.monotonic() + t_len
+_max_len = 10
 
 def _check():
 	_x, _y = gui.position()
@@ -30,9 +25,20 @@ def _check():
 	_d_y = _y0 - _y
 	_dist = sqrt(_d_x * _d_x + _d_y * _d_y)
 	_bool = _dist <= _max_len
-	_bool = time.monotonic() < t_end and _bool
-#	_bool = gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8) and _bool
 	return _bool
 
+_id = sys.argv[1]
+_dip = str(100 - int(sys.argv[2]))
+_mar = str(100 - int(sys.argv[3]))
+_ste = str(100 - int(sys.argv[4]))
+_int = str(100 - int(sys.argv[5]))
+_lea = str(100 - int(sys.argv[6]))
+_list = [['add_diplomacy '_id' '_dip]]
+_list += [['add_martial '_id' '_mar]]
+
+
+_iter = iter(_list)
+
 while _check():
-	gui.click(_x0, _y0)
+	gui.moveTo(_x0, _y0)
+	gui.write(next(_iter))
