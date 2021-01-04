@@ -42,6 +42,7 @@ _list += ['add_trait strong ' + _id]
 _iter = iter(_list)
 
 def _check():
+	global _next, _x, _y
 	_x, _y = gui.position()
 	_d_x = _x0 - _x
 	_d_y = _y0 - _y
