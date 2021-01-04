@@ -33,9 +33,16 @@ _mar = str(100 - int(sys.argv[3]))
 _ste = str(100 - int(sys.argv[4]))
 _int = str(100 - int(sys.argv[5]))
 _lea = str(100 - int(sys.argv[6]))
-_list = [['add_diplomacy '_id' '_dip]]
-_list += [['add_martial '_id' '_mar]]
-
+_list = [['add_diplomacy ' + _id + ' ' + _dip]]
+_list += [['add_martial ' + _id + ' ' + _mar]]
+_list += [['add_stewardship ' + _id + ' ' + _ste]]
+_list += [['add_intrigue ' + _id + ' ' + _int]]
+_list += [['add_learning ' + _id + ' ' + _lea]]
+_list += [['add_trait immortal ' + _id]]
+_list += [['add_trait duelist ' + _id]]
+_list += [['add_trait hunter ' + _id]]
+_list += [['add_trait brilliant_strategist ' + _id]]
+_list += [['add_trait genius ' + _id]]
 
 _iter = iter(_list)
 
