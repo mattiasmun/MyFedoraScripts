@@ -15,9 +15,6 @@ wmctrl['-xa', 'ck2.ck2'] & FG
 
 time.sleep(0.1)
 
-_x0, _y0 = gui.position()
-_x, _y = _x0, _y0
-_max_len = 10
 _next = '.'
 
 _id = sys.argv[1]
@@ -57,17 +54,11 @@ _list += ['add_trait temperate ' + _id]
 _iter = iter(_list)
 
 def _check():
-	global _next, _x, _y
-	_x, _y = gui.position()
-	_d_x = _x0 - _x
-	_d_y = _y0 - _y
-	_dist = sqrt(_d_x * _d_x + _d_y * _d_y)
-	_bool = _dist <= _max_len
+	global _next
 	_next = next(_iter, 0)
-	_bool = _next != 0 and _bool
+	_bool = _next != 0
 	return _bool
 
 while _check():
-	gui.moveTo(_x0, _y0)
 	gui.write(_next)
 	gui.press('enter')
