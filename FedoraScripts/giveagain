@@ -2,7 +2,7 @@
 xdotool keyup Return
 wmctrl -xa "$1"
 sleep 0.3
-for((i=0;i<$2;i++))
+for((i=0;i<"$2";i++))
 do
   xdotool key Return
   sleep 0.2
