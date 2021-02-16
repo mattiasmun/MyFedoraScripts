@@ -26,7 +26,11 @@ _ste = str(100 - int(sys.argv[4]))
 _int = str(100 - int(sys.argv[5]))
 _lea = str(100 - int(sys.argv[6]))
 
-_list = ['add_artifact spear_of_destiny ' + _id]
+_list = ['add_artifact armor_tier_4_guardian ' + _id]
+_list += ['add_artifact chinese_book_economy ' + _id]
+_list += ['add_artifact iron_crown_of_lombardy ' + _id]
+_list += ['add_artifact jade_dragon ' + _id]
+_list += ['add_artifact spear_of_destiny ' + _id]
 _list += ['add_diplomacy ' + _id + ' ' + _dip]
 _list += ['add_martial ' + _id + ' ' + _mar]
 _list += ['add_stewardship ' + _id + ' ' + _ste]
