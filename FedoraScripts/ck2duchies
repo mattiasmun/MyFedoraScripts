@@ -548,7 +548,7 @@ _list += ['give_title d_zemigalians ' + _id]
 _list += ['give_title d_zhetysu ' + _id]
 _list += ['give_title d_zoroastrian ' + _id]
 _list += ['give_title d_zun_pagan_reformed ' + _id]
-_list += ['give_title d_zun_warriors ' + _id]]
+_list += ['give_title d_zun_warriors ' + _id]
 _list += ['clear']
 
 _iter = iter(_list)
