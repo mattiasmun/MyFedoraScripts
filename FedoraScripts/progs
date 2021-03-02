@@ -18,6 +18,7 @@ chkconfig \
 clamav \
 compat-lua-libs \
 compat-tolua++ \
+containers-common \
 dconf-editor \
 deja-dup \
 distribution-gpg-keys \
