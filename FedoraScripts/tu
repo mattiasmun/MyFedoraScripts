@@ -1,5 +1,5 @@
 #!/bin/bash
 a=$(date -d "now" +"%s")
 b=$(date -d "20:00" +"%s")
-c="${b-a}"
+c=$((b-a))
 echo "$c"
