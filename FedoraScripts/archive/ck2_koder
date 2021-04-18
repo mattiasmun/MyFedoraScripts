@@ -1,0 +1,33 @@
+allow_laws
+charinfo
+fow
+quickbuild
+
+add_artifact armor_tier_4_guardian 6403
+add_artifact chinese_book_economy 6403
+add_artifact chinese_dragon_amulet 6403
+add_artifact guilds_item_jewelry 6403
+add_artifact heros_crown_2 6403
+add_artifact jade_dragon 6403
+add_artifact jian_sword 6403
+add_artifact the_bestiary 6403
+add_artifact the_odyssey 6403
+add_artifact treatise_on_fishing 6403
+decision adopt_chinese_imperialism
+decision ask_help_to_manage_titles
+decision assassins_raise_ships
+decision court_exodus
+decision create_warrior_lodge_hellenic
+decision form_new_empire
+decision guilds_create_center
+decision recruit_troops_nomad
+decision write_a_book
+event RIP.11705 
+set_government merchant_republic_government 
+set_government republic_government 
+set_government theocracy_government 
+succ appointment 
+succ open_elective 
+
+ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
+grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisions/'*
