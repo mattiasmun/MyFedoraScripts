@@ -74,6 +74,7 @@ _list += ['add_trait strategist ' + _id]
 _list += ['add_trait strong ' + _id]
 _list += ['add_trait temperate ' + _id]
 _list += ['add_trait unyielding_leader ' + _id]
+_list += ['add_trait zealous ' + _id]
 _list += ['clear']
 
 _iter = iter(_list)
