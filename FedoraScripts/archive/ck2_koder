@@ -28,6 +28,7 @@ set_government republic_government
 set_government theocracy_government 
 succ appointment 
 succ open_elective 
+recalc_succ
 
 ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
 grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisions/'*
