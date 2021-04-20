@@ -20,6 +20,7 @@ decision court_exodus
 decision create_warrior_lodge_hellenic
 decision form_new_empire
 decision guilds_create_center
+decision help_liege_manage_titles
 decision recruit_troops_nomad
 decision write_a_book
 event RIP.11705 
