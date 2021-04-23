@@ -32,7 +32,7 @@ succ appointment
 succ open_elective 
 recalc_succ
 
-perl -i -pe 's#date="13#date="12#g;' '/home/mmunster/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#date="13#date="12#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
 grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisions/'*
 ck2 id 75 85 67 45 58
