@@ -36,6 +36,7 @@ recalc_succ
 
 ck2 id 75 85 67 45 58
 grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisions/'*
+grep 'b_d="14' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 grep 'date="14' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
 perl -i -pe 's#date="13#date="12#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
