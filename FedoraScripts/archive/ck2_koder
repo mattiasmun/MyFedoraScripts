@@ -1,6 +1,5 @@
 allow_laws
 charinfo
-clr_moved_capital
 fow
 quickbuild
 
@@ -14,6 +13,7 @@ add_artifact jian_sword id
 add_artifact the_bestiary id
 add_artifact the_odyssey id
 add_artifact treatise_on_fishing id
+clr_moved_capital
 decision adopt_chinese_imperialism
 decision ask_help_to_manage_titles
 decision assassins_raise_ships
@@ -29,6 +29,7 @@ set_government feudal_government
 set_government merchant_republic_government 
 set_government republic_government 
 set_government theocracy_government 
+spawn_disease
 succ appointment 
 succ open_elective 
 recalc_succ
