@@ -29,6 +29,7 @@ set_government feudal_government
 set_government merchant_republic_government 
 set_government republic_government 
 set_government theocracy_government 
+set_government theocratic_feudal_government 
 spawn_disease bubonic_plague (tuberculosis, typhoid_fever, typhus, measles, small_pox, syphilis, dancing_plague)
 succ appointment 
 succ open_elective 
