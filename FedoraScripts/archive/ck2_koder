@@ -13,8 +13,7 @@ add_artifact jian_sword id
 add_artifact the_bestiary id
 add_artifact the_odyssey id
 add_artifact treatise_on_fishing id
-clr_moved_capital
-decision adopt_chinese_imperialism
+
 decision ask_help_to_manage_titles
 decision assassins_raise_ships
 decision court_exodus
@@ -24,20 +23,26 @@ decision guilds_create_center
 decision help_liege_manage_titles
 decision recruit_troops_nomad
 decision write_a_book
+
+clr_moved_capital
 event RIP.11705 
+
 set_government feudal_government 
-set_government merchant_republic_government 
 set_government republic_government 
 set_government theocracy_government 
-set_government theocratic_feudal_government 
+
 spawn_disease bubonic_plague (tuberculosis, typhoid_fever, typhus, measles, small_pox, syphilis, dancing_plague)
-succ appointment 
+
 succ open_elective 
 recalc_succ
+
+culture arberian
+religion tengri_pagan_reformed
 
 ck2 id 75 85 67 45 58
 grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisions/'*
 grep 'b_d="14' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 grep 'date="14' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
+perl -i -pe 's#b_d="13#b_d="12#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#date="13#date="12#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
