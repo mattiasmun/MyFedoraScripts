@@ -41,8 +41,15 @@ religion tengri_pagan_reformed
 
 ck2 id 75 85 67 45 58
 grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisions/'*
-grep 'b_d="14' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-grep 'date="14' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+
+
 ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
+
+grep 'b_d="13' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#b_d="13#b_d="12#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+
+grep 'date="13' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#date="13#date="12#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+
+grep 'wealth=' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#wealth=0#wealth=1#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
