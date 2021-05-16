@@ -36,8 +36,8 @@ spawn_disease bubonic_plague (tuberculosis, typhoid_fever, typhus, measles, smal
 succ open_elective 
 recalc_succ
 
-culture arberian
-religion tengri_pagan_reformed
+culture arberian 
+religion tengri_pagan_reformed 
 
 ck2 id 75 85 67 45 58
 grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisions/'*
