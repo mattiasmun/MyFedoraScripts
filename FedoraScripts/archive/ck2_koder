@@ -30,8 +30,10 @@ event RIP.11705
 set_government feudal_government 
 set_government republic_government 
 set_government theocracy_government 
+set_government tribal_government 
 
 spawn_disease bubonic_plague (tuberculosis, typhoid_fever, typhus, measles, small_pox, syphilis, dancing_plague)
+outbreak bubonic_plague
 
 succ open_elective 
 recalc_succ
