@@ -25,7 +25,6 @@ decision recruit_troops_nomad
 decision write_a_book
 
 clr_moved_capital
-event RIP.11705 
 
 set_government feudal_government 
 set_government republic_government 
