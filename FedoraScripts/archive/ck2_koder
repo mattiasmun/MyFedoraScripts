@@ -21,6 +21,7 @@ decision create_warrior_lodge_hellenic
 decision form_new_empire
 decision guilds_create_center
 decision help_liege_manage_titles
+decision recruit_academy_hero
 decision recruit_troops_nomad
 decision write_a_book
 
