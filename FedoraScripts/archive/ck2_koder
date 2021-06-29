@@ -6,6 +6,7 @@ quickbuild
 add_artifact armor_tier_4_guardian id
 add_artifact chinese_book_economy id
 add_artifact chinese_dragon_amulet id
+add_artifact guilds_item_gem id
 add_artifact guilds_item_jewelry id
 add_artifact heros_crown_2 id
 add_artifact jade_dragon id
