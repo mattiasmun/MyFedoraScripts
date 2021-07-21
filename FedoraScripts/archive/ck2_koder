@@ -20,6 +20,7 @@ decision assassins_raise_ships
 decision court_exodus
 decision create_warrior_lodge_hellenic
 decision form_new_empire
+decision guilds_build_warehouse_button
 decision guilds_create_center
 decision guilds_get_bloodline
 decision help_liege_manage_titles
