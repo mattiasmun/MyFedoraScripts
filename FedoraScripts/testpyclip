@@ -34,9 +34,9 @@ def _do():
 
 def _loop():
 	clip.copy(_next)
-	time.sleep(0.01)
-	cb_data = clip.paste()
-	print(cb_data)
+	time.sleep(0.02)
+#	cb_data = clip.paste()
+#	print(cb_data)
 	gui.hotkey('ctrl', 'v')
 	gui.press('enter')
 
