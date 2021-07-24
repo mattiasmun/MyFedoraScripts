@@ -115,11 +115,11 @@ def _check():
 	return _bool
 
 while _check():
-	clip.copy(_next)
-	try:
-		clip.waitForNewPaste(0.02)
-	except:
-		time.sleep(0.001)
-	clip.paste()
-#	gui.write(_next)
+#	clip.copy(_next)
+#	try:
+#		clip.waitForNewPaste(0.02)
+#	except:
+#		time.sleep(0.001)
+#	clip.paste()
+	gui.write(_next)
 	gui.press('enter')
