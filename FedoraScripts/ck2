@@ -2,6 +2,7 @@
 from math import sqrt
 from plumbum import local, FG, BG
 import pyautogui as gui
+import pyperclip as clip
 import sys
 import time
 
@@ -109,5 +110,8 @@ def _check():
 	return _bool
 
 while _check():
-	gui.write(_next)
+	clip.copy(_next)
+#	clip.waitForNewPaste()
+	clip.paste()
+#	gui.write(_next)
 	gui.press('enter')
