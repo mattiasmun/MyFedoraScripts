@@ -22,15 +22,6 @@ time.sleep(0.1)
 
 _next = '.'
 
-_id = sys.argv[1]
-if len(sys.argv) == 2:
-	sys.argv += [100] * 5
-_dip = str(100 - int(sys.argv[2]))
-_mar = str(100 - int(sys.argv[3]))
-_ste = str(100 - int(sys.argv[4]))
-_int = str(100 - int(sys.argv[5]))
-_lea = str(100 - int(sys.argv[6]))
-
 _list = ['text one']
 _list += ['text two']
 _list += ['text three']
