@@ -65,6 +65,8 @@ add_modifier kuru_ec_extraordinary_leader -1
 add_modifier kuru_ec_extraordinary_plotter -1
 add_modifier kuru_ec_quick_reinforcements -1
 culture arberian
+remove_trait guilds_trait_apprentice
+remove_trait guilds_trait_trader
 remove_trait misguided_warrior
 remove_trait skilled_tactician
 remove_trait tough_soldier
