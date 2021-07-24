@@ -2,7 +2,7 @@
 from math import sqrt
 from plumbum import local, FG, BG
 import pyautogui as gui
-import pyperclip as clip
+import pyclip as clip
 import sys
 import time
 
@@ -26,7 +26,7 @@ def _check():
 
 def _do():
 	global _iter
-#	wmctrl['-xa', 'geany.Geany'] & FG
+	wmctrl['-xa', 'geany.Geany'] & FG
 	time.sleep(0.1)
 	_iter = iter(_list)
 	while _check():
@@ -34,12 +34,14 @@ def _do():
 
 def _loop():
 	clip.copy(_next)
-	try:
-		clip.waitForNewPaste(2)
-	except:
-		print("Unexpected error:", sys.exc_info())
-		time.sleep(0.01)
-	clip.paste()
+#	try:
+#		clip.waitForNewPaste(2)
+#	except:
+#		print("Unexpected error:", sys.exc_info())
+#		time.sleep(0.01)
+	time.sleep(0.1)
+	cb_data = clip.paste()
+	print(cb_data)
 #	gui.write(_next)
 	gui.press('enter')
 
