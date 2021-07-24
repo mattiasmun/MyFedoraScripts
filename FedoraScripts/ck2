@@ -15,6 +15,9 @@ wmctrl = local['wmctrl']
 #wmctrl['-xa', 'ck2.ck2'] & FG
 wmctrl['-xa', 'geany.Geany'] & FG
 
+if not clip.is_available():
+	print("Copy functionality unavailable!")
+
 time.sleep(0.1)
 
 clip.copy(' ')
