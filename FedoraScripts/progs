@@ -124,6 +124,7 @@ libuv \
 libvala \
 livecd-tools \
 lollypop \
+mdevctl \
 meld \
 mesa-libOpenCL \
 metacity \
@@ -204,6 +205,7 @@ python3-pygame \
 python3-pygpu \
 python3-pynacl \
 python3-pyopencl \
+python3-pyperclip \
 python3-rsa \
 python3-scikit-image \
 python3-scipy \
