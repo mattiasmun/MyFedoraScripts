@@ -39,7 +39,7 @@ def _loop():
 #	except:
 #		print("Unexpected error:", sys.exc_info())
 #		time.sleep(0.01)
-	time.sleep(0.1)
+	time.sleep(0.01)
 	cb_data = clip.paste()
 	print(cb_data)
 #	gui.write(_next)
