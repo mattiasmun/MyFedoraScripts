@@ -19,11 +19,11 @@ _next = '.'
 
 if len(sys.argv) == 1:
 	sys.argv += [100] * 5
-_dip = str(100 - int(sys.argv[2]))
-_mar = str(100 - int(sys.argv[3]))
-_ste = str(100 - int(sys.argv[4]))
-_int = str(100 - int(sys.argv[5]))
-_lea = str(100 - int(sys.argv[6]))
+_dip = str(100 - int(sys.argv[1]))
+_mar = str(100 - int(sys.argv[2]))
+_ste = str(100 - int(sys.argv[3]))
+_int = str(100 - int(sys.argv[4]))
+_lea = str(100 - int(sys.argv[5]))
 
 _list = ['add_diplomacy ' + _dip]
 _list += ['add_martial ' + _mar]
