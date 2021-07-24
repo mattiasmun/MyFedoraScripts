@@ -20,7 +20,7 @@ _next = '.'
 _id = sys.argv[1]
 
 _list = ['play ' + _id]
-_list += ['run ck2_buffer']
+_list += ['run ck2_buffer.txt']
 #_list += ['clear']
 
 _iter = iter(_list)
