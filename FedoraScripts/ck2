@@ -12,7 +12,12 @@ gui.FAILSAFE = True
 gui.keyUp('enter')
 
 wmctrl = local['wmctrl']
-wmctrl['-xa', 'ck2.ck2'] & FG
+#wmctrl['-xa', 'ck2.ck2'] & FG
+wmctrl['-xa', 'geany.Geany'] & FG
+
+time.sleep(0.1)
+
+clip.copy(' ')
 
 time.sleep(0.1)
 
@@ -110,11 +115,11 @@ def _check():
 	return _bool
 
 while _check():
-	clip.copy(_next)
+	clip.copy(_next, True)
 	try:
 		clip.waitForNewPaste(0.02)
 	except:
 		time.sleep(0.001)
-	clip.paste()
+	clip.paste(True)
 #	gui.write(_next)
 	gui.press('enter')
