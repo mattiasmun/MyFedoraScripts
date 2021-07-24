@@ -9,7 +9,7 @@ import time
 gui.PAUSE = 0.02
 gui.FAILSAFE = True
 gui.keyUp('enter')
-clip.copy(' ')
+clip.copy('.')
 wmctrl = local['wmctrl']
 _next = '.'
 _iter = iter(['.'])
@@ -34,17 +34,11 @@ def _do():
 
 def _loop():
 	clip.copy(_next)
-#	try:
-#		clip.waitForNewPaste(2)
-#	except:
-#		print("Unexpected error:", sys.exc_info())
-#		time.sleep(0.01)
 	time.sleep(0.01)
 	cb_data = clip.paste()
 	print(cb_data)
-#	gui.write(_next)
+	gui.hotkey('ctrl', 'v')
 	gui.press('enter')
-
 
 if __name__ == "__main__":
 	_do()
