@@ -6,3 +6,5 @@ cd "${0:0: -11}"
 ./timercfg
 
 ./sudocfg
+
+alias pip-upgrade="pip freeze --user | cut -d'=' -f1 | xargs -n1 pip install -U"
