@@ -2,13 +2,12 @@
 from math import sqrt
 from plumbum import local, FG, BG
 import pyautogui as gui
-import pyperclip as clip
+import pyperclip3 as clip
 import sys
 import time
 
 gui.PAUSE = 0.02
 gui.FAILSAFE = True
-clip.set_clipboard('xclip')
 
 gui.keyUp('enter')
 
@@ -119,11 +118,11 @@ def _check():
 	return _bool
 
 while _check():
-#	clip.copy(_next)
-#	try:
-#		clip.waitForNewPaste(0.02)
-#	except:
-#		time.sleep(0.001)
-#	clip.paste()
-	gui.write(_next)
+	clip.copy(_next)
+	try:
+		clip.waitForNewPaste(0.02)
+	except:
+		time.sleep(0.001)
+	clip.paste()
+#	gui.write(_next)
 	gui.press('enter')
