@@ -1,1 +1,71 @@
-
+add_diplomacy 0
+add_martial 0
+add_stewardship 0
+add_intrigue 0
+add_learning 0
+add_artifact armor_tier_4_guardian
+add_artifact chinese_book_economy
+add_artifact chinese_dragon_amulet
+add_artifact heros_crown_2
+add_artifact jade_dragon
+add_artifact jian_sword
+add_artifact the_bestiary
+add_artifact the_odyssey
+add_artifact treatise_on_fishing
+add_trait administrator
+add_trait adventurer
+add_trait architect
+add_trait augustus
+add_trait born_in_the_purple
+add_trait brave
+add_trait brilliant_strategist
+add_trait celibate
+add_trait charitable
+add_trait chaste
+add_trait content
+add_trait crusader_king
+add_trait diligent
+add_trait duelist
+add_trait fair
+add_trait falconer
+add_trait flanker
+add_trait gamer
+add_trait gardener
+add_trait genius
+add_trait gregarious
+add_trait groomed
+add_trait guilds_trait_master
+add_trait honest
+add_trait humble
+add_trait hunter
+add_trait immortal
+add_trait inspiring_leader
+add_trait just
+add_trait kind
+add_trait mystic
+add_trait organizer
+add_trait patient
+add_trait physician
+add_trait poet
+add_trait robust
+add_trait scholar
+add_trait shrewd
+add_trait siege_leader
+add_trait socializer
+add_trait strategist
+add_trait strong
+add_trait temperate
+add_trait theologian
+add_trait trusting
+add_trait unyielding_leader
+add_trait zealous
+add_modifier kuru_ec_bodyguard -1
+add_modifier kuru_ec_extraordinary_builder -1
+add_modifier kuru_ec_extraordinary_leader -1
+add_modifier kuru_ec_extraordinary_plotter -1
+add_modifier kuru_ec_quick_reinforcements -1
+culture arberian
+remove_trait misguided_warrior
+remove_trait skilled_tactician
+remove_trait tough_soldier
+clear
