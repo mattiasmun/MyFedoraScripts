@@ -8,18 +8,9 @@ import time
 
 gui.PAUSE = 0.02
 gui.FAILSAFE = True
-
 gui.keyUp('enter')
-
-wmctrl = local['wmctrl']
-wmctrl['-xa', 'geany.Geany'] & FG
-
-time.sleep(0.1)
-
 clip.copy(' ')
-
-time.sleep(0.1)
-
+wmctrl = local['wmctrl']
 _next = '.'
 _iter = iter(['.'])
 
@@ -35,6 +26,8 @@ def _check():
 
 def _do():
 	global _iter
+	wmctrl['-xa', 'geany.Geany'] & FG
+	time.sleep(0.1)
 	_iter = iter(_list)
 	while _check():
 		_loop()
