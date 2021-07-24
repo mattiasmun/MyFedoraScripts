@@ -8,6 +8,7 @@ import time
 
 gui.PAUSE = 0.02
 gui.FAILSAFE = True
+clip.set_clipboard('qt')
 
 gui.keyUp('enter')
 
