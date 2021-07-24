@@ -21,9 +21,6 @@ clip.copy(' ')
 
 time.sleep(0.1)
 
-if not clip.is_available():
-	print("Copy functionality unavailable!")
-
 _next = '.'
 
 _id = sys.argv[1]
