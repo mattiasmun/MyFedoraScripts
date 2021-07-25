@@ -10,14 +10,13 @@ gui.FAILSAFE = True
 gui.keyUp('enter')
 wmctrl = local['wmctrl']
 
-_x0, _y0 = gui.position()
+_x0, _y0 = (0, 0)
 _x, _y = _x0, _y0
 _max_len = 6
 #pix = gui.pixel(_x0, _y0)
-
 t_len = eval(sys.argv[2])
 t_len = float(t_len)
-t_end = time.monotonic() + t_len
+t_end = 0
 
 def _check():
 	_x, _y = gui.position()
@@ -30,10 +29,11 @@ def _check():
 	return _bool
 
 def _do():
-	global _x0, _y0
+	global _x0, _y0, t_end
 	_x0, _y0 = gui.position()
 	wmctrl['-xa', sys.argv[1]] & FG
 	time.sleep(0.1)
+	t_end = time.monotonic() + t_len
 	while _check():
 		gui.click(_x0, _y0)
 
