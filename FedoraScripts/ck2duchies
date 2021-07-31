@@ -2,21 +2,17 @@
 from math import sqrt
 from plumbum import local, FG, BG
 import pyautogui as gui
+import pyclip as clip
 import sys
 import time
 
 gui.PAUSE = 0.02
 gui.FAILSAFE = True
-
 gui.keyUp('enter')
-
+clip.copy('.')
 wmctrl = local['wmctrl']
-wmctrl['-xa', 'ck2.ck2'] & FG
-
-time.sleep(0.1)
-
 _next = '.'
-
+_iter = iter(['.'])
 _id = sys.argv[1]
 
 _list = ['give_title d_abakan ' + _id]
@@ -551,14 +547,27 @@ _list += ['give_title d_zun_pagan_reformed ' + _id]
 _list += ['give_title d_zun_warriors ' + _id]
 _list += ['clear']
 
-_iter = iter(_list)
-
 def _check():
 	global _next
 	_next = next(_iter, 0)
 	_bool = _next != 0
 	return _bool
 
-while _check():
-	gui.write(_next)
+def _do():
+	global _iter
+	wmctrl['-xa', 'ck2.ck2'] & FG
+	time.sleep(0.1)
+	_iter = iter(_list)
+	while _check():
+		_loop()
+
+def _loop():
+	clip.copy(_next)
+	time.sleep(0.05)
+#	cb_data = clip.paste()
+#	print(cb_data)
+	gui.hotkey('ctrl', 'v')
 	gui.press('enter')
+
+if __name__ == "__main__":
+	_do()
