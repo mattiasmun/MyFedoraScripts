@@ -44,7 +44,7 @@ recalc_succ
 culture id arberian
 religion id tengri_pagan_reformed
 
-ck2 id 75 85 90 46 58
+ck2 id 74 84 90 40 54
 
 grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisions/'*
 
