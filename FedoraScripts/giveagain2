@@ -15,7 +15,7 @@ _i = 0
 def _check():
 	global _i
 	_bool = _i < _n
-	_i++
+	_i = _i + 1
 	return _bool
 
 def _do():
