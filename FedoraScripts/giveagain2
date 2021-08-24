@@ -9,7 +9,7 @@ gui.FAILSAFE = True
 gui.keyUp('enter')
 wmctrl = local['wmctrl']
 _prog = sys.argv[1]
-_n = sys.argv[2]
+_n = int(sys.argv[2])
 _i = 0
 
 def _check():
