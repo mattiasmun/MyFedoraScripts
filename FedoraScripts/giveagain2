@@ -1,0 +1,33 @@
+#!/bin/python3
+from plumbum import local, FG
+import pyautogui as gui
+import sys
+import time
+
+gui.PAUSE = 0.02
+gui.FAILSAFE = True
+gui.keyUp('enter')
+wmctrl = local['wmctrl']
+_prog = sys.argv[1]
+_n = sys.argv[2]
+_i = 0
+
+def _check():
+	global _i
+	_bool = _i < _n
+	_i++
+	return _bool
+
+def _do():
+	wmctrl['-xa', _prog] & FG
+	time.sleep(0.1)
+	while _check():
+		_loop()
+
+def _loop():
+	gui.press('enter')
+	time.sleep(0.02)
+	gui.press('up')
+
+if __name__ == "__main__":
+	_do()
