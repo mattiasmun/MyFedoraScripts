@@ -41,7 +41,7 @@ outbreak bubonic_plague
 succ open_elective 
 recalc_succ
 
-culture id arberian
+culture id dragon_culture
 religion id tengri_pagan_reformed
 
 ck2 id 74 84 90 40 54
