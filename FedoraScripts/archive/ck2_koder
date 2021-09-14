@@ -50,14 +50,9 @@ grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisi
 
 ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
 
-grep 'b_d="13' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-perl -i -pe 's#b_d="13#b_d="12#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-
-grep 'date="13' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-perl -i -pe 's#date="13#date="12#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-
-grep 'max_settlements=1' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-perl -i -pe 's#max_settlements=1#max_settlements=7#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-
-grep 'wealth=' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-perl -i -pe 's#wealth=0#wealth=999999#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+grep 'culture=italian' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=italian#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=frankish#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=english#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=german#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=swedish#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
