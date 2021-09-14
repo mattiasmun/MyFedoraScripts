@@ -4,6 +4,7 @@ perl -i -pe 's#culture=alan#culture=dragon_culture#g;' "$HOME"'/.paradoxinteract
 perl -i -pe 's#culture=andalusian_arabic#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=arberian#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=armenian#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=ashkenazi#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=assamese#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=assyrian#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=avar#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
