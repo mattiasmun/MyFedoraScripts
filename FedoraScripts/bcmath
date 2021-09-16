@@ -17,7 +17,7 @@ echo "hypotenuse = $hyp"    # 8.184039344
 function progressbar   # Perform division of two numbers
 {  # c = a / b
   progress=$(bc -l << EOF
-  scale = 24
+  scale = 6
   $1 / $2
 EOF
   )
@@ -26,7 +26,7 @@ EOF
   echo "$progress"
 }
 
-num=1
+num=0
 progress=$(progressbar $num 360)
 echo -ne "progress = $progress\r"
 
@@ -36,4 +36,4 @@ echo -ne "progress = $progress\r"
 
 num=$(($num + 1))
 progress=$(progressbar $num 360)
-echo -e "progress = $progress"
+echo "progress = $progress"
