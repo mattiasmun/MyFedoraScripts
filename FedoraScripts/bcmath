@@ -26,5 +26,5 @@ EOF
   echo "$progress"
 }
 
-progress=$(hypotenuse 1 360)
+progress=$(progressbar 1 360)
 echo -ne "progress = $progress"    # 8.184039344
