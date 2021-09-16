@@ -102,6 +102,9 @@ perl -i -pe 's#culture=marathi#culture=dragon_culture#g;' "$HOME"'/.paradoxinter
 perl -i -pe 's#culture=meshchera#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=mongol#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=mordvin#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+num=$(($num + 10))
+progress=$(progressbar $num 360)
+echo -ne "progress = $progress\r"
 perl -i -pe 's#culture=nepali#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=norman#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=norse#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
@@ -112,6 +115,9 @@ perl -i -pe 's#culture=old_frankish#culture=dragon_culture#g;' "$HOME"'/.paradox
 perl -i -pe 's#culture=old_saxon#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=oriya#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=panjabi#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+num=$(($num + 10))
+progress=$(progressbar $num 360)
+echo -ne "progress = $progress\r"
 perl -i -pe 's#culture=pecheneg#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=persian#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=pictish#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
@@ -122,6 +128,9 @@ perl -i -pe 's#culture=prussian#culture=dragon_culture#g;' "$HOME"'/.paradoxinte
 perl -i -pe 's#culture=rajput#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=romanian#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=roman#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+num=$(($num + 10))
+progress=$(progressbar $num 360)
+echo -ne "progress = $progress\r"
 perl -i -pe 's#culture=russian#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=saka#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=samoyed#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
