@@ -14,8 +14,8 @@ EOF
 hyp=$(hypotenuse 3.68 7.31)
 echo "hypotenuse = $hyp"    # 8.184039344
 
-function progressbar   # Calculate hypotenuse of a right triangle.
-{  # c = sqrt( a^2 + b^2 )
+function progressbar   # Perform division of two numbers
+{  # c = a / b
   progress=$(bc -l << EOF
   scale = 24
   $1 / $2
@@ -26,5 +26,14 @@ EOF
   echo "$progress"
 }
 
-progress=$(progressbar 1 360)
-echo -ne "progress = $progress"    # 8.184039344
+num=1
+progress=$(progressbar $num 360)
+echo -ne "progress = $progress\r"
+
+num=$(($num + 1))
+progress=$(progressbar $num 360)
+echo -ne "progress = $progress\r"
+
+num=$(($num + 1))
+progress=$(progressbar $num 360)
+echo -e "progress = $progress"
