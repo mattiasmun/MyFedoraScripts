@@ -42,7 +42,7 @@ succ open_elective
 recalc_succ
 
 culture id dragon_culture
-religion id tengri_pagan_reformed
+religion id cathar
 
 ck2 id 74 84 90 40 54
 
