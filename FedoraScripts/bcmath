@@ -26,14 +26,20 @@ EOF
   echo "$progress"
 }
 
-num=0
-progress=$(progressbar $num 360)
-echo -ne "progress = $progress\r"
+num=-1
 
-num=$(($num + 1))
-progress=$(progressbar $num 360)
-echo -ne "progress = $progress\r"
+function tick
+{
+  num=$(($num + 1))
+  progress=$(progressbar $num 3)
+  echo -ne "progress = $progress\r"
+}
 
-num=$(($num + 1))
-progress=$(progressbar $num 360)
-echo "progress = $progress"
+tick
+sleep 1
+tick
+sleep 1
+tick
+sleep 1
+tick
+echo
