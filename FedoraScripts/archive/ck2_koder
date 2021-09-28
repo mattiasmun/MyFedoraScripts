@@ -39,9 +39,9 @@ spawn_disease bubonic_plague (tuberculosis, typhoid_fever, typhus, measles, smal
 outbreak bubonic_plague
 
 succ open_elective 
-recalc_succ
+recalc_succ id
 
-culture id dragon_culture
+culture id breton
 religion id cathar
 
 ck2 id 74 84 90 40 54
@@ -51,7 +51,7 @@ grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisi
 ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
 
 grep 'culture=italian' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-perl -i -pe 's#culture=italian#culture=dragon_culture#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=italian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#gov=feudal_government#gov=theocracy_government#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#primogeniture#open_elective#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#ultimogeniture#open_elective#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
