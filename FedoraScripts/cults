@@ -21,137 +21,137 @@ function tick
 }
 
 tick
-perl -i -pe 's#culture = afghan#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = alan#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = andalusian_arabic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = arberian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = armenian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = ashkenazi#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = assamese#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = assyrian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = avar#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = baloch#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=afghan#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=alan#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=andalusian_arabic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=arberian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=armenian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=ashkenazi#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=assamese#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=assyrian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=avar#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=baloch#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = basque#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = bedouin_arabic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = belarusian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = bengali#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = bodpa#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = bohemian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = bolghar#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = bosnian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-#perl -i -pe 's#culture = breton#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=basque#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=bedouin_arabic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=belarusian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=bengali#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=bodpa#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=bohemian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=bolghar#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=bosnian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+#perl -i -pe 's#culture=breton#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 num=$(($num - 1))
-perl -i -pe 's#culture = bulgarian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=bulgarian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = carantanian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = castillan#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = catalan#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = coptic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = crimean_gothic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = croatian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = cuman#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = daju#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = dalmatian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = danish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=carantanian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=castillan#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=catalan#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=coptic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=crimean_gothic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=croatian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=cuman#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=daju#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=dalmatian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=danish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = dutch#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = eastereggs#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = egyptian_arabic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = english#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = ethiopian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = finnish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = frankish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = frisian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = georgian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = german#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=dutch#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=eastereggs#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=egyptian_arabic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=english#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=ethiopian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=finnish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=frankish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=frisian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=georgian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=german#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = greek#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = gujurati#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = han#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = hausa#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = hindustani#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = hungarian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = irish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = italian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = jurchen#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = kannada#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=greek#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=gujurati#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=han#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=hausa#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=hindustani#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=hungarian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=irish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=italian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=jurchen#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=kannada#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = kanuri#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = karluk#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = khanty#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = khazar#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = khitan#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = kirghiz#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = komi#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = kurdish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = lappish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = lettigallish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=kanuri#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=karluk#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=khanty#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=khazar#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=khitan#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=kirghiz#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=komi#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=kurdish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=lappish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=lettigallish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = levantine_arabic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = lithuanian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = lombard#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = maghreb_arabic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = manden#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = manichean_church#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = marathi#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = meshchera#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = mongol#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = mordvin#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=levantine_arabic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=lithuanian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=lombard#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=maghreb_arabic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=manden#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=manichean_church#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=marathi#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=meshchera#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=mongol#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=mordvin#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = nepali#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = norman#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = norse#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = norwegian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = nubian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = occitan#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = old_frankish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = old_saxon#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = oriya#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = panjabi#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=nepali#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=norman#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=norse#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=norwegian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=nubian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=occitan#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=old_frankish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=old_saxon#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=oriya#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=panjabi#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = pecheneg#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = persian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = pictish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = polish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = pommeranian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = portuguese#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = prussian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = rajput#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = romanian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = roman#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=pecheneg#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=persian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=pictish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=polish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=pommeranian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=portuguese#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=prussian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=rajput#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=romanian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=roman#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = russian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = saka#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = samoyed#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = sardinian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = saxon#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = scottish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = sephardi#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = serbian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = sindhi#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = sinhala#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=russian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=saka#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=samoyed#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=sardinian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=saxon#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=scottish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=sephardi#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=serbian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=sindhi#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=sinhala#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = slovieni#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = sogdian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = somali#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = songhay#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = soninke#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = suebi#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = sumpa#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = swedish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = tamil#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = tangut#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=slovieni#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=sogdian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=somali#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=songhay#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=soninke#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=suebi#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=sumpa#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=swedish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=tamil#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=tangut#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
-perl -i -pe 's#culture = telugu#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = tocharian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = turkish#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = ugricbaltic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = ukrainian#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = uyghur#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = welsh#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = visigothic#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = zaghawa#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
-perl -i -pe 's#culture = zhangzhung#culture = breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/mod/modern_times/history/provinces/'*.txt
+perl -i -pe 's#culture=telugu#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=tocharian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=turkish#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=ugricbaltic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=ukrainian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=uyghur#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=welsh#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=visigothic#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=zaghawa#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=zhangzhung#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 tick
 echo
