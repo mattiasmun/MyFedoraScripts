@@ -102,7 +102,6 @@ langpacks-sv \
 libXpresent \
 libavif \
 libcanberra \
-libcanberra-gtk2 \
 libcanberra-gtk3 \
 libcloudproviders \
 libgnome-games-support \
@@ -214,7 +213,6 @@ python3-sh \
 python3-stone \
 python3-trustme \
 python3-uritemplate \
-pyxtrlock \
 qemu-audio-spice \
 qemu-char-spice \
 qemu-device-display-virtio-gpu \
