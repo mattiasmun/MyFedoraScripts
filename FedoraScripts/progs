@@ -42,6 +42,7 @@ fedora-workstation-repositories \
 ffmpeg \
 gameconqueror \
 gbrainy \
+gcc-c++ \
 gdbm \
 geany \
 ghex \
