@@ -200,6 +200,7 @@ python3-plumbum \
 python3-ptyprocess \
 python3-pyasn1 \
 python3-pyasn1-modules \
+python3-pybind11 \
 python3-pygame \
 python3-pygpu \
 python3-pynacl \
