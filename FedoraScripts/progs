@@ -71,6 +71,7 @@ gpaste-ui \
 grpc-data \
 gstreamer-plugins-espeak \
 gstreamer1 \
+gstreamer1-plugin-openh264 \
 gtk2-immodule-xim \
 gtk3-immodule-xim \
 gtk4 \
