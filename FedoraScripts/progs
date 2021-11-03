@@ -14,6 +14,7 @@ audacity \
 autocorr-sv \
 avidemux \
 blivet-gui \
+boost-devel \
 boost-program-options \
 boost-random \
 bsd-games \
@@ -105,6 +106,7 @@ libavif \
 libcanberra \
 libcanberra-gtk3 \
 libcloudproviders \
+libglvnd-devel \
 libgnome-games-support \
 libharu \
 libpmemobj \
@@ -132,8 +134,10 @@ minizip \
 mkfontscale \
 mythes-sv \
 nvidia-xconfig \
+ocl-icd-devel \
 ocrmypdf \
 opencc \
+opencl-headers \
 openexr-libs \
 openslide \
 openssh-askpass \
