@@ -60,6 +60,63 @@
 					modifier="guilds_center_trade"
 				}
 			}
+			{
+				type=temple
+				guilds_warehouse_1_temple=yes
+				guilds_warehouse_2_temple=yes
+				guilds_warehouse_3_temple=yes
+				tp_wall_1=yes
+				tp_wall_2=yes
+				tp_wall_3=yes
+				tp_wall_4=yes
+				tp_wall_5=yes
+				tp_town_1=yes
+				tp_town_2=yes
+				tp_town_3=yes
+				tp_town_4=yes
+				tp_town_5=yes
+				tp_town_6=yes
+				tp_shipyard_1=yes
+				tp_shipyard_2=yes
+				tp_shipyard_3=yes
+				tp_shipyard_4=yes
+				tp_wall_q_1=yes
+				tp_wall_q_2=yes
+				tp_wall_q_3=yes
+				tp_wall_q_4=yes
+				tp_wall_q_5=yes
+				tp_school_1=yes
+				tp_school_2=yes
+				tp_monastery_1=yes
+				tp_monastery_2=yes
+				tp_monastery_3=yes
+				tp_monastery_4=yes
+				tp_monastery_5=yes
+				tp_monastery_6=yes
+				tp_barracks_1=yes
+				tp_barracks_2=yes
+				tp_barracks_3=yes
+				tp_barracks_4=yes
+				tp_barracks_5=yes
+				tp_barracks_6=yes
+				tp_elite_barracks_1=yes
+				tp_elite_barracks_2=yes
+				tp_elite_barracks_3=yes
+				tp_elite_barracks_4=yes
+				tp_elite_barracks_5=yes
+				tp_elite_barracks_6=yes
+				levy=
+				{
+					li={2734.000 2734.000}
+					hi={552.000 552.000}
+					pi={1795.000 1795.000}
+					ar={5027.000 5027.000}
+				}
+				modifier=
+				{
+					modifier="guilds_center_trade"
+				}
+			}
 			technology=
 			{
 				tech_levels={8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000 8.000}
