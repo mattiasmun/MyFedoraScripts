@@ -17,7 +17,7 @@ time.sleep(0.1)
 
 _next = '.'
 
-_list += ['add_artifact armor_tier_4_guardian']
+_list = ['add_artifact armor_tier_4_guardian']
 _list += ['add_artifact chinese_book_economy']
 _list += ['add_artifact chinese_dragon_amulet']
 _list += ['add_artifact heros_crown_2']
