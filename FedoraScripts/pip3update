@@ -5,4 +5,4 @@ text="${text:8}"
 no=$(echo "$text" | python3 -c 'print(input().index(" ")+1)')
 text="${text:no}"
 echo "pip3 install -U --user $text"
-pip3 install -U --user "$text"
+pip3 install -U --user $text
