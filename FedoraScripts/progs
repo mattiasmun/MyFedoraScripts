@@ -315,6 +315,9 @@ totem-video-thumbnailer \
 translate-shell \
 translate-toolkit \
 transmission-gtk \
+unifont \
+unifont-fonts \
+unifont-viewer \
 unixODBC-devel \
 vala \
 vim-filesystem \
