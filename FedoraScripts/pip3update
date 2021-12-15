@@ -1,7 +1,7 @@
 #!/bin/bash
 text=$(pip3 list --user --outdated | cut -d ' ' -f1)
 text=$(echo "$text" | tr '\n' ' ')
-text="${text:8}"
+text="${text:8} "
 no=$(echo "$text" | python3 -c 'print(input().index(" ")+1)')
 text="${text:no}"
 echo "pip3 install -U --user $text"
