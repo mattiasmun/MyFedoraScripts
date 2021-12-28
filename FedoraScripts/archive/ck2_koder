@@ -50,6 +50,8 @@ grep 'ask' "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/decisi
 
 ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provinces/' | grep -i uppland
 
+cd ~/.paradoxinteractive/Crusader\ Kings\ II/mod/modern_times/;zip -ur ../modern_times.zip .;cd
+
 grep 'culture=italian' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#culture=italian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#gov=feudal_government#gov=theocracy_government#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
