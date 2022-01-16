@@ -22,6 +22,8 @@ sleep 0.1
 #sleep 0.1
 gnome-terminal &
 sleep 0.1
+easyeffects &
+sleep 0.1
 
 flatpak update -y
 sleep 0.1
