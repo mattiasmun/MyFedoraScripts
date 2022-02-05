@@ -45,7 +45,7 @@ function randomFloat() {
     randomFloat00 -= randomFloat00 % 1;
     randomFloat00 *= 10;
     randomFloat00 += Math.random() * 9 + 1;
-    randomFloat00 -= randomFloat00 % 1
+    randomFloat00 -= randomFloat00 % 1;
     randomFloat00 /= 1e12;
     return randomFloat00;
 }
