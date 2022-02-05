@@ -5,7 +5,7 @@ export async function main(ns00) {
     ns = ns00;
     var host = ns.args[0];
     var target = ns.args[1];
-    var threads = ns.args[2];//Math.min(ns.args[2], 2000);
+    var threads = ns.args[2];
     var moneyThresh = ns.getServerMaxMoney(target) * 0.8;
     var threadsMax = 0.1 / ns.hackAnalyze(target);
     ns.tprint('Amount of threads needed to hack 10% of money: ', threadsMax);
