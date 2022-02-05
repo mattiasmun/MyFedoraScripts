@@ -41,9 +41,11 @@ export async function main(ns00) {
 }
 
 function randomFloat() {
-    var randomFloat00 = Math.random() * 9e5 + 1e5;
-    randomFloat00 = Math.floor(randomFloat00);
-    randomFloat00 = randomFloat00 * 10 + Math.random() * 9 + 1;
-    randomFloat00 = (Math.floor(randomFloat00)) / 1e7;
+    var randomFloat00 = Math.random() * 9e10 + 1e10;
+    randomFloat00 -= randomFloat00 % 1;
+    randomFloat00 *= 10;
+    randomFloat00 += Math.random() * 9 + 1;
+    randomFloat00 -= randomFloat00 % 1
+    randomFloat00 /= 1e12;
     return randomFloat00;
 }
