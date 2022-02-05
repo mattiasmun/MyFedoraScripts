@@ -11,7 +11,7 @@ export async function main(ns00) {
     ns.tprint('Amount of threads needed to hack 10% of money: ', threadsMax);
     var weakenThreads = threadsMax * 700;
     var growThreads = threadsMax * 40;
-    threadsMax = Math.floor(threadsMax);
+    threadsMax -= threadsMax % 1;
     if (threadsMax > 0) {
         threads = Math.min(threads, threadsMax);
     } else if (threadsMax == 0) {
