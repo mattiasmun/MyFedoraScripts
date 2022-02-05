@@ -1,6 +1,6 @@
 let ns = null;
 
-/** @param {NS} ns **/
+/** @param {NS} ns00 **/
 export async function main(ns00) {
     ns = ns00;
     var host = ns.args[0];
