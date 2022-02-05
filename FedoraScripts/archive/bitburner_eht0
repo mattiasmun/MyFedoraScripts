@@ -1,0 +1,49 @@
+let ns = null;
+
+/** @param {NS} ns **/
+export async function main(ns00) {
+    ns = ns00;
+    var host = ns.args[0];
+    var target = ns.args[1];
+    var threads = ns.args[2];//Math.min(ns.args[2], 2000);
+    var moneyThresh = ns.getServerMaxMoney(target) * 0.8;
+    var threadsMax = 0.1 / ns.hackAnalyze(target);
+    ns.tprint('Amount of threads needed to hack 10% of money: ', threadsMax);
+    var weakenThreads = threadsMax * 700;
+    threadsMax = Math.floor(threadsMax);
+    if (threadsMax > 0) {
+        threads = Math.min(threads, threadsMax);
+    } else if (threadsMax == 0) {
+        threads = 1;
+    }
+    var securityThresh = ns.getServerMinSecurityLevel(target) + 5;
+    var sleep00 = securityThresh ** 2 * 5 + 100;
+    var a00 = 0;
+    var a01 = 0;
+    var a02 = 0;
+
+    while (true) {
+        if (ns.getServerSecurityLevel(target) > securityThresh) {
+            ns.exec('weaken.ns', host, weakenThreads, target, weakenThreads, 0, a00);
+            a00++;
+            a00 = a00 % 1e4;
+        } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
+            ns.exec('grow.ns', host, threads, target, threads, 0, a01);
+            a01++;
+            a01 = a01 % 1e4;
+        } else {
+            ns.exec('hack.ns', host, threads, target, threads, 0, a02);
+            a02++;
+            a02 = a02 % 1e4;
+        }
+        await ns.sleep(sleep00 + randomFloat());
+    }
+}
+
+function randomFloat() {
+    var randomFloat00 = Math.random() * 9e5 + 1e5;
+    randomFloat00 = Math.floor(randomFloat00);
+    randomFloat00 = randomFloat00 * 10 + Math.random() * 9 + 1;
+    randomFloat00 = (Math.floor(randomFloat00)) / 1e7;
+    return randomFloat00;
+}
