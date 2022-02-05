@@ -10,6 +10,7 @@ export async function main(ns00) {
     var threadsMax = 0.1 / ns.hackAnalyze(target);
     ns.tprint('Amount of threads needed to hack 10% of money: ', threadsMax);
     var weakenThreads = threadsMax * 700;
+    var growThreads = threadsMax * 40;
     threadsMax = Math.floor(threadsMax);
     if (threadsMax > 0) {
         threads = Math.min(threads, threadsMax);
@@ -28,7 +29,7 @@ export async function main(ns00) {
             a00++;
             a00 = a00 % 1e4;
         } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
-            ns.exec('grow.ns', host, threads, target, threads, 0, a01);
+            ns.exec('grow.ns', host, growThreads, target, growThreads, 0, a01);
             a01++;
             a01 = a01 % 1e4;
         } else {
