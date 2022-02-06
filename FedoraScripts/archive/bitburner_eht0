@@ -11,10 +11,11 @@ export async function main(ns00) {
     ns.tprint('Amount of threads needed to hack 10% of money: ', threadsMax);
     var weakenThreads = Math.min(threads, threadsMax * 700);
     var growThreads = Math.min(threads, threadsMax * 40);
+    var oldThreadsMax = threadsMax;
     threadsMax -= threadsMax % 1;
     if (threadsMax > 0) {
         threads = Math.min(threads, threadsMax);
-    } else if (threadsMax == 0) {
+    } else if (oldThreadsMax >= 0) {
         threads = 1;
     }
     var securityThresh = ns.getServerMinSecurityLevel(target) + 5;
@@ -37,16 +38,27 @@ export async function main(ns00) {
             a02++;
             a02 = a02 % 1e4;
         }
-        await ns.sleep(sleep00 + randomFloat());
+        await ns.sleep(randomFloat(sleep00));
     }
 }
 
-function randomFloat() {
+function randomFloat(n00) {
+    var x00 = Math.log10(n00);
+    x00 = Math.round(x00);
+
+    n00 *= 10 ** (2 - x00);
+    n00 = Math.round(n00);
+    n00 /= 10 ** (2 - x00);
+
+    x00 = 1 / 10 ** x00;
+    x00 *= 1e14;
+
     var randomFloat00 = Math.random() * 9e10 + 1e10;
     randomFloat00 -= randomFloat00 % 1;
     randomFloat00 *= 10;
     randomFloat00 += Math.random() * 9 + 1;
     randomFloat00 -= randomFloat00 % 1;
-    randomFloat00 /= 1e12;
-    return randomFloat00;
+    randomFloat00 /= x00;
+    n00 += randomFloat00;
+    return n00;
 }
