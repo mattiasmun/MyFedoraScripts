@@ -9,8 +9,8 @@ export async function main(ns00) {
     var moneyThresh = ns.getServerMaxMoney(target) * 0.8;
     var threadsMax = 0.1 / ns.hackAnalyze(target);
     ns.tprint('Amount of threads needed to hack 10% of money: ', threadsMax);
-    var weakenThreads = threadsMax * 700;
-    var growThreads = threadsMax * 40;
+    var weakenThreads = Math.min(threads, threadsMax * 700);
+    var growThreads = Math.min(threads, threadsMax * 40);
     threadsMax -= threadsMax % 1;
     if (threadsMax > 0) {
         threads = Math.min(threads, threadsMax);
