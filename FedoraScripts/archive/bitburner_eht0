@@ -13,7 +13,7 @@ export async function main(ns00) {
     var growThreads = Math.min(threads, threadsMax * 40);
     var oldThreadsMax = threadsMax;
     threadsMax -= threadsMax % 1;
-    if (threadsMax > 0) {
+    if (oldThreadsMax >= 1) {
         threads = Math.min(threads, threadsMax);
     } else if (oldThreadsMax >= 0) {
         threads = 1;
