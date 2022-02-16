@@ -41,8 +41,8 @@ outbreak bubonic_plague
 succ open_elective 
 recalc_succ id
 
-culture id breton
-religion id cathar
+culture id tangut
+religion id buddhist
 
 ck2 id 74 84 90 40 54
 
@@ -53,7 +53,7 @@ ls "$HOME"'/.local/share/Steam/steamapps/common/Crusader Kings II/history/provin
 cd ~/.paradoxinteractive/Crusader\ Kings\ II/mod/modern_times/;zip -ur ../modern_times.zip .;cd
 
 grep 'culture=italian' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
-perl -i -pe 's#culture=italian#culture=breton#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
+perl -i -pe 's#culture=italian#culture=tangut#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#gov=feudal_government#gov=theocracy_government#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#primogeniture#open_elective#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
 perl -i -pe 's#ultimogeniture#open_elective#g;' "$HOME"'/.paradoxinteractive/Crusader Kings II/save games/autosave.ck2'
