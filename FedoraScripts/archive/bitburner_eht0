@@ -12,7 +12,7 @@ export async function main(ns00) {
     var weakenThreads = Math.min(threads, threadsMax * 700);
     var growThreads = Math.min(threads, threadsMax * 40);
     var oldThreadsMax = threadsMax;
-    threadsMax -= threadsMax % 1;
+    threadsMax = Math.floor(threadsMax);
     if (oldThreadsMax >= 1) {
         threads = Math.min(threads, threadsMax);
     } else if (oldThreadsMax >= 0) {
@@ -54,10 +54,10 @@ function randomFloat(n00) {
     x00 *= 1e14;
 
     var randomFloat00 = Math.random() * 9e10 + 1e10;
-    randomFloat00 -= randomFloat00 % 1;
+    randomFloat00 = Math.floor(randomFloat00);
     randomFloat00 *= 10;
     randomFloat00 += Math.random() * 9 + 1;
-    randomFloat00 -= randomFloat00 % 1;
+    randomFloat00 = Math.floor(randomFloat00);
     randomFloat00 /= x00;
     n00 += randomFloat00;
     return n00;
