@@ -7,7 +7,22 @@ Spymaster - 7fac631c8d10 - 9999999
 					+68
 Chaplain - 7fac631c8d78 - 9999999
 
-set_stress 0
+
+add_maa bombard [character id]
+
+add_maa varangian_veterans [character id]
+
+change_stewardship 35 [character id]
+
+fow
+
+gain_all_dynasty_perks [character id]
+
+gain_all_perks [character id]
+
+instabuild 
+
+set_stress 0 [character id]
 
 
 
