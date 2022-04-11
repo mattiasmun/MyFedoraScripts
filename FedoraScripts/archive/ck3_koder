@@ -22,6 +22,10 @@ gain_all_perks [character id]
 
 instabuild 
 
+instant_birth
+
+pregnancy [character id female] [character id male]
+
 set_stress 0 [character id]
 
 
