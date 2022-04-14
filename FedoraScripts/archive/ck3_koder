@@ -8,25 +8,25 @@ Spymaster - 7fac631c8d10 - 9999999
 Chaplain - 7fac631c8d78 - 9999999
 
 
-add_maa bombard [character id]
+add_maa bombard [char id]
 
-add_maa varangian_veterans [character id]
+add_maa varangian_veterans [char id]
 
-change_stewardship 35 [character id]
+change_stewardship 35 [char id]
 
 fow
 
-gain_all_dynasty_perks [character id]
+gain_all_dynasty_perks [char id]
 
-gain_all_perks [character id]
+gain_all_perks [char id]
 
 instabuild 
 
 instant_birth
 
-pregnancy [character id female] [character id male]
+pregnancy [female id] [male id] [instant birth (yes/no)]
 
-set_stress 0 [character id]
+set_stress 0 [char id]
 
 
 
