@@ -8,7 +8,7 @@ Spymaster - 7f7892aaada0 - 9999999
 					+68
 Chaplain - 7f7892aaae08 - 9999999
 
-cd '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1158310/'
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1158310/"
 
 add_maa bombard [char id]
 
