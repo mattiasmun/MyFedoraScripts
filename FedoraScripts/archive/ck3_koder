@@ -16,8 +16,6 @@ add_maa varangian_veterans [char id]
 
 change_stewardship 35 [char id]
 
-fow
-
 gain_all_dynasty_perks [char id]
 
 gain_all_perks [char id]
