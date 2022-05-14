@@ -20,7 +20,7 @@ gain_all_dynasty_perks [char id]
 
 gain_all_perks [char id]
 
-instabuild 
+instabuild
 
 instant_birth
 
