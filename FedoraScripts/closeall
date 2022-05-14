@@ -3,13 +3,13 @@ sleep 0.5
 
 #x="$(wmctrl -l | awk '{print $2}')"
 #x="${#x}"
-x="8"
+x="10"
 
 function _closeall
 {
   for i in `seq 1 "$x"`
   do
-    xdotool key --clearmodifiers "Alt+F4"
+    sudo -A ydotool key 56:1 62:1 56:0 62:0
     sleep 0.4
   done
   if [[ "$1" == 1 ]]
