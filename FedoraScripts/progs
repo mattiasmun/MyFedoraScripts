@@ -5,6 +5,7 @@ SDL2_image \
 SDL2_mixer \
 SDL2_ttf \
 VirtualBox \
+abrt-tui \
 aisleriot \
 anaconda \
 anaconda-install-env-deps \
@@ -66,6 +67,7 @@ glibc-doc \
 glibc-langpack-sv \
 gnome-sudoku \
 gnome-tweaks \
+gnome-weather \
 gnucash \
 gnutls-dane \
 gnutls-utils \
@@ -288,6 +290,7 @@ quadrapassel \
 quodlibet \
 readline-devel \
 redshift-gtk \
+rit-rachana-fonts \
 rpmfusion-free-release \
 rpmfusion-nonfree-release \
 samba-libs \
@@ -297,7 +300,6 @@ setxkbmap \
 simplescreenrecorder \
 smc-anjalioldlipi-fonts \
 smc-dyuthi-fonts \
-smc-rachana-fonts \
 smc-raghumalayalamsans-fonts \
 smc-suruma-fonts \
 spin-kickstarts \
@@ -359,4 +361,5 @@ xvinfo \
 xwininfo \
 xz-devel \
 xz-lzma-compat \
+ydotool \
 youtube-dl
