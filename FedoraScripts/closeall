@@ -1,8 +1,9 @@
 #!/bin/bash
 sleep 0.5
 
-x="$(wmctrl -l | awk '{print $2}')"
-x="${#x}"
+#x="$(wmctrl -l | awk '{print $2}')"
+#x="${#x}"
+x="8"
 
 function _closeall
 {
