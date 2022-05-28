@@ -1,0 +1,2 @@
+#!/bin/bash
+/bin/sh "/home/mmunster/.paradoxlauncher/launcher-v2.2022.7/Paradox Launcher" --pdxlSessionId e64a23c4-0665-4f43-9df1-b303443ddd18 --pdxlGameDir "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Crusader Kings III/launcher" --gameDir "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Crusader Kings III/launcher" --pdxlDisableHardwareSettings -nakama -simultaneouschunks 2 -debug_mode
