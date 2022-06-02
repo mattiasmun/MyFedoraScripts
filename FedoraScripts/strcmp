@@ -1,0 +1,16 @@
+#!/bin/python3
+import sys
+
+name1 = sys.argv[1]
+name2 = sys.argv[2]
+
+def _strcmp():
+	if name1 > name2:
+		print(name1, " is greater than ", name2)
+	elif name1 < name2:
+		print(name1, " is lesser than ", name2)
+	else:
+		print(name1, " is equal to ", name2)
+
+if __name__ == "__main__":
+	_strcmp()
