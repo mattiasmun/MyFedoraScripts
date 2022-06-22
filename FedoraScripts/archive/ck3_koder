@@ -1,5 +1,8 @@
 ll '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Paradox Interactive/Crusader Kings III/save games/'
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1158310/"
 -debug_mode
+
+To search for 102 gold type 10200000..10299999
 
 Chancellor - 7f7892aaac68 - 9999999
 					+68
@@ -8,8 +11,6 @@ Steward - 7f7892aaacd0 - 9999999
 Spymaster - 7f7892aaada0 - 9999999
 					+68
 Chaplain - 7f7892aaae08 - 9999999
-
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1158310/"
 
 add_maa bombard [char id]
 
@@ -29,6 +30,7 @@ pregnancy [female id] [male id] [instant birth (yes/no)]
 
 set_stress 0 [char id]
 
+yesmen
 
 
 
