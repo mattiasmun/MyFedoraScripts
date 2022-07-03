@@ -12,6 +12,16 @@ Spymaster - 7f7892aaada0 - 9999999
 					+68
 Chaplain - 7f7892aaae08 - 9999999
 
+Cultural traditions:
+	Agrarian
+	Collective Lands
+	Fervent Temple Builders
+	Highland Warriors
+	Legalistic
+	Pastoralists
+	Refined Poetry
+	Republican Legacy
+
 add_maa bombard [char id]
 
 add_maa varangian_veterans [char id]
