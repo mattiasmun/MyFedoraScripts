@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Europa Universalis IV
+Comment=Play this game on Steam
+Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=/app/bin/steam-wrapper com.valvesoftware.Steam steam://rungameid/236850
+Icon=/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/icons/hicolor/96x96/apps/steam_icon_236850.png
+Terminal=false
+Type=Application
+Categories=Game;
