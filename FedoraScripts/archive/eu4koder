@@ -95,6 +95,7 @@ pirate [<Province ID>]											Starts a Pirate in a province.
 powerpoints [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]		Get power in all powers. Maximizes monarch points if no number specified.
 prestige [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]			Adds prestige. Gives 5 prestige if no amount is given.
 reformprogress [Points to add] [Target tag <optional>]			Adds Government reform progress (Default is 500).
+repair [<Country tag>]											Repairs all ships of country.
 sailors (Insert Number) [<Country tag> OPTIONAL]				Extra sailors.
 spynetwork [<Target Country tag>] [<Amount>]					Adds spy network with target country.
 stability [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]		Changes the stability of the specified country (to maximum without value).
