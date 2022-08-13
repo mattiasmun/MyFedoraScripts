@@ -80,6 +80,8 @@ embrace [<Province ID>] [<institution name> optional]		Embraces an institutions 
 		Manufactories: manufactories
 		Enlightenment: enlightenment
 		Industrialization: industrialization
+fast_colonize													Toggles the fast colonize cheat (affects AI as well).
+fast_diplo														Ignore the date check for enroute diplomats.
 findcommands [<Search string>]									Finds console commands.
 god																godmode on/off. One effect is that a battle is automatically won after the first day.
 integrate [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Integrates the specified tag into actors country (adds cores).
