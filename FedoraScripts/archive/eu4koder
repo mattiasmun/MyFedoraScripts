@@ -9,17 +9,10 @@ yesman				Toggle AI diplomatic responses (on: always accept; off: normal respons
 add_baseunrest [<Province ID>] [<Base Unrest>]			Adds base unrest to a province.
 add_local_autonomy [<Province ID>] [<Amount>]			Adds local autonomy to a province.
 add_loyalty [<Target Estate>] [<Amount>]					Adds loyalty to target estate. The estates have the following identifier:
-		estate_church
-		estate_nobles
-		estate_burghers
-		estate_cossacks
-		estate_nomadic_tribes
-		estate_dhimmi
-		estate_brahmins
-		estate_maratha
-		estate_vaisyas
-		estate_jains
-		estate_rajput
+		estate_church		estate_nobles				estate_burghers
+		estate_cossacks		estate_nomadic_tribes		estate_dhimmi
+		estate_brahmins		estate_maratha				estate_vaisyas
+		estate_jains			estate_rajput
 add_opinion [<Actor Country tag>] [<Target Country tag> OPTIONAL]		Add opinion to/from tag.
 army_tradition [<Amount>] [<Target Country tag> OPTIONAL]			Adds army tradition to the target country (default value: 50).
 assimilate [<Province>] [<Tag> OPTIONAL]						Change ownership, core, set culture and religion.
@@ -31,58 +24,27 @@ center_of_trade(cot) [CoT Level] [<Province ID>]					Create or upgrade/downgrade
 change_culture_court [<ruler/heir/consort/admadv/dipadv/miladv>] [<Culture>]		Changes the culture of a court member.
 change_religion [<province ID>/<Target Country tag>] [<religion>]			Change religion of a province or country. If no province id or tag is specified, the state religion of the current country is changed.
 	If only a province id is specified the religion of the province is changed to the state religion of the current country. The religions have the following identifier:
-		Catholic: catholic
-		Protestant: protestant
-		Hussite: hussite
-		Reformed: reformed
-		Anglican: anglican
-		Orthodox: orthodox
-		Coptic: coptic
-		Sunni: sunni
-		Shia: shiite
-		Ibadi: ibadi
-		Theravada: buddhism
-		Vajrayana: vajrayana
-		Mahayana: mahayana
-		Confucian: confucianism
-		Shinto: shinto
-		Hindu: hinduism
-		Sikh: sikhism
-		Animist: animism
-		Fetishist: shamanism
-		Totemist: totemism
-		Inti: inti
-		Nahuatl: nahuatl
-		Mayan: mesoamerican_religion
-		Norse: norse_pagan_reformed
-		Tengri: tengri_pagan_reformed
-		Jewish: jewish
-		Zoroastrian: zoroastrian
+		Catholic: catholic			Protestant: protestant				Hussite: hussite
+		Reformed: reformed			Anglican: anglican					Orthodox: orthodox
+		Coptic: coptic				Sunni: sunni						Shia: shiite
+		Ibadi: ibadi					Theravada: buddhism				Vajrayana: vajrayana
+		Mahayana: mahayana		Confucian: confucianism				Shinto: shinto
+		Hindu: hinduism			Sikh: sikhism						Animist: animism
+		Fetishist: shamanism		Totemist: totemism					Inti: inti
+		Nahuatl: nahuatl			Mayan: mesoamerican_religion		Norse: norse_pagan_reformed
+		Tengri: tengri_pagan_reformed		Jewish: jewish		Zoroastrian: zoroastrian
 change_religion_court [<ruler/heir/consort/admadv/dipadv/miladv>] [<Religion>]		Changes the religion of a court member.
 colonize [<province ID/colonial region>]							Colonizes and cores an unsettled province (and gets some prestige). The province retains its original culture and religion.
 	Note: Works also for settled provinces and keeps any previous owners core. Also works for entire colonial regions at once, as listed in 00_colonial_regions.txt:
-		colonial_alaska
-		colonial_australia
-		colonial_brazil
-		colonial_california
-		colonial_canada
-		colonial_colombia
-		colonial_eastern_america
-		colonial_la_plata
-		colonial_louisiana
-		colonial_mexico
-		colonial_peru
-		colonial_the_carribean
+		colonial_alaska				colonial_australia		colonial_brazil
+		colonial_california			colonial_canada			colonial_colombia
+		colonial_eastern_america		colonial_la_plata			colonial_louisiana
+		colonial_mexico				colonial_peru			colonial_the_carribean
 debug_info			Toggles Debug info.
 embrace [<Province ID>] [<institution name> optional]		Embraces an institutions in a province. If left blank, all institutions will be embraced. The institution has the following identifier:
-		Feudalism: feudalism
-		Renaissance: renaissance
-		Colonialism: new_world_i
-		Printing Press: printing_press
-		Global Trade: global_trade
-		Manufactories: manufactories
-		Enlightenment: enlightenment
-		Industrialization: industrialization
+		Feudalism: feudalism				Renaissance: renaissance			Colonialism: new_world_i
+		Printing Press: printing_press		Global Trade: global_trade			Manufactories: manufactories
+		Enlightenment: enlightenment		Industrialization: industrialization
 findcommands [<Search string>]									Finds console commands.
 god																godmode on/off. One effect is that a battle is automatically won after the first day.
 integrate [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Integrates the specified tag into actors country (adds cores).
