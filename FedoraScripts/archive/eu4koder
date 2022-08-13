@@ -1,4 +1,3 @@
-debug_info			Toggles Debug info.
 debug_mode		Makes some debug features available. Displays province ID, country tag, and border distance when mousing over provinces. Also shows event ids and AI weight in the tooltip for event options.
 fast_colonize													Toggles the fast colonize cheat (affects AI as well).
 fast_diplo														Ignore the date check for enroute diplomats.
@@ -74,6 +73,7 @@ colonize [<province ID/colonial region>]							Colonizes and cores an unsettled 
 		colonial_mexico
 		colonial_peru
 		colonial_the_carribean
+debug_info			Toggles Debug info.
 embrace [<Province ID>] [<institution name> optional]		Embraces an institutions in a province. If left blank, all institutions will be embraced. The institution has the following identifier:
 		Feudalism: feudalism
 		Renaissance: renaissance
