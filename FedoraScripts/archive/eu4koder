@@ -27,6 +27,35 @@ bearhaslanded [<Province ID> OPTIONAL]						Spawns Jan Mayen.
 cash (Insert Number) [<Country tag> OPTIONAL]					Extra Money (if not specified, gives 5000).
 center_of_trade(cot) [CoT Level] [<Province ID>]					Create or upgrade/downgrade a center of trade.
 change_culture_court [<ruler/heir/consort/admadv/dipadv/miladv>] [<Culture>]		Changes the culture of a court member.
+change_religion [<province ID>/<Target Country tag>] [<religion>]			Change religion of a province or country. If no province id or tag is specified, the state religion of the current country is changed. If only a province id is specified the religion of the province is changed to the state religion of the current country.
+The religions have the following identifier:
+		Catholic: catholic
+		Protestant: protestant
+		Hussite: hussite
+		Reformed: reformed
+		Anglican: anglican
+		Orthodox: orthodox
+		Coptic: coptic
+		Sunni: sunni
+		Shia: shiite
+		Ibadi: ibadi
+		Theravada: buddhism
+		Vajrayana: vajrayana
+		Mahayana: mahayana
+		Confucian: confucianism
+		Shinto: shinto
+		Hindu: hinduism
+		Sikh: sikhism
+		Animist: animism
+		Fetishist: shamanism
+		Totemist: totemism
+		Inti: inti
+		Nahuatl: nahuatl
+		Mayan: mesoamerican_religion
+		Norse: norse_pagan_reformed
+		Tengri: tengri_pagan_reformed
+		Jewish: jewish
+		Zoroastrian: zoroastrian
 change_religion_court [<ruler/heir/consort/admadv/dipadv/miladv>] [<Religion>]		Changes the religion of a court member.
 colonize [<province ID/colonial region>]							Colonizes and cores an unsettled province (and gets some prestige). The province retains its original culture and religion.
 	Note: Works also for settled provinces and keeps any previous owners core. Also works for entire colonial regions at once, as listed in 00_colonial_regions.txt:
@@ -60,9 +89,13 @@ manpower (Insert Number) [<Country tag> OPTIONAL]			Extra manpower (in thousands
 navy_tradition [<Amount>] [<Target Country tag> OPTIONAL]			Adds navy tradition to the specified country.
 norevolts														Toggles revolts.
 observe(spectator)												Switches to play no country at all, and no longer shows messages or pauses the game.
+pirate [<Province ID>]											Starts a Pirate in a province.
 powerpoints [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]		Get power in all powers. Maximizes monarch points if no number specified.
 prestige [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]			Adds prestige. Gives 5 prestige if no amount is given.
 reformprogress [Points to add] [Target tag <optional>]			Adds Government reform progress (Default is 500).
 sailors (Insert Number) [<Country tag> OPTIONAL]				Extra sailors.
 tag [<Country tag>]												Switch tag to another country.
 tech [<AMOUNT>]												Gets levels in all technology types.
+trust [<Target Country tag>] [<Amount>]							Adds trust with target country.
+vassalize [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Vassalize the specified tag.
+winwars														Gives max war score in all wars for the country.
