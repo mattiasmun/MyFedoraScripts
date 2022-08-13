@@ -25,7 +25,8 @@ add_opinion [<Actor Country tag>] [<Target Country tag> OPTIONAL]		Add opinion t
 army_tradition [<Amount>] [<Target Country tag> OPTIONAL]			Adds army tradition to the target country (default value: 50).
 assimilate [<Province>] [<Tag> OPTIONAL]						Change ownership, core, set culture and religion.
 autosave														Triggers an autosave.
-bearhaslanded [<Province ID> OPTIONAL]						Spawns Jan Mayen.
+bearhaslanded [<Province ID> OPTIONAL]						Spawns Jan Mayen. Jan Mayen will then be created as a two or three province state around a random province. The exact location of Jan Mayen can be
+	determined by adding province code after "bearhaslanded" (Ex. bearhaslanded 50 will create Jan Mayen in Berlin).
 cash (Insert Number) [<Country tag> OPTIONAL]					Extra Money (if not specified, gives 5000).
 center_of_trade(cot) [CoT Level] [<Province ID>]					Create or upgrade/downgrade a center of trade.
 change_culture_court [<ruler/heir/consort/admadv/dipadv/miladv>] [<Culture>]		Changes the culture of a court member.
