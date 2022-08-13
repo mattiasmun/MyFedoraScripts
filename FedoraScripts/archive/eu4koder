@@ -42,13 +42,27 @@ colonize [<province ID/colonial region>]							Colonizes and cores an unsettled 
 		colonial_mexico
 		colonial_peru
 		colonial_the_carribean
+embrace [<Province ID>] [<institution name> optional]		Embraces an institutions in a province. If left blank, all institutions will be embraced. The institution has the following identifier:
+		Feudalism: feudalism
+		Renaissance: renaissance
+		Colonialism: new_world_i
+		Printing Press: printing_press
+		Global Trade: global_trade
+		Manufactories: manufactories
+		Enlightenment: enlightenment
+		Industrialization: industrialization
+findcommands [<Search string>]									Finds console commands.
+god																godmode on/off. One effect is that a battle is automatically won after the first day.
 integrate [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Integrates the specified tag into actors country (adds cores).
-legitimacy [<AMOUNT>] [<Country tag> OPTIONAL]					Set the legitimacy of the ruler.
-lucky [<Country tag> OPTIONAL]									Toggles lucky nation status.
-manpower (Insert Number) [<Country tag> OPTIONAL]				Extra manpower (in thousands).
+legitimacy [<AMOUNT>] [<Country tag> OPTIONAL]				Set the legitimacy of the ruler.
+lucky [<Country tag> OPTIONAL]								Toggles lucky nation status.
+manpower (Insert Number) [<Country tag> OPTIONAL]			Extra manpower (in thousands).
 navy_tradition [<Amount>] [<Target Country tag> OPTIONAL]			Adds navy tradition to the specified country.
-observe(spectator)													Switches to play no country at all, and no longer shows messages or pauses the game.
+norevolts														Toggles revolts.
+observe(spectator)												Switches to play no country at all, and no longer shows messages or pauses the game.
 powerpoints [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]		Get power in all powers. Maximizes monarch points if no number specified.
 prestige [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]			Adds prestige. Gives 5 prestige if no amount is given.
-reformprogress [Points to add] [Target tag <optional>]				Adds Government reform progress (Default is 500).
-sailors (Insert Number) [<Country tag> OPTIONAL]					Extra sailors.
+reformprogress [Points to add] [Target tag <optional>]			Adds Government reform progress (Default is 500).
+sailors (Insert Number) [<Country tag> OPTIONAL]				Extra sailors.
+tag [<Country tag>]												Switch tag to another country.
+tech [<AMOUNT>]												Gets levels in all technology types.
