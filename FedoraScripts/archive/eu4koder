@@ -27,8 +27,8 @@ bearhaslanded [<Province ID> OPTIONAL]						Spawns Jan Mayen.
 cash (Insert Number) [<Country tag> OPTIONAL]					Extra Money (if not specified, gives 5000).
 center_of_trade(cot) [CoT Level] [<Province ID>]					Create or upgrade/downgrade a center of trade.
 change_culture_court [<ruler/heir/consort/admadv/dipadv/miladv>] [<Culture>]		Changes the culture of a court member.
-change_religion [<province ID>/<Target Country tag>] [<religion>]			Change religion of a province or country. If no province id or tag is specified, the state religion of the current country is changed. If only a province id is specified the religion of the province is changed to the state religion of the current country.
-The religions have the following identifier:
+change_religion [<province ID>/<Target Country tag>] [<religion>]			Change religion of a province or country. If no province id or tag is specified, the state religion of the current country is changed.
+	If only a province id is specified the religion of the province is changed to the state religion of the current country. The religions have the following identifier:
 		Catholic: catholic
 		Protestant: protestant
 		Hussite: hussite
