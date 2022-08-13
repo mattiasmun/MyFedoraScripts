@@ -1,17 +1,35 @@
-debug_info			Toggles Debug info
+debug_info			Toggles Debug info.
 debug_mode		Makes some debug features available. Displays province ID, country tag, and border distance when mousing over provinces. Also shows event ids and AI weight in the tooltip for event options.
-fow					Toggles fog of war on/off
-selflearningai		Enables/Disables Self-Learning AI
-ti					Toggles terra incognita on/off
-yesman				Toggle AI diplomatic responses (on: always accept; off: normal response)
+fow					Toggles fog of war on/off.
+selflearningai		Enables/Disables Self-Learning AI.
+ti					Toggles terra incognita on/off.
+yesman				Toggle AI diplomatic responses (on: always accept; off: normal response).
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-annex [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Annexes the specified tag without adding cores
-assimilate [<Province>] [<Tag> OPTIONAL]		Change ownership, core, set culture and religion
-autosave		Triggers an autosave.
-center_of_trade(cot) [CoT Level] [<Province ID>]		Create or upgrade/downgrade a center of trade.
-colonize [<province ID/colonial region>]			Colonizes and cores an unsettled province (and gets some prestige). The province retains its original culture and religion.
-	Note: Works also for settled provinces and keeps any previous owners core.
-	Also works for entire colonial regions at once, as listed in 00_colonial_regions.txt:
+add_baseunrest [<Province ID>] [<Base Unrest>]			Adds base unrest to a province.
+add_local_autonomy [<Province ID>] [<Amount>]			Adds local autonomy to a province.
+add_loyalty [<Target Estate>] [<Amount>]					Adds loyalty to target estate. The estates have the following identifier:
+		estate_church
+		estate_nobles
+		estate_burghers
+		estate_cossacks
+		estate_nomadic_tribes
+		estate_dhimmi
+		estate_brahmins
+		estate_maratha
+		estate_vaisyas
+		estate_jains
+		estate_rajput
+add_opinion [<Actor Country tag>] [<Target Country tag> OPTIONAL]		Add opinion to/from tag.
+army_tradition [<Amount>] [<Target Country tag> OPTIONAL]			Adds army tradition to the target country (default value: 50).
+assimilate [<Province>] [<Tag> OPTIONAL]						Change ownership, core, set culture and religion.
+autosave														Triggers an autosave.
+bearhaslanded [<Province ID> OPTIONAL]						Spawns Jan Mayen.
+cash (Insert Number) [<Country tag> OPTIONAL]					Extra Money (if not specified, gives 5000).
+center_of_trade(cot) [CoT Level] [<Province ID>]					Create or upgrade/downgrade a center of trade.
+change_culture_court [<ruler/heir/consort/admadv/dipadv/miladv>] [<Culture>]		Changes the culture of a court member.
+change_religion_court [<ruler/heir/consort/admadv/dipadv/miladv>] [<Religion>]		Changes the religion of a court member.
+colonize [<province ID/colonial region>]							Colonizes and cores an unsettled province (and gets some prestige). The province retains its original culture and religion.
+	Note: Works also for settled provinces and keeps any previous owners core. Also works for entire colonial regions at once, as listed in 00_colonial_regions.txt:
 		colonial_alaska
 		colonial_australia
 		colonial_brazil
@@ -24,5 +42,13 @@ colonize [<province ID/colonial region>]			Colonizes and cores an unsettled prov
 		colonial_mexico
 		colonial_peru
 		colonial_the_carribean
-
-reformprogress [Points to add] [Target tag <optional>]		Adds Government reform progress (Default is 500.)
+integrate [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Integrates the specified tag into actors country (adds cores).
+legitimacy [<AMOUNT>] [<Country tag> OPTIONAL]					Set the legitimacy of the ruler.
+lucky [<Country tag> OPTIONAL]									Toggles lucky nation status.
+manpower (Insert Number) [<Country tag> OPTIONAL]				Extra manpower (in thousands).
+navy_tradition [<Amount>] [<Target Country tag> OPTIONAL]			Adds navy tradition to the specified country.
+observe(spectator)													Switches to play no country at all, and no longer shows messages or pauses the game.
+powerpoints [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]		Get power in all powers. Maximizes monarch points if no number specified.
+prestige [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]			Adds prestige. Gives 5 prestige if no amount is given.
+reformprogress [Points to add] [Target tag <optional>]				Adds Government reform progress (Default is 500).
+sailors (Insert Number) [<Country tag> OPTIONAL]					Extra sailors.
