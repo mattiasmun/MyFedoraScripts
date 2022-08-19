@@ -33,8 +33,8 @@ def get_endpoints(_list):
 	return (a, b)
 
 matrix = make_dist_matrix(lx, ly)
-endps = get_endpoints(matrix[0])
-path = solve_tsp(matrix, endpoints = endps)
+#endps = get_endpoints(matrix[0])
+path = solve_tsp(matrix)
 
 for i in path:
 	print(A[i])
