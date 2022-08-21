@@ -257,6 +257,7 @@ python3-paramiko \
 python3-pdfkit \
 python3-pexpect \
 python3-plumbum \
+python3-protobuf \
 python3-ptyprocess \
 python3-pyasn1 \
 python3-pyasn1-modules \
