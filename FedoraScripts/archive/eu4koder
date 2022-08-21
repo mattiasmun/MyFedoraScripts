@@ -7,6 +7,7 @@ ti					Toggles terra incognita on/off.
 yesman				Toggle AI diplomatic responses (on: always accept; off: normal response).
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 add_baseunrest [<Province ID>] [<Base Unrest>]			Adds base unrest to a province.
+add_idea_group [<Idea group key>] [<Country tag> OPTIONAL]		Adds the specified idea group. For example "add_idea_group diplomatic_ideas GER"
 add_local_autonomy [<Province ID>] [<Amount>]			Adds local autonomy to a province.
 add_loyalty [<Target Estate>] [<Amount>]					Adds loyalty to target estate. The estates have the following identifier:
 		estate_church		estate_nobles				estate_burghers
