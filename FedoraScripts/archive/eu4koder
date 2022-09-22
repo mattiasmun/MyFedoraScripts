@@ -2,7 +2,6 @@ debug_mode		Makes some debug features available. Displays province ID, country t
 fast_colonize													Toggles the fast colonize cheat (affects AI as well).
 fast_diplo														Ignore the date check for enroute diplomats.
 fow					Toggles fog of war on/off.
-selflearningai		Enables/Disables Self-Learning AI.
 ti					Toggles terra incognita on/off.
 yesman				Toggle AI diplomatic responses (on: always accept; off: normal response).
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -62,6 +61,7 @@ prestige [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]			Adds prestige. Gives 5 p
 reformprogress [Points to add] [Target tag <optional>]			Adds Government reform progress (Default is 500).
 repair [<Country tag>]											Repairs all ships of country.
 sailors (Insert Number) [<Country tag> OPTIONAL]				Extra sailors.
+selflearningai											Enables/Disables Self-Learning AI.
 spynetwork [<Target Country tag>] [<Amount>]					Adds spy network with target country.
 stability [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]		Changes the stability of the specified country (to maximum without value).
 tag [<Country tag>]												Switch tag to another country.
