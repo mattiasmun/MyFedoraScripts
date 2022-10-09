@@ -47,6 +47,7 @@ embrace [<Province ID>] [<institution name> optional]		Embraces an institutions 
 		Enlightenment: enlightenment		Industrialization: industrialization
 event 700027 [<Province ID>] 								Changes tradegood to paper in a province.
 findcommands [<Search string>]									Finds console commands.
+form_union [<Country tag>] [<Country tag> OPTIONAL]				Forms Union with target
 god																godmode on/off. One effect is that a battle is automatically won after the first day.
 integrate [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Integrates the specified tag into actors country (adds cores).
 legitimacy [<AMOUNT>] [<Country tag> OPTIONAL]				Set the legitimacy of the ruler.
