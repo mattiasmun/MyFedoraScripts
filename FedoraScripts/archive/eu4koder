@@ -45,6 +45,7 @@ embrace [<Province ID>] [<institution name> optional]		Embraces an institutions 
 		Feudalism: feudalism				Renaissance: renaissance			Colonialism: new_world_i
 		Printing Press: printing_press		Global Trade: global_trade			Manufactories: manufactories
 		Enlightenment: enlightenment		Industrialization: industrialization
+event 2001												The Protestant Reformation: Starts the Protestantism protestant reformation and spawns a Center of reformation.png center of reformation in the capital. 
 event 700027 [<Province ID>] 								Changes tradegood to paper in a province.
 findcommands [<Search string>]									Finds console commands.
 form_union [<Country tag>] [<Country tag> OPTIONAL]				Forms Union with target
