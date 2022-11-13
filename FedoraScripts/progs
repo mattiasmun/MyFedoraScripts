@@ -21,6 +21,7 @@ boost-devel \
 boost-program-options \
 boost-random \
 bsd-games \
+btop \
 cfitsio-devel \
 chkconfig \
 chrpath \
