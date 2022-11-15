@@ -2,7 +2,7 @@
 d="/dev/sd${2}1"
 x=$(xdg-user-dir "DOWNLOAD")
 n="/Fedora-Workstation-Live-x86_64-${1}"
-f="${x}${n}${n}-1.5.iso"
+f="${x}${n}${n}-1.7.iso"
 sudo umount "${d}"
 sudo mkfs.ext4 "${d}"
 sudo livecd-iso-to-disk --force --reset-mbr "${f}" "${d}"
