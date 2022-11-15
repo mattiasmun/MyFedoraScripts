@@ -68,7 +68,6 @@ glibc-doc \
 glibc-langpack-sv \
 gnome-sudoku \
 gnome-tweaks \
-gnome-weather \
 gnucash \
 gnutls-dane \
 gnutls-utils \
@@ -150,10 +149,11 @@ libkml-devel \
 libpmemobj \
 libpng-devel \
 libpq-devel \
-libproxy-webkitgtk4 \
 libqhull_r \
+libreoffice-data \
 libreoffice-help-sv \
 libreoffice-langpack-sv \
+libreoffice-ure-common \
 librttopo \
 librx-devel \
 libselinux-devel \
@@ -243,6 +243,7 @@ python3-devel \
 python3-dnf-plugin-system-upgrade \
 python3-dropbox \
 python3-fasteners \
+python3-fonttools \
 python3-future \
 python3-gmpy2 \
 python3-google-api-client \
@@ -258,7 +259,6 @@ python3-paramiko \
 python3-pdfkit \
 python3-pexpect \
 python3-plumbum \
-python3-protobuf \
 python3-ptyprocess \
 python3-pyasn1 \
 python3-pyasn1-modules \
