@@ -72,12 +72,3 @@ tech [<AMOUNT>]												Gets levels in all technology types.
 trust [<Target Country tag>] [<Amount>]							Adds trust with target country.
 vassalize [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Vassalize the specified tag.
 winwars														Gives max war score in all wars for the country.
-
-
-perl -i -pe "s#_infrastructure_0=yes#_infrastructure_7=yes#g;" "$HOME""/.var/app/com.valvesoftware.Steam/.local/share/Paradox Interactive/Europa Universalis IV/save games/autosavetest.eu4"
-perl -i -pe "s#_infrastructure_1=yes#_infrastructure_7=yes#g;" "$HOME""/.var/app/com.valvesoftware.Steam/.local/share/Paradox Interactive/Europa Universalis IV/save games/autosavetest.eu4"
-perl -i -pe "s#_infrastructure_2=yes#_infrastructure_7=yes#g;" "$HOME""/.var/app/com.valvesoftware.Steam/.local/share/Paradox Interactive/Europa Universalis IV/save games/autosavetest.eu4"
-perl -i -pe "s#_infrastructure_3=yes#_infrastructure_7=yes#g;" "$HOME""/.var/app/com.valvesoftware.Steam/.local/share/Paradox Interactive/Europa Universalis IV/save games/autosavetest.eu4"
-perl -i -pe "s#_infrastructure_4=yes#_infrastructure_7=yes#g;" "$HOME""/.var/app/com.valvesoftware.Steam/.local/share/Paradox Interactive/Europa Universalis IV/save games/autosavetest.eu4"
-perl -i -pe "s#_infrastructure_5=yes#_infrastructure_7=yes#g;" "$HOME""/.var/app/com.valvesoftware.Steam/.local/share/Paradox Interactive/Europa Universalis IV/save games/autosavetest.eu4"
-perl -i -pe "s#_infrastructure_6=yes#_infrastructure_7=yes#g;" "$HOME""/.var/app/com.valvesoftware.Steam/.local/share/Paradox Interactive/Europa Universalis IV/save games/autosavetest.eu4"
