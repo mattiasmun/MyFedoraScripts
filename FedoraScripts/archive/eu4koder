@@ -1,7 +1,7 @@
 debug_mode		Makes some debug features available. Displays province ID, country tag, and border distance when mousing over provinces. Also shows event ids and AI weight in the tooltip for event options.
-fast_colonize													Toggles the fast colonize cheat (affects AI as well).
-fast_diplo														Ignore the date check for enroute diplomats.
+fast_diplo			Ignore the date check for enroute diplomats.
 fow					Toggles fog of war on/off.
+norevolts			Toggles revolts.
 ti					Toggles terra incognita on/off.
 yesman				Toggle AI diplomatic responses (on: always accept; off: normal response).
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -48,15 +48,15 @@ embrace [<Province ID>] [<institution name> optional]		Embraces an institutions 
 event 700										Allows player to gain 1 / 1 / 1 to the current leader (Will Replace Queen Regents and Regency Councils).
 event 2001												Starts the Protestantism protestant reformation and spawns a center of reformation in the capital. 
 event 700027 [<Province ID>] 								Changes tradegood to paper in a province.
+fast_colonize													Toggles the fast colonize cheat (affects AI as well).
 findcommands [<Search string>]									Finds console commands.
-form_union [<Country tag>] [<Country tag> OPTIONAL]				Forms Union with target
+form_union [<Country tag>] [<Country tag> OPTIONAL]				Forms Union with target.
 god																godmode on/off. One effect is that a battle is automatically won after the first day.
 integrate [<Target Country Tag>] [<Actor Country tag> OPTIONAL]		Integrates the specified tag into actors country (adds cores).
 legitimacy [<AMOUNT>] [<Country tag> OPTIONAL]				Set the legitimacy of the ruler.
 lucky [<Country tag> OPTIONAL]								Toggles lucky nation status.
 manpower (Insert Number) [<Country tag> OPTIONAL]			Extra manpower (in thousands).
 navy_tradition [<Amount>] [<Target Country tag> OPTIONAL]			Adds navy tradition to the specified country.
-norevolts														Toggles revolts.
 observe(spectator)												Switches to play no country at all, and no longer shows messages or pauses the game.
 pirate [<Province ID>]											Starts a Pirate in a province.
 powerpoints [<AMOUNT> OPTIONAL] [<Country tag> OPTIONAL]		Get power in all powers. Maximizes monarch points if no number specified.
