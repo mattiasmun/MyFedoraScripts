@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo dnf -y install dkms git kernel-devel
+sudo -A dnf -y install dkms git kernel-devel
 n="rtl88x2bu"
 g="${HOME}/Git"
 mkdir -p "${g}"
@@ -8,7 +8,7 @@ git clone "https://github.com/cilynx/${n}.git"
 cd "${n}"
 VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
 cd "/usr/src"
-sudo ln -s "${g}/${n}" "${n}-${VER}"
-sudo dkms add -m "${n}" -v "${VER}"
-sudo dkms build -m "${n}" -v "${VER}"
-sudo dkms install -m "${n}" -v "${VER}"
+sudo -A ln -s "${g}/${n}" "${n}-${VER}"
+sudo -A dkms add -m "${n}" -v "${VER}"
+sudo -A dkms build -m "${n}" -v "${VER}"
+sudo -A dkms install -m "${n}" -v "${VER}"

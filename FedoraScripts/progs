@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo dnf -y install AtomicParsley \
+sudo -A dnf -y install AtomicParsley \
 Box2D \
 SDL2_image \
 SDL2_mixer \
