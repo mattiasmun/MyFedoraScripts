@@ -3,5 +3,5 @@ n="rtl88x2bu"
 cd "${HOME}/Git/${n}"
 VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
 git pull --rebase
-sudo dkms build -m "${n}" -v "${VER}"
-sudo dkms install -m "${n}" -v "${VER}"
+sudo -A dkms build -m "${n}" -v "${VER}"
+sudo -A dkms install -m "${n}" -v "${VER}"

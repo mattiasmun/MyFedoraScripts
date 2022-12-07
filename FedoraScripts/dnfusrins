@@ -1,7 +1,7 @@
 #!/bin/bash
 f="$HOME"'/Bash/MyFedoraScripts/FedoraScripts/progs'
 echo '#!/bin/bash' > "$f"
-data='sudo dnf -y install '
+data='sudo -A dnf -y install '
 que="$(dnf repoquery --userinstalled --queryformat '%{name} \')"
 que="${que::-2}"
 echo "$data$que" >> "$f"

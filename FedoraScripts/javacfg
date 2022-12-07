@@ -1,6 +1,6 @@
 #!/bin/bash
-sudo update-alternatives --config 'java'
-sudo update-alternatives --config 'javac'
-sudo update-alternatives --config 'jre_openjdk'
-sudo update-alternatives --config 'java_sdk_openjdk'
+sudo -A update-alternatives --config 'java'
+sudo -A update-alternatives --config 'javac'
+sudo -A update-alternatives --config 'jre_openjdk'
+sudo -A update-alternatives --config 'java_sdk_openjdk'
 update-alternatives --list | grep 'jvm'

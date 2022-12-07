@@ -9,5 +9,5 @@ t='Path askpass /usr/libexec/openssh/gnome-ssh-askpass'
 echo "$t" >> "$s"
 
 chmod 0644 "$s"
-sudo chown root:root "$s"
-sudo mv "$s" '/etc/'"$s"
+sudo -A chown root:root "$s"
+sudo -A mv "$s" '/etc/'"$s"
