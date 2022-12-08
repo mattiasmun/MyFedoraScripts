@@ -12,7 +12,7 @@ wmctrl = local['wmctrl']
 
 _x0, _y0 = (0, 0)
 _x, _y = _x0, _y0
-_max_len = 6
+_max_dist = 6
 #_pix = (0, 0)
 _t_len = eval(sys.argv[2])
 _t_len = float(max(_t_len, 1))
@@ -25,7 +25,7 @@ def _check():
 	_d_x = _x0 - _x
 	_d_y = _y0 - _y
 	_dist = sqrt(_d_x * _d_x + _d_y * _d_y)
-	_bool = _dist <= _max_len
+	_bool = _dist <= _max_dist
 	_bool = time.monotonic() < _t_end and _bool
 #	_bool = gui.pixelMatchesColor(_x0, _y0, _pix, tolerance=8) and _bool
 	return _bool
