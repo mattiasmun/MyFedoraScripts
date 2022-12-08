@@ -13,10 +13,12 @@ wmctrl = local['wmctrl']
 _x0, _y0 = (0, 0)
 _x, _y = _x0, _y0
 _max_len = 6
-#pix = gui.pixel(_x0, _y0)
-t_len = eval(sys.argv[2])
-t_len = float(t_len)
-t_end = 0
+#_pix = (0, 0)
+_t_len = eval(sys.argv[2])
+_t_len = float(max(_t_len - 1.3, 1))
+_t_end = 0
+_interval = eval(sys.argv[3])
+_interval = float(_interval)
 
 def _check():
 	_x, _y = gui.position()
@@ -24,18 +26,19 @@ def _check():
 	_d_y = _y0 - _y
 	_dist = sqrt(_d_x * _d_x + _d_y * _d_y)
 	_bool = _dist <= _max_len
-	_bool = time.monotonic() < t_end and _bool
-#	_bool = gui.pixelMatchesColor(_x0, _y0, pix, tolerance=8) and _bool
+	_bool = time.monotonic() < _t_end and _bool
+#	_bool = gui.pixelMatchesColor(_x0, _y0, _pix, tolerance=8) and _bool
 	return _bool
 
 def _do():
-	global _x0, _y0, t_end
+	global _x0, _y0, _t_end
 	_x0, _y0 = gui.position()
+#	_pix = gui.pixel(_x0, _y0)
 	wmctrl['-xa', sys.argv[1]] & FG
 	time.sleep(0.1)
-	t_end = time.monotonic() + t_len
+	_t_end = time.monotonic() + _t_len
 	while _check():
-		gui.click(_x0, _y0)
+		gui.click(_x0, _y0, clicks=5, interval = _interval)
 
 if __name__ == "__main__":
 	_do()
