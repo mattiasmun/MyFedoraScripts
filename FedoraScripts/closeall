@@ -1,15 +1,16 @@
 #!/bin/bash
 sleep 0.5
 
-#x="$(wmctrl -l | awk '{print $2}')"
-#x="${#x}"
-x="10"
+x="$(wmctrl -l | awk '{print $2}')"
+x="${#x}"
+#x="10"
 
 function _closeall
 {
   for i in `seq 1 "$x"`
   do
-    sudo -A ydotool key 56:1 62:1 56:0 62:0
+#    sudo -A ydotool key 56:1 62:1 56:0 62:0
+    xdotool key "Alt_L+F4"
     sleep 0.4
   done
   if [[ "$1" == 1 ]]
