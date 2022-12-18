@@ -2,7 +2,8 @@
 sleep 0.5
 
 x="$(wmctrl -l | awk '{print $2}')"
-x="${#x}"
+x=$(wc -w <<< "$x")
+x="$((x+2))"
 #x="10"
 
 function _closeall
