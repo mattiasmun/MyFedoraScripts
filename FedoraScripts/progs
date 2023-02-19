@@ -26,6 +26,7 @@ cfitsio-devel \
 chkconfig \
 chrpath \
 clamav \
+clamtk \
 clang-resource-filesystem \
 compat-lua-libs \
 compat-tolua++ \
