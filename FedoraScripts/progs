@@ -126,6 +126,7 @@ kernel-core \
 kernel-debug-devel \
 kernel-devel \
 kernel-modules \
+kernel-modules-core \
 kernel-modules-extra \
 khmer-os-content-fonts \
 khmer-os-system-fonts \
@@ -243,7 +244,6 @@ python3-boto \
 python3-breathe \
 python3-cheroot \
 python3-devel \
-python3-dnf-plugin-system-upgrade \
 python3-dropbox \
 python3-fasteners \
 python3-fonttools \
