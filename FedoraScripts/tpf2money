@@ -14,10 +14,11 @@ _x0, _y0 = (0, 0)
 _x, _y = (_x0, _y0)
 _max_dist = 6
 #_pix = (0, 0)
-_t_len = eval(sys.argv[2])
+_name = 'TransportFever2.TransportFever2'
+_t_len = eval(sys.argv[1])
 _t_len = float(max(_t_len, 1))
 _t_end = 0
-_interval = eval(sys.argv[3])
+_interval = eval(sys.argv[2])
 _interval = float(_interval)
 
 def _check():
@@ -34,11 +35,13 @@ def _do():
 	global _x0, _y0, _t_end
 	_x0, _y0 = gui.position()
 #	_pix = gui.pixel(_x0, _y0)
-	wmctrl['-xa', sys.argv[1]] & FG
+	wmctrl['-xa', _name] & FG
 	time.sleep(0.1)
 	_t_end = time.monotonic() + _t_len
 	while _check():
-		gui.click(_x0, _y0, clicks = 5, interval = _interval)
+		gui.keyDown('altright')
+		gui.press('m', presses = 5)
+		gui.keyUp('altright')
 
 if __name__ == "__main__":
 	_do()
