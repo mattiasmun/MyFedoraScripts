@@ -40,7 +40,7 @@ def _do():
 	_t_end = time.monotonic() + _t_len
 	while _check():
 		gui.keyDown('altright')
-		gui.press('m', presses = 5)
+		gui.press('m', presses = 5, interval = _interval)
 		gui.keyUp('altright')
 
 if __name__ == "__main__":
