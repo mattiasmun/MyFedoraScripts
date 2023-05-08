@@ -39,9 +39,9 @@ def _do():
 	time.sleep(0.1)
 	_t_end = time.monotonic() + _t_len
 	while _check():
-		gui.keyDown('altright')
+		gui.keyDown('altgr')
 		gui.press('m', presses = 5, interval = _interval)
-		gui.keyUp('altright')
+		gui.keyUp('altgr')
 
 if __name__ == "__main__":
 	_do()
