@@ -9,6 +9,7 @@ gui.PAUSE = 0.02
 gui.FAILSAFE = True
 gui.keyUp('enter')
 wmctrl = local['wmctrl']
+xdotool = local['xdotool']
 
 _x0, _y0 = (0, 0)
 _x, _y = (_x0, _y0)
@@ -36,12 +37,14 @@ def _do():
 	_x0, _y0 = gui.position()
 #	_pix = gui.pixel(_x0, _y0)
 	wmctrl['-xa', _name] & FG
+	xdotool['keydown', 'ISO_Level3_Shift'] & FG
 	time.sleep(0.1)
 	_t_end = time.monotonic() + _t_len
 	while _check():
 #		gui.keyDown('altright')
 		gui.press('m', presses = 5, interval = _interval)
 #		gui.keyUp('altright')
+	xdotool['keyup', 'ISO_Level3_Shift'] & FG
 
 if __name__ == "__main__":
 	_do()
