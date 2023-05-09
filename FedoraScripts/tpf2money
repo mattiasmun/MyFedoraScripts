@@ -37,8 +37,8 @@ def _do():
 	_x0, _y0 = gui.position()
 #	_pix = gui.pixel(_x0, _y0)
 	wmctrl['-xa', _name] & FG
-	xdotool['keydown', 'ISO_Level3_Shift'] & FG
 	time.sleep(0.1)
+	xdotool['keydown', 'ISO_Level3_Shift'] & FG
 	_t_end = time.monotonic() + _t_len
 	while _check():
 #		gui.keyDown('altright')
