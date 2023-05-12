@@ -274,6 +274,7 @@ python3-pyopencl \
 python3-pyperclip \
 python3-pytest \
 python3-rsa \
+python3-ruamel-yaml \
 python3-scikit-image \
 python3-scipy \
 python3-sgmllib3k \
