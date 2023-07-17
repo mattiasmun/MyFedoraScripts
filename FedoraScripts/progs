@@ -273,6 +273,7 @@ python3-pynacl \
 python3-pyopencl \
 python3-pyperclip \
 python3-pytest \
+python3-reportlab \
 python3-rsa \
 python3-ruamel-yaml \
 python3-scikit-image \
