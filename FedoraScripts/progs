@@ -91,6 +91,7 @@ gstreamer1-plugins-good-extras \
 gtk2-immodule-xim \
 gtk3-immodule-xim \
 gtk4 \
+gtk4-devel \
 gtranslator \
 guile22 \
 hdf-devel \
@@ -137,6 +138,7 @@ langpacks-core-sv \
 langpacks-en \
 langpacks-sv \
 libXpresent \
+libadwaita-devel \
 libavif \
 libcanberra \
 libcanberra-gtk3 \
