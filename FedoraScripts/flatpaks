@@ -1,0 +1,4 @@
+#!/bin/bash
+flatpak install flathub_2 com.valvesoftware.Steam -y
+flatpak install flathub_2 org.flathub.flatpak-external-data-checker -y
+flatpak install flathub org.gnome.Builder -y
