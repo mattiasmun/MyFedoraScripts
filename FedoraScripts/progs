@@ -240,7 +240,6 @@ pygobject2 \
 pygtk2 \
 python3-Cython \
 python3-IPy \
-python3-PyDrive \
 python3-bcrypt \
 python3-boto \
 python3-breathe \
