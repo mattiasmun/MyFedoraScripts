@@ -133,7 +133,6 @@ khmer-os-content-fonts \
 khmer-os-system-fonts \
 kmod-nvidia \
 krb5-devel \
-langpacks-core-font-sv \
 langpacks-core-sv \
 langpacks-en \
 langpacks-sv \
@@ -238,12 +237,12 @@ proj-devel \
 puzzles \
 pygobject2 \
 pygtk2 \
-python3-Cython \
 python3-IPy \
 python3-bcrypt \
 python3-boto \
 python3-breathe \
 python3-cheroot \
+python3-cython \
 python3-devel \
 python3-dropbox \
 python3-fasteners \
@@ -269,7 +268,6 @@ python3-pyasn1 \
 python3-pyasn1-modules \
 python3-pybind11 \
 python3-pygame \
-python3-pygpu \
 python3-pynacl \
 python3-pyopencl \
 python3-pyperclip \
