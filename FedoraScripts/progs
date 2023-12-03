@@ -301,6 +301,7 @@ rit-rachana-fonts \
 rpmfusion-free-release \
 rpmfusion-nonfree-release \
 ruby \
+rubygem-irb \
 samba-libs \
 scanmem \
 screen \
