@@ -7,7 +7,7 @@ done < <(cat /etc/motd)
 
 str="$(stat -c %y /etc/motd)"
 str="${str::19}"
-str=$(trans -b 'Modified')': '"$str"
+str="Modified: $str"
 center "$str"
 
 while read -r line
