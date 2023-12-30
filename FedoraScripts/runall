@@ -24,6 +24,8 @@ gnome-terminal &
 sleep 0.1
 easyeffects &
 sleep 0.1
+sleep 2
+wmctrl -xa gnome-terminal-server.Gnome-terminal
 
 pip3update
 sleep 0.1
