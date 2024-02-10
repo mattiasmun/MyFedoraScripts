@@ -5,6 +5,6 @@ x="/bosse/Filer"
 n="/Fedora-Workstation-Live-x86_64-${1}"
 f="${x}${n}${n}-1.5.iso"
 sudo -A umount "${d}"
-#sudo -A mkfs.ext4 "${d}"
+sudo -A mkfs.ext4 "${d}"
 sudo -A livecd-iso-to-disk --force --reset-mbr "${f}" "${d}"
 #sudo -A dd if="${f}" of="/dev/sd${2}" bs=8M status=progress oflag=direct
