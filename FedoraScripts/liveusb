@@ -1,6 +1,7 @@
 #!/bin/bash
 d="/dev/sd${2}1"
-x=$(xdg-user-dir "DOWNLOAD")
+#x=$(xdg-user-dir "DOWNLOAD")
+x="/bosse/Filer"
 n="/Fedora-Workstation-Live-x86_64-${1}"
 f="${x}${n}${n}-1.5.iso"
 sudo -A umount "${d}"
