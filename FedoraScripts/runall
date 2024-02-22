@@ -6,7 +6,7 @@ thunderbird &
 sleep 0.1
 firefox &
 sleep 0.1
-geany &
+gedit ~/Dokument/Anteckningar &
 sleep 0.1
 gnome-calculator &
 sleep 0.1
