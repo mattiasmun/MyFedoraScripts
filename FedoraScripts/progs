@@ -10,6 +10,7 @@ aisleriot \
 anaconda \
 anaconda-install-env-deps \
 anaconda-live \
+ansible \
 ant \
 appstream \
 armadillo-devel \
@@ -334,6 +335,9 @@ unifont \
 unifont-fonts \
 unifont-viewer \
 unixODBC-devel \
+vagrant \
+vagrant-libvirt \
+vagrant-sshfs \
 vala \
 vim-filesystem \
 vlc \
