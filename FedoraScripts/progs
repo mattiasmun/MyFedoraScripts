@@ -127,7 +127,6 @@ julietaula-montserrat-base-web-fonts \
 julietaula-montserrat-fonts-common \
 kernel \
 kernel-core \
-kernel-debug-devel \
 kernel-devel \
 kernel-modules \
 kernel-modules-core \
