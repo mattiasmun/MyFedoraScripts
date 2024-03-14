@@ -1,0 +1,82 @@
+#!/bin/python3
+from math import sqrt
+from plumbum import local, FG, BG
+import pyautogui as gui
+import pyclip as clip
+import sys
+import time
+
+gui.PAUSE = 0.02
+gui.FAILSAFE = True
+gui.keyUp('enter')
+clip.copy('.')
+wmctrl = local['wmctrl']
+_next = '.'
+_iter = iter(['.'])
+_id = sys.argv[1]
+
+_list = ['add_trait adventurer ' + _id]
+_list += ['add_trait aggressive_attacker ' + _id]
+_list += ['add_trait athletic ' + _id]
+_list += ['add_trait augustus ' + _id]
+_list += ['add_trait beauty_good_3 ' + _id]
+_list += ['add_trait born_in_the_purple ' + _id]
+_list += ['add_trait comfort_eater ' + _id]
+_list += ['add_trait confider ' + _id]
+_list += ['add_trait crusader_king ' + _id]
+_list += ['add_trait education_martial_prowess_4 ' + _id]
+_list += ['add_trait fecund ' + _id]
+_list += ['add_trait flexible_leader ' + _id]
+_list += ['add_trait greatest_of_khans ' + _id]
+_list += ['add_trait intellect_good_3 ' + _id]
+_list += ['add_trait journaller ' + _id]
+_list += ['add_trait lifestyle_blademaster ' + _id]
+_list += ['add_trait lifestyle_gardener ' + _id]
+_list += ['add_trait lifestyle_herbalist ' + _id]
+_list += ['add_trait lifestyle_hunter ' + _id]
+_list += ['add_trait lifestyle_mystic ' + _id]
+_list += ['add_trait lifestyle_physician ' + _id]
+_list += ['add_trait lifestyle_reveler ' + _id]
+_list += ['add_trait logistician ' + _id]
+_list += ['add_trait military_engineer ' + _id]
+_list += ['add_trait organizer ' + _id]
+_list += ['add_trait physique_good_3 ' + _id]
+_list += ['add_trait pilgrim ' + _id]
+_list += ['add_trait poet ' + _id]
+_list += ['add_trait pure_blooded ' + _id]
+_list += ['add_trait shrewd ' + _id]
+_list += ['add_trait strong ' + _id]
+_list += ['add_trait unyielding_defender ' + _id]
+_list += ['set_stress 0  ' + _id]
+_list += ['set_diplomacy 40  ' + _id]
+_list += ['set_martial 30  ' + _id]
+_list += ['set_stewardship 50  ' + _id]
+_list += ['set_intrigue 30  ' + _id]
+_list += ['set_learning 40  ' + _id]
+_list += ['set_prowess 40  ' + _id]
+_list += ['clear']
+
+def _check():
+	global _next
+	_next = next(_iter, 0)
+	_bool = _next != 0
+	return _bool
+
+def _do():
+	global _iter
+	wmctrl['-xa', 'ck3.ck3'] & FG
+	time.sleep(0.1)
+	_iter = iter(_list)
+	while _check():
+		_loop()
+
+def _loop():
+	clip.copy(_next)
+	time.sleep(0.05)
+#	cb_data = clip.paste()
+#	print(cb_data)
+	gui.hotkey('ctrl', 'v')
+	gui.press('enter')
+
+if __name__ == "__main__":
+	_do()
