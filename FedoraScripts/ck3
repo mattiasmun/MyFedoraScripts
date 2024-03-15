@@ -27,6 +27,7 @@ _list += ['add_trait crusader_king ' + _id]
 _list += ['add_trait education_martial_prowess_4 ' + _id]
 _list += ['add_trait fecund ' + _id]
 _list += ['add_trait flexible_leader ' + _id]
+_list += ['add_trait forder ' + _id]
 _list += ['add_trait greatest_of_khans ' + _id]
 _list += ['add_trait intellect_good_3 ' + _id]
 _list += ['add_trait journaller ' + _id]
@@ -47,13 +48,13 @@ _list += ['add_trait pure_blooded ' + _id]
 _list += ['add_trait shrewd ' + _id]
 _list += ['add_trait strong ' + _id]
 _list += ['add_trait unyielding_defender ' + _id]
-_list += ['set_stress 0  ' + _id]
-_list += ['set_diplomacy 40  ' + _id]
-_list += ['set_martial 30  ' + _id]
-_list += ['set_stewardship 50  ' + _id]
-_list += ['set_intrigue 30  ' + _id]
-_list += ['set_learning 40  ' + _id]
-_list += ['set_prowess 40  ' + _id]
+_list += ['set_stress 0 ' + _id]
+_list += ['set_diplomacy 40 ' + _id]
+_list += ['set_martial 40 ' + _id]
+_list += ['set_stewardship 50 ' + _id]
+_list += ['set_intrigue 30 ' + _id]
+_list += ['set_learning 40 ' + _id]
+_list += ['set_prowess 40 ' + _id]
 _list += ['clear']
 
 def _check():
@@ -73,7 +74,7 @@ def _do():
 def _loop():
 	clip.copy(_next)
 	time.sleep(0.05)
-#	cb_data = clip.paste()
+#	cb_data = clip.paste(text=True)
 #	print(cb_data)
 	gui.hotkey('ctrl', 'v')
 	gui.press('enter')
