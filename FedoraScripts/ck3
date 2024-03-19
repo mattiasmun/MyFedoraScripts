@@ -15,7 +15,8 @@ _next = '.'
 _iter = iter(['.'])
 _id = sys.argv[1]
 
-_list = ['add_trait adventurer ' + _id]
+_list = ['set_faith quranist ' + _id]
+_list += ['add_trait adventurer ' + _id]
 _list += ['add_trait aggressive_attacker ' + _id]
 _list += ['add_trait athletic ' + _id]
 _list += ['add_trait augustus ' + _id]
@@ -57,9 +58,11 @@ _list += ['set_intrigue 30 ' + _id]
 _list += ['set_learning 40 ' + _id]
 _list += ['set_prowess 40 ' + _id]
 _list += ['set_dread 50 ' + _id]
-_list += ['set_faith quranist ' + _id]
 _list += ['effect = { every_vassal_or_below  = { set_character_faith = faith:quranist }}']
 _list += ['effect = { every_courtier_or_guest  = { set_character_faith = faith:quranist }}']
+_list += ['effect create_artifact_reichskrone_effect = { OWNER = this }']
+_list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
+_list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
 _list += ['clear']
 
 def _check():
