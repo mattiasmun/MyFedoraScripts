@@ -59,7 +59,7 @@ _list += ['set_prowess 40 ' + _id]
 _list += ['set_dread 50 ' + _id]
 _list += ['set_faith quranist ' + _id]
 _list += ['effect = { every_vassal_or_below  = { set_character_faith = faith:quranist }}']
-_list += ['effect = { every_courtier_or_guest  = { set_character_faith = faith:quranist }} ']
+_list += ['effect = { every_courtier_or_guest  = { set_character_faith = faith:quranist }}']
 _list += ['clear']
 
 def _check():
