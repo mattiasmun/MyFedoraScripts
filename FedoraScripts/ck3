@@ -61,8 +61,8 @@ _list += ['set_dread 100 ' + _id]
 _list += ['effect create_artifact_reichskrone_effect = { OWNER = this }']
 _list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
 _list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
-_list += ['effect = { every_vassal_or_below  = { set_character_faith = faith:quranist }}']
-_list += ['effect = { every_courtier_or_guest  = { set_character_faith = faith:quranist }}']
+_list += ['effect = { every_vassal_or_below  = { set_character_faith = root.faith }}']
+_list += ['effect = { every_courtier_or_guest  = { set_character_faith = root.faith }}']
 _list += ['effect = { every_vassal_or_below  = { set_culture = root.culture }}']
 _list += ['effect = { every_courtier_or_guest = { set_culture = root.culture }}']
 _list += ['effect = { every_sub_realm_county = { set_county_faith = root.faith }}']
@@ -86,8 +86,6 @@ def _do():
 def _loop():
 	clip.copy(_next)
 	time.sleep(0.05)
-#	cb_data = clip.paste(text=True)
-#	print(cb_data)
 	gui.hotkey('ctrl', 'v')
 	gui.press('enter')
 
