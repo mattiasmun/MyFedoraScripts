@@ -15,7 +15,7 @@ _next = '.'
 _iter = iter(['.'])
 _id = sys.argv[1]
 
-_list = ['set_faith quranist ' + _id]
+_list = ['set_faith messalianist ' + _id] #Messalianism
 _list += ['add_trait adventurer ' + _id]
 _list += ['add_trait aggressive_attacker ' + _id]
 _list += ['add_trait athletic ' + _id]
@@ -91,3 +91,14 @@ def _loop():
 
 if __name__ == "__main__":
 	_do()
+
+"""
+effect create_artifact_reichskrone_effect = { OWNER = this }
+effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }
+effect = { every_vassal_or_below  = { set_character_faith = root.faith }}
+effect = { every_courtier_or_guest  = { set_character_faith = root.faith }}
+effect = { every_vassal_or_below  = { set_culture = root.culture }}
+effect = { every_courtier_or_guest = { set_culture = root.culture }}
+effect = { every_sub_realm_county = { set_county_faith = root.faith }}
+effect = { every_sub_realm_county = { set_county_culture = root.culture }}
+"""
