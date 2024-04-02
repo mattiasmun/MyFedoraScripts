@@ -15,7 +15,7 @@ _next = '.'
 _iter = iter(['.'])
 _id = sys.argv[1]
 
-_list = ['set_faith messalianist ' + _id] #Messalianism
+_list = ['set_faith messalian ' + _id] #Messalianism
 _list += ['add_trait adventurer ' + _id]
 _list += ['add_trait aggressive_attacker ' + _id]
 _list += ['add_trait athletic ' + _id]
@@ -51,12 +51,12 @@ _list += ['add_trait shrewd ' + _id]
 _list += ['add_trait strong ' + _id]
 _list += ['add_trait unyielding_defender ' + _id]
 _list += ['set_stress 0 ' + _id]
-_list += ['set_diplomacy 40 ' + _id]
-_list += ['set_martial 40 ' + _id]
-_list += ['set_stewardship 50 ' + _id]
-_list += ['set_intrigue 30 ' + _id]
-_list += ['set_learning 40 ' + _id]
-_list += ['set_prowess 40 ' + _id]
+_list += ['set_diplomacy 100 ' + _id]
+_list += ['set_martial 100 ' + _id]
+_list += ['set_stewardship 100 ' + _id]
+_list += ['set_intrigue 100 ' + _id]
+_list += ['set_learning 100 ' + _id]
+_list += ['set_prowess 100 ' + _id]
 _list += ['set_dread 100 ' + _id]
 _list += ['effect create_artifact_reichskrone_effect = { OWNER = this }']
 _list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
