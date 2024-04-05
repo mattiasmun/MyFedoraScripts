@@ -59,6 +59,22 @@ _list += ['set_learning 100 ' + _id]
 _list += ['set_prowess 100 ' + _id]
 _list += ['set_dread 100 ' + _id]
 _list += ['effect create_artifact_reichskrone_effect = { OWNER = this }']
+_list += ['effect create_artifact_illustrious_sassanian_sword_effect = { OWNER = this }']
+_list += ['effect create_artifact_navaratna_effect = { OWNER = this }']
+_list += ['effect create_artifact_navaratna_effect = { OWNER = this }']
+_list += ['effect create_artifact_navaratna_effect = { OWNER = this }']
+_list += ['effect create_artifact_navaratna_effect = { OWNER = this }']
+_list += ['effect create_artifact_turquoise_throne_effect = { OWNER = this }']
+_list += ['effect create_artifact_dhammapada_effect = { OWNER = this }']
+_list += ['effect create_artifact_dhammapada_effect = { OWNER = this }']
+_list += ['effect create_artifact_sculpture_ark_of_covenant_effect = { OWNER = this }']
+_list += ['effect create_artifact_sculpture_ark_of_covenant_effect = { OWNER = this }']
+_list += ['effect create_artifact_sculpture_ark_of_covenant_effect = { OWNER = this }']
+_list += ['effect create_artifact_kaves_apron_effect = { OWNER = this }']
+_list += ['effect create_artifact_kaves_apron_effect = { OWNER = this }']
+_list += ['effect create_artifact_kaves_apron_effect = { OWNER = this }']
+_list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
+_list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
 _list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
 _list += ['effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }']
 _list += ['effect = { every_vassal_or_below  = { set_character_faith = root.faith }}']
@@ -93,8 +109,14 @@ if __name__ == "__main__":
 	_do()
 
 """
-effect create_artifact_reichskrone_effect = { OWNER = this }
-effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }
+effect create_artifact_reichskrone_effect = { OWNER = this }			x1 Crown			Reichskrone
+effect create_artifact_illustrious_sassanian_sword_effect = { OWNER = this }	x1 Regalia			Sassanian Sword
+effect create_artifact_navaratna_effect = { OWNER = this }			x4 Trinket			Navaratna
+effect create_artifact_turquoise_throne_effect = { OWNER = this }		x1 Throne			Turquoise Throne
+effect create_artifact_dhammapada_effect = { OWNER = this }			x2 Book				Dhammapada
+effect create_artifact_sculpture_ark_of_covenant_effect = { OWNER = this }	x3 Furniture			Ark of the Covenant
+effect create_artifact_kaves_apron_effect = { OWNER = this }			x3 Large Wall Ornament		Kave's Apron
+effect create_artifact_pedestal_crown_iron_effect = { OWNER = this }		x4 Pedestal Item		Iron Crown of Lombardy
 effect = { every_vassal_or_below  = { set_character_faith = root.faith }}
 effect = { every_courtier_or_guest  = { set_character_faith = root.faith }}
 effect = { every_vassal_or_below  = { set_culture = root.culture }}
