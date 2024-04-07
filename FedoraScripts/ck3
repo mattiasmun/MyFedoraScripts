@@ -16,6 +16,12 @@ _iter = iter(['.'])
 _id = sys.argv[1]
 
 _list = ['set_faith messalian ' + _id] #Messalianism
+_list += ['clear_traits ' + _id]
+_list += ['set_sexuality heterosexual ' + _id]
+_list += ['add_trait generous ' + _id]
+_list += ['add_trait gregarious ' + _id]
+_list += ['add_trait lustful ' + _id]
+_list += ['add_trait zealous ' + _id]
 _list += ['add_trait adventurer ' + _id]
 _list += ['add_trait aggressive_attacker ' + _id]
 _list += ['add_trait athletic ' + _id]
@@ -25,8 +31,13 @@ _list += ['add_trait born_in_the_purple ' + _id]
 _list += ['add_trait comfort_eater ' + _id]
 _list += ['add_trait confider ' + _id]
 _list += ['add_trait crusader_king ' + _id]
+_list += ['add_trait education_diplomacy_5 ' + _id]
+_list += ['add_trait education_intrigue_5 ' + _id]
+_list += ['add_trait education_learning_5 ' + _id]
+_list += ['add_trait education_martial_5 ' + _id]
 _list += ['add_trait education_martial_prowess_4 ' + _id]
 _list += ['add_trait education_republican_knowledge_4 ' + _id]
+_list += ['add_trait education_stewardship_5 ' + _id]
 _list += ['add_trait fecund ' + _id]
 _list += ['add_trait flexible_leader ' + _id]
 _list += ['add_trait forder ' + _id]
@@ -109,6 +120,7 @@ if __name__ == "__main__":
 	_do()
 
 """
+_list += [' ' + _id]
 effect create_artifact_reichskrone_effect = { OWNER = this }			x1 Crown			Reichskrone
 effect create_artifact_illustrious_sassanian_sword_effect = { OWNER = this }	x1 Regalia			Sassanian Sword
 effect create_artifact_navaratna_effect = { OWNER = this }			x4 Trinket			Navaratna
