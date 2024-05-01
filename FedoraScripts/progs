@@ -68,6 +68,8 @@ geany \
 geos-devel \
 gh \
 ghex \
+ghostscript-tools-fonts \
+ghostscript-tools-printing \
 giflib-devel \
 gimp \
 glibc-doc \
@@ -110,7 +112,6 @@ initscripts \
 intel-gmmlib \
 intel-media-driver \
 intltool \
-iptables-compat \
 iptables-legacy \
 iptables-legacy-libs \
 iptables-utils \
