@@ -22,6 +22,8 @@ Cultural traditions:
 	Refined Poetry
 	Republican Legacy
 
+effect spawn_army = { men_at_arms = { type = gendarme men = 1500 } location = capital_province }
+
 add_maa bombard [char id]
 
 add_maa varangian_veterans [char id]
