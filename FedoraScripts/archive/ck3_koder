@@ -28,6 +28,8 @@ add_maa bombard [char id]
 
 add_maa varangian_veterans [char id]
 
+effect = { title:k_poland = { set_de_jure_liege_title = title:e_roman_empire }}
+
 add_realm_law [law id] [character id] for example "add_realm_law crown_authority_3"
 
 change_stewardship 35 [char id]
