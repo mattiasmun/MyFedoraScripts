@@ -319,6 +319,7 @@ smc-anjalioldlipi-fonts \
 smc-dyuthi-fonts \
 smc-raghumalayalamsans-fonts \
 smc-suruma-fonts \
+speech-dispatcher-utils \
 spin-kickstarts \
 sqlite-devel \
 subversion \
