@@ -37,7 +37,7 @@ def f(x):
 def df(x):
 	return 3*x**2 - 2*x
 
-def guessing(_list):
+def solving(_list):
 	for guess in _list:
 		root = newton_raphson(f, df, guess)
 		if root is not None:
@@ -50,7 +50,7 @@ def main():
 	b=np.clongdouble(15+19j)/10
 	c=np.clongdouble(15-19j)/10
 	initial_guesses = [a, b, c]	# List of initial guesses
-	guessing(initial_guesses)
+	solving(initial_guesses)
 
 if __name__ == "__main__":
 	main()
