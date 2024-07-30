@@ -1,6 +1,5 @@
 #!/bin/python3
 import numpy as np
-from math import isclose
 
 # Assuming clongdouble is supported on your system. 1371742100/1111111111 + 2606309890/1111111111i
 # equals to 1.234567890… + 2.345678901…i. Two numbers with repeating digits.
