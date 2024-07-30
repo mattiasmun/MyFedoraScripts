@@ -1,0 +1,58 @@
+#!/bin/python3
+import numpy as np
+from math import isclose
+
+# Assuming clongdouble is supported on your system. 1371742100/1111111111 + 2606309890/1111111111i
+# equals to 1.234567890… + 2.345678901…i. Two numbers with repeating digits.
+# complex_number = np.clongdouble(1371742100 + 2606309890j)/1111111111
+
+def newton_raphson(f, df, x0, rel_tol=1e-14, abs_tol=0.0, max_iter=100):
+	"""
+	Implements the Newton-Raphson method to find a root of the function f.
+	
+	Args:
+		f: The function to find the root of.
+		df: The derivative of the function f.
+		x0: The initial guess for the root.
+		rel_tol: Relative tolerance for isclose.
+		abs_tol: Absolute tolerance for isclose.
+		max_iter: The maximum number of iterations.
+	
+	Returns:
+		The approximate root of the function f.
+	"""
+	
+	for i in range(max_iter):
+		x1 = x0 - f(x0) / df(x0)
+#		print("x1:", x1)
+		if np.allclose(x1, x0, rtol=rel_tol, atol=abs_tol):
+			return x1
+		x0 = x1
+	return None	# Failed to converge
+
+# Mathematical function
+def f(x):
+	return x**3 - x**2 + 12
+
+# Derivative of mathematical function
+def df(x):
+	return 3*x**2 - 2*x
+
+def guessing(_list):
+	for guess in _list:
+		root = newton_raphson(f, df, guess)
+		if root is not None:
+			print("Root found for initial guess", guess, ":", root)
+		else:
+			print("Newton-Raphson failed to converge for initial guess", guess)
+
+def main():
+	a=np.longdouble(-2)
+	b=np.clongdouble(15+19j)/10
+	c=np.clongdouble(15-19j)/10
+	initial_guesses = [a, b, c]	# List of initial guesses
+	guessing(initial_guesses)
+
+if __name__ == "__main__":
+	main()
+
