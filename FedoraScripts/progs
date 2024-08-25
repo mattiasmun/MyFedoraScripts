@@ -242,6 +242,7 @@ proj-devel \
 puzzles \
 pygobject2 \
 pygtk2 \
+python-launcher \
 python3-IPy \
 python3-bcrypt \
 python3-boto \
