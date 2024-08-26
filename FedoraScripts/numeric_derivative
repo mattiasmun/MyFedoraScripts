@@ -1,0 +1,46 @@
+#!/bin/python3
+import gmpy2 as gp
+
+gp.get_context().precision = 127
+_zero = gp.mpfr(0)
+_one = gp.mpfr(1)
+_eps = gp.next_above(_one) - _one
+_epsrt = gp.mpfr(2)**26
+
+def richardson_extrapolation(f, x, h):
+	"""
+	Computes the derivative using Richardson extrapolation.
+	
+	Args:
+		f: The function to differentiate.
+		x: The point at which to calculate the derivative.
+		h: The initial step size.
+	
+	Returns:
+		The approximate derivative using Richardson extrapolation.
+	"""
+	
+	h2 = h / 2
+	D1 = (f(x+h) - f(x-h)) / (2*h)
+	D2 = (f(x+h2) - f(x-h2)) / (2*h2)
+	return (4*D2 - D1) / 3
+
+def richardson_extrapolation2(f, x):
+	a = abs(x)
+	if x == _zero:
+		a = _one
+	h = gp.next_above(a) - a
+	h = h * _epsrt
+	return richardson_extrapolation(f, x, h)
+
+# Example usage:
+def f(x):
+	return gp.sin(x)
+
+def main():
+	x = gp.atan(_one)
+	derivative = richardson_extrapolation2(f, x)
+	print(derivative)
+
+if __name__ == "__main__":
+	main()
