@@ -1,5 +1,6 @@
 #!/bin/python3
 import numpy as np
+import gmpy2 as gp
 
 # Assuming clongdouble is supported on your system. 1371742100/1111111111 + 2606309890/1111111111i
 # equals to 1.234567890… + 2.345678901…i. Two numbers with repeating digits.
@@ -46,7 +47,7 @@ def solving(_list):
 			print("Newton-Raphson failed to converge for initial guess", guess)
 
 def main():
-	a=np.longdouble(-2)
+	a=gp.mpfr(-2)
 	b=np.clongdouble(15+19j)/10
 	c=np.clongdouble(15-19j)/10
 	initial_guesses = [a, b, c]	# List of initial guesses
