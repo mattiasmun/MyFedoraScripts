@@ -124,8 +124,6 @@ jline-style \
 jline-terminal \
 jline-terminal-jna \
 json-c-devel \
-julietaula-montserrat-base-web-fonts \
-julietaula-montserrat-fonts-common \
 kernel \
 kernel-core \
 kernel-devel \
@@ -321,7 +319,6 @@ smc-dyuthi-fonts \
 smc-raghumalayalamsans-fonts \
 smc-suruma-fonts \
 speech-dispatcher-utils \
-spin-kickstarts \
 sqlite-devel \
 subversion \
 svt-av1-libs \
