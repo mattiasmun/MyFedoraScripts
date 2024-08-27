@@ -1,12 +1,11 @@
 #!/bin/python3
-import numpy as np
 import gmpy2 as gp
 import cmath
 
 gp.get_context().precision = 127
 # Assuming clongdouble is supported on your system. 1371742100/1111111111 + 2606309890/1111111111i
 # equals to 1.234567890… + 2.345678901…i. Two numbers with repeating digits.
-# complex_number = np.clongdouble(1371742100 + 2606309890j)/1111111111
+# complex_number = gp.mpc(1371742100 + 2606309890j)/1111111111
 
 def newton_raphson(f, df, x0, rel_tol=1e-14, abs_tol=1e-14, max_iter=100):
 	"""
@@ -50,8 +49,8 @@ def solving(_list):
 
 def main():
 	a=gp.mpfr(-2)
-	b=gp.mpc(15+19j)/10
-	c=np.clongdouble(15-19j)/10
+	b=gp.mpc(15 + 19j)/10
+	c=gp.mpc(15 - 19j)/10
 	initial_guesses = [a, b, c]	# List of initial guesses
 	solving(initial_guesses)
 
