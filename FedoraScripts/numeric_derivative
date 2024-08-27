@@ -5,7 +5,7 @@ gp.get_context().precision = 127
 _zero = gp.mpfr(0)
 _one = gp.mpfr(1)
 _eps = gp.next_above(_one) - _one
-_epsrt = gp.mpfr(2)**63
+_epsrt = gp.mpfr(2)**103
 
 def richardson_extrapolation(f, x, h):
 	"""
@@ -41,6 +41,9 @@ def main():
 	x = gp.atan(_one)
 	derivative = richardson_extrapolation2(f, x)
 	print(derivative)
+	z=f(x)
+	print(z)
+	print(abs(z-derivative)/z)
 
 if __name__ == "__main__":
 	main()
