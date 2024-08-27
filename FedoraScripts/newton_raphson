@@ -7,7 +7,7 @@ gp.get_context().precision = 127
 # equals to 1.234567890… + 2.345678901…i. Two numbers with repeating digits.
 # complex_number = gp.mpc(1371742100 + 2606309890j)/1111111111
 
-def newton_raphson(f, df, x0, rel_tol=1e-14, abs_tol=1e-14, max_iter=100):
+def newton_raphson(f, df, x0, rel_tol=1e-18, abs_tol=1e-18, max_iter=100):
 	"""
 	Implements the Newton-Raphson method to find a root of the function f.
 	
