@@ -4,7 +4,7 @@ import cmath
 import math
 
 gp.get_context().precision = 127
-# Assuming clongdouble is supported on your system. 1371742100/1111111111 + 2606309890/1111111111i
+# 1371742100/1111111111 + 2606309890/1111111111i
 # equals to 1.234567890… + 2.345678901…i. Two numbers with repeating digits.
 # complex_number = gp.mpc(1371742100 + 2606309890j)/1111111111
 
