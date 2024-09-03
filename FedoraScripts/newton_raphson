@@ -53,8 +53,8 @@ def ITP(f, a, b, epsilon=None, k1=None, k2=2, n0=1, max_iter=100):
 	y_a = f(a)
 	y_b = f(b)
 	
-#	if math.copysign(1, _itr(y_a)) == math.copysign(1, _itr(y_b)):
-#		raise ValueError("sign(f(a)) = sign(f(b)). There is no guaranteed root in the given interval.")
+	if math.copysign(1, _itr(y_a)) == math.copysign(1, _itr(y_b)):
+		raise ValueError("sign(f(a)) = sign(f(b)). There is no guaranteed root in the given interval.")
 	
 	j = 0
 	while _gt(b - a, 2 * epsilon) and j < max_iter:
