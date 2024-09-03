@@ -10,8 +10,9 @@ gp.get_context().precision = 127
 
 _one = gp.mpfr(1)
 _eps = gp.next_above(_one) - _one
+#print(_eps)
 
-def newton_raphson(f, df, x0, rel_tol=1e-18, abs_tol=1e-18, max_iter=100):
+def newton_raphson(f, df, x0, rtol=1e-30, atol=1e-30, max_iter=100):
 	"""
 	Implements the Newton-Raphson method to find a root of the function f.
 	
@@ -30,7 +31,7 @@ def newton_raphson(f, df, x0, rel_tol=1e-18, abs_tol=1e-18, max_iter=100):
 	for i in range(max_iter):
 		x1 = x0 - f(x0) / df(x0)
 #		print("x1:", x1)
-		if cmath.isclose(x1, x0, rel_tol=rel_tol, abs_tol=abs_tol):
+		if cmath.isclose(x1, x0, rel_tol=rtol, abs_tol=atol):
 			return x1
 		x0 = x1
 	return None	# Failed to converge
@@ -112,13 +113,14 @@ def _ceil(x):
 	x = gp.mpc(a, b)
 	return x
 
-def secant(f, x1, x2, E = _eps, max_iter=100):
+def secant(f, x1, x2, rtol=_eps, atol=_eps, max_iter=100):
 	xm = x0 = c = 0
 #	print(f(x1) * f(x2))
 	if (_itr(f(x1) * f(x2)) < 0):
 		for i in range(max_iter):
 			# calculate the intermediate value
 			fx1, fx2 = f(x1), f(x2)
+			oldx0 = x0
 			x0 = ((x1 * fx2 - x2 * fx1) / (fx2 - fx1))
 			
 			# check if x0 is root of
@@ -127,14 +129,10 @@ def secant(f, x1, x2, E = _eps, max_iter=100):
 			
 			# update the value of interval
 			x1, x2 = x2, x0
-			
+#			print(i, _itr(c))
 			# if x0 is the root of equation
 			# then break the loop
-			if (c == 0):
-				break
-			xm = ((x1 * f(x2) - x2 * f(x1)) / (f(x2) - f(x1)))
-			
-			if(abs(xm - x0) < E):
+			if (c == 0 or cmath.isclose(oldx0, x0, rel_tol=rtol, abs_tol=atol)):
 				break
 		return x0
 	else:
