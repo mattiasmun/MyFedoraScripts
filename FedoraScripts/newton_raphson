@@ -101,7 +101,7 @@ def _gt(a, b):
 def _itr(x):
 	r, i = x.real, x.imag
 	a = abs(x)
-	x = math.copysign(a, r + i)
+	x = a if r + i >= 0 else -a
 	return x
 
 def _ceil(x):
@@ -114,6 +114,7 @@ def _ceil(x):
 
 def secant(f, x1, x2, E = _eps, max_iter=100):
 	n = xm = x0 = c = 0
+	print(f(x1) * f(x2))
 	if (_itr(f(x1) * f(x2)) < 0):
 		for i in range(max_iter):
 			
@@ -163,12 +164,16 @@ def solving(_list):
 			print("Secant failed to converge for initial guess", guess)
 
 def main():
-#	a=gp.mpfr(3)
-#	b=gp.mpc(gp.mpfr('-1.46'), gp.mpfr('2.53'))
-#	c=gp.mpc(gp.mpfr('-1.46'), gp.mpfr('-2.53'))
-	a=(gp.mpfr('2.9'), gp.mpfr('3'))
-	b=(gp.mpc(gp.mpfr('-1.47'), gp.mpfr('2.53')), gp.mpc(gp.mpfr('-1.46'), gp.mpfr('2.54')))
-	c=(gp.mpc(gp.mpfr('-1.47'), gp.mpfr('-2.54')), gp.mpc(gp.mpfr('-1.46'), gp.mpfr('-2.53')))
+#	a = gp.mpfr(3)
+#	b = gp.mpc(gp.mpfr('-1.46'), gp.mpfr('2.53'))
+#	c = gp.mpc(gp.mpfr('-1.46'), gp.mpfr('-2.53'))
+	a = (gp.mpfr('2.9'), gp.mpfr('3'))
+	b0 = gp.mpc(gp.mpfr('-1.48'), gp.mpfr('2.53'))
+	b1 = gp.mpc(gp.mpfr('-1.46'), gp.mpfr('2.54'))
+	b = (b0, b1)
+	c0 = gp.mpc(gp.mpfr('-1.47'), gp.mpfr('-2.54'))
+	c1 = gp.mpc(gp.mpfr('-1.46'), gp.mpfr('-2.53'))
+	c = (c0, c1)
 	initial_guesses = [a, b, c]	# List of initial guesses
 	solving(initial_guesses)
 	print("³√25", gp.mpfr('25')**(_one/3))
