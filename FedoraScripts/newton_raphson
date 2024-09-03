@@ -132,7 +132,7 @@ def secant(f, x1, x2, rtol=_eps, atol=_eps, max_iter=100):
 #			print(i, _itr(c))
 			# if x0 is the root of equation
 			# then break the loop
-			if (c == 0 or cmath.isclose(_itr(oldx0), _itr(x0), rel_tol=rtol, abs_tol=atol)):
+			if (c == 0 or math.isclose(_itr(oldx0), _itr(x0), rel_tol=rtol, abs_tol=atol)):
 				break
 		return x0
 	else:
