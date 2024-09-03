@@ -1,11 +1,15 @@
 #!/bin/python3
 import gmpy2 as gp
 import cmath
+import math
 
 gp.get_context().precision = 127
 # Assuming clongdouble is supported on your system. 1371742100/1111111111 + 2606309890/1111111111i
 # equals to 1.234567890… + 2.345678901…i. Two numbers with repeating digits.
 # complex_number = gp.mpc(1371742100 + 2606309890j)/1111111111
+
+_one = gp.mpfr(1)
+_eps = gp.next_above(_one) - _one
 
 def newton_raphson(f, df, x0, rel_tol=1e-18, abs_tol=1e-18, max_iter=100):
 	"""
@@ -31,6 +35,83 @@ def newton_raphson(f, df, x0, rel_tol=1e-18, abs_tol=1e-18, max_iter=100):
 		x0 = x1
 	return None	# Failed to converge
 
+def ITP(f, a, b, epsilon=None, k1=None, k2=2, n0=1, max_iter=100):
+	if epsilon is None:
+		epsilon = _eps
+	if k1 is None:
+		k1 = 0.2 / (b - a)
+	
+	if not (0 < _itr(k1) or cmath.isfinite(k1)):
+		raise ValueError("k1 must be between 0 and ∞")
+	if not (1 <= k2 < 1 + (1 + math.sqrt(gp.mpfr(5))) / 2):
+		raise ValueError("k2 must be between 1 and 1 + (1 + √5)/2 (1 + the golden ratio)")
+	if not (0 < n0 < float('inf')):
+		raise ValueError("n0 must be between 0 and ∞")
+	
+	n_1div2 = _ceil(cmath.log((b - a) / (2 * epsilon), 2))
+	n_max = n_1div2 + n0
+	y_a = f(a)
+	y_b = f(b)
+	
+#	if math.copysign(1, _itr(y_a)) == math.copysign(1, _itr(y_b)):
+#		raise ValueError("sign(f(a)) = sign(f(b)). There is no guaranteed root in the given interval.")
+	
+	j = 0
+	while _gt(b - a, 2 * epsilon) and j < max_iter:
+		# Calculating parameters:
+		x_1div2 = (a + b) / 2
+		r = epsilon * 2 ** (n_max - j) - (b - a) / 2
+		delta = k1 * (b - a) ** k2
+		
+		# Interpolation:
+		x_f = (y_b * a - y_a * b) / (y_b - y_a)
+		
+		# Truncation:
+		sigma = math.copysign(1, _itr(x_1div2 - x_f))
+		x_t = x_f + sigma * delta if _le(delta, abs(x_1div2 - x_f)) else x_1div2
+		
+		# Projection:
+		x_ITP = x_t if _le(abs(x_t - x_1div2), r) else x_1div2 - sigma * r
+		
+		# Updating Interval:
+		y_ITP = f(x_ITP)
+		if _itr(y_ITP) > 0:
+			b = x_ITP
+			y_b = y_ITP
+		elif _itr(y_ITP) < 0:
+			a = x_ITP
+			y_a = y_ITP
+		else:
+			a = b = x_ITP
+		
+		j += 1
+	print("j", j)
+	return (a + b) / 2
+
+def _le(a, b):
+	a = _itr(a)
+	b = _itr(b)
+	return a <= b
+
+def _gt(a, b):
+	a = _itr(a)
+	b = _itr(b)
+	return a > b
+
+def _itr(x):
+	r, i = x.real, x.imag
+	a = abs(x)
+	x = math.copysign(a, r + i)
+	return x
+
+def _ceil(x):
+	a = x.real
+	b = x.imag
+	a = math.ceil(a)
+	b = math.ceil(b)
+	x = gp.mpc(a, b)
+	return x
+
 # Mathematical function
 def f(x):
 	return x**3 - x**2 + 12
@@ -41,16 +122,20 @@ def df(x):
 
 def solving(_list):
 	for guess in _list:
-		root = newton_raphson(f, df, guess)
+#		root = newton_raphson(f, df, guess)
+		root = ITP(f,guess[0],guess[1])
 		if root is not None:
 			print("Root found for initial guess", guess, ":", root)
 		else:
 			print("Newton-Raphson failed to converge for initial guess", guess)
 
 def main():
-	a=gp.mpfr(-2)
-	b=gp.mpc(15 + 19j)/10
-	c=gp.mpc(15 - 19j)/10
+#	a=gp.mpfr(-2)
+#	b=gp.mpc(15 + 19j)/10
+#	c=gp.mpc(15 - 19j)/10
+	a=(gp.mpfr(-21)/10, gp.mpfr(-19)/10)
+	b=(gp.mpc(14 + 19j)/10, gp.mpc(16 + 20j)/10)
+	c=(gp.mpc(14 - 20j)/10, gp.mpc(16 - 19j)/10)
 	initial_guesses = [a, b, c]	# List of initial guesses
 	solving(initial_guesses)
 
