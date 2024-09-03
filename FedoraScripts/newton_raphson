@@ -118,11 +118,12 @@ def secant(f, x1, x2, E = _eps, max_iter=100):
 	if (_itr(f(x1) * f(x2)) < 0):
 		for i in range(max_iter):
 			# calculate the intermediate value
-			x0 = ((x1 * f(x2) - x2 * f(x1)) / (f(x2) - f(x1)))
+			fx1, fx2 = f(x1), f(x2)
+			x0 = ((x1 * fx2 - x2 * fx1) / (fx2 - fx1))
 			
 			# check if x0 is root of
 			# equation or not
-			c = f(x1) * f(x0)
+			c = fx1 * f(x0)
 			
 			# update the value of interval
 			x1, x2 = x2, x0
