@@ -114,7 +114,7 @@ def _ceil(x):
 	return x
 
 def secant(f, x1, x2, rtol = 1e-30, atol = 1e-30, max_iter = 100):
-	xm = x0 = c = 0
+	x0 = c = 0
 #	print(f(x1) * f(x2))
 	if (_itr(f(x1) * f(x2)) < 0):
 		for i in range(max_iter):
