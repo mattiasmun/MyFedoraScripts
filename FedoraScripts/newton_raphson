@@ -152,7 +152,8 @@ def isclose(a, b, rtol = 1e-30, atol = 1e-30):
 	
 	# Calculate relative and absolute differences
 	diff = abs(a - b)
-	rdiff = diff / max(abs(a), abs(b)) if max(abs(a), abs(b)) != 0 else diff
+	top = max(abs(a), abs(b))
+	rdiff = diff / top if top > 0 else diff
 	
 	# Check tolerances
 	return rdiff <= rtol or diff <= atol
