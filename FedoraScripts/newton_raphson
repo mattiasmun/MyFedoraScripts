@@ -113,7 +113,7 @@ def _ceil(x):
 	x = gp.mpc(a, b)
 	return x
 
-def secant(f, x1, x2, rtol=_eps, atol=_eps, max_iter=100):
+def secant(f, x1, x2, rtol=1e-30, atol=1e-30, max_iter=100):
 	xm = x0 = c = 0
 #	print(f(x1) * f(x2))
 	if (_itr(f(x1) * f(x2)) < 0):

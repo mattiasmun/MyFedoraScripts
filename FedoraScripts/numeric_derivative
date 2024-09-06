@@ -5,7 +5,7 @@ gp.get_context().precision = 127
 _zero = gp.mpfr(0)
 _one = gp.mpfr(1)
 _eps = gp.next_above(_one) - _one
-_epsrt = gp.mpfr(2)**103
+_epsrt = gp.mpfr(8<<100)
 
 def richardson_extrapolation(f, x, h):
 	"""
