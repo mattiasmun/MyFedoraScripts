@@ -145,8 +145,6 @@ def isclose(a, b, rtol = 1e-30, atol = 1e-30):
 	# Handle NaN and infinity cases
 	if gp.is_nan(a) or gp.is_nan(b):
 		return False
-	if gp.is_infinite(a) and gp.is_infinite(b) and a == b:
-		return True
 	if a == b:
 		return True
 	
