@@ -12,7 +12,7 @@ _one = gp.mpfr(1)
 _eps = gp.next_above(_one) - _one
 #print(_eps)
 
-def newton_raphson(f, df, x0, rtol=1e-30, atol=1e-30, max_iter=100):
+def newton_raphson(f, df, x0, rtol = 1e-30, atol = 1e-30, max_iter = 100):
 	"""
 	Implements the Newton-Raphson method to find a root of the function f.
 	
@@ -20,8 +20,8 @@ def newton_raphson(f, df, x0, rtol=1e-30, atol=1e-30, max_iter=100):
 		f: The function to find the root of.
 		df: The derivative of the function f.
 		x0: The initial guess for the root.
-		rel_tol: Relative tolerance for isclose.
-		abs_tol: Absolute tolerance for isclose.
+		rtol: Relative tolerance for isclose.
+		atol: Absolute tolerance for isclose.
 		max_iter: The maximum number of iterations.
 	
 	Returns:
@@ -31,12 +31,12 @@ def newton_raphson(f, df, x0, rtol=1e-30, atol=1e-30, max_iter=100):
 	for i in range(max_iter):
 		x1 = x0 - f(x0) / df(x0)
 #		print("x1:", x1)
-		if cmath.isclose(x1, x0, rel_tol=rtol, abs_tol=atol):
+		if isclose(x1, x0, rtol = rtol, atol = atol):
 			return x1
 		x0 = x1
 	return None	# Failed to converge
 
-def ITP(f, a, b, epsilon=None, k1=None, k2=2, n0=1, max_iter=100):
+def ITP(f, a, b, epsilon = None, k1 = None, k2 = 2, n0 = 1, max_iter = 100):
 	if epsilon is None:
 		epsilon = _eps
 	if k1 is None:
@@ -113,7 +113,7 @@ def _ceil(x):
 	x = gp.mpc(a, b)
 	return x
 
-def secant(f, x1, x2, rtol=1e-30, atol=1e-30, max_iter=100):
+def secant(f, x1, x2, rtol = 1e-30, atol = 1e-30, max_iter = 100):
 	xm = x0 = c = 0
 #	print(f(x1) * f(x2))
 	if (_itr(f(x1) * f(x2)) < 0):
@@ -132,11 +132,30 @@ def secant(f, x1, x2, rtol=1e-30, atol=1e-30, max_iter=100):
 #			print(i, _itr(c))
 			# if x0 is the root of equation
 			# then break the loop
-			if (c == 0 or cmath.isclose(oldx0, x0, rel_tol = rtol, abs_tol = atol)):
+			if (c == 0 or isclose(oldx0, x0, rtol = rtol, atol = atol)):
 				break
 		return x0
 	else:
 		return None
+		
+def isclose(a, b, rtol = 1e-30, atol = 1e-30):
+	if a is None or b is None:
+		return False
+	
+	# Handle NaN and infinity cases
+	if gp.is_nan(a) or gp.is_nan(b):
+		return False
+	if gp.is_infinite(a) and gp.is_infinite(b) and a == b:
+		return True
+	if a == b:
+		return True
+	
+	# Calculate relative and absolute differences
+	diff = abs(a - b)
+	rdiff = diff / max(abs(a), abs(b)) if max(abs(a), abs(b)) != 0 else diff
+	
+	# Check tolerances
+	return rdiff <= rtol or diff <= atol
 
 # Mathematical function
 def f(x):

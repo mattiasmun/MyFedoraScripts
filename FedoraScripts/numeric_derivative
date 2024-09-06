@@ -33,15 +33,19 @@ def richardson_extrapolation2(f, x):
 	h = h * _epsrt
 	return richardson_extrapolation(f, x, h)
 
-# Example usage:
+# Mathematical function:
 def f(x):
 	return gp.sin(x)
+
+# Derivative of mathematical function
+def df(x):
+	return gp.cos(x)
 
 def main():
 	x = gp.atan(_one)
 	derivative = richardson_extrapolation2(f, x)
 	print("Approximately:\t", derivative)
-	z=f(x)
+	z=df(x)
 	print("Exact:\t\t", z)
 	print("Error:\t\t", abs(z - derivative) / z)
 
