@@ -119,20 +119,20 @@ def secant(f, x1, x2, rtol=1e-30, atol=1e-30, max_iter=100):
 	if (_itr(f(x1) * f(x2)) < 0):
 		for i in range(max_iter):
 			# calculate the intermediate value
-			fx1, fx2 = f(x1), f(x2)
+			y1, y2 = f(x1), f(x2)
 			oldx0 = x0
-			x0 = ((x1 * fx2 - x2 * fx1) / (fx2 - fx1))
+			x0 = ((x1 * y2 - x2 * y1) / (y2 - y1))
 			
 			# check if x0 is root of
 			# equation or not
-			c = fx1 * f(x0)
+			c = y1 * f(x0)
 			
 			# update the value of interval
 			x1, x2 = x2, x0
 #			print(i, _itr(c))
 			# if x0 is the root of equation
 			# then break the loop
-			if (c == 0 or cmath.isclose(oldx0, x0, rel_tol=rtol, abs_tol=atol)):
+			if (c == 0 or cmath.isclose(oldx0, x0, rel_tol = rtol, abs_tol = atol)):
 				break
 		return x0
 	else:
@@ -140,11 +140,11 @@ def secant(f, x1, x2, rtol=1e-30, atol=1e-30, max_iter=100):
 
 # Mathematical function
 def f(x):
-	return x**3 - 25
+	return x ** 3 - 25
 
 # Derivative of mathematical function
 def df(x):
-	return 3*x**2
+	return 3 * x ** 2
 
 def solving(_list):
 	for guess in _list:
@@ -169,7 +169,7 @@ def main():
 	c = (c0, c1)
 	initial_guesses = [a, b, c]	# List of initial guesses
 	solving(initial_guesses)
-	print("³√25 =", gp.mpfr('25')**(_one/3))
+	print("³√25 =", gp.mpfr('25') ** (_one / 3))
 
 if __name__ == "__main__":
 	main()
