@@ -256,6 +256,7 @@ python3-future \
 python3-gmpy2 \
 python3-google-api-client \
 python3-httplib2 \
+python3-idle \
 python3-lockfile \
 python3-matplotlib \
 python3-more-itertools \
