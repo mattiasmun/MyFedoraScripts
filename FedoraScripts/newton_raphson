@@ -49,7 +49,7 @@ def ITP(f, a, b, epsilon = None, k1 = None, k2 = 2, n0 = 1, max_iter = 100):
 	if not (0 < n0 < gp.inf()):
 		raise ValueError("n0 must be between 0 and ∞")
 	
-	n_1div2 = _ceil(gp.log2(_itr((b - a) / (2 * epsilon))))
+	n_1div2 = _ceil(gp.log((b - a) / (2 * epsilon)) / gp.log(2))
 	n_max = n_1div2 + n0
 	y_a = f(a)
 	y_b = f(b)
