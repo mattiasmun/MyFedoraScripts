@@ -1,7 +1,5 @@
 #!/bin/python3
 import gmpy2 as gp
-import cmath
-import math
 
 gp.get_context().precision = 127
 # 1371742100/1111111111 + 2606309890/1111111111i
@@ -40,21 +38,21 @@ def ITP(f, a, b, epsilon = None, k1 = None, k2 = 2, n0 = 1, max_iter = 100):
 	if epsilon is None:
 		epsilon = _eps
 	if k1 is None:
-		k1 = 0.2 / (b - a)
+		k1 = gp.mpfr('0.2') / (b - a)
 	
-	if not (0 < _itr(k1) or cmath.isfinite(k1)):
+	if not (0 < _itr(k1) or gp.is_finite(k1)):
 		raise ValueError("k1 must be between 0 and ∞")
-	if not (1 <= k2 < 1 + (1 + math.sqrt(gp.mpfr(5))) / 2):
+	if not (1 <= k2 < 1 + (1 + gp.sqrt(gp.mpfr(5))) / 2):
 		raise ValueError("k2 must be between 1 and 1 + (1 + √5)/2 (1 + the golden ratio)")
-	if not (0 < n0 < float('inf')):
+	if not (0 < n0 < gp.inf()):
 		raise ValueError("n0 must be between 0 and ∞")
 	
-	n_1div2 = _ceil(cmath.log((b - a) / (2 * epsilon), 2))
+	n_1div2 = _ceil(gp.log2((b - a) / (2 * epsilon)))
 	n_max = n_1div2 + n0
 	y_a = f(a)
 	y_b = f(b)
 	
-	if math.copysign(1, _itr(y_a)) == math.copysign(1, _itr(y_b)):
+	if gp.sign(_itr(y_a)) == gp.sign(_itr(y_b)):
 		raise ValueError("sign(f(a)) = sign(f(b)). There is no guaranteed root in the given interval.")
 	
 	j = 0
@@ -68,7 +66,7 @@ def ITP(f, a, b, epsilon = None, k1 = None, k2 = 2, n0 = 1, max_iter = 100):
 		x_f = (y_b * a - y_a * b) / (y_b - y_a)
 		
 		# Truncation:
-		sigma = math.copysign(1, _itr(x_1div2 - x_f))
+		sigma = gp.sign(_itr(x_1div2 - x_f))
 		x_t = x_f + sigma * delta if _le(delta, abs(x_1div2 - x_f)) else x_1div2
 		
 		# Projection:
@@ -108,8 +106,8 @@ def _itr(x):
 def _ceil(x):
 	a = x.real
 	b = x.imag
-	a = math.ceil(a)
-	b = math.ceil(b)
+	a = gp.ceil(a)
+	b = gp.ceil(b)
 	x = gp.mpc(a, b)
 	return x
 
