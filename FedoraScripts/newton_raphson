@@ -167,7 +167,7 @@ def df(x):
 def solving(_list):
 	for guess in _list:
 #		root = newton_raphson(f, df, guess)
-		root = ITP(f, guess[0], guess[1])
+		root = secant(f, guess[0], guess[1])
 		if root is not None:
 			print("Root found for initial guess", guess, ":", root)
 		else:
