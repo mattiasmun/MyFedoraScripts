@@ -2,6 +2,7 @@
 import gmpy2 as gp
 
 gp.get_context().precision = 127
+gp.get_context().allow_complex = True
 _zero = gp.mpfr(0)
 _one = gp.mpfr(1)
 _eps = gp.next_above(_one) - _one
