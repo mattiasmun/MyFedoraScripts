@@ -42,7 +42,7 @@ def ITP(f, a, b, epsilon = None, k1 = None, k2 = 2, n0 = 1, max_iter = 100):
 	
 	if not (0 < _itr(k1) or gp.is_finite(k1)):
 		raise ValueError("k1 must be between 0 and ∞")
-	if not (1 <= k2 < 1 + (1 + gp.sqrt(gp.mpfr(5))) / 2):
+	if not (1 <= k2 < 1 + (1 + gp.sqrt(5)) / 2):
 		raise ValueError("k2 must be between 1 and 1 + (1 + √5)/2 (1 + the golden ratio)")
 	if not (0 < n0 < gp.inf()):
 		raise ValueError("n0 must be between 0 and ∞")
