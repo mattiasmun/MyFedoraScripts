@@ -106,11 +106,15 @@ def _itr(x):
 	return x
 
 def _ceil(x):
-	a = x.real
-	b = x.imag
-	a = gp.ceil(a)
-	b = gp.ceil(b)
-	x = gp.mpc(a, b)
+	t = type(x)
+	if t == gp.mpc or t == complex:
+		a = x.real
+		b = x.imag
+		a = gp.ceil(a)
+		b = gp.ceil(b)
+		x = gp.mpc(a, b)
+	else:
+		x = gp.ceil(x)
 	return x
 
 def secant(f, x1, x2, rtol = _eps, atol = _eps, max_iter = 100):
