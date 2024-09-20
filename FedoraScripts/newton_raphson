@@ -169,7 +169,7 @@ def isnotclose(a, b, rtol = _eps, atol = _eps):
 	rdiff = diff / top if top > 0 else diff
 	
 	# Check tolerances
-	return rdiff > rtol or diff > atol
+	return rdiff > rtol and diff > atol
 
 # Mathematical function
 def f(x):
