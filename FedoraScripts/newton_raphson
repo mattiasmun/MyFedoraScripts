@@ -173,11 +173,11 @@ def isnotclose(a, b, rtol = _eps, atol = _eps):
 
 # Mathematical function
 def f(x):
-	return x ** 3 - 25
+	return x ** 3 - x ** 2 - 1
 
 # Derivative of mathematical function
 def df(x):
-	return 3 * x ** 2
+	return 3 * x ** 2 - 2 * x
 
 def solving(_list):
 	for guess in _list:
@@ -193,7 +193,7 @@ def main():
 #	a = gp.mpfr(3)
 #	b = gp.mpc(gp.mpfr('-1.46'), gp.mpfr('2.53'))
 #	c = gp.mpc(gp.mpfr('-1.46'), gp.mpfr('-2.53'))
-	a = (gp.mpfr('2.9'), gp.mpfr('3'))
+	a = (gp.mpfr('1.46'), gp.mpfr('1.47'))
 	b0 = gp.mpc(gp.mpfr('-1.46'), gp.mpfr('2.53'))
 	b1 = gp.mpc(gp.mpfr('-1.47'), gp.mpfr('2.54'))
 	b = (b0, b1)
