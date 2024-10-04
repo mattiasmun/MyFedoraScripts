@@ -47,7 +47,7 @@ def ITP(f, a, b, k1 = None, k2 = 2, n0 = 1, rtol = _eps, atol = _eps, max_iter =
 	if not (0 < n0 < gp.inf()):
 		raise ValueError("n0 must be between 0 and ∞")
 	
-	n_1div2 = _ceil(gp.log((b - a) / (2 * rtol)) / gp.log(2))
+	n_1div2 = _ceil(gp.log((b - a) / (2 * rtol)) / gp.const_log2())
 	n_max = n_1div2 + n0
 	y_a = f(a)
 	y_b = f(b)
