@@ -9,6 +9,6 @@ ctx.allow_complex = True
 π = gp.const_pi()
 φ = 0.5 + gp.sqrt(1.25)
 ψ = gp.mpfr('1.465571231876768026656731225219939108025')
-π, φ, ψ
+print(π, φ, ψ)\
 """
 exec(cmds)
