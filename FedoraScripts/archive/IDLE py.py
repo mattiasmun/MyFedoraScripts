@@ -1,6 +1,7 @@
 #!/bin/python3
 cmds = """\
 import gmpy2 as gp
+import numpy as np
 from timeit import timeit
 ctx = gp.get_context()
 ctx.precision = 127
