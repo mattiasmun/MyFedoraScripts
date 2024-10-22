@@ -12,6 +12,10 @@ ctx.allow_complex = True
 _the_str = "π, φ, ψ = " + str(π) + ", " + str(φ) + ", " + str(ψ)
 print(_the_str)
 _1 = gp.mpfr(1)
-_m1, _0, _2 = -_1, _1 - _1, _1 + _1\
+_m1, _0, _2 = -_1, _1 - _1, _1 + _1
+def _lf(a):
+    b = type(a)
+    b = (b == float) or (b == np.float_)
+    return gp.mpfr(str(a)) if b else gp.mpfr(a)\
 """
 exec(cmds)
