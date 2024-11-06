@@ -15,7 +15,7 @@ _1 = gp.mpfr(1)
 _m1, _0, _2 = -_1, _1 - _1, _1 + _1
 def _lf(a):
     b = type(a)
-    b = (b == float) or (b == np.float_)
+    b = (b == float) or (b == np.float64)
     return gp.mpfr(str(a)) if b else gp.mpfr(a)\
 """
 exec(cmds)
