@@ -5,5 +5,6 @@ data='sudo -A dnf -y install '
 que="$(dnf5 repoquery --userinstalled --queryformat '%{name} \')"
 que="${que::-2}"
 echo "$data$que" >> "$f"
+sed -i 's/\\/\\\n/g' "$f"
 chmod +x "$f"
 ex +g/'x86_64'/d -scwq "$f"
