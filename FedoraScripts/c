@@ -13,7 +13,7 @@ center "$str"
 while read -r line
 do
     center "$line"
-done < <(systemctl list-timers dnf-a* --all)
+done < <(systemctl list-timers dnf5-a* --all)
 
 dnf -C check
 
