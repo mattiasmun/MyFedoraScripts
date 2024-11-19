@@ -272,6 +272,7 @@ gnucash \
 gnupg2 \
 gnutls-dane \
 gnutls-utils \
+golang \
 google-carlito-fonts \
 google-crosextra-caladea-fonts \
 google-droid-sans-fonts \
@@ -508,6 +509,7 @@ libvala \
 libvirt \
 libvirt-ssh-proxy \
 libwebp-devel \
+libxkbcommon-devel \
 linux-firmware \
 livecd-tools \
 logrotate \
@@ -751,6 +753,7 @@ samba-client \
 samba-libs \
 sane-backends-drivers-scanners \
 scanmem \
+scdoc \
 screen \
 sdbus-cpp \
 selinux-policy-targeted \

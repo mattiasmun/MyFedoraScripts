@@ -14,11 +14,11 @@ nautilus &
 sleep 0.1
 easyeffects &
 sleep 3.3
-xdotool key super
+#xdotool key super
 
 pip3update &
 sleep 10
-wmctrl -xa gnome-terminal-server.Gnome-terminal
+#wmctrl -xa gnome-terminal-server.Gnome-terminal
 flatpak update -y
 sleep 0.1
 flatpak uninstall --unused -y
