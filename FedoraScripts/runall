@@ -14,8 +14,10 @@ nautilus &
 sleep 0.1
 easyeffects &
 sleep 3.3
+echo key k:125 | dotool
 #xdotool key super
 
+dotoold &
 pip3update &
 sleep 10
 #wmctrl -xa gnome-terminal-server.Gnome-terminal
