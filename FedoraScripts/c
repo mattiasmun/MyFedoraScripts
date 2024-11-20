@@ -3,7 +3,7 @@
 while read -r line
 do
     center "$line"
-done < <(cat /etc/motd)
+done < <(cat /etc/motd.d/dnf5-automatic)
 
 str="$(stat -c %y /etc/motd.d/dnf5-automatic)"
 str="${str::19}"
