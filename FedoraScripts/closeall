@@ -11,7 +11,7 @@ function _closeall
   for i in `seq 1 "$x"`
   do
 #    sudo -A ydotool key 56:1 62:1 56:0 62:0
-     echo key alt+k:62 | DOTOOL_XKB_LAYOUT=se sudo -A dotool
+     echo key alt+k:62 | dotoolc
 #    xdotool key "Alt_L+F4"
     sleep 0.4
   done
