@@ -19,3 +19,45 @@ def _lf(a):
     return gp.mpfr(str(a)) if b else gp.mpfr(a)\
 """
 exec(cmds)
+
+def limit_denominator(x, max_den = gp.inf()):
+	"""Finds the best rational approximation of an mpq with a denominator <= max_den.
+	
+	Args:
+		x: The mpq number to approximate.
+		max_den: The maximum allowed denominator.
+	
+	Returns:
+		The best rational approximation as an mpq.
+	"""
+	A = x.numerator, x.denominator
+	A = cont_fraction(A[0], A[1])
+	return contfrac_to_frac(A, max_den)
+
+_A = np.full(1000, gp.mpz(0))
+
+def frac_to_contfrac(p, q):
+	A, i = _A.copy(), 0
+	while q:
+		if len(A) == i:
+			A = np.concatenate((A, _A))
+		A[i] = gp.mpz(p // q)
+		p, q = q, p % q
+		i += 1
+	return A[:i]
+
+def contfrac_to_frac(seq, max_den = gp.inf()):
+	""" Convert the simple continued fraction in `seq`
+		into a fraction, num / den
+	"""
+	n, d, num, den = 0, 1, 1, 0
+	for u in seq:
+		n, d, num, den = num, den, gp.fma(num, u, n), gp.fma(den, u, d)
+		if den > max_den:
+			if d > 0:
+				return gp.mpq(n, d)
+	return gp.mpq(num, den)
+
+x = frac_to_contfrac(π, 1)
+y = contfrac_to_frac(x[:34])
+
