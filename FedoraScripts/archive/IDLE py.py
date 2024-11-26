@@ -19,7 +19,7 @@ def _lf(a):
     b = (b == float) or (b == np.float64)
     return gp.mpfr(str(a)) if b else gp.mpfr(a)
 
-def limit_denominator(x, max_den = gp.inf()):
+def limit_denominator(x, max_den = _lf(1e15)):
 	#Finds the best rational approximation of an mpq with a denominator <= max_den.
 	#Args:
 	#	x: The mpq number to approximate.
@@ -43,7 +43,7 @@ def frac_to_cont_frac(p, q = 1):
 		i += 1
 	return A[:i]
 
-def cont_frac_to_frac(seq, max_den = gp.inf()):
+def cont_frac_to_frac(seq, max_den = _lf(1e15)):
 	#Convert the simple continued fraction in `seq`
 	#into a fraction, num / den
 	n, d, num, den = 0, 1, 1, 0
