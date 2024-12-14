@@ -29,7 +29,6 @@ abrt-tui \
 acl \
 add-determinism \
 adobe-source-code-pro-fonts \
-adwaita-qt5 \
 aisleriot \
 alsa-sof-firmware \
 alsa-ucm \
@@ -722,7 +721,6 @@ qemu-guest-agent \
 qemu-ui-egl-headless \
 qemu-ui-opengl \
 qemu-ui-spice-core \
-qgnomeplatform-qt5 \
 qt5-qtbase \
 qt5-qtbase-gui \
 qt5-qtdeclarative \
