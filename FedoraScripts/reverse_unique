@@ -5,7 +5,7 @@ from pathlib import Path
 
 def keep_last_unique_lines(input_file, output_file):
 	"""
-	Keeps only the last occurrence of each unique line in a file,
+	Keeps only one occurrence of each unique line in a file,
 	sorts them alphanumerically, and saves them to another file.
 
 	Args:
@@ -23,14 +23,14 @@ def keep_last_unique_lines(input_file, output_file):
 	unique_lines = {}
 	for line in lines:
 		cleaned_line = line.strip()  # Remove leading/trailing whitespace
-		unique_lines[cleaned_line] = line # Store the original line with whitespace if needed
+		unique_lines[cleaned_line] = cleaned_line # Store the cleaned line without leading/trailing whitespace
 
 	sorted_lines = sorted(unique_lines.values())
 
 	try:
 		with open(output_file, 'w') as f_out:
 			f_out.writelines(sorted_lines)
-		print(f"Unique lines (last occurrence, sorted) saved to '{output_file}'")
+		print(f"Unique lines (one occurrence, sorted) saved to '{output_file}'")
 
 	except Exception as e:
 		print(f"An error occurred while writing to the output file: {e}")
