@@ -1,0 +1,62 @@
+#!/usr/bin/python
+
+import os
+from pathlib import Path
+
+def keep_last_unique_lines(input_file, output_file):
+	"""
+	Keeps only the last occurrence of each unique line in a file,
+	sorts them alphanumerically, and saves them to another file.
+
+	Args:
+		input_file: Path to the input file.
+		output_file: Path to the output file.
+	"""
+
+	try:
+		with open(input_file, 'r') as f_in:
+			lines = f_in.readlines()
+	except FileNotFoundError:
+		print(f"Error: Input file '{input_file}' not found.")
+		return
+
+	unique_lines = {}
+	for line in lines:
+		cleaned_line = line.strip()  # Remove leading/trailing whitespace
+		unique_lines[cleaned_line] = line # Store the original line with whitespace if needed
+
+	sorted_lines = sorted(unique_lines.values())
+
+	try:
+		with open(output_file, 'w') as f_out:
+			f_out.writelines(sorted_lines)
+		print(f"Unique lines (last occurrence, sorted) saved to '{output_file}'")
+
+	except Exception as e:
+		print(f"An error occurred while writing to the output file: {e}")
+
+
+
+# Example usage:
+_home = str(Path.home()) + "/"
+input_filename =  _home + ".bash_history"  # Replace with your input file name
+output_filename = _home + ".bash_history2" # Replace with your desired output file name
+
+# Create a sample input file (for testing):
+"""with open(input_filename, "w") as f:
+	f.write("apple\n")
+	f.write("banana\n")
+	f.write("apple\n")  # Last occurrence of "apple"
+	f.write("orange\n")
+	f.write("banana\n") # Last occurrence of "banana"
+	f.write("Apple\n") # Case sensitive, so this will be treated as different from "apple"
+	f.write("orange\n") # Last occurrence of "orange"
+	f.write("grape\n")
+"""
+
+keep_last_unique_lines(input_filename, output_filename)
+
+
+# For robust error handling, you might want to add checks like:
+# os.path.exists(input_filename) before attempting to open the file.
+# and handle potential exceptions during file operations.
