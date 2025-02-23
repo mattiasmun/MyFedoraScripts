@@ -23,7 +23,7 @@ def keep_last_unique_lines(input_file, output_file):
 	unique_lines = {}
 	for line in lines:
 		cleaned_line = line.strip()  # Remove leading/trailing whitespace
-		unique_lines[cleaned_line] = cleaned_line # Store the cleaned line without leading/trailing whitespace
+		unique_lines[cleaned_line] = cleaned_line + "\n" # Store the cleaned line without leading/trailing whitespace
 
 	sorted_lines = sorted(unique_lines.values())
 
