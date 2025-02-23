@@ -38,9 +38,9 @@ def keep_last_unique_lines(input_file, output_file):
 
 
 # Example usage:
-_home = str(Path.home()) + "/"
-input_filename =  _home + ".bash_history"  # Replace with your input file name
-output_filename = _home + ".bash_history2" # Replace with your desired output file name
+_home = Path.home()
+input_filename =  _home / ".bash_history"  # Replace with your input file name
+output_filename = _home / ".bash_history2" # Replace with your desired output file name
 
 # Create a sample input file (for testing):
 """with open(input_filename, "w") as f:
