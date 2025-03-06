@@ -1,4 +1,5 @@
 ./build.sh && sudo ./build.sh install
+./piper --help
 aplay raw.wav
 bc -lq
 c
@@ -7,6 +8,10 @@ cat '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapp
 cat /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
 cat /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
 cat /usr/share/dnf5/dnf5-plugins/automatic.conf
+cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 16000 -a - output2.mp3
+cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8000 -a - output2.mp3
+cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8400 -a - output2.mp3
+cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame -V 9 raw.wav output.mp3
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame raw.wav output.mp3
 cd
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Sid Meier's Civilization VI/steamassets/base/binaries/linux"
@@ -15,6 +20,7 @@ cd 529340/
 cd Bash/MyFedoraScripts/
 cd Bash/MyFedoraScripts/FedoraScripts/
 cd Hämtningar/piper_amd64/
+cd Hämtningar/piper_amd64/piper/
 cd Projekt/
 cd Projekt/dotool/
 cd dotool/
@@ -36,6 +42,7 @@ dnf --version
 dnf -v
 dnf check
 dnf check --help
+dnf info piper
 dnf info python3-gmpy2.x86_64
 dnf info sway
 dnf info wlrctl
@@ -58,6 +65,17 @@ du --help
 du -c
 echo "$data$que" >> "$f"
 echo "Hej på dig!" | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && ffmpeg -i raw.wav output.mp3
+echo "Hello, World" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame - output2.mp3
+echo "Hello, World" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r - output2.mp3
+echo "Hello, World" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 - output2.mp3
+echo "Hello, World" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -b 32 - output2.mp3
+echo "Hello, World" | piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -b 32 - output2.mp3
+echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | ffprobe -
+echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 11025 -a - output2.mp3
+echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 - output2.mp3
+echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -a - output2.mp3
+echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -b 32 - output2.mp3
+echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8000 -a - output2.mp3
 echo $((1+2))
 echo $f
 echo $que
@@ -66,7 +84,10 @@ echo r
 env
 ex --help
 f="$HOME"'/Bash/MyFedoraScripts/FedoraScripts/progs'
-
+ffprobe --help
+ffprobe output.mp3
+ffprobe output2.mp3
+ffprobe raw.wav
 find -name *g43
 find -name . g43
 find -name g43
@@ -116,16 +137,22 @@ grep -nirI sg44
 grep -nirI svt40
 groupadd -f input
 htop
+l
+lame --help
+lame --longhelp
 lame raw.wav output.mp3
 ll
 ll "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/sentry/last_crash"
 ll $f
+ll *.mp3
 ll /etc/dnf/automatic.conf
 ll /etc/dnf/automatic.conf.rpmnew
 ll /home/mmunster/.local/share/Steam/linux64/steamclient.so
 ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/linux64/steamclient.so
 ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/03dabf48-21c2-496e-dbc10998-8684603a_stdout.txt
 ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
+ll output.mp3
+ll output2.mp3
 ln --help
 ln -s '/home/mmunster/.var/app/com.valvesoftware.Steam/Desktop/Men of War II.desktop' '.local/share/applications/Men of War II.desktop'
 ln -sT /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/linux32/steamclient.so /home/mmunster/.local/share/Steam/linux32/steamclient.so
@@ -177,15 +204,21 @@ lsattr Dokument/IDLE\ py.py
 lsattr Dokument/Men\ of\ war\ 2/corpsmanx_ai.set
 lsattr Hämtningar/
 man wlrctl
+mediainfo
 meld '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men' '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set'
 meld .bash_history .bash_history2
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 meld Dokument/IDLE\ py.py Bash/MyFedoraScripts/FedoraScripts/archive/IDLE\ py.py
+mpg123
+mplayer
+mplayer output.mp3
+mplayer output2.mp3
 nautilus "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
 nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share
 nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860
 newton_raphson
+nvidia-smi
 pgrep firefox
 pidof firefox
 pidof flatpak
@@ -193,6 +226,7 @@ pip list
 pip list --user
 pip3 install pyautogui pip-date tsp-solver2
 pip3update
+piper --help
 pkill -sigkill Civ6
 pkill -sigkill TransportFever2
 pkill -sigkill mow2
@@ -217,21 +251,19 @@ string2=$(echo '$string' | sed 's/\\/\\\n/g')
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever=41 &
 sudo -A dnf autoremove
 sudo -A dnf check
-sudo -A dnf install lame
-sudo -A dnf install wlrctl
-sudo -A dnf remove python2.7 python2-cairo pygtk2 pygobject2 abrt-java-connector
 sudo -A dnf system-upgrade reboot &
 sudo -A dnf upgrade
 sudo -A dnf-automatic
 sudo -A gedit /etc/dnf/automatic.conf
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 sudo -A updatedb
-sudo -A wmctrl -l
 sudo -A wmctrl -xl
 sudo dnf install go libxkbcommon-dev scdoc
 sudo dnf install go libxkbcommon-devel scdoc
+sudo dnf install mplayer
 sudo dnf repoquery --extras
 sudo dotoold
+sudo systemctl restart gdm
 sudo udevadm control --reload && sudo udevadm trigger
 sudo updatedb
 sudo usermod -a -G input $USER
@@ -240,6 +272,7 @@ sudo wlrctl pointer move 50 -70
 sudo wlrctl window focus firefox
 systemctl enable --now dnf5-automatic.timer
 systemctl status dnf5-automatic.timer
+systemctl status gdm
 uname -a
 uname -r
 unique_lines
