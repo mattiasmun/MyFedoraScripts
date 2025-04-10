@@ -15,7 +15,9 @@ cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav 
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame raw.wav output.mp3
 cd
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Sid Meier's Civilization VI/steamassets/base/binaries/linux"
-cd /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/
+cd '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155'
+cd '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/'
+cd ..
 cd 529340/
 cd Bash/MyFedoraScripts/
 cd Bash/MyFedoraScripts/FedoraScripts/
@@ -88,8 +90,12 @@ ffprobe --help
 ffprobe output.mp3
 ffprobe output2.mp3
 ffprobe raw.wav
+find
+find -name
+find -name *
 find -name *g43
 find -name . g43
+find -name a
 find -name g43
 find -name g43 .
 find . -name *g43
@@ -109,6 +115,8 @@ gedit .bash_history
 gedit .bash_history2
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua &
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1066780/2848415950/res/scripts/wkpt_params.lua &
+gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/properties/resupply.inc
+gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc
 gedit global/map/cheatsmod/cheatsgohairwinter.mi
 git add *
 git add FedoraScripts/archive/IDLE\ py.py
@@ -126,6 +134,7 @@ grep -nir 43
 grep -nir filled
 grep -nir svt40
 grep -nirI 43
+grep -nirI female
 grep -nirI filled
 grep -nirI g43
 grep -nirI k98
@@ -134,6 +143,7 @@ grep -nirI pillbox
 grep -nirI sandbag_kit
 grep -nirI scope
 grep -nirI sg44
+grep -nirI sniper
 grep -nirI svt40
 groupadd -f input
 htop
@@ -143,6 +153,8 @@ lame --longhelp
 lame raw.wav output.mp3
 ll
 ll "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/sentry/last_crash"
+ll $(locate dnf.log)
+ll $(locate dnf5.log)
 ll $f
 ll *.mp3
 ll /etc/dnf/automatic.conf
@@ -159,6 +171,7 @@ ln -sT /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/linux3
 ln -sT /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/linux64/steamclient.so /home/mmunster/.local/share/Steam/linux64/steamclient.so
 ln -sT /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/ubuntu12_32/steamclient.so /home/mmunster/.local/share/Steam/ubuntu12_32/steamclient.so
 locate *.desktop
+locate *.inc
 locate *.log
 locate 1128860
 locate 2760877761
@@ -172,13 +185,19 @@ locate automatic.conf
 locate automatic.timer
 locate corpsmanx
 locate crash
+locate dnf.log
 locate dotool
+locate easy.inc
+locate engineer
+locate engineerx
 locate engineerx_ai.set
 locate g43
 locate https://steamcommunity.com/sharedfiles/filedetails/?id=3271667155
 locate icon_1128860
+locate perks.inc
 locate pyautogui
 locate rifle
+locate sniper
 locate solothurn
 locate steam_icon
 locate steamclient.so
@@ -214,6 +233,8 @@ mpg123
 mplayer
 mplayer output.mp3
 mplayer output2.mp3
+nano /var/log/dnf.log
+nano /var/log/dnf5.log
 nautilus "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
 nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share
 nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860
@@ -242,6 +263,7 @@ rm -r /home/mmunster/.local/lib/python3.12/
 rm /home/mmunster/.local/share/Steam/linux32/steamclient.so
 rm /home/mmunster/.local/share/Steam/linux64/steamclient.so
 rm /home/mmunster/.local/share/Steam/ubuntu12_32/steamclient.so
+rm scene/set/breed/mp2/ger/sniperx_ai.set\ men
 sha256sum /bosse/Filer/Fedora-Workstation-Live-x86_64-41/Fedora-Workstation-Live-x86_64-41-1.4.iso
 steam steam://rungameid/289070
 strcmp a2dd3caf3224b8f3a640d9e31b1016d2a4e98a6d7cb435a1e2030235976d6da2 a2dd3caf3224b8f3a640d9e31b1016d2a4e98a6d7cb435a1e2030235976d6da2
