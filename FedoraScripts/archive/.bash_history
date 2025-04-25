@@ -91,26 +91,22 @@ ffprobe output.mp3
 ffprobe output2.mp3
 ffprobe raw.wav
 find
-find -name
-find -name *
-find -name *g43
-find -name . g43
-find -name a
-find -name g43
-find -name g43 .
-find . -name *g43
-find . -name g43
+find --help
+find . -name engineer*
+find . -name opel*
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak run com.valvesoftware.Steam steam://rungameid/289070
 flatpak update -y
 gedit "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
 gedit "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/log_cli/cli_2025-02-15_14-41-53.log"
+gedit "scene/entity/-vehicle/tank_medium/m4a3_105/m4a3_105+++++++++.def"
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/tank_medium/t34_85m'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/tank_medium/t34_85m/t34_85m+++++++++.def'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/special/cheat.set'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/solothurn_s18_1000+++++++++'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc'
+gedit ./scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def &
 gedit .bash_history
 gedit .bash_history2
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua &
@@ -118,6 +114,8 @@ gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamap
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/properties/resupply.inc
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc
 gedit global/map/cheatsmod/cheatsgohairwinter.mi
+gedit scene/properties/human+++++++++.ext
+gedit scene/set/auto_restore_inventory+++++++++.set &
 git add *
 git add FedoraScripts/archive/IDLE\ py.py
 git clone https://git.sr.ht/~geb/dotool
@@ -128,17 +126,17 @@ gitty ~/529340/
 gitty ~/Bash/MyFedoraScripts/
 glxgears -swapinterval 0 & sleep 15.5; pkill glxgears
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
-grep -ni svt40
-grep -nie svt40
-grep -nir 43
-grep -nir filled
-grep -nir svt40
-grep -nirI 43
+grep -nirI 'size 10 16'
+grep -nirI 'size 12 14'
+grep -nirI browning
 grep -nirI female
 grep -nirI filled
 grep -nirI g43
+grep -nirI grenade
 grep -nirI k98
 grep -nirI kit
+grep -nirI land
+grep -nirI m24x
 grep -nirI pillbox
 grep -nirI sandbag_kit
 grep -nirI scope
@@ -226,6 +224,7 @@ man wlrctl
 mediainfo
 meld '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men' '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set'
 meld .bash_history .bash_history2
+meld .bash_history Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 meld Dokument/IDLE\ py.py Bash/MyFedoraScripts/FedoraScripts/archive/IDLE\ py.py
@@ -265,24 +264,21 @@ rm /home/mmunster/.local/share/Steam/linux64/steamclient.so
 rm /home/mmunster/.local/share/Steam/ubuntu12_32/steamclient.so
 rm scene/set/breed/mp2/ger/sniperx_ai.set\ men
 sha256sum /bosse/Filer/Fedora-Workstation-Live-x86_64-41/Fedora-Workstation-Live-x86_64-41-1.4.iso
+sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
 steam steam://rungameid/289070
-strcmp a2dd3caf3224b8f3a640d9e31b1016d2a4e98a6d7cb435a1e2030235976d6da2 a2dd3caf3224b8f3a640d9e31b1016d2a4e98a6d7cb435a1e2030235976d6da2
 strcmp asdfsdf gertergdfg
 string2="$(echo '$string' | sed 's/\\/\\\n/g')"
 string2=$(echo '$string' | sed 's/\\/\\\n/g')
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever=41 &
 sudo -A dnf autoremove
 sudo -A dnf check
-sudo -A dnf system-upgrade reboot &
+sudo -A dnf system-upgrade reboot
 sudo -A dnf upgrade
 sudo -A dnf-automatic
 sudo -A gedit /etc/dnf/automatic.conf
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 sudo -A updatedb
 sudo -A wmctrl -xl
-sudo dnf install go libxkbcommon-dev scdoc
-sudo dnf install go libxkbcommon-devel scdoc
-sudo dnf install mplayer
 sudo dnf repoquery --extras
 sudo dotoold
 sudo systemctl restart gdm
