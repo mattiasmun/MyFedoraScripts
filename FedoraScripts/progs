@@ -407,6 +407,7 @@ jasper-devel \
 java-11-openjdk-devel \
 java-latest-openjdk \
 javapackages-local \
+jedit \
 jline-reader \
 jline-style \
 jline-terminal \
