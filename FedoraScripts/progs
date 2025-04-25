@@ -29,6 +29,7 @@ abrt-tui \
 acl \
 add-determinism \
 adobe-source-code-pro-fonts \
+adoptium-temurin-java-repository \
 aisleriot \
 alsa-sof-firmware \
 alsa-ucm \
@@ -138,7 +139,6 @@ device-mapper-multipath \
 dhcp-client \
 distribution-gpg-keys \
 dkms \
-dmraid \
 dnf-plugins-core \
 dnf5 \
 dnf5-plugin-automatic \
@@ -329,6 +329,7 @@ gstreamer-plugins-espeak \
 gstreamer1 \
 gstreamer1-devel \
 gstreamer1-doc \
+gstreamer1-plugin-dav1d \
 gstreamer1-plugin-gtk4 \
 gstreamer1-plugin-libav \
 gstreamer1-plugin-openh264 \
@@ -404,9 +405,8 @@ iwlegacy-firmware \
 iwlwifi-dvm-firmware \
 iwlwifi-mvm-firmware \
 jasper-devel \
-java-11-openjdk-devel \
 java-latest-openjdk \
-javapackages-local \
+javapackages-local-openjdk21 \
 jedit \
 jline-reader \
 jline-style \
@@ -513,6 +513,7 @@ libwebp-devel \
 libxkbcommon-devel \
 linux-firmware \
 livecd-tools \
+localsearch \
 logrotate \
 lohit-assamese-fonts \
 lohit-bengali-fonts \
@@ -630,6 +631,7 @@ policycoreutils \
 policycoreutils-python-utils \
 polkit \
 poppler-devel \
+prefixdevname \
 procps-ng \
 proj-data-at \
 proj-data-au \
@@ -805,6 +807,7 @@ system-config-printer-udev \
 systemd \
 systemd-oomd-defaults \
 systemd-resolved \
+systemd-sysusers \
 systemd-udev \
 systemtap-sdt-dtrace \
 tar \
@@ -817,13 +820,12 @@ texttopaps \
 thermald \
 thunderbird \
 time \
+tinysparql \
 tiwilink-firmware \
 tlwg-waree-fonts \
 toolbox \
 totem-video-thumbnailer \
 traceroute \
-tracker \
-tracker-miners \
 translate-shell \
 translate-toolkit \
 transmission-gtk \
