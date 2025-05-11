@@ -5,6 +5,7 @@ bc -lq
 c
 cat '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc'
 cat '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc'
+cat /etc/resolv.conf
 cat /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
 cat /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
 cat /usr/share/dnf5/dnf5-plugins/automatic.conf
@@ -117,7 +118,6 @@ gedit global/map/cheatsmod/cheatsgohairwinter.mi
 gedit scene/properties/human+++++++++.ext
 gedit scene/set/auto_restore_inventory+++++++++.set &
 git add *
-git add FedoraScripts/archive/IDLE\ py.py
 git clone https://git.sr.ht/~geb/dotool
 git gc
 git pull
@@ -128,21 +128,6 @@ glxgears -swapinterval 0 & sleep 15.5; pkill glxgears
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
 grep -nirI 'size 10 16'
 grep -nirI 'size 12 14'
-grep -nirI browning
-grep -nirI female
-grep -nirI filled
-grep -nirI g43
-grep -nirI grenade
-grep -nirI k98
-grep -nirI kit
-grep -nirI land
-grep -nirI m24x
-grep -nirI pillbox
-grep -nirI sandbag_kit
-grep -nirI scope
-grep -nirI sg44
-grep -nirI sniper
-grep -nirI svt40
 groupadd -f input
 htop
 l
@@ -157,17 +142,11 @@ ll $f
 ll *.mp3
 ll /etc/dnf/automatic.conf
 ll /etc/dnf/automatic.conf.rpmnew
-ll /home/mmunster/.local/share/Steam/linux64/steamclient.so
-ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/linux64/steamclient.so
 ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/03dabf48-21c2-496e-dbc10998-8684603a_stdout.txt
 ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
 ll output.mp3
 ll output2.mp3
 ln --help
-ln -s '/home/mmunster/.var/app/com.valvesoftware.Steam/Desktop/Men of War II.desktop' '.local/share/applications/Men of War II.desktop'
-ln -sT /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/linux32/steamclient.so /home/mmunster/.local/share/Steam/linux32/steamclient.so
-ln -sT /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/linux64/steamclient.so /home/mmunster/.local/share/Steam/linux64/steamclient.so
-ln -sT /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/ubuntu12_32/steamclient.so /home/mmunster/.local/share/Steam/ubuntu12_32/steamclient.so
 locate *.desktop
 locate *.inc
 locate *.log
@@ -175,7 +154,6 @@ locate 1128860
 locate 2760877761
 locate 2848415950
 locate 3271667155
-locate 3360
 locate 3360488425
 locate T2GP
 locate Vic3.desktop
@@ -186,12 +164,10 @@ locate crash
 locate dnf.log
 locate dotool
 locate easy.inc
-locate engineer
-locate engineerx
 locate engineerx_ai.set
-locate g43
 locate https://steamcommunity.com/sharedfiles/filedetails/?id=3271667155
 locate icon_1128860
+locate opel_blitz
 locate perks.inc
 locate pyautogui
 locate rifle
@@ -204,6 +180,7 @@ locate t34
 locate t34_85
 locate wlrctl
 ls
+ls "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/"
 ls '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/texture/common/model/'
 ls -Al
 ls -Al $(locate steamclient.so)
@@ -218,16 +195,21 @@ ls /home/mmunster/.local/share/Steam/linux64/steamclient.so
 ls /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
 ls /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/
 lsattr Dokument/IDLE\ py.py
-lsattr Dokument/Men\ of\ war\ 2/corpsmanx_ai.set
 lsattr Hämtningar/
 man wlrctl
 mediainfo
-meld '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men' '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set'
+meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/opel_blitz_supp+++++++++.def"
+meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "/home/mmunster/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def"
+meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/corpsmanx_ai.set"
+meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Dokument/Men_of_war2/corpsmanx_ai.set"
+meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/engineerx_ai.set"
+meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Dokument/Men_of_war2/engineerx_ai.set"
 meld .bash_history .bash_history2
 meld .bash_history Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 meld Dokument/IDLE\ py.py Bash/MyFedoraScripts/FedoraScripts/archive/IDLE\ py.py
+meld Dokument/Men_of_war2/engineerx_ai.set Dokument/Men_of_war2/engineerx_ai.txt
 mpg123
 mplayer
 mplayer output.mp3
@@ -238,6 +220,8 @@ nautilus "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/ste
 nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share
 nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860
 newton_raphson
+nslookup google.com
+nslookup google.com 8.26.56.26
 nvidia-smi
 pgrep firefox
 pidof firefox
@@ -251,27 +235,16 @@ pkill -sigkill Civ6
 pkill -sigkill TransportFever2
 pkill -sigkill mow2
 py
-que
-que="$(dnf repoquery --userinstalled --queryformat '%{name} \')"
-que="$(dnf5 repoquery --userinstalled --queryformat '%{name} \')"
-que="$(dnf5 repoquery --userinstalled --queryformat '%{name} \n')"
-que="${que::-2}"
 quodlibet hej.wav &
 r
-rm -r /home/mmunster/.local/lib/python3.12/
-rm /home/mmunster/.local/share/Steam/linux32/steamclient.so
-rm /home/mmunster/.local/share/Steam/linux64/steamclient.so
-rm /home/mmunster/.local/share/Steam/ubuntu12_32/steamclient.so
-rm scene/set/breed/mp2/ger/sniperx_ai.set\ men
 sha256sum /bosse/Filer/Fedora-Workstation-Live-x86_64-41/Fedora-Workstation-Live-x86_64-41-1.4.iso
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
 steam steam://rungameid/289070
 strcmp asdfsdf gertergdfg
-string2="$(echo '$string' | sed 's/\\/\\\n/g')"
-string2=$(echo '$string' | sed 's/\\/\\\n/g')
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever=41 &
 sudo -A dnf autoremove
 sudo -A dnf check
+sudo -A dnf repoquery --extras
 sudo -A dnf system-upgrade reboot
 sudo -A dnf upgrade
 sudo -A dnf-automatic
@@ -279,7 +252,6 @@ sudo -A gedit /etc/dnf/automatic.conf
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 sudo -A updatedb
 sudo -A wmctrl -xl
-sudo dnf repoquery --extras
 sudo dotoold
 sudo systemctl restart gdm
 sudo udevadm control --reload && sudo udevadm trigger
