@@ -56,6 +56,7 @@
 		{item "svt40_sniper" filled}
 		{item "ammo rifle" 350}
 		{item "bandage" 5}
+		{item "knife_union"}
 		{item "grenade m61" 2}
 		{item "grenade n73at" 2}
 		{item "sandbag_kit"}

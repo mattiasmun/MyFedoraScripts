@@ -7,7 +7,7 @@
 	{icon_priority 1}
 	{nationality usa}
 	{armors
-		{body us_body_armor}
+		{body "us_body_armor"}
 		{head "usa-helmet_1"}
 	}
 	{perks (include "\set\breed\perks.inc")
@@ -54,9 +54,10 @@
 		{"minedetection" 30}
 	}
 	{inventory
-		{item "g43" filled}
+		{item "avs36" filled}
 		{item "ammo rifle" 350}
 		{item "bandage" 5}
+		{item "knife_union"}
 		{item "grenade m61" 3}
 		{item "grenade n73at" 6}
 		{item "remote mine"}
@@ -64,7 +65,6 @@
 		{item "signal grenade" 2}
 		{item "repair_kit"}
 		{item "sandbag_kit"}
-		{item "dot_kit"}
 		{item "barbwire_kit"}
 		{item "hedgehog_kit"}
 		{item "tower_usa_kit"}
