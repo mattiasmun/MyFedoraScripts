@@ -18,10 +18,11 @@
 			{item "barrel" filling "fuel" 200}
 			{item "supp_point_kit"}
 			{item "can" filling "fuel" 60}
-			{item "sapper_shovel" 20}
-			{item "knife_union" 20}
-			{item "usa-helmet_2" 20}
-			{item "us_body_armor" 20}
+			{item "sapper_shovel" 50}
+			{item "sandbag_kit" 50}
+			{item "knife_union" 50}
+			{item "usa-helmet_2" 50}
+			{item "us_body_armor" 50}
 			{item "dynamite" 20}
 			{item "grenade m61" 60}
 			{item "grenade n73at" 60}
