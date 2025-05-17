@@ -1,11 +1,11 @@
 {game_entity
 	{extender "auto_restore_fuel_point"
-		{radius 22}
+		{radius 25}
 		{type "static"}
 	}
 
 	{extender "auto_restore_warehouse"
-		{radius 22}
+		{radius 25}
 		{type "static"}
 	}
 
@@ -20,10 +20,13 @@
 			{item "can" filling "fuel" 60}
 			{item "sapper_shovel" 50}
 			{item "sandbag_kit" 50}
+			{item "barbwire_kit" 50}
+			{item "hedgehog_kit" 50}
 			{item "knife_union" 50}
 			{item "usa-helmet_2" 50}
 			{item "us_body_armor" 50}
 			{item "dynamite" 20}
+			{item "remote mine" 20}
 			{item "grenade m61" 60}
 			{item "grenade n73at" 60}
 			{item "smoke grenade" 30}
