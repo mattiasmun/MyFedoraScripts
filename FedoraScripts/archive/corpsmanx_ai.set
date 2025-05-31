@@ -7,7 +7,7 @@
 	{icon_priority 0}
 	{nationality usa}
 	{armors
-		{body us_body_armor}
+		{body "us_body_armor"}
 		{head "usa-helmet_medic"}
 	}
 	{perks (include "\set\breed\perks.inc")
