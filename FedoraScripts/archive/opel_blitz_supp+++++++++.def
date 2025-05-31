@@ -12,7 +12,7 @@
 	{extender "inventory"
 		{box
 			{clear}
-			{size 12 14}
+			{size 12 16}
 			{Weight 100000}
 			{item "repair_kit" 2}
 			{item "barrel" filling "fuel" 200}
