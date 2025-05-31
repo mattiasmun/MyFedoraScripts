@@ -15,9 +15,9 @@ cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame -V 9 raw.wav output.mp3
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame raw.wav output.mp3
 cd
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Sid Meier's Civilization VI/steamassets/base/binaries/linux"
-cd '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155'
-cd '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/'
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
 cd ..
 cd 529340/
 cd Bash/MyFedoraScripts/
@@ -93,21 +93,23 @@ ffprobe output2.mp3
 ffprobe raw.wav
 find
 find --help
+find . -name *.def
+find . -name *supp*
 find . -name engineer*
 find . -name opel*
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak run com.valvesoftware.Steam steam://rungameid/289070
 flatpak update -y
+gedit "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3259735408/scene/set/mod_config/superhealthbar.inc"
 gedit "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
 gedit "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/log_cli/cli_2025-02-15_14-41-53.log"
 gedit "scene/entity/-vehicle/tank_medium/m4a3_105/m4a3_105+++++++++.def"
-gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/tank_medium/t34_85m'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/tank_medium/t34_85m/t34_85m+++++++++.def'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/special/cheat.set'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/solothurn_s18_1000+++++++++'
 gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc'
-gedit ./scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def &
+gedit ./scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def
 gedit .bash_history
 gedit .bash_history2
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua &
@@ -116,7 +118,7 @@ gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamap
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc
 gedit global/map/cheatsmod/cheatsgohairwinter.mi
 gedit scene/properties/human+++++++++.ext
-gedit scene/set/auto_restore_inventory+++++++++.set &
+gedit scene/set/auto_restore_inventory+++++++++.set
 git add *
 git clone https://git.sr.ht/~geb/dotool
 git gc
@@ -126,8 +128,15 @@ gitty ~/529340/
 gitty ~/Bash/MyFedoraScripts/
 glxgears -swapinterval 0 & sleep 15.5; pkill glxgears
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
+grep -lirI 'size 10 16' | xargs -i@ sed -i 's/Size\ 10\ 16/size\ 12\ 16/g' @
+grep -lirI 'size 10 16' | xargs -i@ sed -i 's/size\ 10\ 16/size\ 12\ 16/g' @
+grep -nirI 'New_Bin'
+grep -nirI 'a_supp'
+grep -nirI 'opel'
 grep -nirI 'size 10 16'
 grep -nirI 'size 12 14'
+grep -nirI 'size 12 16'
+grep -nirI 'supp'
 groupadd -f input
 htop
 l
@@ -153,12 +162,14 @@ locate *.log
 locate 1128860
 locate 2760877761
 locate 2848415950
+locate 3259735
 locate 3271667155
 locate 3360488425
 locate T2GP
 locate Vic3.desktop
 locate automatic.conf
 locate automatic.timer
+locate binocu
 locate corpsmanx
 locate crash
 locate dnf.log
