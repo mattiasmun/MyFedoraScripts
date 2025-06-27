@@ -185,6 +185,7 @@ meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamap
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/engineerx_ai.set"
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Dokument/Men_of_war2/engineerx_ai.set"
 meld .bash_history .bash_history2
+meld .bash_history .bash_history2 Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
 meld .bash_history Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
