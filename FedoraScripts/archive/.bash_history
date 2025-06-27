@@ -15,8 +15,8 @@ cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame -V 9 raw.wav output.mp3
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame raw.wav output.mp3
 cd
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
 cd ..
 cd 529340/
@@ -48,6 +48,7 @@ dnf check --help
 dnf info piper
 dnf info python3-gmpy2.x86_64
 dnf info sway
+dnf info vlc-plugins*
 dnf info wlrctl
 dnf info wlroots
 dnf repoquery --duplicates
@@ -57,6 +58,7 @@ dnf repoquery --userinstalled --queryformat '%{name} \'
 dnf search dotool
 dnf search gmpy2
 dnf search sway
+dnf search vlc-plugins
 dnf search wlrctl
 dnf search xkb
 dnf5 repoquery --help
@@ -137,6 +139,7 @@ grep -nirI 'size 10 16'
 grep -nirI 'size 12 14'
 grep -nirI 'size 12 16'
 grep -nirI 'supp'
+grep -nirI 'zis'
 groupadd -f input
 htop
 l
@@ -156,40 +159,6 @@ ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1
 ll output.mp3
 ll output2.mp3
 ln --help
-locate *.desktop
-locate *.inc
-locate *.log
-locate 1128860
-locate 2760877761
-locate 2848415950
-locate 3259735
-locate 3271667155
-locate 3360488425
-locate T2GP
-locate Vic3.desktop
-locate automatic.conf
-locate automatic.timer
-locate binocu
-locate corpsmanx
-locate crash
-locate dnf.log
-locate dotool
-locate easy.inc
-locate engineerx_ai.set
-locate https://steamcommunity.com/sharedfiles/filedetails/?id=3271667155
-locate icon_1128860
-locate opel_blitz
-locate perks.inc
-locate pyautogui
-locate rifle
-locate sniper
-locate solothurn
-locate steam_icon
-locate steamclient.so
-locate stuff
-locate t34
-locate t34_85
-locate wlrctl
 ls
 ls "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/"
 ls '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/texture/common/model/'
@@ -258,6 +227,7 @@ sudo -A dnf check
 sudo -A dnf repoquery --extras
 sudo -A dnf system-upgrade reboot
 sudo -A dnf upgrade
+sudo -A dnf upgrade --best --allowerasing
 sudo -A dnf-automatic
 sudo -A gedit /etc/dnf/automatic.conf
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
