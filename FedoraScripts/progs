@@ -214,7 +214,7 @@ geos-devel \
 gh \
 ghex \
 ghostscript \
-ghostscript-tools-fonts \
+ghostscript-tools-fontutils \
 ghostscript-tools-printing \
 giflib-devel \
 gimp \
@@ -866,7 +866,6 @@ vim-minimal \
 virt-what \
 virtualbox-guest-additions \
 vlc \
-vlc-plugins-freeworld \
 vte291-gtk4 \
 wev \
 wget2-wget \
