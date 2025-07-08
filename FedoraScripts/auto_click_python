@@ -3,7 +3,7 @@
 import subprocess
 import time
 import threading
-from pynput import keyboard
+#from pynput import keyboard
 
 # Global flag to signal the clicking loop to stop
 stop_clicking_flag = threading.Event()
@@ -72,7 +72,7 @@ def run_clicking(duration_seconds, interval_seconds):
 	end_time = start_time + duration_seconds
 	
 	# The loop now checks both the timer and the stop flag
-	while time.time() < end_time and not stop_clicking_flag.is_set():
+	while time.time() < end_time:# and not stop_clicking_flag.is_set():
 		send_dotool_command("click left")
 		time.sleep(interval_seconds) # Sleeps for interval_seconds
 	
@@ -84,25 +84,33 @@ def run_clicking(duration_seconds, interval_seconds):
 if __name__ == "__main__":
 	import sys
 	
+	duration, interval = 0, 0
+	
 	# Get duration from command line argument, default to 5 seconds
-	duration = float(sys.argv[1]) if len(sys.argv) > 1 else 5
+	try:
+		duration = float(sys.argv[1])
+	except IndexError:
+		duration = 6
 	
 	# The amount of seconds to wait between each mouse click, defalut to 0.025 seconds
-	interval = float(sys.argv[2]) if len(sys.argv) > 2 else 0.025
+	try:
+		interval = float(sys.argv[2])
+	except IndexError:
+		interval = 0.025
 	
 	# --- Initial Alt+Tab Sequence ---
 	alt_tab_with_dotool()
 	
 	# --- Start Key Listener in a separate thread ---
-	listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-	listener.start() # Start monitoring keyboard events in the background
+	#listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+	#listener.start() # Start monitoring keyboard events in the background
 	
 	# --- Run the clicking in the main thread ---
 	run_clicking(duration, interval)
 	
 	# Ensure the listener thread is stopped if it's still running
-	if listener.running:
-		listener.stop()
+	#if listener.running:
+	#	listener.stop()
 	# listener.join() # Wait for the listener thread to finish (optional, but good practice)
 	
 	print("Script exited.")
