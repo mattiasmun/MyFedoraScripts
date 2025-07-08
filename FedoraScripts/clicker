@@ -3,6 +3,20 @@
 # Duration in seconds
 DURATION_SECONDS=$1 # Change 5 to your desired number of seconds
 
+# Define a cleanup function
+cleanup() {
+    echo -e "\nScript interrupted! Cleaning up..."
+    # Add any commands here you want to run before exiting,
+    # e.g., releasing any held keys, if you were holding them continuously.
+    # For this script, just exiting cleanly is usually enough.
+    exit 0 # Exit successfully
+}
+
+# Trap SIGINT (Ctrl+C) and call the cleanup function
+trap cleanup SIGINT
+
+echo "Starting script. Press Ctrl+C to cancel early."
+
 sleep 0.5
 
 # Press and hold the Alt key (left Alt is usually 'Alt_L')
