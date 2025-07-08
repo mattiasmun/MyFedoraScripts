@@ -15,7 +15,7 @@ sleep 0.1
 easyeffects &
 sleep 3.3
 echo key k:125 | dotool
-#xdotool key super
+#dotool key super
 
 dotoold &
 pip3update &
