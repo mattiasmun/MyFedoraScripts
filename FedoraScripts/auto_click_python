@@ -1,0 +1,107 @@
+#!/usr/bin/python
+
+import subprocess
+import time
+import threading
+from pynput import keyboard
+
+# Global flag to signal the clicking loop to stop
+stop_clicking_flag = threading.Event()
+stop_key_pressed = False # Flag to indicate if the specific key was pressed
+
+# --- dotoolc Helper Function (from previous example) ---
+def send_dotool_command(command):
+	"""Sends a command to dotool."""
+	process = subprocess.run(
+		f"echo {command} | dotoolc", # Use dotoolc as per your script
+		shell=True,
+		capture_output=True,
+		text=True
+	)
+	if process.returncode != 0:
+		# Suppress error if dotoolc is intentionally killed by SIGINT
+		if "Bad file descriptor" not in process.stderr:
+			print(f"Error executing dotoolc command '{command}':")
+			print(process.stderr)
+
+# --- Performs Alt+Tab ---
+def alt_tab_with_dotool():
+	print("Performing Alt+Tab...")
+	send_dotool_command("keydown k:56") # Alt_L
+	time.sleep(0.1)
+	send_dotool_command("keydown k:15") # Tab
+	time.sleep(0.1)
+	send_dotool_command("keyup k:15") # Tab
+	time.sleep(0.1)
+	send_dotool_command("keyup k:56") # Alt_L
+	print("Alt+Tab sequence sent.")
+
+# --- Key Listener Functions ---
+def on_press(key):
+	global stop_key_pressed
+	try:
+		# You can specify the key by its name or char
+		# Common key names: 'esc', 'f1', 'f2', 'space', 'alt_l', 'ctrl_l', etc.
+		# For a character key: 'a', 'b', 'z'
+		# To find key names: run a simple pynput listener and press keys
+		if key == keyboard.Key.esc: # Example: Stop on 'Esc' key press
+			print("Escape key pressed. Stopping script...")
+			stop_key_pressed = True
+			stop_clicking_flag.set() # Set the event to stop the clicking loop
+			return False # Stop the listener
+		# Or, for a specific character key (e.g., 'q')
+		# if hasattr(key, 'char') and key.char == 'q':
+		# 	print(" 'q' key pressed. Stopping script...")
+		# 	stop_key_pressed = True
+		# 	stop_clicking_flag.set()
+		# 	return False
+	except AttributeError:
+		# Special keys (like Alt, Ctrl, Shift) don't have a 'char' attribute
+		pass
+
+def on_release(key):
+	# This function is not strictly needed for just stopping,
+	# but good for completeness if you need it.
+	pass
+
+# --- Main Clicking Logic ---
+def run_clicking(duration_seconds, interval_seconds):
+	print(f"Starting rapid clicking for {duration_seconds} seconds...")
+	start_time = time.time()
+	end_time = start_time + duration_seconds
+	
+	# The loop now checks both the timer and the stop flag
+	while time.time() < end_time and not stop_clicking_flag.is_set():
+		send_dotool_command("click left")
+		time.sleep(interval_seconds) # Sleeps for interval_seconds
+	
+	if not stop_key_pressed: # Only print "finished" if not stopped by key
+		print("Clicking finished.")
+	else:
+		print("Script stopped by key press.")
+
+if __name__ == "__main__":
+	import sys
+	
+	# Get duration from command line argument, default to 5 seconds
+	duration = float(sys.argv[1]) if len(sys.argv) > 1 else 5
+	
+	# The amount of seconds to wait between each mouse click, defalut to 0.025 seconds
+	interval = float(sys.argv[2]) if len(sys.argv) > 2 else 0.025
+	
+	# --- Initial Alt+Tab Sequence ---
+	alt_tab_with_dotool()
+	
+	# --- Start Key Listener in a separate thread ---
+	listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+	listener.start() # Start monitoring keyboard events in the background
+	
+	# --- Run the clicking in the main thread ---
+	run_clicking(duration, interval)
+	
+	# Ensure the listener thread is stopped if it's still running
+	if listener.running:
+		listener.stop()
+	listener.join() # Wait for the listener thread to finish (optional, but good practice)
+	
+	print("Script exited.")
