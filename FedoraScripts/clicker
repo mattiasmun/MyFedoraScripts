@@ -15,7 +15,7 @@ while [ $(date +%s) -lt $END_TIME ]; do
     # 'sleep 0' might not actually yield to other processes and can max out CPU.
     # For some systems, a very small sleep like 'sleep 0.001' (1 millisecond)
     # might be more efficient and still very fast. Experiment to see what works best.
-    sleep 0 # Or sleep 0.001
+    sleep 0.001 # Or sleep 0.001
 done
 
 echo "Clicking finished."
