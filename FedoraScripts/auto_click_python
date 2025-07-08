@@ -102,6 +102,6 @@ if __name__ == "__main__":
 	# Ensure the listener thread is stopped if it's still running
 	if listener.running:
 		listener.stop()
-	listener.join() # Wait for the listener thread to finish (optional, but good practice)
+	# listener.join() # Wait for the listener thread to finish (optional, but good practice)
 	
 	print("Script exited.")
