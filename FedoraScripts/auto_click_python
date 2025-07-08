@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import subprocess
+import sys
 import time
 import threading
 #from pynput import keyboard
@@ -82,8 +83,6 @@ def run_clicking(duration_seconds, interval_seconds):
 		print("Script stopped by key press.")
 
 if __name__ == "__main__":
-	import sys
-	
 	duration, interval = 0, 0
 	
 	# Get duration from command line argument, default to 5 seconds
