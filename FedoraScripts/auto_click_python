@@ -85,11 +85,11 @@ def run_clicking(duration_seconds, interval_seconds):
 if __name__ == "__main__":
 	duration, interval = 0, 0
 	
-	# Get duration from command line argument, default to 5 seconds
+	# Get duration from command line argument, default to 6.0 seconds
 	try:
 		duration = float(sys.argv[1])
 	except IndexError:
-		duration = 6
+		duration = 6.0
 	
 	# The amount of seconds to wait between each mouse click, defalut to 0.025 seconds
 	try:
