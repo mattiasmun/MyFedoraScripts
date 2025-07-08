@@ -82,7 +82,7 @@ def run_clicking(duration_seconds, interval_seconds):
 	else:
 		print("Script stopped by key press.")
 
-if __name__ == "__main__":
+def main():
 	duration, interval = 0, 0
 	
 	# Get duration from command line argument, default to 6.0 seconds
@@ -113,3 +113,6 @@ if __name__ == "__main__":
 	# listener.join() # Wait for the listener thread to finish (optional, but good practice)
 	
 	print("Script exited.")
+
+if __name__ == "__main__":
+	main()
