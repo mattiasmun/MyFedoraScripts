@@ -38,12 +38,13 @@ def alt_tab_with_dotool():
 
 # --- Key Listener Functions ---
 def on_press(key):
-	global stop_key_pressed
+	global stop_key_pressed, stop_clicking_flag
 	try:
 		# You can specify the key by its name or char
 		# Common key names: 'esc', 'f1', 'f2', 'space', 'alt_l', 'ctrl_l', etc.
 		# For a character key: 'a', 'b', 'z'
 		# To find key names: run a simple pynput listener and press keys
+		print("Key press: " + key)
 		if key == keyboard.Key.esc: # Example: Stop on 'Esc' key press
 			print("Escape key pressed. Stopping script...")
 			stop_key_pressed = True

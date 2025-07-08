@@ -1,6 +1,7 @@
 ./build.sh && sudo ./build.sh install
 ./piper --help
 aplay raw.wav
+auto_click_python 12 0.025
 bc -lq
 c
 cat '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc'
@@ -28,8 +29,9 @@ cd Projekt/
 cd Projekt/dotool/
 cd dotool/
 cd piper/
-chmod +x "$f"
-chmod +x Dokument/IDLE\ py.py
+clicker 12 0.025
+clicker 120 0.025
+clickfast Navigator.org.mozilla.firefox 9 0.24362375
 clickfast Navigator.org.mozilla.firefox 9999 0.24362375
 closeall
 cp .bash_history .bash_history2
@@ -55,15 +57,10 @@ dnf repoquery --duplicates
 dnf repoquery --extras
 dnf repoquery --unneeded
 dnf repoquery --userinstalled --queryformat '%{name} \'
-dnf search dotool
-dnf search gmpy2
-dnf search sway
-dnf search vlc-plugins
-dnf search wlrctl
-dnf search xkb
 dnf5 repoquery --help
 dnfsysupgr
 dnfusrins
+dotool --list-keys
 dotoold
 du
 du --help
@@ -82,9 +79,12 @@ echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_r
 echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -b 32 - output2.mp3
 echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8000 -a - output2.mp3
 echo $((1+2))
+echo $SHELL
+echo $XDG_SESSION_TYPE
 echo $f
 echo $que
 echo key k:26 k:39 k:40 | dotoolc
+echo key shift+1 x:exclam shift+k:2 | dotoolc
 echo r
 env
 ex --help
@@ -93,6 +93,7 @@ ffprobe --help
 ffprobe output.mp3
 ffprobe output2.mp3
 ffprobe raw.wav
+fg
 find
 find --help
 find . -name *.def
@@ -114,6 +115,7 @@ gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steama
 gedit ./scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def
 gedit .bash_history
 gedit .bash_history2
+gedit .bashrc
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua &
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1066780/2848415950/res/scripts/wkpt_params.lua &
 gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/properties/resupply.inc
@@ -141,7 +143,11 @@ grep -nirI 'size 12 16'
 grep -nirI 'supp'
 grep -nirI 'zis'
 groupadd -f input
+groups
+gs
+gs --help
 htop
+id -nG
 l
 lame --help
 lame --longhelp
@@ -154,11 +160,14 @@ ll $f
 ll *.mp3
 ll /etc/dnf/automatic.conf
 ll /etc/dnf/automatic.conf.rpmnew
+ll /etc/udev/rules.d/99-input.rules
 ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/03dabf48-21c2-496e-dbc10998-8684603a_stdout.txt
 ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
+ll Bash/MyFedoraScripts/FedoraScripts/
 ll output.mp3
 ll output2.mp3
 ln --help
+locate *.pdf
 ls
 ls "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/"
 ls '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/texture/common/model/'
@@ -176,6 +185,7 @@ ls /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/
 ls /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/
 lsattr Dokument/IDLE\ py.py
 lsattr Hämtningar/
+man dotool
 man wlrctl
 mediainfo
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/opel_blitz_supp+++++++++.def"
@@ -218,6 +228,7 @@ pkill -sigkill mow2
 py
 quodlibet hej.wav &
 r
+rm ~/.bash_history-*.tmp
 sha256sum /bosse/Filer/Fedora-Workstation-Live-x86_64-41/Fedora-Workstation-Live-x86_64-41-1.4.iso
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
 steam steam://rungameid/289070
@@ -235,6 +246,7 @@ sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 sudo -A updatedb
 sudo -A wmctrl -xl
 sudo dotoold
+sudo gedit /etc/udev/rules.d/99-input.rules
 sudo systemctl restart gdm
 sudo udevadm control --reload && sudo udevadm trigger
 sudo updatedb
