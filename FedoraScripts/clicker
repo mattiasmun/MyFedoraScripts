@@ -6,13 +6,23 @@ DURATION_SECONDS=$1 # Change 5 to your desired number of seconds
 sleep 1
 
 # Press and hold the Alt key (left Alt is usually 'Alt_L')
-echo keydown Alt_L | dotoolc
+echo keydown k:56 | dotoolc
+
+sleep 0.1
 
 # Press and release the Tab key
-echo key Tab | dotoolc
+echo keydown k:15 | dotoolc
+
+sleep 0.1
+
+echo keyup k:15 | dotoolc
+
+sleep 0.1
 
 # Release the Alt key
-echo keyup Alt_L | dotoolc
+echo keyup k:56 | dotoolc
+
+sleep 0.1
 
 # Get the start time
 START_TIME=$(date +%s)
@@ -26,7 +36,7 @@ while [ $(date +%s) -lt $END_TIME ]; do
     # 'sleep 0' might not actually yield to other processes and can max out CPU.
     # For some systems, a very small sleep like 'sleep 0.001' (1 millisecond)
     # might be more efficient and still very fast. Experiment to see what works best.
-    sleep 0.001
+    sleep 0.04
 done
 
 echo "Clicking finished."
