@@ -1,0 +1,53 @@
+#!/usr/bin/bash
+
+# Kontrollera om en söksträng angavs
+if [ -z "$1" ]; then
+    echo "Användning: $0 <söksträng>"
+    echo "Exempel: $0 logg (matchar 'logg', 'LOGG', 'Logg', etc. i filnamnet/sökvägen)"
+    echo "         $0 .conf (matchar '.conf', '.CONF', '.Conf', etc. i filnamnet/sökvägen)"
+    exit 1
+fi
+
+SEARCH_STRING_LOWER=$(echo "$1" | tr '[:upper:]' '[:lower:]') # Konvertera söksträngen till små bokstäver
+START_PATH="." # Sök alltid från aktuell katalog
+
+echo "Söker efter filer vars SÖKVÄG/FILNAMN innehåller '$1' (skiftlägesokänsligt), från '$START_PATH'…"
+echo "Sorterar efter storlek i fallande ordning:"
+echo "----------------------------------------------------"
+
+# Använd find för att hitta filer, filtrera sedan i while-loopen för filnamn/sökväg
+find "$START_PATH" -type f -print0 | \
+    while IFS= read -r -d $'\0' filename; do
+        filename_lower=$(echo "$filename" | tr '[:upper:]' '[:lower:]')
+        if [[ "$filename_lower" == *"$SEARCH_STRING_LOWER"* ]]; then
+            printf "%s\0" "$filename" # Skicka null-avgränsade filnamn vidare
+        fi
+    done | \
+    xargs -0 du -b | \
+    sort -nr | \
+    while read -r size_bytes filename; do
+        # Kör ls på det faktiska filnamnet för att få utdatan
+        ls -ldh --time-style=+%Y-%m-%d\ %H:%M:%S "$filename" | \
+            awk '{
+                # ls -l utdata: permissions, links, owner, group, size, month, day, time, filename
+                # $5 = size (human readable)
+                # $6, $7, $8 = date/time (formatted)
+                # $9 till $NF = filename (använd $9 för att undvika problem med mellanslag i namn)
+                # För att få korrekt filnamn, skriv ut allt från och med fält 9.
+                # Om du vill ha enbart filnamnet, kan du behöva justera mer noga för mellanslag
+                
+                # Om vi vill ha exakt som du önskade: storlek, datum, tid, filnamn
+                # Notera att $9 kan vara problematiskt för filnamn med mellanslag
+                # En säkrare metod för att hämta filnamnet är att använda $0 som är hela raden
+                # och sedan ta bort den initiala ls-info
+                
+                # Alternativ för att få filnamnet som kan hantera mellanslag bättre:
+                # Loopa genom fält från $9 och framåt
+                file_start_col = 9;
+                for (i = 9; i <= NF; i++) {
+                    if (i == 9) { filename_part = $i; }
+                    else { filename_part = filename_part " " $i; }
+                }
+                print $5, $6, $7, $8, filename_part
+            }'
+    done
