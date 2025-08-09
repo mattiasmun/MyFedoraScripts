@@ -36,7 +36,6 @@ clickfast Navigator.org.mozilla.firefox 9999 0.24362375
 closeall
 cp .bash_history .bash_history2
 cp .bash_history2 .bash_history
-cp Dokument/IDLE\ py.py Bash/MyFedoraScripts/FedoraScripts/archive/
 d
 d $(tu 21:00:00)
 d $(tu 22:00:00)
@@ -100,6 +99,7 @@ find . -name *.def
 find . -name *supp*
 find . -name engineer*
 find . -name opel*
+find_and_sort_files mi
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak run com.valvesoftware.Steam steam://rungameid/289070
 flatpak update -y
@@ -134,7 +134,6 @@ glxgears -swapinterval 0 & sleep 15.5; pkill glxgears
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
 grep -lirI 'size 10 16' | xargs -i@ sed -i 's/Size\ 10\ 16/size\ 12\ 16/g' @
 grep -lirI 'size 10 16' | xargs -i@ sed -i 's/size\ 10\ 16/size\ 12\ 16/g' @
-grep -nirI 'New_Bin'
 grep -nirI 'a_supp'
 grep -nirI 'opel'
 grep -nirI 'size 10 16'
@@ -194,9 +193,7 @@ meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamap
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Dokument/Men_of_war2/corpsmanx_ai.set"
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/engineerx_ai.set"
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Dokument/Men_of_war2/engineerx_ai.set"
-meld .bash_history .bash_history2
 meld .bash_history .bash_history2 Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
-meld .bash_history Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 meld Dokument/IDLE\ py.py Bash/MyFedoraScripts/FedoraScripts/archive/IDLE\ py.py
