@@ -30,7 +30,8 @@
 			{item "grenade m61" 60}
 			{item "grenade n73at" 60}
 			{item "smoke grenade" 30}
-			{item "sandbag_kit2" 2}
+			{item "bandage" 100}
+			{item "sandbag_kit2" 20}
 			{item "avs36" filled}
 			{item "svt40_sniper" filled}
 			{item "sg44" filled}
