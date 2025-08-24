@@ -16,9 +16,12 @@ cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame -V 9 raw.wav output.mp3
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame raw.wav output.mp3
 cd
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Men of War II/"
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/"
+cd "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/sentry/"
 cd ..
 cd 529340/
 cd Bash/MyFedoraScripts/
@@ -28,14 +31,13 @@ cd Hämtningar/piper_amd64/piper/
 cd Projekt/
 cd Projekt/dotool/
 cd dotool/
+cd entity/-vehicle/car/
 cd piper/
 clicker 12 0.025
 clicker 120 0.025
 clickfast Navigator.org.mozilla.firefox 9 0.24362375
 clickfast Navigator.org.mozilla.firefox 9999 0.24362375
 closeall
-cp .bash_history .bash_history2
-cp .bash_history2 .bash_history
 d
 d $(tu 21:00:00)
 d $(tu 22:00:00)
@@ -140,6 +142,7 @@ grep -nirI 'size 10 16'
 grep -nirI 'size 12 14'
 grep -nirI 'size 12 16'
 grep -nirI 'supp'
+grep -nirI 'supp++'
 grep -nirI 'zis'
 groupadd -f input
 groups
@@ -166,6 +169,7 @@ ll Bash/MyFedoraScripts/FedoraScripts/
 ll output.mp3
 ll output2.mp3
 ln --help
+locate "Men of War II"
 locate *.pdf
 ls
 ls "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/"
@@ -187,24 +191,27 @@ lsattr Hämtningar/
 man dotool
 man wlrctl
 mediainfo
-meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/opel_blitz_supp+++++++++.def"
-meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "/home/mmunster/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def"
+meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "/home/mmunster/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/opel_blitz_supp+++++++++.def"
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/corpsmanx_ai.set"
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Dokument/Men_of_war2/corpsmanx_ai.set"
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/engineerx_ai.set"
 meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Dokument/Men_of_war2/engineerx_ai.set"
+meld "/home/mmunster/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set" "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/auto_restore_inventory+++++++++.set"
+meld "/home/mmunster/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set" "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/set/auto_restore_inventory+++++++++.set"
+meld "/home/mmunster/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def"
 meld .bash_history .bash_history2 Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 meld Dokument/IDLE\ py.py Bash/MyFedoraScripts/FedoraScripts/archive/IDLE\ py.py
 meld Dokument/Men_of_war2/engineerx_ai.set Dokument/Men_of_war2/engineerx_ai.txt
+mkdir -p entity/-vehicle/car/opel_blitz
 mpg123
 mplayer
 mplayer output.mp3
-mplayer output2.mp3
 nano /var/log/dnf.log
 nano /var/log/dnf5.log
 nautilus "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
+nautilus .
 nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share
 nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860
 newton_raphson

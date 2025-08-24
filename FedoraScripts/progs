@@ -137,6 +137,7 @@ deltarpm \
 desktop-backgrounds-gnome \
 device-mapper-multipath \
 dhcp-client \
+discord \
 distribution-gpg-keys \
 dkms \
 dnf-plugins-core \
