@@ -4,11 +4,11 @@ aplay raw.wav
 auto_click_python 12 0.025
 bc -lq
 c
-cat '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc'
-cat '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc'
+cat '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc'
+cat '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc'
 cat /etc/resolv.conf
-cat /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
-cat /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
+cat /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
+cat /home/mmunster/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
 cat /usr/share/dnf5/dnf5-plugins/automatic.conf
 cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 16000 -a - output2.mp3
 cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8000 -a - output2.mp3
@@ -16,11 +16,11 @@ cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame -V 9 raw.wav output.mp3
 cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame raw.wav output.mp3
 cd
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Men of War II/"
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/"
+cd "/home/mmunster/.local/share/Steam/steamapps/common/Men of War II/"
+cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
+cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
+cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
+cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/"
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/sentry/"
 cd ..
 cd 529340/
@@ -105,23 +105,23 @@ find_and_sort_files mi
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak run com.valvesoftware.Steam steam://rungameid/289070
 flatpak update -y
-gedit "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3259735408/scene/set/mod_config/superhealthbar.inc"
-gedit "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
+gedit "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3259735408/scene/set/mod_config/superhealthbar.inc"
+gedit "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
 gedit "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/log_cli/cli_2025-02-15_14-41-53.log"
 gedit "scene/entity/-vehicle/tank_medium/m4a3_105/m4a3_105+++++++++.def"
-gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/tank_medium/t34_85m/t34_85m+++++++++.def'
-gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men'
-gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/special/cheat.set'
-gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/solothurn_s18_1000+++++++++'
-gedit '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc'
+gedit '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/tank_medium/t34_85m/t34_85m+++++++++.def'
+gedit '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men'
+gedit '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/special/cheat.set'
+gedit '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/solothurn_s18_1000+++++++++'
+gedit '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc'
 gedit ./scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def
 gedit .bash_history
 gedit .bash_history2
 gedit .bashrc
-gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua &
-gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1066780/2848415950/res/scripts/wkpt_params.lua &
-gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/properties/resupply.inc
-gedit /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc
+gedit /home/mmunster/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua &
+gedit /home/mmunster/.local/share/Steam/steamapps/workshop/content/1066780/2848415950/res/scripts/wkpt_params.lua &
+gedit /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/properties/resupply.inc
+gedit /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc
 gedit global/map/cheatsmod/cheatsgohairwinter.mi
 gedit scene/properties/human+++++++++.ext
 gedit scene/set/auto_restore_inventory+++++++++.set
@@ -163,8 +163,8 @@ ll *.mp3
 ll /etc/dnf/automatic.conf
 ll /etc/dnf/automatic.conf.rpmnew
 ll /etc/udev/rules.d/99-input.rules
-ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/03dabf48-21c2-496e-dbc10998-8684603a_stdout.txt
-ll /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
+ll /home/mmunster/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/03dabf48-21c2-496e-dbc10998-8684603a_stdout.txt
+ll /home/mmunster/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
 ll Bash/MyFedoraScripts/FedoraScripts/
 ll output.mp3
 ll output2.mp3
@@ -173,7 +173,7 @@ locate "Men of War II"
 locate *.pdf
 ls
 ls "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/"
-ls '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/texture/common/model/'
+ls '/home/mmunster/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/texture/common/model/'
 ls -Al
 ls -Al $(locate steamclient.so)
 ls -Al Dokument/
@@ -184,21 +184,21 @@ ls /home/mmunster/.local/lib/python3.12/site-packages/
 ls /home/mmunster/.local/lib/python3.13/
 ls /home/mmunster/.local/lib/python3.13/site-packages/
 ls /home/mmunster/.local/share/Steam/linux64/steamclient.so
-ls /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
-ls /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/
+ls /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
+ls /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/
 lsattr Dokument/IDLE\ py.py
 lsattr Hämtningar/
 man dotool
 man wlrctl
 mediainfo
-meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "/home/mmunster/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/opel_blitz_supp+++++++++.def"
-meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/corpsmanx_ai.set"
-meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Dokument/Men_of_war2/corpsmanx_ai.set"
-meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/engineerx_ai.set"
-meld "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Dokument/Men_of_war2/engineerx_ai.set"
-meld "/home/mmunster/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set" "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/auto_restore_inventory+++++++++.set"
-meld "/home/mmunster/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set" "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/set/auto_restore_inventory+++++++++.set"
-meld "/home/mmunster/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def"
+meld "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "/home/mmunster/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/opel_blitz_supp+++++++++.def"
+meld "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/corpsmanx_ai.set"
+meld "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set" "/home/mmunster/Dokument/Men_of_war2/corpsmanx_ai.set"
+meld "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/engineerx_ai.set"
+meld "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set" "/home/mmunster/Dokument/Men_of_war2/engineerx_ai.set"
+meld "/home/mmunster/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set" "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/auto_restore_inventory+++++++++.set"
+meld "/home/mmunster/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set" "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/set/auto_restore_inventory+++++++++.set"
+meld "/home/mmunster/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def"
 meld .bash_history .bash_history2 Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
@@ -210,10 +210,10 @@ mplayer
 mplayer output.mp3
 nano /var/log/dnf.log
 nano /var/log/dnf5.log
-nautilus "/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
+nautilus "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
 nautilus .
-nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share
-nautilus /home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/workshop/content/1128860
+nautilus /home/mmunster/.local/share
+nautilus /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860
 newton_raphson
 nslookup google.com
 nslookup google.com 8.26.56.26
@@ -271,7 +271,7 @@ wlrctl keyboard type 'Hello, world!'
 wlrctl pointer move 50 -70
 wlrctl window focus firefox
 wmctrl -xl
-xdg-open '/home/mmunster/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Men of War II/packages/html_interface/global/interface/metagame/page/assets/img/unit/at_rifle_solothurn(ger).png'
+xdg-open '/home/mmunster/.local/share/Steam/steamapps/common/Men of War II/packages/html_interface/global/interface/metagame/page/assets/img/unit/at_rifle_solothurn(ger).png'
 xdotool
 xdotool key s
 xdotool key super
