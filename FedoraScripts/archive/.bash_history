@@ -101,6 +101,7 @@ find . -name *.def
 find . -name *supp*
 find . -name engineer*
 find . -name opel*
+find . -type d -iname "*steamapps*"
 find_and_sort_files mi
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak run com.valvesoftware.Steam steam://rungameid/289070
