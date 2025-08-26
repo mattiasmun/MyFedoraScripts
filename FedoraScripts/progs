@@ -658,6 +658,7 @@ proj-data-sk \
 proj-data-uk \
 proj-data-us \
 proj-devel \
+protontricks \
 psacct \
 psmisc \
 ptyxis \
@@ -790,6 +791,7 @@ sqlite-devel \
 sssd \
 sssd-common \
 sssd-kcm \
+steam \
 stix-fonts \
 strace \
 subversion \
