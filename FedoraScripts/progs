@@ -177,7 +177,6 @@ fedora-logos \
 fedora-release-workstation \
 fedora-workstation-backgrounds \
 fedora-workstation-repositories \
-ffmpeg \
 file \
 file-roller \
 filesystem \
@@ -572,7 +571,6 @@ nvidia-gpu-firmware \
 nvidia-xconfig \
 nvme-cli \
 nxpwireless-firmware \
-ocl-icd-devel \
 ocrmypdf \
 ogdi-devel \
 open-sans-fonts \

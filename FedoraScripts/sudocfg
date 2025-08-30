@@ -1,10 +1,12 @@
 #!/bin/bash
 
-# Define the path to the executable we need
+# Define the paths to the executable we need
 ASKPASS_PATH="/usr/libexec/gcr-ssh-askpass"
+GNOME_ASKPASS_PATH="/usr/libexec/openssh/gnome-ssh-askpass"
 
-# Define the line to be added
+# Define the lines to be added
 ASKPASS_LINE="export SSH_ASKPASS=\"$ASKPASS_PATH\""
+GNOME_ASKPASS_LINE="export SUDO_ASKPASS=\"$GNOME_ASKPASS_PATH\""
 
 # Define the target file
 BASHRC_FILE="$HOME/.bashrc"
@@ -26,6 +28,23 @@ if [ ! -f "$ASKPASS_PATH" ]; then
     fi
 fi
 
+# Check if the required executable exists. If not, attempt to install it.
+if [ ! -f "$GNOME_ASKPASS_PATH" ]; then
+    echo "The required executable '$GNOME_ASKPASS_PATH' was not found."
+    echo "Attempting to install the openssh-askpass package using dnf..."
+    
+    # Use sudo to install the package non-interactively
+    sudo dnf install openssh-askpass -y
+    
+    # After the installation attempt, check again if the file exists
+    if [ ! -f "$GNOME_ASKPASS_PATH" ]; then
+        echo "Installation failed or the package does not provide the executable. Please install it manually and try again."
+        exit 1
+    else
+        echo "Installation successful."
+    fi
+fi
+
 # Check if the line already exists in the file
 if grep -qF -- "$ASKPASS_LINE" "$BASHRC_FILE"; then
     echo "The line already exists in $BASHRC_FILE. No changes will be made."
@@ -38,6 +57,22 @@ else
     echo "" >> "$BASHRC_FILE"
     echo "# Added by script to set the graphical ssh-askpass program" >> "$BASHRC_FILE"
     echo "$ASKPASS_LINE" >> "$BASHRC_FILE"
+    
+    echo "Successfully added the line to $BASHRC_FILE."
+fi
+
+# Check if the line already exists in the file
+if grep -qF -- "$GNOME_ASKPASS_LINE" "$BASHRC_FILE"; then
+    echo "The line already exists in $BASHRC_FILE. No changes will be made."
+else
+    # Create a backup of the original file
+    cp "$BASHRC_FILE" "${BASHRC_FILE}.bak"
+    echo "Backup of $BASHRC_FILE created at ${BASHRC_FILE}.bak"
+
+    # Append the line to the file
+    echo "" >> "$BASHRC_FILE"
+    echo "# Added by script to set the graphical ssh-askpass program" >> "$BASHRC_FILE"
+    echo "$GNOME_ASKPASS_LINE" >> "$BASHRC_FILE"
     
     echo "Successfully added the line to $BASHRC_FILE."
 fi

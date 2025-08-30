@@ -103,8 +103,8 @@ else
     echo "Building and installing dotool..."
     (
         cd "$DOTOOL_DIR" || exit
-        make
-        sudo -A make install
+        ./build.sh
+        sudo -A ./build.sh install
     )
     echo "dotool installed successfully."
 fi
