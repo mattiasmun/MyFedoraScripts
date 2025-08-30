@@ -11,22 +11,10 @@
 set -e
 
 # --- Variable Definitions ---
-GIT_CONFIG_SCRIPT="$HOME/Bash/MyFedoraScripts/FedoraScripts/gitcfg"
 REPO1_DIR="$HOME/Bash/MyFedoraScripts"
 REPO1_URL="https://github.com/mattiasmun/MyFedoraScripts.git"
 REPO2_DIR="$HOME/Git/noscriptsettings"
 REPO2_URL="https://github.com/mattiasmun/noscriptsettings.git"
-
-# --- Run Git Configuration Script ---
-echo "--- Step 1: Running Git configuration script ---"
-if [ -x "$GIT_CONFIG_SCRIPT" ]; then
-    echo "Running $GIT_CONFIG_SCRIPT..."
-    "$GIT_CONFIG_SCRIPT"
-    echo "Git configuration script finished."
-else
-    echo "Warning: Git configuration script '$GIT_CONFIG_SCRIPT' not found or is not executable."
-    echo "Please ensure the file exists and has execute permissions (+x)."
-fi
 
 # --- Clone Git Repositories ---
 echo ""

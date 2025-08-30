@@ -5,7 +5,7 @@
 # a credential helper, the default text editor, and the diff/merge tool.
 # It also configures a global .gitignore file and sets up useful Git aliases.
 #
-# Usage: ./gitcfg.sh <user_email> <user_name>
+# Usage: ./gitcfg <user_email> <user_name>
 #
 # Arguments:
 #   $1 (user_email): The email address to be used for Git commits.
