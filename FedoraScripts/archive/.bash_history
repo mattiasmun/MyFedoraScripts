@@ -42,6 +42,7 @@ d
 d $(tu 21:00:00)
 d $(tu 22:00:00)
 data='sudo -A dnf -y install '
+df -h
 dnf
 dnf --help
 dnf --version
@@ -236,7 +237,7 @@ r
 rm ~/.bash_history-*.tmp
 sha256sum /bosse/Filer/Fedora-Workstation-Live-x86_64-41/Fedora-Workstation-Live-x86_64-41-1.4.iso
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
-steam steam://rungameid/289070
+steam steam://rungameid/1128860
 strcmp asdfsdf gertergdfg
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever=41 &
 sudo -A dnf autoremove
