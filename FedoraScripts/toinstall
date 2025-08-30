@@ -17,4 +17,6 @@ cd "${0:0: -9}"
 sudo -A dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
   'workstation-product-environment'
   
-pip install 'PyAutoGUI' 'tsp-solver2'
+pip install 'PyAutoGUI' 'tsp-solver2' 'pip-date'
+
+#Network DNS 8.26.56.26, 8.20.247.20
