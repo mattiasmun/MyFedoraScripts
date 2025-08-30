@@ -2,7 +2,30 @@
 sudo -A cp 'archive/fstrimz' '/usr/sbin/'
 sudo -A chown root:root '/usr/sbin/fstrimz'
 
-sudo -A nano '/etc/dnf/automatic.conf'
+# Define the source and destination paths for the configuration file
+SOURCE_CONF="/usr/share/dnf5/dnf5-plugins/automatic.conf"
+DEST_CONF="/etc/dnf/automatic.conf"
+
+# Check if the destination file already exists
+if [ -f "$DEST_CONF" ]; then
+    echo "Configuration file already exists at $DEST_CONF. No action needed."
+else
+    # The destination file does not exist, so copy the template
+    echo "Configuration file not found. Copying template from $SOURCE_CONF to $DEST_CONF."
+    
+    # Use sudo to ensure we have the necessary permissions to write to /etc/dnf/
+    sudo -A cp "$SOURCE_CONF" "$DEST_CONF"
+    
+    if [ $? -eq 0 ]; then
+        echo "Successfully copied the configuration file."
+        echo "You can now edit the file with 'sudo nano $DEST_CONF' to customize your settings."
+    else
+        echo "An error occurred while copying the file. Please check permissions."
+        exit 1
+    fi
+fi
+
+sudo -A nano "$DEST_CONF"
 
 f='/usr/lib/systemd/system/fstrim.service'
 xclip -i "$f" -selection clipboard

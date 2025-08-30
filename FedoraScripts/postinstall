@@ -1,10 +1,10 @@
 #!/bin/bash
 cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 
+./sudocfg
+
 ./javacfg
 
 ./timercfg
-
-./sudocfg
 
 alias pip-upgrade="pip freeze --user | cut -d'=' -f1 | xargs -n1 pip install -U"
