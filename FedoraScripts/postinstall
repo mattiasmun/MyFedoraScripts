@@ -1,6 +1,8 @@
 #!/bin/bash
 cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 
+cp archive/.bash_history "$HOME/.bash_history"
+
 ./javacfg
 
 ./timercfg

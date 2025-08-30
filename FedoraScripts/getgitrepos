@@ -1,14 +1,62 @@
 #!/bin/bash
-cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 
-./gitcfg
+# ==============================================================================
+# This script automates the setup of a new environment by:
+# 1. Running a configuration script for Git.
+# 2. Cloning two specific Git repositories into designated directories.
+# The script is designed to be idempotent and provides clear user feedback.
+# ==============================================================================
 
-cd "$HOME"
-mkdir -p 'Bash'
-mkdir -p 'Git'
+# Exit immediately if a command exits with a non-zero status.
+set -e
 
-cd 'Bash'
-git clone 'https://github.com/mattiasmun/MyFedoraScripts.git'
+# --- Variable Definitions ---
+GIT_CONFIG_SCRIPT="$HOME/Bash/MyFedoraScripts/FedoraScripts/gitcfg"
+REPO1_DIR="$HOME/Bash/MyFedoraScripts"
+REPO1_URL="https://github.com/mattiasmun/MyFedoraScripts.git"
+REPO2_DIR="$HOME/Git/noscriptsettings"
+REPO2_URL="https://github.com/mattiasmun/noscriptsettings.git"
 
-cd '../Git'
-git clone 'https://github.com/mattiasmun/noscriptsettings.git'
+# --- Run Git Configuration Script ---
+echo "--- Step 1: Running Git configuration script ---"
+if [ -x "$GIT_CONFIG_SCRIPT" ]; then
+    echo "Running $GIT_CONFIG_SCRIPT..."
+    "$GIT_CONFIG_SCRIPT"
+    echo "Git configuration script finished."
+else
+    echo "Warning: Git configuration script '$GIT_CONFIG_SCRIPT' not found or is not executable."
+    echo "Please ensure the file exists and has execute permissions (+x)."
+fi
+
+# --- Clone Git Repositories ---
+echo ""
+echo "--- Step 2: Cloning Git repositories ---"
+
+# Function to clone a repository if it doesn't already exist
+clone_repo() {
+    local repo_dir="$1"
+    local repo_url="$2"
+    local parent_dir=$(dirname "$repo_dir")
+
+    echo "Checking for repository at '$repo_dir'..."
+    if [ -d "$repo_dir" ]; then
+        echo "Repository directory already exists. Skipping clone."
+    else
+        echo "Repository not found. Creating parent directory '$parent_dir' and cloning..."
+        mkdir -p "$parent_dir"
+        git clone "$repo_url" "$repo_dir"
+        echo "Successfully cloned repository."
+    fi
+}
+
+# Clone the first repository
+clone_repo "$REPO1_DIR" "$REPO1_URL"
+
+echo ""
+
+# Clone the second repository
+clone_repo "$REPO2_DIR" "$REPO2_URL"
+
+echo ""
+echo "--- Script finished. ---"
+

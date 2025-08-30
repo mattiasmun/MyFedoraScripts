@@ -40,7 +40,6 @@ else
     echo "$ASKPASS_LINE" >> "$BASHRC_FILE"
     
     echo "Successfully added the line to $BASHRC_FILE."
-    echo "You need to restart your terminal or run 'source $BASHRC_FILE' to apply the changes."
 fi
 
 # Apply the changes to the current shell environment
