@@ -1,12 +1,15 @@
 #!/bin/bash
 v="$(rpm -E %fedora)"
+
+cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
+
+./sudocfg
+
 sudo -A dnf -y install 'git' \
   'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-'"$v"'.noarch.rpm' \
   'https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-'"$v"'.noarch.rpm'
 
 sudo -A dnf -y upgrade
-
-cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 
 ./getgitrepos
 
@@ -16,18 +19,3 @@ cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 
 sudo -A dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
   'workstation-product-environment'
-  
-pip install 'PyAutoGUI' 'tsp-solver2' 'pip-date'
-
-mkdir -p "$HOME/Projects"
-cd "$HOME/Projects"
-git clone "https://git.sr.ht/~geb/dotool"
-cd dotool
-make
-sudo -A make install
-sudo -A usermod -a -G input "$USER"
-mkdir -p "$HOME/.config/systemd/user/"
-cp "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/dotool.service" "$HOME/.config/systemd/user/"
-systemctl --user enable --now dotool.service
-
-#Network DNS 8.26.56.26, 8.20.247.20
