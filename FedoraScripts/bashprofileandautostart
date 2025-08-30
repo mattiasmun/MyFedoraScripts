@@ -1,8 +1,8 @@
 #!/bin/bash
-s="$HOME"'/Bash/MyFedoraScripts/FedoraScripts'
-f="$s"'/archive/runall.desktop'
+s="$HOME""/Bash/MyFedoraScripts/FedoraScripts"
+f="$s""/archive/runall.desktop"
 
-echo 'PATH="$PATH:'"$s"'";export PATH' >> "$HOME"'/.bash_profile'
+echo 'PATH="$PATH:'"$s"'";export PATH' >> "$HOME""/.bash_profile"
 
 t="$HOME"'/.config/autostart'
 mkdir -p "$t"
