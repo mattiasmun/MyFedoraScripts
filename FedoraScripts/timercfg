@@ -1,36 +1,112 @@
 #!/bin/bash
-sudo -A cp 'archive/fstrimz' '/usr/sbin/'
-sudo -A chown root:root '/usr/sbin/fstrimz'
 
-# Define the source and destination paths for the configuration file
-SOURCE_CONF="/usr/share/dnf5/dnf5-plugins/automatic.conf"
-DEST_CONF="/etc/dnf/automatic.conf"
+# ==============================================================================
+# This script automates the configuration of systemd timers for fstrim and
+# dnf5-automatic. It handles file permissions, configures services, and
+# enables the timers.
+# ==============================================================================
 
-# Check if the destination file already exists
-if [ -f "$DEST_CONF" ]; then
-    echo "Configuration file already exists at $DEST_CONF. No action needed."
+# Exit immediately if a command exits with a non-zero status.
+set -e
+
+# --- Variable Definitions ---
+# Use descriptive variables for paths and commands.
+FSTRIMZ_SOURCE="archive/fstrimz"
+FSTRIMZ_DEST="/usr/sbin/fstrimz"
+DNF_CONF_SOURCE="/usr/share/dnf5/dnf5-plugins/automatic.conf"
+DNF_CONF_DEST="/etc/dnf/automatic.conf"
+FSTRIM_SERVICE_FILE="/usr/lib/systemd/system/fstrim.service"
+
+# --- Step 1: Install and configure fstrimz ---
+echo "--- Step 1: Installing and configuring fstrimz ---"
+
+# Check if the source file exists.
+if [ ! -f "$FSTRIMZ_SOURCE" ]; then
+    echo "Error: Source file '$FSTRIMZ_SOURCE' not found. Skipping fstrimz setup."
 else
-    # The destination file does not exist, so copy the template
-    echo "Configuration file not found. Copying template from $SOURCE_CONF to $DEST_CONF."
-    
-    # Use sudo to ensure we have the necessary permissions to write to /etc/dnf/
-    sudo -A cp "$SOURCE_CONF" "$DEST_CONF"
-    
-    if [ $? -eq 0 ]; then
-        echo "Successfully copied the configuration file."
-        echo "You can now edit the file with 'sudo nano $DEST_CONF' to customize your settings."
-    else
-        echo "An error occurred while copying the file. Please check permissions."
-        exit 1
-    fi
+    # Copy the file with a clear message.
+    echo "Copying '$FSTRIMZ_SOURCE' to '$FSTRIMZ_DEST'..."
+    sudo -A cp "$FSTRIMZ_SOURCE" "$FSTRIMZ_DEST"
+
+    # Set permissions and ownership for the executable.
+    echo "Setting permissions and ownership for '$FSTRIMZ_DEST'..."
+    sudo -A chown root:root "$FSTRIMZ_DEST"
+    sudo -A chmod 755 "$FSTRIMZ_DEST" # Ensure it is executable
+
+    echo "fstrimz installed successfully."
 fi
 
-sudo -A nano "$DEST_CONF"
+# --- Step 2: Configure DNF Automatic ---
+echo ""
+echo "--- Step 2: Configuring DNF Automatic ---"
 
-f='/usr/lib/systemd/system/fstrim.service'
-xclip -i "$f" -selection clipboard
-sudo -A systemctl edit 'fstrim.service'
+# Check if the DNF configuration file already exists.
+if [ -f "$DNF_CONF_DEST" ]; then
+    echo "Configuration file '$DNF_CONF_DEST' already exists. Skipping copy."
+else
+    # Check if the source DNF config file exists before copying.
+    if [ ! -f "$DNF_CONF_SOURCE" ]; then
+        echo "Error: DNF automatic source file not found. Skipping DNF configuration."
+        exit 1
+    fi
+    echo "Copying DNF automatic configuration from '$DNF_CONF_SOURCE' to '$DNF_CONF_DEST'..."
+    sudo -A cp "$DNF_CONF_SOURCE" "$DNF_CONF_DEST"
+    echo "DNF configuration file copied."
+fi
 
-sudo -A systemctl enable --now 'dnf5-automatic.timer' 'fstrim.timer'
+# Set the dnf5 automatic.conf to apply updates (if not already set).
+if ! grep -q "apply_updates = True" "$DNF_CONF_DEST"; then
+    echo "Enabling automatic updates in DNF configuration..."
+    sudo -A sed -i 's/^# apply_updates = False/apply_updates = True/' "$DNF_CONF_DEST"
+else
+    echo "Automatic updates already enabled in DNF configuration."
+fi
+
+# Set dnf5 to emit updates via MOTD.
+echo "Configuring DNF to emit via MOTD..."
+if grep -q "^emit_via = motd" "$DNF_CONF_DEST"; then
+    echo "MOTD emission is already configured."
+else
+    # Use sed to ensure the emit_via line is set correctly, adding it if missing.
+    sudo -A sed -i 's/^# *emit_via = .*/emit_via = motd/' "$DNF_CONF_DEST" || \
+    sudo -A sed -i '/^\[general\]/a emit_via = motd' "$DNF_CONF_DEST"
+    echo "MOTD emission configured successfully."
+fi
+
+# Ensure all packages are shown in dnf-automatic output.
+echo "Configuring DNF to show all packages..."
+if grep -q "^show_packages = True" "$DNF_CONF_DEST"; then
+    echo "Showing all packages is already configured."
+else
+    # Use sed to ensure show_packages is set to True.
+    sudo -A sed -i 's/^# *show_packages = .*/show_packages = True/' "$DNF_CONF_DEST" || \
+    sudo -A sed -i '/^\[general\]/a show_packages = True' "$DNF_CONF_DEST"
+    echo "Show packages configured successfully."
+fi
+
+# --- Step 3: Edit and Enable Systemd Timers ---
+echo ""
+echo "--- Step 3: Editing and enabling systemd timers ---"
+
+# Check if the fstrim service file exists before editing.
+if [ ! -f "$FSTRIM_SERVICE_FILE" ]; then
+    echo "Error: fstrim service file not found at '$FSTRIM_SERVICE_FILE'. Skipping this step."
+    exit 1
+fi
+
+# Automate the editing of fstrim.service using sed to replace 'fstrim' with 'fstrimz'.
+echo "Automating fstrim service configuration..."
+sudo -A sed -i 's/^ExecStart=\/usr\/sbin\/fstrim/ExecStart=\/usr\/sbin\/fstrimz/g' "$FSTRIM_SERVICE_FILE"
+echo "fstrim.service updated to use 'fstrimz'."
+
+# Enable and start the dnf and fstrim timers.
+echo "Enabling and starting dnf5-automatic and fstrim timers..."
+sudo -A systemctl enable --now dnf5-automatic.timer fstrim.timer
 sudo -A systemctl daemon-reload
+echo "Timers enabled and daemon reloaded."
+
+# --- Step 4: Verify Timers ---
+echo ""
+echo "--- Step 4: Verifying active timers ---"
 systemctl list-timers --all
+echo "Script finished successfully!"
