@@ -1,5 +1,4 @@
 ./build.sh && sudo ./build.sh install
-./piper --help
 aplay raw.wav
 auto_click_python 12 0.025
 bc -lq
@@ -10,11 +9,6 @@ cat /etc/resolv.conf
 cat /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
 cat /home/mmunster/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
 cat /usr/share/dnf5/dnf5-plugins/automatic.conf
-cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 16000 -a - output2.mp3
-cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8000 -a - output2.mp3
-cat text.txt | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8400 -a - output2.mp3
-cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame -V 9 raw.wav output.mp3
-cat text.txt | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && lame raw.wav output.mp3
 cd
 cd "/home/mmunster/.local/share/Steam/steamapps/common/Men of War II/"
 cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
@@ -23,16 +17,6 @@ cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667
 cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/"
 cd "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/sentry/"
 cd ..
-cd 529340/
-cd Bash/MyFedoraScripts/
-cd Bash/MyFedoraScripts/FedoraScripts/
-cd Hämtningar/piper_amd64/
-cd Hämtningar/piper_amd64/piper/
-cd Projekt/
-cd Projekt/dotool/
-cd dotool/
-cd entity/-vehicle/car/
-cd piper/
 clicker 12 0.025
 clicker 120 0.025
 clickfast Navigator.org.mozilla.firefox 9 0.24362375
@@ -48,13 +32,6 @@ dnf --help
 dnf --version
 dnf -v
 dnf check
-dnf check --help
-dnf info piper
-dnf info python3-gmpy2.x86_64
-dnf info sway
-dnf info vlc-plugins*
-dnf info wlrctl
-dnf info wlroots
 dnf repoquery --duplicates
 dnf repoquery --extras
 dnf repoquery --unneeded
@@ -68,18 +45,6 @@ du
 du --help
 du -c
 echo "$data$que" >> "$f"
-echo "Hej på dig!" | ./piper -s 0 --model sv_SE-nst-medium.onnx --output_file raw.wav && ffmpeg -i raw.wav output.mp3
-echo "Hello, World" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame - output2.mp3
-echo "Hello, World" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r - output2.mp3
-echo "Hello, World" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 - output2.mp3
-echo "Hello, World" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -b 32 - output2.mp3
-echo "Hello, World" | piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -b 32 - output2.mp3
-echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | ffprobe -
-echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 11025 -a - output2.mp3
-echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 - output2.mp3
-echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -a - output2.mp3
-echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 22050 -b 32 - output2.mp3
-echo "Tjena, tjena, mittbena" | ./piper --model sv_SE-nst-medium.onnx --output_raw | lame -r -s 8000 -a - output2.mp3
 echo $((1+2))
 echo $SHELL
 echo $XDG_SESSION_TYPE
@@ -100,12 +65,9 @@ find
 find --help
 find . -name *.def
 find . -name *supp*
-find . -name engineer*
-find . -name opel*
 find . -type d -iname "*steamapps*"
 find_and_sort_files mi
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
-flatpak run com.valvesoftware.Steam steam://rungameid/289070
 flatpak update -y
 gedit "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3259735408/scene/set/mod_config/superhealthbar.inc"
 gedit "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
@@ -227,7 +189,6 @@ pip list
 pip list --user
 pip3 install pyautogui pip-date tsp-solver2
 pip3update
-piper --help
 pkill -sigkill Civ6
 pkill -sigkill TransportFever2
 pkill -sigkill mow2
@@ -266,7 +227,6 @@ systemctl status gdm
 uname -a
 uname -r
 unique_lines
-usermod -a -G input $USER
 wev
 wlrctl --help
 wlrctl keyboard type 'Hello, world!'
