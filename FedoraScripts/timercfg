@@ -8,6 +8,6 @@ f='/usr/lib/systemd/system/fstrim.service'
 xclip -i "$f" -selection clipboard
 sudo -A systemctl edit 'fstrim.service'
 
-sudo -A systemctl enable --now 'dnf-automatic.timer' 'fstrim.timer'
+sudo -A systemctl enable --now 'dnf5-automatic.timer' 'fstrim.timer'
 sudo -A systemctl daemon-reload
 systemctl list-timers --all
