@@ -1,6 +1,28 @@
 #!/bin/bash
-sudo -A update-alternatives --config 'java'
-sudo -A update-alternatives --config 'javac'
-sudo -A update-alternatives --config 'jre_openjdk'
-sudo -A update-alternatives --config 'java_sdk_openjdk'
-update-alternatives --list | grep 'jvm'
+
+# ==============================================================================
+# This script lists all registered Java alternatives on your system.
+# It is a diagnostic and informational tool to help you choose a Java version.
+# ==============================================================================
+
+echo "--- Listing all registered Java alternatives ---"
+
+# The 'update-alternatives' command lists all registered alternatives for a given group.
+# We'll use a for-loop to list the alternatives for common Java commands.
+for cmd in java javac jar jre_openjdk java_sdk_openjdk; do
+    echo ""
+    echo "--- Alternatives for '$cmd' ---"
+    # Check if a specific alternative exists before trying to list it
+    if update-alternatives --list "$cmd" &>/dev/null; then
+        update-alternatives --display "$cmd"
+    else
+        echo "No alternatives registered for '$cmd'."
+    fi
+done
+
+echo ""
+echo "--- How to set a Java version non-interactively ---"
+echo "To choose a specific Java version without a prompt, find the path you want from the list above."
+echo "Then, use the '--set' command with 'sudo', followed by the command name and the path."
+echo "For example, to set 'java' to a specific OpenJDK 17 installation, you would run:"
+echo "sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java"
