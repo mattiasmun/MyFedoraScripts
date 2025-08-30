@@ -1,25 +1,140 @@
 #!/bin/bash
-cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 
-cp archive/.bash_history "$HOME/.bash_history"
+# ==============================================================================
+# This script automates post-installation setup tasks for a Fedora system.
+# It includes configuring Git, setting up systemd timers, installing Python
+# packages, and setting up the 'dotool' utility.
+# ==============================================================================
 
-./javacfg
+# Exit immediately if a command exits with a non-zero status.
+set -e
 
-./timercfg
+# --- Variable Definitions ---
+# Use absolute paths and descriptive variable names.
+SCRIPT_DIR="$HOME/Bash/MyFedoraScripts/FedoraScripts"
+PROJECTS_DIR="$HOME/Projects"
+DOTOOL_DIR="$PROJECTS_DIR/dotool"
+DOTOOL_SERVICE_SOURCE="$SCRIPT_DIR/archive/dotool.service"
+DOTOOL_SERVICE_DEST="$HOME/.config/systemd/user/dotool.service"
 
-alias pip-upgrade="pip freeze --user | cut -d'=' -f1 | xargs -n1 pip install -U"
+# --- Step 1: Copy bash history files ---
+echo "--- Step 1: Copying Bash history files ---"
+if [ -f "$SCRIPT_DIR/archive/.bash_history" ]; then
+    if [ ! -f "$HOME/.bash_history" ]; then
+        echo "Copying .bash_history..."
+        cp "$SCRIPT_DIR/archive/.bash_history" "$HOME/.bash_history"
+    else
+        echo ".bash_history already exists. Skipping."
+    fi
 
-pip install 'PyAutoGUI' 'tsp-solver2' 'pip-date'
+    if [ ! -f "$HOME/.bash_history2" ]; then
+        echo "Copying .bash_history2..."
+        cp "$SCRIPT_DIR/archive/.bash_history" "$HOME/.bash_history2"
+    else
+        echo ".bash_history2 already exists. Skipping."
+    fi
+else
+    echo "Warning: Source .bash_history file not found. Skipping history copy."
+fi
 
-mkdir -p "$HOME/Projects"
-cd "$HOME/Projects"
-git clone "https://git.sr.ht/~geb/dotool"
-cd dotool
-make
-sudo -A make install
+# --- Step 2: Run configuration scripts ---
+echo ""
+echo "--- Step 2: Running Java and Timer configuration scripts ---"
+if [ -f "$SCRIPT_DIR/javacfg" ]; then
+    "$SCRIPT_DIR/javacfg"
+else
+    echo "Warning: javacfg script not found at '$SCRIPT_DIR/javacfg'. Skipping."
+fi
+
+if [ -f "$SCRIPT_DIR/timercfg" ]; then
+    "$SCRIPT_DIR/timercfg"
+else
+    echo "Warning: timercfg script not found at '$SCRIPT_DIR/timercfg'. Skipping."
+fi
+
+# --- Step 3: Configure Git ---
+echo ""
+echo "--- Step 3: Running Git configuration script ---"
+if [ -f "$SCRIPT_DIR/gitcfg" ]; then
+    echo "Please provide your email and name for Git configuration."
+    read -p "Enter your email: " user_email
+    read -p "Enter your name: " user_name
+    "$SCRIPT_DIR/gitcfg" "$user_email" "$user_name"
+else
+    echo "Warning: gitcfg script not found. Skipping Git configuration."
+fi
+
+# --- Step 4: Add pip-upgrade alias and install Python packages ---
+echo ""
+echo "--- Step 4: Adding pip alias and installing Python packages ---"
+
+# Add pip-upgrade alias to .bashrc.
+if ! grep -q "alias pip-upgrade" "$HOME/.bashrc"; then
+    echo "Adding pip-upgrade alias to .bashrc..."
+    echo 'alias pip-upgrade="pip freeze --user | cut -d'\''='\'' -f1 | xargs -n1 pip install -U --no-warn-script-location"' >> "$HOME/.bashrc"
+    source "$HOME/.bashrc"
+else
+    echo "pip-upgrade alias already exists in .bashrc. Skipping."
+fi
+
+# Install Python packages.
+echo "Installing Python packages..."
+pip install --user 'PyAutoGUI' 'tsp-solver2' 'pip-date'
+echo "Python packages installed successfully."
+
+# --- Step 5: Install and configure dotool ---
+echo ""
+echo "--- Step 5: Installing and configuring dotool ---"
+if command -v dotool &>/dev/null; then
+    echo "dotool is already installed. Skipping installation."
+else
+    echo "dotool not found. Starting installation..."
+    echo "Creating projects directory '$PROJECTS_DIR'..."
+    mkdir -p "$PROJECTS_DIR"
+
+    if [ ! -d "$DOTOOL_DIR" ]; then
+        echo "Cloning dotool repository..."
+        git clone "https://git.sr.ht/~geb/dotool" "$DOTOOL_DIR"
+    else
+        echo "dotool repository already cloned. Skipping clone."
+    fi
+
+    # Navigate to the dotool directory and install.
+    echo "Building and installing dotool..."
+    (
+        cd "$DOTOOL_DIR" || exit
+        make
+        sudo -A make install
+    )
+    echo "dotool installed successfully."
+fi
+
+# Configure permissions and service for dotool.
+echo "Configuring permissions and service for dotool..."
 sudo -A usermod -a -G input "$USER"
-mkdir -p "$HOME/.config/systemd/user/"
-cp "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/dotool.service" "$HOME/.config/systemd/user/"
-systemctl --user enable --now dotool.service
+echo "User '$USER' added to 'input' group."
+echo "Please log out and back in for this change to take effect."
 
-#Network DNS 8.26.56.26, 8.20.247.20
+mkdir -p "$HOME/.config/systemd/user/"
+if [ ! -f "$DOTOOL_SERVICE_DEST" ]; then
+    echo "Copying dotool.service file..."
+    cp "$DOTOOL_SERVICE_SOURCE" "$DOTOOL_SERVICE_DEST"
+else
+    echo "dotool.service file already exists. Skipping copy."
+fi
+
+echo "Enabling and starting dotool.service..."
+systemctl --user enable --now "$DOTOOL_SERVICE_DEST" || echo "Warning: Failed to enable dotool.service."
+
+echo "--- Script Finished ---"
+
+echo ""
+echo "--- Optional: Configure DNS ---"
+echo "If you want to set your DNS servers to 8.26.56.26 and 8.20.247.20,"
+echo "you can use the following commands:"
+echo ""
+echo "sudo nmcli connection modify 'ConnectionName' ipv4.dns '8.26.56.26 8.20.247.20'"
+echo "sudo nmcli connection up 'ConnectionName'"
+echo ""
+echo "Replace 'ConnectionName' with the name of your network connection."
+

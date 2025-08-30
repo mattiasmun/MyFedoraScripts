@@ -1,21 +1,77 @@
 #!/bin/bash
-v="$(rpm -E %fedora)"
 
-cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
+# ==============================================================================
+# This script automates initial system setup tasks for a fresh Fedora installation.
+# It installs core packages, configures repositories, and runs custom setup scripts.
+# ==============================================================================
 
-./sudocfg
+# Exit immediately if a command exits with a non-zero status.
+set -e
 
-sudo -A dnf -y install 'git' \
-  'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-'"$v"'.noarch.rpm' \
-  'https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-'"$v"'.noarch.rpm'
+# --- Variable Definitions ---
+# The Fedora version is needed for RPM Fusion links.
+FEDORA_VERSION="$(rpm -E %fedora)"
+# Define the script's directory using an absolute path.
+SCRIPT_DIR="$HOME/Bash/MyFedoraScripts/FedoraScripts"
 
+# --- Step 1: Run sudo configuration script ---
+echo "--- Step 1: Running sudo configuration script ---"
+if [ -x "$SCRIPT_DIR/sudocfg" ]; then
+    "$SCRIPT_DIR/sudocfg"
+else
+    echo "Warning: 'sudocfg' script not found or is not executable. Skipping."
+fi
+
+# --- Step 2: Install core packages and repositories ---
+echo ""
+echo "--- Step 2: Installing Git and RPM Fusion repositories ---"
+# Install git and the RPM Fusion repositories.
+# The `|| true` prevents the script from exiting if the repos are already installed.
+sudo -A dnf -y install \
+    'git' \
+    "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_VERSION}.noarch.rpm" \
+    "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_VERSION}.noarch.rpm" || true
+echo "Core packages and repositories installed."
+
+# --- Step 3: Run sub-scripts for further configuration ---
+echo ""
+echo "--- Step 3: Running subsequent setup scripts ---"
+
+# Upgrade all packages to the latest version.
+echo "Running full system upgrade..."
 sudo -A dnf -y upgrade
+echo "System upgrade complete."
 
-./getgitrepos
+# Run the script to get Git repositories.
+if [ -x "$SCRIPT_DIR/getgitrepos" ]; then
+    echo "Running 'getgitrepos' script..."
+    "$SCRIPT_DIR/getgitrepos"
+else
+    echo "Warning: 'getgitrepos' script not found or is not executable. Skipping."
+fi
 
-./bashprofileandautostart
+# Run the script for bash profile and autostart.
+if [ -x "$SCRIPT_DIR/bashprofileandautostart" ]; then
+    echo "Running 'bashprofileandautostart' script..."
+    "$SCRIPT_DIR/bashprofileandautostart"
+else
+    echo "Warning: 'bashprofileandautostart' script not found or is not executable. Skipping."
+fi
 
-./progs
+# Run the script to install programs.
+if [ -x "$SCRIPT_DIR/progs" ]; then
+    echo "Running 'progs' script..."
+    "$SCRIPT_DIR/progs"
+else
+    echo "Warning: 'progs' script not found or is not executable. Skipping."
+fi
 
-sudo -A dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
-  'workstation-product-environment'
+# --- Step 4: Final group updates ---
+echo ""
+echo "--- Step 4: Updating system package groups ---"
+sudo -A dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' 'workstation-product-environment'
+echo "Package groups updated."
+
+echo ""
+echo "--- Installation script finished successfully! ---"
+```eof
