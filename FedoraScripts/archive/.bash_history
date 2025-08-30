@@ -40,7 +40,7 @@ dnf5 repoquery --help
 dnfsysupgr
 dnfusrins
 dotool --list-keys
-dotoold
+dotoold &
 du
 du --help
 du -c
@@ -212,7 +212,6 @@ sudo -A gedit /etc/dnf/automatic.conf
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 sudo -A updatedb
 sudo -A wmctrl -xl
-sudo dotoold
 sudo gedit /etc/udev/rules.d/99-input.rules
 sudo systemctl restart gdm
 sudo udevadm control --reload && sudo udevadm trigger
