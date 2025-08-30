@@ -1,5 +1,108 @@
 #!/bin/bash
+
+# ==============================================================================
+# This script configures global Git settings, including user email, user name,
+# a credential helper, the default text editor, and the diff/merge tool.
+# It also configures a global .gitignore file and sets up useful Git aliases.
+#
+# Usage: ./gitcfg.sh <user_email> <user_name>
+#
+# Arguments:
+#   $1 (user_email): The email address to be used for Git commits.
+#   $2 (user_name): The name to be used for Git commits.
+# ==============================================================================
+
+# Exit immediately if a command exits with a non-zero status.
+set -e
+
+# --- Argument Validation ---
+# Check if exactly two arguments were provided.
+if [ "$#" -ne 2 ]; then
+    echo "Error: This script requires exactly two arguments: an email and a name."
+    echo "Usage: $0 <user_email> <user_name>"
+    exit 1
+fi
+
+# --- Variable Definitions ---
+USER_EMAIL="$1"
+USER_NAME="$2"
+GLOBAL_GITIGNORE="$HOME/.gitignore_global"
+
+# --- Configure Git Global Settings ---
+
+echo "--- Step 1: Setting global credential helper to 'store' ---"
 git config --global credential.helper store
-git config --global user.email "mattiasmun@gmail.com"
-git config --global user.name "Mattias Münster"
+echo "Credential helper set successfully."
+
+echo ""
+echo "--- Step 2: Setting global user email to '$USER_EMAIL' ---"
+git config --global user.email "$USER_EMAIL"
+echo "User email set successfully."
+
+echo ""
+echo "--- Step 3: Setting global user name to '$USER_NAME' ---"
+git config --global user.name "$USER_NAME"
+echo "User name set successfully."
+
+echo ""
+echo "--- Step 4: Setting global core editor to 'nano' ---"
 git config --global core.editor "nano"
+echo "Core editor set successfully."
+
+echo ""
+echo "--- Step 5: Setting global diff and merge tool to 'meld' ---"
+git config --global diff.tool meld
+git config --global merge.tool meld
+echo "Diff and merge tools set to 'meld' successfully."
+
+echo ""
+echo "--- Step 6: Configuring the meld diff and merge tool ---"
+git config --global meld.path '/usr/bin/meld'
+echo "Meld path configured."
+
+echo ""
+echo "--- Step 7: Configuring a global .gitignore file ---"
+echo "Creating global gitignore file at $GLOBAL_GITIGNORE"
+# Common patterns to ignore
+cat << EOF > "$GLOBAL_GITIGNORE"
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs and databases
+*.log
+*.sqlite
+*.sqlite3
+
+# Development environment files
+.idea/
+.vscode/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build and temporary directories
+build/
+dist/
+node_modules/
+.sass-cache/
+npm-debug.log
+yarn-debug.log
+EOF
+git config --global core.excludesfile "$GLOBAL_GITIGNORE"
+echo "Global .gitignore configured successfully."
+
+echo ""
+echo "--- Step 8: Configuring useful Git aliases ---"
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.log 'log --oneline --graph --decorate'
+echo "Git aliases configured successfully."
+
+echo ""
+echo "--- Git configuration complete. ---"
+
