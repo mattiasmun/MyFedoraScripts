@@ -1,118 +1,196 @@
 #!/usr/bin/python
-
-import subprocess
-import sys
-import time
+import tkinter as tk
+from tkinter import ttk, messagebox
 import threading
-#from pynput import keyboard
+import subprocess
+import time
+from pynput import keyboard
 
-# Global flag to signal the clicking loop to stop
-stop_clicking_flag = threading.Event()
-stop_key_pressed = False # Flag to indicate if the specific key was pressed
+class AutoClickerGUI(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Merged Auto-Clicker GUI")
+        self.geometry("450x550")
+        self.resizable(False, False)
+        
+        # Event to signal the clicking loop to stop
+        self.stop_event = threading.Event()
+        self.is_running = False
+        self.thread = None
+        self.listener = None
 
-# --- dotoolc Helper Function (from previous example) ---
-def send_dotool_command(command):
-	"""Sends a command to dotool."""
-	process = subprocess.run(
-		f"echo {command} | dotoolc", # Use dotoolc as per your script
-		shell=True,
-		capture_output=True,
-		text=True
-	)
-	if process.returncode != 0:
-		# Suppress error if dotoolc is intentionally killed by SIGINT
-		if "Bad file descriptor" not in process.stderr:
-			print(f"Error executing dotoolc command '{command}':")
-			print(process.stderr)
+        # Style configuration for a modern look
+        self.style = ttk.Style(self)
+        self.style.theme_use('clam')
+        self.style.configure('TFrame', background='#f0f0f0')
+        self.style.configure('TLabel', background='#f0f0f0', font=('Arial', 10))
+        self.style.configure('TButton', font=('Arial', 10, 'bold'))
+        self.style.configure('TCheckbutton', background='#f0f0f0')
+        self.style.configure('TEntry', fieldbackground='white')
+        self.style.configure('Heading.TLabel', font=('Arial', 16, 'bold'))
 
-# --- Performs Alt+Tab ---
-def alt_tab_with_dotool():
-	print("Performing Alt+Tab...")
-	send_dotool_command("keydown k:56") # Alt_L
-	time.sleep(0.1)
-	send_dotool_command("keydown k:15") # Tab
-	time.sleep(0.1)
-	send_dotool_command("keyup k:15") # Tab
-	time.sleep(0.1)
-	send_dotool_command("keyup k:56") # Alt_L
-	print("Alt+Tab sequence sent.")
+        # Create the main frame
+        self.main_frame = ttk.Frame(self, padding=20)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-# --- Key Listener Functions ---
-def on_press(key):
-	global stop_key_pressed, stop_clicking_flag
-	try:
-		# You can specify the key by its name or char
-		# Common key names: 'esc', 'f1', 'f2', 'space', 'alt_l', 'ctrl_l', etc.
-		# For a character key: 'a', 'b', 'z'
-		# To find key names: run a simple pynput listener and press keys
-		print("Key press: " + key)
-		if key == keyboard.Key.esc: # Example: Stop on 'Esc' key press
-			print("Escape key pressed. Stopping script...")
-			stop_key_pressed = True
-			stop_clicking_flag.set() # Set the event to stop the clicking loop
-			return False # Stop the listener
-		# Or, for a specific character key (e.g., 'q')
-		# if hasattr(key, 'char') and key.char == 'q':
-		# 	print(" 'q' key pressed. Stopping script...")
-		# 	stop_key_pressed = True
-		# 	stop_clicking_flag.set()
-		# 	return False
-	except AttributeError:
-		# Special keys (like Alt, Ctrl, Shift) don't have a 'char' attribute
-		pass
+        # Title
+        self.title_label = ttk.Label(self.main_frame, text="Dotool GUI Clicker", style='Heading.TLabel')
+        self.title_label.pack(pady=(0, 20))
 
-def on_release(key):
-	# This function is not strictly needed for just stopping,
-	# but good for completeness if you need it.
-	pass
+        # Coordinates Input
+        self.coords_frame = ttk.Frame(self.main_frame)
+        self.coords_frame.pack(fill=tk.X, pady=5)
+        ttk.Label(self.coords_frame, text="X Coordinate:").pack(side=tk.LEFT, padx=(0, 5))
+        self.x_entry = ttk.Entry(self.coords_frame, width=10)
+        self.x_entry.pack(side=tk.LEFT, padx=(0, 10))
+        ttk.Label(self.coords_frame, text="Y Coordinate:").pack(side=tk.LEFT, padx=(0, 5))
+        self.y_entry = ttk.Entry(self.coords_frame, width=10)
+        self.y_entry.pack(side=tk.LEFT)
 
-# --- Main Clicking Logic ---
-def run_clicking(duration_seconds, interval_seconds):
-	print(f"Starting rapid clicking for {duration_seconds} seconds...")
-	start_time = time.time()
-	end_time = start_time + duration_seconds
-	
-	# The loop now checks both the timer and the stop flag
-	while time.time() < end_time:# and not stop_clicking_flag.is_set():
-		send_dotool_command("click left")
-		time.sleep(interval_seconds) # Sleeps for interval_seconds
-	
-	if not stop_key_pressed: # Only print "finished" if not stopped by key
-		print("Clicking finished.")
-	else:
-		print("Script stopped by key press.")
+        # Click Count Input
+        self.count_frame = ttk.Frame(self.main_frame)
+        self.count_frame.pack(fill=tk.X, pady=5)
+        ttk.Label(self.count_frame, text="Clicks (0 for infinite):").pack(side=tk.LEFT, padx=(0, 5))
+        self.count_entry = ttk.Entry(self.count_frame, width=10)
+        self.count_entry.insert(0, "10")
+        self.count_entry.pack(side=tk.LEFT)
 
-def main():
-	duration, interval = 0, 0
-	
-	# Get duration from command line argument, default to 6.0 seconds
-	try:
-		duration = float(sys.argv[1])
-	except IndexError:
-		duration = 6.0
-	
-	# The amount of seconds to wait between each mouse click, defalut to 0.025 seconds
-	try:
-		interval = float(sys.argv[2])
-	except IndexError:
-		interval = 0.025
-	
-	# --- Initial Alt+Tab Sequence ---
-	alt_tab_with_dotool()
-	
-	# --- Start Key Listener in a separate thread ---
-	#listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-	#listener.start() # Start monitoring keyboard events in the background
-	
-	# --- Run the clicking in the main thread ---
-	run_clicking(duration, interval)
-	
-	# Ensure the listener thread is stopped if it's still running
-	#if listener.running:
-	#	listener.stop()
-	# listener.join() # Wait for the listener thread to finish (optional, but good practice)
-	
-	print("Script exited.")
+        # Delay Input
+        self.delay_frame = ttk.Frame(self.main_frame)
+        self.delay_frame.pack(fill=tk.X, pady=5)
+        ttk.Label(self.delay_frame, text="Delay between clicks (seconds):").pack(side=tk.LEFT, padx=(0, 5))
+        self.delay_entry = ttk.Entry(self.delay_frame, width=10)
+        self.delay_entry.insert(0, "0.5")
+        self.delay_entry.pack(side=tk.LEFT)
+        
+        # Alt+Tab Checkbox
+        self.alt_tab_var = tk.BooleanVar()
+        self.alt_tab_check = ttk.Checkbutton(self.main_frame, text="Switch Window (Alt+Tab)", variable=self.alt_tab_var)
+        self.alt_tab_check.pack(pady=10)
+
+        # Control Buttons
+        self.button_frame = ttk.Frame(self.main_frame)
+        self.button_frame.pack(pady=20)
+        self.start_button = ttk.Button(self.button_frame, text="Start", command=self.start_clicking)
+        self.start_button.pack(side=tk.LEFT, padx=10)
+        self.stop_button = ttk.Button(self.button_frame, text="Stop", command=self.stop_clicking, state=tk.DISABLED)
+        self.stop_button.pack(side=tk.LEFT, padx=10)
+
+        # Status Label
+        self.status_label = ttk.Label(self.main_frame, text="Status: Ready", font=('Arial', 10, 'italic'))
+        self.status_label.pack(pady=10)
+
+        # Instructions Section
+        self.instructions_label = ttk.Label(self.main_frame, 
+            text="Instructions:\n"
+                 "1. Enter the X and Y coordinates to click.\n"
+                 "2. Optionally, check the 'Switch Window' box to use Alt+Tab.\n"
+                 "3. Press 'Start' to begin the clicking process.\n"
+                 "4. **Press the ESC key on your keyboard to stop the process at any time.**",
+            justify=tk.LEFT)
+        self.instructions_label.pack(pady=10, fill=tk.X)
+        
+        # Start the keyboard listener thread
+        self.listener = keyboard.Listener(on_press=self.on_press)
+        self.listener.start()
+
+    def send_dotool_command(self, command):
+        """Sends a command to dotool."""
+        subprocess.run(
+            f"echo {command} | dotoolc",
+            shell=True,
+            capture_output=True,
+            text=True
+        )
+
+    def dotool_click(self, x, y):
+        """Performs a click at the specified coordinates using dotool."""
+        self.send_dotool_command(f"click --x {x} --y {y}")
+
+    def alt_tab_with_dotool(self):
+        """Performs an Alt+Tab key sequence using dotool."""
+        self.send_dotool_command("keydown k:56") # Alt_L
+        time.sleep(0.1)
+        self.send_dotool_command("keydown k:15") # Tab
+        time.sleep(0.1)
+        self.send_dotool_command("keyup k:15") # Tab
+        time.sleep(0.1)
+        self.send_dotool_command("keyup k:56") # Alt_L
+        
+    def on_press(self, key):
+        """Pynput callback to stop the clicking loop on ESC key press."""
+        try:
+            if key == keyboard.Key.esc:
+                print("Escape key pressed. Stopping script...")
+                self.stop_clicking()
+                return False  # Stops the listener
+        except AttributeError:
+            pass
+
+    def start_clicking(self):
+        if self.is_running:
+            return
+
+        try:
+            x = int(self.x_entry.get())
+            y = int(self.y_entry.get())
+            count = int(self.count_entry.get())
+            delay = float(self.delay_entry.get())
+            
+            if delay <= 0:
+                messagebox.showerror("Invalid Input", "Delay must be a positive number.")
+                return
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Please enter valid numbers.")
+            return
+
+        self.is_running = True
+        self.stop_event.clear()
+        self.start_button.config(state=tk.DISABLED)
+        self.stop_button.config(state=tk.NORMAL)
+        self.status_label.config(text="Status: Running...")
+
+        self.thread = threading.Thread(target=self.clicking_loop, args=(x, y, count, delay))
+        self.thread.daemon = True
+        self.thread.start()
+
+    def stop_clicking(self):
+        if not self.is_running:
+            return
+
+        self.is_running = False
+        self.stop_event.set()
+        self.status_label.config(text="Status: Stopping...")
+        
+        if self.thread and self.thread.is_alive():
+            self.thread.join()
+
+        self.start_button.config(state=tk.NORMAL)
+        self.stop_button.config(state=tk.DISABLED)
+        self.status_label.config(text="Status: Stopped")
+
+    def clicking_loop(self, x, y, count, delay):
+        i = 0
+        while not self.stop_event.is_set() and (count == 0 or i < count):
+            if self.alt_tab_var.get():
+                try:
+                    self.alt_tab_with_dotool()
+                    time.sleep(1)
+                except Exception as e:
+                    print(f"Error switching windows: {e}")
+            
+            try:
+                self.dotool_click(x, y)
+                time.sleep(delay)
+            except Exception as e:
+                print(f"Error during clicking: {e}")
+                self.stop_event.set()
+            
+            i += 1
+
+        self.stop_clicking()
 
 if __name__ == "__main__":
-	main()
+    app = AutoClickerGUI()
+    app.mainloop()
+
