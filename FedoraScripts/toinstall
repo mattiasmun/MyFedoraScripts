@@ -6,8 +6,6 @@ sudo -A dnf -y install 'git' \
 
 sudo -A dnf -y upgrade
 
-cd "${0:0: -9}"
-
 ./getgitrepos
 
 ./bashprofileandautostart
@@ -19,7 +17,16 @@ sudo -A dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
   
 pip install 'PyAutoGUI' 'tsp-solver2' 'pip-date'
 
+mkdir -p "$HOME/Projects"
+cd "$HOME/Projects"
+git clone "https://git.sr.ht/~geb/dotool"
+cd dotool
+make
+sudo -A make install
+sudo -A usermod -a -G input "$USER"
 mkdir -p "$HOME/.config/systemd/user/"
 cp "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/dotool.service" "$HOME/.config/systemd/user/"
+systemctl --user enable dotool.service
+systemctl --user start dotool.service
 
 #Network DNS 8.26.56.26, 8.20.247.20
