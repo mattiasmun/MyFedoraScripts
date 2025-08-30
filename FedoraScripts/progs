@@ -198,6 +198,7 @@ gamemode \
 gbrainy \
 gcc \
 gcc-c++ \
+gcr3 \
 gdal-devel \
 gdb \
 gdbm \
