@@ -1,0 +1,8 @@
+[Unit]
+Description=dotool keyboard automation daemon
+
+[Service]
+ExecStart=/usr/local/bin/dotoold
+
+[Install]
+WantedBy=default.target

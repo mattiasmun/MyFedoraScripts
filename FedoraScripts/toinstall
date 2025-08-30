@@ -19,4 +19,7 @@ sudo -A dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' \
   
 pip install 'PyAutoGUI' 'tsp-solver2' 'pip-date'
 
+mkdir -p "$HOME/.config/systemd/user/"
+cp "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/dotool.service" "$HOME/.config/systemd/user/"
+
 #Network DNS 8.26.56.26, 8.20.247.20
