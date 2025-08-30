@@ -10,7 +10,7 @@ class AutoClickerGUI(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Merged Auto-Clicker GUI")
-        self.geometry("450x550")
+        self.geometry("650x650")
         self.resizable(False, False)
         
         # Event to signal the clicking loop to stop
