@@ -26,7 +26,6 @@ sudo -A make install
 sudo -A usermod -a -G input "$USER"
 mkdir -p "$HOME/.config/systemd/user/"
 cp "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/dotool.service" "$HOME/.config/systemd/user/"
-systemctl --user enable dotool.service
-systemctl --user start dotool.service
+systemctl --user enable --now dotool.service
 
 #Network DNS 8.26.56.26, 8.20.247.20
