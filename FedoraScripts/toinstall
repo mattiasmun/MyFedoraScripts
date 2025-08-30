@@ -6,6 +6,8 @@ sudo -A dnf -y install 'git' \
 
 sudo -A dnf -y upgrade
 
+cd "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
+
 ./getgitrepos
 
 ./bashprofileandautostart
