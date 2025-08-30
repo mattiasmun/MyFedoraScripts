@@ -1,9 +1,10 @@
 #!/bin/bash
+
 # Define the path to the executable we need
 ASKPASS_PATH="/usr/libexec/gcr-ssh-askpass"
 
 # Define the line to be added
-ASKPASS_LINE="export SSH_ASKPASS=\"""$ASKPASS_PATH""\""
+ASKPASS_LINE="export SSH_ASKPASS=\"$ASKPASS_PATH\""
 
 # Define the target file
 BASHRC_FILE="$HOME/.bashrc"
@@ -11,7 +12,7 @@ BASHRC_FILE="$HOME/.bashrc"
 # Check if the required executable exists. If not, attempt to install it.
 if [ ! -f "$ASKPASS_PATH" ]; then
     echo "The required executable '$ASKPASS_PATH' was not found."
-    echo "Attempting to install the gnome-keyring package using dnf..."
+    echo "Attempting to install the gcr3 package using dnf..."
     
     # Use sudo to install the package non-interactively
     sudo dnf install gcr3 -y
