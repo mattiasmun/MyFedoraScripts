@@ -167,10 +167,6 @@ evince \
 evince-djvu \
 exfatprogs \
 expat-devel \
-f34-backgrounds-base \
-f34-backgrounds-gnome \
-f41-backgrounds-base \
-f41-backgrounds-gnome \
 faac \
 fcoe-utils \
 fdk-aac \
@@ -407,7 +403,7 @@ iwlwifi-dvm-firmware \
 iwlwifi-mvm-firmware \
 jasper-devel \
 java-latest-openjdk \
-javapackages-local-openjdk21 \
+java-latest-openjdk-devel \
 jedit \
 jline-reader \
 jline-style \
@@ -933,6 +929,7 @@ xz-lzma-compat \
 ydotool \
 yelp \
 youtube-dl \
+yt-dlp \
 zd1211-firmware \
 zip \
 zix \
