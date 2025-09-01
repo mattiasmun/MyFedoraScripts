@@ -15,18 +15,20 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# --- Variable Definitions ---
+USER_EMAIL="$1"
+USER_NAME="$2"
+GLOBAL_GITIGNORE="$HOME/.gitignore_global"
+
 # --- Argument Validation ---
 # Check if exactly two arguments were provided.
 if [ "$#" -ne 2 ]; then
     echo "Error: This script requires exactly two arguments: an email and a name."
     echo "Usage: $0 <user_email> <user_name>"
-    exit 1
+    echo "Please provide your email and name for Git configuration."
+    read -p "Enter your email: " USER_EMAIL
+    read -p "Enter your name: " USER_NAME
 fi
-
-# --- Variable Definitions ---
-USER_EMAIL="$1"
-USER_NAME="$2"
-GLOBAL_GITIGNORE="$HOME/.gitignore_global"
 
 # --- Configure Git Global Settings ---
 
