@@ -56,10 +56,7 @@ fi
 echo ""
 echo "--- Step 3: Running Git configuration script ---"
 if [ -f "$SCRIPT_DIR/gitcfg" ]; then
-    echo "Please provide your email and name for Git configuration."
-    read -p "Enter your email: " user_email
-    read -p "Enter your name: " user_name
-    "$SCRIPT_DIR/gitcfg" "$user_email" "$user_name"
+    "$SCRIPT_DIR/gitcfg"
 else
     echo "Warning: gitcfg script not found. Skipping Git configuration."
 fi
