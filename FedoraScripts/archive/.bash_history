@@ -1,27 +1,46 @@
+./bashprofileandautostart
+./build.sh
 ./build.sh && sudo ./build.sh install
+./gitcfg mattiasmun@gmail.com mattiasmun
+./postinstall
+./progs
+./toinstall
 aplay raw.wav
 auto_click_python 12 0.025
+bashprofileandautostart
 bc -lq
 c
 cat '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc'
 cat '/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc'
 cat /etc/resolv.conf
+cat /home/mmunster/.git-credentials
+cat /home/mmunster/.gitconfig
+cat /home/mmunster/.gitignore_global
 cat /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
 cat /home/mmunster/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
 cat /usr/share/dnf5/dnf5-plugins/automatic.conf
+cat README.md
+cat ~/.gitconfig
 cd
 cd "/home/mmunster/.local/share/Steam/steamapps/common/Men of War II/"
 cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
 cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
 cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
 cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/"
-cd "/home/mmunster/.var/app/com.valvesoftware.Steam/Men of War II/sentry/"
+cd "/home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle"
+cd "/home/mmunster/Men of War II/sentry/"
 cd ..
+cd .local/share/Steam/steamapps/workshop/content/1128860
+cd Bash/MyFedoraScripts/FedoraScripts/
+cd Projects/
+cd dotool/
+cd ~/Bash/MyFedoraScripts/FedoraScripts/
 clicker 12 0.025
 clicker 120 0.025
 clickfast Navigator.org.mozilla.firefox 9 0.24362375
 clickfast Navigator.org.mozilla.firefox 9999 0.24362375
 closeall
+cp -r ~/Bash/MyFedoraScripts/FedoraScripts/archive/car car
 d
 d $(tu 21:00:00)
 d $(tu 22:00:00)
@@ -32,8 +51,11 @@ dnf --help
 dnf --version
 dnf -v
 dnf check
+dnf check-upgrade
 dnf repoquery --duplicates
 dnf repoquery --extras
+dnf repoquery --installonly
+dnf repoquery --leaves
 dnf repoquery --unneeded
 dnf repoquery --userinstalled --queryformat '%{name} \'
 dnf5 repoquery --help
@@ -44,6 +66,7 @@ dotoold &
 du
 du --help
 du -c
+du car
 echo "$data$que" >> "$f"
 echo $((1+2))
 echo $SHELL
@@ -65,7 +88,11 @@ find
 find --help
 find . -name *.def
 find . -name *supp*
+find . -type d -iname "*Men of War II*"
+find . -type d -iname "*car*"
 find . -type d -iname "*steamapps*"
+find_and_sort_files .
+find_and_sort_files female
 find_and_sort_files mi
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak update -y
@@ -94,6 +121,7 @@ git clone https://git.sr.ht/~geb/dotool
 git gc
 git pull
 git status
+gitcfg
 gitty ~/529340/
 gitty ~/Bash/MyFedoraScripts/
 glxgears -swapinterval 0 & sleep 15.5; pkill glxgears
@@ -101,6 +129,7 @@ grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
 grep -lirI 'size 10 16' | xargs -i@ sed -i 's/Size\ 10\ 16/size\ 12\ 16/g' @
 grep -lirI 'size 10 16' | xargs -i@ sed -i 's/size\ 10\ 16/size\ 12\ 16/g' @
 grep -nirI 'a_supp'
+grep -nirI 'gitcfg'
 grep -nirI 'opel'
 grep -nirI 'size 10 16'
 grep -nirI 'size 12 14'
@@ -114,6 +143,7 @@ gs
 gs --help
 htop
 id -nG
+javacfg
 l
 lame --help
 lame --longhelp
@@ -129,29 +159,13 @@ ll /etc/dnf/automatic.conf.rpmnew
 ll /etc/udev/rules.d/99-input.rules
 ll /home/mmunster/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/03dabf48-21c2-496e-dbc10998-8684603a_stdout.txt
 ll /home/mmunster/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
+ll /usr/share/dnf5/dnf5-plugins/automatic.conf
 ll Bash/MyFedoraScripts/FedoraScripts/
 ll output.mp3
 ll output2.mp3
 ln --help
-locate "Men of War II"
-locate *.pdf
-ls
-ls "/home/mmunster/Bash/MyFedoraScripts/FedoraScripts/archive/"
-ls '/home/mmunster/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/texture/common/model/'
-ls -Al
-ls -Al $(locate steamclient.so)
-ls -Al Dokument/
-ls -Al FedoraScripts/archive/
-ls /etc/dnf
-ls /etc/dnf/dnf5-plugins/
-ls /home/mmunster/.local/lib/python3.12/site-packages/
-ls /home/mmunster/.local/lib/python3.13/
-ls /home/mmunster/.local/lib/python3.13/site-packages/
-ls /home/mmunster/.local/share/Steam/linux64/steamclient.so
-ls /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
-ls /home/mmunster/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/
 lsattr Dokument/IDLE\ py.py
-lsattr Hämtningar/
+make
 man dotool
 man wlrctl
 mediainfo
@@ -195,6 +209,9 @@ pkill -sigkill mow2
 py
 quodlibet hej.wav &
 r
+rm -r 3480663038/global/sound/human/talk/rus_sniper_female 3480663038/global/sound/human/talk/rus_medic_female 3271667155/global/sound/human/talk/rus_medic_female 3271667155/global/sound/human/talk/rus_sniper_female
+rm 3480663038/scene/entity_soviet_female.pak 3271667155/scene/entity_soviet_female.pak 3480663038/global/interface/scene/portrait/rus_sniper_female.png 3271667155/global/interface/scene/portrait/rus_sniper_female.png 3480663038/global/interface/scene/portrait/rus_medic_female.png 3271667155/global/interface/scene/portrait/rus_medic_female.png
+rm 3480663038/scene/entity_soviet_female.pak 3271667155/scene/entity_soviet_female.pak 3480663038/global/interface/scene/portrait/rus_sniper_female.png 3271667155/global/interface/scene/portrait/rus_sniper_female.png 3480663038/global/interface/scene/portrait/rus_medic_female.png 3271667155/global/interface/scene/portrait/rus_medic_female.png
 rm ~/.bash_history-*.tmp
 sha256sum /bosse/Filer/Fedora-Workstation-Live-x86_64-41/Fedora-Workstation-Live-x86_64-41-1.4.iso
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
@@ -209,9 +226,13 @@ sudo -A dnf upgrade
 sudo -A dnf upgrade --best --allowerasing
 sudo -A dnf-automatic
 sudo -A gedit /etc/dnf/automatic.conf
+sudo -A make install
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
+sudo -A nano /etc/dnf/automatic.conf
+sudo -A systemctl start dnf5-automatic.service
 sudo -A updatedb
 sudo -A wmctrl -xl
+sudo ./build.sh install
 sudo gedit /etc/udev/rules.d/99-input.rules
 sudo systemctl restart gdm
 sudo udevadm control --reload && sudo udevadm trigger
@@ -220,12 +241,20 @@ sudo usermod -a -G input $USER
 sudo wlrctl keyboard type 'Hello, world!'
 sudo wlrctl pointer move 50 -70
 sudo wlrctl window focus firefox
+systemctl --user status dotool.service
 systemctl enable --now dnf5-automatic.timer
+systemctl status
+systemctl status dnf5-automatic.service
 systemctl status dnf5-automatic.timer
 systemctl status gdm
 uname -a
 uname -r
 unique_lines
+update-alternatives
+update-alternatives --list
+wc -lL .bash_history
+wc -lL .bash_history2
+wc -lL < .bash_history
 wev
 wlrctl --help
 wlrctl keyboard type 'Hello, world!'
