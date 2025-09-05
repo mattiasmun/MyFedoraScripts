@@ -1,7 +1,6 @@
 ./bashprofileandautostart
 ./build.sh
 ./build.sh && sudo ./build.sh install
-./gitcfg mattiasmun@gmail.com mattiasmun
 ./postinstall
 ./progs
 ./toinstall
