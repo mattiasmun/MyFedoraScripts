@@ -14,27 +14,27 @@
 			{clear}
 			{size 12 16}
 			{Weight 100000}
-			{item "barbwire_kit" 1000 {cell 4 2}}
-			{item "hedgehog_kit" 1000 {cell 6 2}}
-			{item "repair_kit" 1000 {cell 0 0}}
-			{item "sandbag_kit" 1000 {cell 0 2}}
-			{item "sandbag_kit2" 1000 {cell 5 5}}
-			{item "supp_point_kit" 1000 {cell 4 0}}
+			{item "barbwire_kit" 990 {cell 4 2}}
+			{item "hedgehog_kit" 990 {cell 6 2}}
+			{item "repair_kit" 990 {cell 0 0}}
+			{item "sandbag_kit" 990 {cell 0 2}}
+			{item "sandbag_kit2" 990 {cell 5 5}}
+			{item "supp_point_kit" 990 {cell 4 0}}
 			{item "barrel" 100 filling "fuel" 200 {cell 2 0}}
 			{item "can" 100 filling "fuel" 60 {cell 6 0}}
-			{item "bandage" 5000 {cell 10 4}}
-			{item "dynamite" 1000 {cell 8 3}}
-			{item "knife_union" 1000 {cell 8 2}}
-			{item "remote" "mine" 1000 {cell 3 4}}
-			{item "sapper_shovel" 1000 {cell 8 0}}
-			{item "us_body_armor" 1000 {cell 0 4}}
-			{item "usa-helmet_2" 1000 {cell 10 2}}
-			{item "f1" "grenade" 1000 {cell 7 4}}
-			{item "m61" "grenade" 1000 {cell 11 0}}
-			{item "n73at" "grenade" 1000 {cell 2 3}}
-			{item "rpg40" "grenade" 1000 {cell 0 13}}
-			{item "signal" "heavy" "grenade" 1000 {cell 4 13}}
-			{item "smoke" "grenade" 1000 {cell 5 4}}
+			{item "bandage" 4990 {cell 10 4}}
+			{item "dynamite" 990 {cell 8 3}}
+			{item "knife_union" 990 {cell 8 2}}
+			{item "remote" "mine" 990 {cell 3 4}}
+			{item "sapper_shovel" 990 {cell 8 0}}
+			{item "us_body_armor" 990 {cell 0 4}}
+			{item "usa-helmet_2" 990 {cell 10 2}}
+			{item "f1" "grenade" 990 {cell 7 4}}
+			{item "m61" "grenade" 990 {cell 11 0}}
+			{item "n73at" "grenade" 990 {cell 2 3}}
+			{item "rpg40" "grenade" 990 {cell 0 13}}
+			{item "signal" "heavy" "grenade" 990 {cell 4 13}}
+			{item "smoke" "grenade" 990 {cell 5 4}}
 			{item "hmgun" "ammo" 29462 {cell 8 11}}
 			{item "hmgun" "bzt" "ammo" 16960 {cell 10 11}}
 			{item "m18rr" "ap" "ammo" 1666 {cell 9 7}}
