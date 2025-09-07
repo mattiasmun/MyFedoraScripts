@@ -1665,6 +1665,7 @@ screen \
 sdl2-compat \
 selinux-policy-targeted \
 sessreg \
+setroubleshoot \
 setup \
 sgml-common \
 shadow-utils \
@@ -1722,6 +1723,7 @@ syslinux-extlinux \
 syslinux-extlinux-nonlinux \
 syslinux-nonlinux \
 sysprof-capture-devel \
+system-config-language \
 system-config-printer-udev \
 systemd \
 systemd-devel \
