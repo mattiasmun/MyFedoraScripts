@@ -98,6 +98,7 @@ bash-color-prompt \
 bash-completion \
 bc \
 bind-utils \
+binutils \
 bison \
 bleachbit \
 blivet-gui \
@@ -191,6 +192,7 @@ cpu-x-data \
 crontabs \
 cryptsetup \
 cscope \
+ctags \
 cups \
 cups-browsed \
 cups-filters \
@@ -255,6 +257,7 @@ efibootmgr \
 egl-gbm \
 egl-wayland \
 egl-x11 \
+elfutils \
 elfutils-debuginfod-client \
 elfutils-debuginfod-client-devel \
 elfutils-devel \
@@ -293,6 +296,7 @@ firefox \
 firewall-config \
 firewalld \
 flac-libs \
+flatpak \
 flex \
 flexiblas \
 flexiblas-devel \
@@ -331,6 +335,7 @@ gcc-gfortran \
 gcc-plugin-annobin \
 gdal-devel \
 gdal-libs \
+gdb \
 gdbm-libs \
 gdcm \
 gdisk \
@@ -344,6 +349,7 @@ geany-libgeany \
 gedit \
 gegl04 \
 gegl04-matting-levin \
+genisoimage \
 geos \
 geos-devel \
 gettext-common-devel \
@@ -786,6 +792,7 @@ libreoffice-graphicfilter \
 libreoffice-help-sv \
 libreoffice-impress \
 libreoffice-langpack-sv \
+libreoffice-pyuno \
 libreoffice-writer \
 libreoffice-x11 \
 librsvg2 \
@@ -1306,11 +1313,13 @@ pipewire \
 pipewire-alsa \
 pipewire-codec-aptx \
 pipewire-gstreamer \
+pipewire-jack-audio-connection-kit \
 pipewire-libs \
 pipewire-pulseaudio \
 pipewire-utils \
 pixman \
 pixman-devel \
+pkgconf \
 plocate \
 plymouth \
 plymouth-system-theme \
@@ -1666,6 +1675,7 @@ sil-mingzat-fonts \
 sil-nuosu-fonts \
 simple-scan \
 simplescreenrecorder \
+skopeo \
 smartmontools \
 smc-anjalioldlipi-fonts \
 smc-dyuthi-fonts \
@@ -1805,6 +1815,7 @@ vlc-gui-skins2 \
 vlc-libs \
 vlc-plugin-ffmpeg \
 vlc-plugin-gnome \
+vlc-plugin-gstreamer \
 vlc-plugin-lua \
 vlc-plugin-notify \
 vlc-plugin-pipewire \
