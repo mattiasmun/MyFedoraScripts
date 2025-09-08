@@ -324,6 +324,7 @@ fribidi-devel \
 fros-gnome \
 fuse-sshfs \
 fwupd \
+fzf \
 gameconqueror \
 gamemode \
 gavl \
@@ -786,12 +787,15 @@ libpsl-devel \
 libqhull_r \
 libquadmath \
 libquadmath-devel \
+libreoffice-base \
 libreoffice-calc \
+libreoffice-draw \
 libreoffice-emailmerge \
 libreoffice-graphicfilter \
 libreoffice-help-sv \
 libreoffice-impress \
 libreoffice-langpack-sv \
+libreoffice-math \
 libreoffice-pyuno \
 libreoffice-writer \
 libreoffice-x11 \
@@ -1763,6 +1767,7 @@ texlive-texlive-scripts \
 texlive-texlive.infra \
 texlive-unicode-data \
 texttopaps \
+thefuck \
 thermald \
 thunderbird \
 thunderbird-librnp-rnp \
@@ -1928,5 +1933,6 @@ zip \
 zita-convolver \
 zlib-ng-compat \
 zlib-ng-compat-devel \
+zoxide \
 zram-generator-defaults \
 zziplib
