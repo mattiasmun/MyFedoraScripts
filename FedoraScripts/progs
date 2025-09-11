@@ -287,6 +287,7 @@ fedora-flathub-remote \
 fedora-release-workstation \
 fedora-workstation-backgrounds \
 fedora-workstation-repositories \
+ffmpeg \
 fftw-libs-single \
 file \
 file-roller \
@@ -472,6 +473,7 @@ gstreamer1-plugin-openh264 \
 gstreamer1-plugins-bad-free \
 gstreamer1-plugins-bad-free-devel \
 gstreamer1-plugins-bad-free-extras \
+gstreamer1-plugins-bad-freeworld \
 gstreamer1-plugins-base-devel \
 gstreamer1-plugins-base-tools \
 gstreamer1-plugins-good \
@@ -586,6 +588,7 @@ kernel-devel \
 kernel-devel-matched \
 kernel-headers \
 kernel-modules \
+kernel-modules-core \
 kernel-modules-extra \
 kernel-srpm-macros \
 kexec-tools \
@@ -1679,7 +1682,6 @@ sil-abyssinica-fonts \
 sil-mingzat-fonts \
 sil-nuosu-fonts \
 simple-scan \
-simplescreenrecorder \
 skopeo \
 smartmontools \
 smc-anjalioldlipi-fonts \
@@ -1832,6 +1834,7 @@ vlc-plugins-base \
 vlc-plugins-extra \
 vlc-plugins-freeworld \
 vlc-plugins-video-out \
+vokoscreenNG \
 vtk \
 vulkan-headers \
 vulkan-loader \
