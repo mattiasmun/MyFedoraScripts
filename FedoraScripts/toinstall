@@ -51,11 +51,11 @@ else
 fi
 
 # Run the script for bash profile and autostart.
-if [ -x "$SCRIPT_DIR/bashprofileandautostart" ]; then
-    echo "Running 'bashprofileandautostart' script..."
-    "$SCRIPT_DIR/bashprofileandautostart"
+if [ -x "$SCRIPT_DIR/setup-my-env.sh" ]; then
+    echo "Running 'setup-my-env.sh' script..."
+    "$SCRIPT_DIR/setup-my-env.sh"
 else
-    echo "Warning: 'bashprofileandautostart' script not found or is not executable. Skipping."
+    echo "Warning: 'setup-my-env.sh' script not found or is not executable. Skipping."
 fi
 
 # Run the script to install programs.

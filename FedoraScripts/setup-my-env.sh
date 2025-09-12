@@ -4,7 +4,7 @@
 # This script automates three main tasks:
 # 1. Adds a custom script directory to the user's PATH in .bashrc.
 # 2. Creates necessary directories and copies a .desktop file for autostart
-#    and application registration.
+#	and application registration.
 # 3. Copies a bash history file to the user's home directory if it doesn't exist.
 # ==============================================================================
 
@@ -22,23 +22,27 @@ BASH_HISTORY_TARGET2="$HOME/.bash_history2"
 # --- Add Directory to PATH in .bashrc ---
 echo "--- Step 1: Updating PATH in $BASHRC_FILE ---"
 
-# The line to be added to .bashrc
-PATH_LINE="PATH=\"\$PATH:$SOURCE_DIR\";export PATH"
-
-# Check if the line already exists to prevent duplication
-if grep -qF -- "$PATH_LINE" "$BASHRC_FILE"; then
-    echo "PATH already contains '$SOURCE_DIR'. No changes needed."
+# We will add a conditional block to .bashrc to check the PATH.
+# First, we check if the block has already been added by looking for a unique marker.
+if grep -qF -- "# Path setup added by setup-my-env.sh" "$BASHRC_FILE"; then
+	echo "The conditional PATH block already exists in '$BASHRC_FILE'. No changes needed."
 else
-    # Create a backup of the original file for safety
-    cp "$BASHRC_FILE" "${BASHRC_FILE}.bak"
-    echo "Backup created at ${BASHRC_FILE}.bak"
+	# Create a backup of the original file for safety
+	cp "$BASHRC_FILE" "${BASHRC_FILE}.bak"
+	echo "Backup created at ${BASHRC_FILE}.bak"
 
-    # Append the new PATH line to .bashrc
-    echo "" >> "$BASHRC_FILE"
-    echo "# Added by the setup script to include custom scripts" >> "$BASHRC_FILE"
-    echo "$PATH_LINE" >> "$BASHRC_FILE"
-    
-    echo "Successfully added '$SOURCE_DIR' to PATH."
+	# Append the new PATH block to .bashrc using a here document.
+	# The 'EOF' is quoted to prevent variables from being expanded here.
+	cat << 'EOF' >> "$BASHRC_FILE"
+
+# Path setup added by setup-my-env.sh
+# This conditional check ensures the directory is added to PATH only if it's not already present.
+if [[ ":$PATH:" != *":$HOME/Bash/MyFedoraScripts/FedoraScripts:"* ]]; then
+	export PATH="$PATH:$HOME/Bash/MyFedoraScripts/FedoraScripts"
+fi
+EOF
+	
+	echo "Successfully added the PATH conditional block to '$BASHRC_FILE'."
 fi
 
 # --- Copy .desktop file to Autostart and Applications directories ---
@@ -47,9 +51,9 @@ echo "--- Step 2: Copying $DESKTOP_FILE ---"
 
 # Check if the source .desktop file exists
 if [ ! -f "$DESKTOP_FILE" ]; then
-    echo "Error: The desktop file '$DESKTOP_FILE' does not exist."
-    echo "Please ensure the file is in the correct location and try again."
-    exit 1
+	echo "Error: The desktop file '$DESKTOP_FILE' does not exist."
+	echo "Please ensure the file is in the correct location and try again."
+	exit 1
 fi
 
 # Create autostart directory if it doesn't exist
@@ -60,9 +64,9 @@ mkdir -p "$AUTOSTART_DIR"
 echo "Copying $DESKTOP_FILE to $AUTOSTART_DIR"
 cp -f "$DESKTOP_FILE" "$AUTOSTART_DIR"
 if [ $? -eq 0 ]; then
-    echo "Successfully copied to autostart directory."
+	echo "Successfully copied to autostart directory."
 else
-    echo "Error: Failed to copy to autostart directory."
+	echo "Error: Failed to copy to autostart directory."
 fi
 
 # Create applications directory if it doesn't exist
@@ -73,9 +77,9 @@ mkdir -p "$APPLICATIONS_DIR"
 echo "Copying $DESKTOP_FILE to $APPLICATIONS_DIR"
 cp -f "$DESKTOP_FILE" "$APPLICATIONS_DIR"
 if [ $? -eq 0 ]; then
-    echo "Successfully copied to applications directory."
+	echo "Successfully copied to applications directory."
 else
-    echo "Error: Failed to copy to applications directory."
+	echo "Error: Failed to copy to applications directory."
 fi
 
 # --- Copy .bash_history file if it doesn't exist ---
@@ -84,23 +88,23 @@ echo "--- Step 3: Copying Bash History files ---"
 
 # Check if the source history file exists
 if [ ! -f "$BASH_HISTORY_SOURCE" ]; then
-    echo "Warning: The source history file '$BASH_HISTORY_SOURCE' does not exist. Skipping this step."
+	echo "Warning: The source history file '$BASH_HISTORY_SOURCE' does not exist. Skipping this step."
 else
-    # Check if the first target history file exists
-    if [ ! -f "$BASH_HISTORY_TARGET1" ]; then
-        echo "Copying $BASH_HISTORY_SOURCE to $BASH_HISTORY_TARGET1"
-        cp -f "$BASH_HISTORY_SOURCE" "$BASH_HISTORY_TARGET1"
-    else
-        echo "$BASH_HISTORY_TARGET1 already exists. Skipping copy."
-    fi
+	# Check if the first target history file exists
+	if [ ! -f "$BASH_HISTORY_TARGET1" ]; then
+		echo "Copying $BASH_HISTORY_SOURCE to $BASH_HISTORY_TARGET1"
+		cp -f "$BASH_HISTORY_SOURCE" "$BASH_HISTORY_TARGET1"
+	else
+		echo "$BASH_HISTORY_TARGET1 already exists. Skipping copy."
+	fi
 
-    # Check if the second target history file exists
-    if [ ! -f "$BASH_HISTORY_TARGET2" ]; then
-        echo "Copying $BASH_HISTORY_SOURCE to $BASH_HISTORY_TARGET2"
-        cp -f "$BASH_HISTORY_SOURCE" "$BASH_HISTORY_TARGET2"
-    else
-        echo "$BASH_HISTORY_TARGET2 already exists. Skipping copy."
-    fi
+	# Check if the second target history file exists
+	if [ ! -f "$BASH_HISTORY_TARGET2" ]; then
+		echo "Copying $BASH_HISTORY_SOURCE to $BASH_HISTORY_TARGET2"
+		cp -f "$BASH_HISTORY_SOURCE" "$BASH_HISTORY_TARGET2"
+	else
+		echo "$BASH_HISTORY_TARGET2 already exists. Skipping copy."
+	fi
 fi
 
 echo ""

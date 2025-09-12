@@ -1,4 +1,3 @@
-./bashprofileandautostart
 ./build.sh
 ./build.sh && sudo ./build.sh install
 ./postinstall
@@ -6,7 +5,6 @@
 ./toinstall
 aplay raw.wav
 auto_click_python 12 0.025
-bashprofileandautostart
 bc -lq
 c
 cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
