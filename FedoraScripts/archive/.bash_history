@@ -37,11 +37,11 @@ clicker 120 0.025
 clickfast Navigator.org.mozilla.firefox 9 0.24362375
 clickfast Navigator.org.mozilla.firefox 9999 0.24362375
 closeall
-cp -r ~/Bash/MyFedoraScripts/FedoraScripts/archive/car car
+cp "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set"
 d
 d $(tu 21:00:00)
-d $(tu 22:00:00)
 data="sudo -A dnf -y install "
+df
 df -h
 dnf
 dnf --help
@@ -49,7 +49,10 @@ dnf --version
 dnf -v
 dnf check
 dnf check-upgrade
+dnf group list
 dnf history info last
+dnf history list
+dnf history list | more
 dnf repoquery --duplicates
 dnf repoquery --extras
 dnf repoquery --installonly
@@ -68,20 +71,19 @@ du -c
 du car
 echo "$data$que" >> "$f"
 echo $((1+2))
+echo $PATH
 echo $SHELL
 echo $XDG_SESSION_TYPE
 echo $f
 echo $que
 echo key k:26 k:39 k:40 | dotoolc
 echo key shift+1 x:exclam shift+k:2 | dotoolc
-echo r
 env
 ex --help
+exit
 f="$HOME/Bash/MyFedoraScripts/FedoraScripts/progs"
 ffprobe --help
 ffprobe output.mp3
-ffprobe output2.mp3
-ffprobe raw.wav
 fg
 find
 find --help
@@ -95,6 +97,10 @@ find_and_sort_files female
 find_and_sort_files mi
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak update -y
+for file in "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/gaz_aa/gaz_aa_supp+++++++++.def" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/gmc/gmc_supp+++++++++.def" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/car/gaz_aa/gaz_aa_supp+++++++++.def" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/car/gmc/gmc_supp+++++++++.def" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/car/opel_blitz/opel_blitz_supp+++++++++.def"; do cp "$HOME/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "$file"; done
+fuck
+fuck --help
+fzf
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3259735408/scene/set/mod_config/superhealthbar.inc"
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/tank_medium/t34_85m/t34_85m+++++++++.def"
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men"
@@ -103,6 +109,7 @@ gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/sc
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc"
 gedit "$HOME/Men of War II/log_cli/cli_2025-02-15_14-41-53.log"
+gedit "$HOME/Men of War II/packages/editor-local-changes/global/map/single/mod_example/bonusmission_2/0.mi"
 gedit "scene/entity/-vehicle/tank_medium/m4a3_105/m4a3_105+++++++++.def"
 gedit $HOME/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua &
 gedit $HOME/.local/share/Steam/steamapps/workshop/content/1066780/2848415950/res/scripts/wkpt_params.lua &
@@ -143,24 +150,23 @@ gs --help
 htop
 id -nG
 javacfg
+jedit
 l
 lame --help
 lame --longhelp
 lame raw.wav output.mp3
 ll
 ll "$HOME/Men of War II/sentry/last_crash"
+ll $(locate auto_restore)
 ll $(locate dnf.log)
 ll $(locate dnf5.log)
-ll $(locate supp++++)
-ll $HOME/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/03dabf48-21c2-496e-dbc10998-8684603a_stdout.txt
-ll $HOME/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
+ll $(locate supp+++++++++.def)
 ll /etc/dnf/automatic.conf
-ll /etc/dnf/automatic.conf.rpmnew
-ll /etc/udev/rules.d/99-input.rules
-ll /usr/share/dnf5/dnf5-plugins/automatic.conf
-ll Bash/MyFedoraScripts/FedoraScripts/
+ll "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 ln --help
 lsattr Dokument/IDLE_py.py
+lsblk
+lspci
 make
 man dotool
 man wlrctl
@@ -178,6 +184,7 @@ meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 meld Dokument/IDLE_py.py Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py
 mkdir -p entity/-vehicle/car/opel_blitz
+more --help
 mpg123
 mplayer
 mplayer output.mp3
@@ -204,7 +211,9 @@ r
 rm -r 3480663038/global/sound/human/talk/rus_sniper_female 3480663038/global/sound/human/talk/rus_medic_female 3271667155/global/sound/human/talk/rus_medic_female 3271667155/global/sound/human/talk/rus_sniper_female
 rm 3480663038/scene/entity_soviet_female.pak 3271667155/scene/entity_soviet_female.pak 3480663038/global/interface/scene/portrait/rus_sniper_female.png 3271667155/global/interface/scene/portrait/rus_sniper_female.png 3480663038/global/interface/scene/portrait/rus_medic_female.png 3271667155/global/interface/scene/portrait/rus_medic_female.png
 rm ~/.bash_history-*.tmp
+setup-my-env.sh
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
+source ~/.bashrc
 steam steam://rungameid/1128860
 strcmp asdfsdf gertergdfg
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever=43 &
@@ -217,25 +226,19 @@ sudo -A dnf-automatic
 sudo -A gedit /etc/dnf/automatic.conf
 sudo -A make install
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
-sudo -A nano /etc/dnf/automatic.conf
-sudo -A systemctl start dnf5-automatic.service
+sudo -A systemctl restart gdm
 sudo -A updatedb
 sudo -A wmctrl -xl
 sudo ./build.sh install
-sudo gedit /etc/udev/rules.d/99-input.rules
-sudo systemctl restart gdm
-sudo udevadm control --reload && sudo udevadm trigger
-sudo updatedb
-sudo usermod -a -G input $USER
 sudo wlrctl keyboard type "Hello, world!"
 sudo wlrctl pointer move 50 -70
 sudo wlrctl window focus firefox
 systemctl --user status dotool.service
 systemctl enable --now dnf5-automatic.timer
 systemctl status
+systemctl status bluetooth
 systemctl status dnf5-automatic.service
 systemctl status dnf5-automatic.timer
-systemctl status gdm
 uname -a
 uname -r
 unique_lines
@@ -261,3 +264,9 @@ xev
 yev
 yt-dlp -F https://www.youtube.com/watch?v=E9lVXoezkFM
 yt-dlp -f 140 https://www.youtube.com/watch?v=E9lVXoezkFM
+z --help
+z Fe
+zoxide --help
+zoxide add --help
+zoxide add "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
+zoxide edit
