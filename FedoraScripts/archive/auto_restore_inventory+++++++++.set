@@ -1,45 +1,41 @@
 
 {recovery_items
+	{"ammo m18rr ap" 1}
+	{"ammo m18rr fg" 1}
+	{"ammo rs310" 7}
+	{"ammo rs82" 5}
 	{"bandage" 1}
-	{"repair_kit" 1}
-	{"sandbag_kit" 1}
-	{"sandbag_kit2" 1}
-	{"dot_kit" 1}
-	{"sapper_shovel" 1}
-	{"fuel_point_kit" 1}
-	{"supp_point_kit" 1}
-	{"repair_point_kit" 1}
-	{"med_point_kit" 1}
-	{"medkit" 1}
-	{"plant" 1}
-	{"remote mine" 1}
-	{"dynamite" 1}
 	{"barbwire_kit" 1}
-	{"hedgehog_kit" 1}
-	{"tower_usa_kit" 1}
-	{"mine_detector" 1}
-	{"wirecutters" 1}
-
-	{"morphine" 1}
-	{"molotov_coctail grenade" 1}
-
+	{"dot_kit" 1}
+	{"dynamite" 1}
+	{"f1 grenade" 1}
+	{"fuel_point_kit" 1}
 	{"grenade m24" 1}
 	{"grenade m24x7" 1}
-	{"m39 grenade" 1}
-	{"pwm1 grenade" 1}
 	{"grenade m61" 1}
 	{"grenade n73at" 1}
+	{"hedgehog_kit" 1}
+	{"m39 grenade" 1}
+	{"med_point_kit" 1}
+	{"medkit" 1}
+	{"mine_detector" 1}
 	{"mk1 grenade" 1}
-	{"f1 grenade" 1}
+	{"molotov_coctail grenade" 1}
+	{"morphine" 1}
+	{"plant" 1}
+	{"pwm1 grenade" 1}
+	{"remote mine" 1}
+	{"repair_kit" 1}
+	{"repair_point_kit" 1}
+	{"rgd33x5 grenade" 1}
 	{"rpg40 grenade" 1}
 	{"rpg43 grenade" 1}
-	{"rgd33x5 grenade" 1}
-	{"smoke grenade" 1}
+	{"sandbag_kit" 1}
+	{"sandbag_kit2" 1}
+	{"sapper_shovel" 1}
 	{"signal grenade" 1}
-	
-	{"ammo m18rr fg" 1}
-	{"ammo m18rr ap" 1}
-
-	{"ammo rs82" 5}
-	{"ammo rs310" 7}
+	{"smoke grenade" 1}
+	{"supp_point_kit" 1}
+	{"tower_usa_kit" 1}
+	{"wirecutters" 1}
 }

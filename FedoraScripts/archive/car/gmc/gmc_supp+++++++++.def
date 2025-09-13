@@ -14,35 +14,35 @@
 			{clear}
 			{size 12 16}
 			{Weight 100000}
-			{item "avs36" 100 filled {cell 0 12}}
-			{item "bandage" 4990 {cell 2 6}}
-			{item "barbwire_kit" 990 {cell 10 10}}
-			{item "browning" 100 filling "hmgun" "bzt" "ammo" 200 {cell 6 14}}
-			{item "can" 100 filling "fuel" 60 {cell 6 5}}
-			{item "dynamite" 990 {cell 8 7}}
-			{item "f1" "grenade" 990 {cell 11 7}}
-			{item "hedgehog_kit" 990 {cell 10 12}}
+			{item "avs36" 99 filled {cell 0 12}}
+			{item "bandage" 99 {cell 2 6}}
+			{item "barbwire_kit" 99 {cell 10 10}}
+			{item "browning" 99 filling "hmgun" "bzt" "ammo" 200 {cell 6 14}}
+			{item "can" 99 filling "fuel" 60 {cell 6 5}}
+			{item "dynamite" 99 {cell 8 7}}
+			{item "f1" "grenade" 30 {cell 11 7}}
+			{item "hedgehog_kit" 99 {cell 10 12}}
 			{item "hmgun" "bzt" "ammo" 120352 {cell 0 7}}
-			{item "knife_union" 990 {cell 2 5}}
-			{item "m18recoilless" 100 filled {cell 0 14}}
-			{item "m18rr" "ap" "ammo" 1666 {cell 3 9}}
-			{item "m61" "grenade" 990 {cell 10 7}}
-			{item "n73at" "grenade" 990 {cell 10 9}}
+			{item "knife_union" 99 {cell 2 5}}
+			{item "m18recoilless" 99 filled {cell 0 14}}
+			{item "m61" "grenade" 30 {cell 10 7}}
+			{item "n73at" "grenade" 30 {cell 10 9}}
 			{item "ptr" "ammo" 25000 {cell 0 6}}
-			{item "remote" "mine" 990 {cell 6 7}}
-			{item "repair_kit" 990 {cell 4 5}}
+			{item "remote" "mine" 99 {cell 6 7}}
+			{item "repair_kit" 99 {cell 4 5}}
 			{item "rifle" "ammo" 50000 {cell 1 5}}
-			{item "rpg40" "grenade" 990 {cell 10 8}}
-			{item "sandbag_kit" 990 {cell 2 7}}
-			{item "sandbag_kit2" 990 {cell 4 7}}
-			{item "sapper_shovel" 990 {cell 3 10}}
-			{item "shotgun" 100 filled {cell 6 10}}
-			{item "signal" "heavy" "grenade" 990 {cell 8 9}}
-			{item "smoke" "grenade" 990 {cell 6 9}}
-			{item "supp_point_kit" 990 {cell 8 5}}
-			{item "svt40_sniper" 100 filled {cell 5 12}}
-			{item "us_body_armor" 990 {cell 0 9}}
-			{item "usa-helmet_2" 990 {cell 10 5}}
+			{item "rpg40" "grenade" 30 {cell 10 8}}
+			{item "sandbag_kit" 99 {cell 2 7}}
+			{item "sandbag_kit2" 99 {cell 4 7}}
+			{item "sapper_shovel" 99 {cell 3 10}}
+			{item "shotgun" 99 filled {cell 6 10}}
+			{item "smoke" "grenade" 30 {cell 6 9}}
+			{item "supp_point_kit" 99 {cell 8 5}}
+			{item "svt40_sniper" 99 filled {cell 5 12}}
+			{item "us_body_armor" 99 {cell 0 9}}
+			{item "usa-helmet_2" 99 {cell 10 5}}
+			{item "signal" "heavy" "grenade" 30 {cell 8 9}}
+			{item "m18rr" "ap" "ammo" 1666 {cell 3 9}}
 		}
 	}
 }
