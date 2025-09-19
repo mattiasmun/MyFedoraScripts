@@ -3,23 +3,23 @@
 ./postinstall
 ./progs
 ./toinstall
-aplay raw.wav
 auto_click_python 12 0.025
 bc -lq
 c
+cat "$HOME/.git-credentials"
+cat "$HOME/.gitconfig"
+cat "$HOME/.gitignore_global"
+cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle"
 cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
 cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc"
-cat $HOME/.git-credentials
-cat $HOME/.gitconfig
-cat $HOME/.gitignore_global
-cat $HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle
-cat $HOME/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt
+cat "$HOME/.local/share/Steam/userdata/1162978727/1066780/local/crash_dump/stdout.txt"
 cat /etc/resolv.conf
 cat /usr/share/dnf5/dnf5-plugins/automatic.conf
 cat README.md
 cat ~/.gitconfig
 cd
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II/"
+cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
@@ -27,8 +27,6 @@ cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle"
 cd "$HOME/Men of War II/sentry/"
 cd ..
-cd .local/share/Steam/steamapps/workshop/content/1128860
-cd Bash/MyFedoraScripts/FedoraScripts/
 cd Projects/
 cd dotool/
 cd ~/Bash/MyFedoraScripts/FedoraScripts/
@@ -40,10 +38,8 @@ closeall
 cp "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set"
 d
 d $(tu 21:00:00)
-data="sudo -A dnf -y install "
 df
 df -h
-dnf
 dnf --help
 dnf --version
 dnf -v
@@ -55,12 +51,12 @@ dnf history list
 dnf history list | more
 dnf repoquery --duplicates
 dnf repoquery --extras
+dnf repoquery --help
 dnf repoquery --installonly
 dnf repoquery --leaves
 dnf repoquery --leaves | wc -l
 dnf repoquery --unneeded
 dnf repoquery --userinstalled --queryformat "%{name} \"
-dnf5 repoquery --help
 dnfsysupgr
 dnfusrins
 dotool --list-keys
@@ -69,19 +65,15 @@ du
 du --help
 du -c
 du car
-echo "$data$que" >> "$f"
 echo $((1+2))
 echo $PATH
 echo $SHELL
 echo $XDG_SESSION_TYPE
-echo $f
-echo $que
 echo key k:26 k:39 k:40 | dotoolc
 echo key shift+1 x:exclam shift+k:2 | dotoolc
 env
 ex --help
 exit
-f="$HOME/Bash/MyFedoraScripts/FedoraScripts/progs"
 ffprobe --help
 ffprobe output.mp3
 fg
@@ -101,8 +93,11 @@ for file in "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667
 fuck
 fuck --help
 fzf
+gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua"
+gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1066780/2848415950/res/scripts/wkpt_params.lua"
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3259735408/scene/set/mod_config/superhealthbar.inc"
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/tank_medium/t34_85m/t34_85m+++++++++.def"
+gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/properties/resupply.inc"
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/sniperx_ai.set men"
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/special/cheat.set"
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle/ptr/solothurn_s18_1000+++++++++"
@@ -110,12 +105,6 @@ gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/sc
 gedit "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc"
 gedit "$HOME/Men of War II/log_cli/cli_2025-02-15_14-41-53.log"
 gedit "$HOME/Men of War II/packages/editor-local-changes/global/map/single/mod_example/bonusmission_2/0.mi"
-gedit "scene/entity/-vehicle/tank_medium/m4a3_105/m4a3_105+++++++++.def"
-gedit $HOME/.local/share/Steam/steamapps/workshop/content/1066780/2760877761/res/scripts/wkre_params.lua &
-gedit $HOME/.local/share/Steam/steamapps/workshop/content/1066780/2848415950/res/scripts/wkpt_params.lua &
-gedit $HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/properties/resupply.inc
-gedit $HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc
-gedit ./scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def
 gedit .bash_history
 gedit .bash_history2
 gedit .bashrc
@@ -132,17 +121,7 @@ gitty ~/529340/
 gitty ~/Bash/MyFedoraScripts/
 glxgears -swapinterval 0 & sleep 15.5; pkill glxgears
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
-grep -lirI "size 10 16" | xargs -i@ sed -i "s/Size\ 10\ 16/size\ 12\ 16/g" @
-grep -lirI "size 10 16" | xargs -i@ sed -i "s/size\ 10\ 16/size\ 12\ 16/g" @
-grep -nirI "a_supp"
-grep -nirI "gitcfg"
-grep -nirI "opel"
-grep -nirI "size 10 16"
-grep -nirI "size 12 14"
-grep -nirI "size 12 16"
-grep -nirI "supp"
 grep -nirI "supp++"
-grep -nirI "zis"
 groupadd -f input
 groups
 gs
@@ -154,15 +133,12 @@ jedit
 l
 lame --help
 lame --longhelp
-lame raw.wav output.mp3
 ll
+ll "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 ll "$HOME/Men of War II/sentry/last_crash"
 ll $(locate auto_restore)
-ll $(locate dnf.log)
-ll $(locate dnf5.log)
 ll $(locate supp+++++++++.def)
 ll /etc/dnf/automatic.conf
-ll "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
 ln --help
 lsattr Dokument/IDLE_py.py
 lsblk
@@ -171,25 +147,18 @@ make
 man dotool
 man wlrctl
 mediainfo
+meld "$HOME/.bash_history" "$HOME/.bash_history2" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"
+meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py"
 meld "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/auto_restore_inventory+++++++++.set"
 meld "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/set/auto_restore_inventory+++++++++.set"
 meld "$HOME/Dokument/Men_of_war2/corpsmanx_ai.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/corpsmanx_ai.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/corpsmanx_ai.set"
 meld "$HOME/Dokument/Men_of_war2/engineerx_ai.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/engineerx_ai.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/engineerx_ai.set"
-meld "$HOME/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def"
-meld "$HOME/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/car/gaz_aa/gaz_aa_supp+++++++++.def" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/gaz_aa/gaz_aa_supp+++++++++.def"
-meld "$HOME/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/car/gmc/gmc_supp+++++++++.def" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/gmc/gmc_supp+++++++++.def"
-meld "$HOME/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/car/opel_blitz/opel_blitz_supp+++++++++.def" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def"
-meld .bash_history .bash_history2 Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
-meld Dokument/IDLE_py.py Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py
 mkdir -p entity/-vehicle/car/opel_blitz
 more --help
 mpg123
 mplayer
-mplayer output.mp3
-nano /var/log/dnf.log
-nano /var/log/dnf5.log
 nautilus .
 newton_raphson
 nslookup google.com
@@ -206,7 +175,6 @@ pkill -sigkill Civ6
 pkill -sigkill TransportFever2
 pkill -sigkill mow2
 py
-quodlibet hej.wav &
 r
 rm -r 3480663038/global/sound/human/talk/rus_sniper_female 3480663038/global/sound/human/talk/rus_medic_female 3271667155/global/sound/human/talk/rus_medic_female 3271667155/global/sound/human/talk/rus_sniper_female
 rm 3480663038/scene/entity_soviet_female.pak 3271667155/scene/entity_soviet_female.pak 3480663038/global/interface/scene/portrait/rus_sniper_female.png 3271667155/global/interface/scene/portrait/rus_sniper_female.png 3480663038/global/interface/scene/portrait/rus_medic_female.png 3271667155/global/interface/scene/portrait/rus_medic_female.png
@@ -244,7 +212,7 @@ uname -r
 unique_lines
 update-alternatives
 update-alternatives --list
-wc -l Bash/MyFedoraScripts/FedoraScripts/progs
+wc -l "$HOME/Bash/MyFedoraScripts/FedoraScripts/progs"
 wc -lL .bash_history
 wc -lL .bash_history2
 wc -lL < .bash_history
@@ -267,6 +235,6 @@ yt-dlp -f 140 https://www.youtube.com/watch?v=E9lVXoezkFM
 z --help
 z Fe
 zoxide --help
-zoxide add --help
 zoxide add "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
+zoxide add --help
 zoxide edit
