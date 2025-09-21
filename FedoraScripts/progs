@@ -1026,6 +1026,7 @@ nvidia-persistenced \
 nvidia-settings \
 nvidia-xconfig \
 nvme-cli \
+nvtop \
 nxpwireless-firmware \
 ocaml-srpm-macros \
 ocrmypdf \
