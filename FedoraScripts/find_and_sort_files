@@ -12,17 +12,29 @@ SEARCH_STRING_LOWER=$(echo "$1" | tr '[:upper:]' '[:lower:]') # Konvertera söks
 START_PATH="." # Sök alltid från aktuell katalog
 
 echo "Söker efter filer vars SÖKVÄG/FILNAMN innehåller '$1' (skiftlägesokänsligt), från '$START_PATH'…"
-echo "Sorterar efter storlek i fallande ordning:"
-echo "----------------------------------------------------"
 
 # Använd find för att hitta filer, filtrera sedan i while-loopen för filnamn/sökväg
-find "$START_PATH" -type f -print0 | \
+# Spara resultatet i en temporär variabel för att kunna kontrollera antalet
+FOUND_FILES=$(find "$START_PATH" -type f -print0 | \
     while IFS= read -r -d $'\0' filename; do
         filename_lower=$(echo "$filename" | tr '[:upper:]' '[:lower:]')
         if [[ "$filename_lower" == *"$SEARCH_STRING_LOWER"* ]]; then
             printf "%s\0" "$filename" # Skicka null-avgränsade filnamn vidare
         fi
-    done | \
+    done)
+
+# Kontrollera om inga filer hittades
+if [ -z "$FOUND_FILES" ]; then
+    echo "----------------------------------------------------"
+    echo "Inga filer hittades som matchar söksträngen."
+    exit 0
+fi
+
+echo "Sorterar efter storlek i fallande ordning:"
+echo "----------------------------------------------------"
+
+# Använd de funna filerna för att fortsätta pipelinen
+echo -n "$FOUND_FILES" | \
     xargs -0 du -b | \
     sort -nr | \
     while read -r size_bytes filename; do
@@ -32,20 +44,11 @@ find "$START_PATH" -type f -print0 | \
                 # ls -l utdata: permissions, links, owner, group, size, month, day, time, filename
                 # $5 = size (human readable)
                 # $6, $7, $8 = date/time (formatted)
-                # $9 till $NF = filename (använd $9 för att undvika problem med mellanslag i namn)
-                # För att få korrekt filnamn, skriv ut allt från och med fält 9.
-                # Om du vill ha enbart filnamnet, kan du behöva justera mer noga för mellanslag
                 
-                # Om vi vill ha exakt som du önskade: storlek, datum, tid, filnamn
-                # Notera att $9 kan vara problematiskt för filnamn med mellanslag
-                # En säkrare metod för att hämta filnamnet är att använda $0 som är hela raden
-                # och sedan ta bort den initiala ls-info
-                
-                # Alternativ för att få filnamnet som kan hantera mellanslag bättre:
-                # Loopa genom fält från $9 och framåt
+                # För att få korrekt filnamn som kan hantera mellanslag:
                 file_start_col = 9;
-                for (i = 9; i <= NF; i++) {
-                    if (i == 9) { filename_part = $i; }
+                for (i = file_start_col; i <= NF; i++) {
+                    if (i == file_start_col) { filename_part = $i; }
                     else { filename_part = filename_part " " $i; }
                 }
                 print $5, $6, $7, $8, filename_part
