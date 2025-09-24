@@ -13,28 +13,33 @@ START_PATH="." # Sök alltid från aktuell katalog
 
 echo "Söker efter filer vars SÖKVÄG/FILNAMN innehåller '$1' (skiftlägesokänsligt), från '$START_PATH'…"
 
-# Använd find för att hitta filer, filtrera sedan i while-loopen för filnamn/sökväg
-# Spara resultatet i en temporär variabel för att kunna kontrollera antalet
-FOUND_FILES=$(find "$START_PATH" -type f -print0 | \
+# Skapa en temporär fil för att lagra de hittade filnamnen
+temp_file=$(mktemp)
+
+# Sök efter filer, filtrera och spara resultatet som null-avgränsade strängar i den temporära filen.
+# Detta är den mest robusta metoden för att hantera filnamn med mellanslag.
+find "$START_PATH" -type f -print0 | \
     while IFS= read -r -d $'\0' filename; do
         filename_lower=$(echo "$filename" | tr '[:upper:]' '[:lower:]')
         if [[ "$filename_lower" == *"$SEARCH_STRING_LOWER"* ]]; then
             printf "%s\0" "$filename" # Skicka null-avgränsade filnamn vidare
         fi
-    done)
+    done > "$temp_file" # Omdirigera hela pipen till den temporära filen
 
-# Kontrollera om inga filer hittades
-if [ -z "$FOUND_FILES" ]; then
+# Kontrollera om den temporära filen är tom (storlek noll)
+if [ ! -s "$temp_file" ]; then
     echo "----------------------------------------------------"
     echo "Inga filer hittades som matchar söksträngen."
+    rm "$temp_file"
     exit 0
 fi
 
 echo "Sorterar efter storlek i fallande ordning:"
 echo "----------------------------------------------------"
 
-# Använd de funna filerna för att fortsätta pipelinen
-echo -n "$FOUND_FILES" | \
+# Använd de funna filerna från den temporära filen för att fortsätta pipelinen
+# 'cat' skickar innehållet till xargs som nu korrekt tolkar null-avgränsningarna.
+cat "$temp_file" | \
     xargs -0 du -b | \
     sort -nr | \
     while read -r size_bytes filename; do
@@ -54,3 +59,7 @@ echo -n "$FOUND_FILES" | \
                 print $5, $6, $7, $8, filename_part
             }'
     done
+
+# Rensa upp den temporära filen när programmet är klart
+rm "$temp_file"
+
