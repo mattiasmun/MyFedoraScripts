@@ -27,7 +27,7 @@
 			{item "m61" "grenade" 30 {cell 10 6}}
 			{item "n73at" "grenade" 30 {cell 4 7}}
 			{item "panzershreck" "ammo" 1000 {cell 3 11}}
-			{item "panzershreck" "weapon" 99 filled {cell 0 14}}
+			{item "panzershreck" "weapon" 99 filling "panzershreck" "ammo" 100 {cell 0 14}}
 			{item "remote" "mine" 99 {cell 6 12}}
 			{item "repair_kit" 99 {cell 8 9}}
 			{item "rpg40" "grenade" 30 {cell 0 7}}
