@@ -14,51 +14,38 @@
 			{clear}
 			{size 12 16}
 			{Weight 100000}
-			{item "avs36" 99 filled {cell 0 12}}
-			{item "bandage" 99 {cell 10 9}}
-			{item "barbwire_kit" 99 {cell 10 10}}
-			{item "browning" 99 filling "hmgun" "bzt" "ammo" 200 {cell 6 14}}
-			{item "can" 99 filling "fuel" 60 {cell 6 6}}
-			{item "dynamite" 99 {cell 8 8}}
-			{item "f1" "grenade" 30 {cell 3 6}}
-			{item "hedgehog_kit" 99 {cell 10 12}}
-			{item "hmgun" "bzt" "ammo" 24000 {cell 10 3}}
-			{item "hmgun" "bzt" "ammo" 24000 {cell 4 3}}
-			{item "hmgun" "bzt" "ammo" 24000 {cell 6 3}}
-			{item "hmgun" "bzt" "ammo" 24000 {cell 8 3}}
-			{item "knife_union" 99 {cell 10 8}}
-			{item "m18recoilless" 99 filled {cell 0 14}}
-			{item "m18rr" "ap" "ammo" 1666 {cell 3 9}}
-			{item "m61" "grenade" 30 {cell 2 6}}
-			{item "n73at" "grenade" 30 {cell 0 4}}
-			{item "ptr" "ammo" 6000 {cell 2 2}}
-			{item "ptr" "ammo" 6000 {cell 2 3}}
-			{item "ptr" "ammo" 6000 {cell 4 2}}
-			{item "ptr" "ammo" 6000 {cell 6 2}}
-			{item "remote" "mine" 99 {cell 6 8}}
-			{item "repair_kit" 99 {cell 4 5}}
-			{item "rifle" "ammo" 12000 {cell 10 2}}
-			{item "rifle" "ammo" 12000 {cell 11 2}}
-			{item "rifle" "ammo" 12000 {cell 8 2}}
-			{item "rifle" "ammo" 12000 {cell 9 2}}
-			{item "rpg40" "grenade" 30 {cell 2 4}}
-			{item "rpg43" "grenade" 30 {cell 0 5}}
-			{item "rpg43" "grenade" 30 {cell 0 6}}
-			{item "rpg43" "grenade" 30 {cell 2 5}}
-			{item "sandbag_kit" 99 {cell 2 7}}
-			{item "sandbag_kit2" 99 {cell 4 7}}
-			{item "sapper_shovel" 99 {cell 3 10}}
-			{item "shotgun" 99 filled {cell 6 10}}
-			{item "signal" "heavy" "grenade" 30 {cell 10 5}}
-			{item "signal" "heavy" "grenade" 30 {cell 10 6}}
-			{item "signal" "heavy" "grenade" 30 {cell 10 7}}
-			{item "signal" "heavy" "grenade" 30 {cell 6 5}}
-			{item "signal" "heavy" "grenade" 30 {cell 8 5}}
-			{item "smoke" "grenade" 30 {cell 0 3}}
-			{item "supp_point_kit" 99 {cell 8 6}}
-			{item "svt40_sniper" 99 filled {cell 5 12}}
-			{item "us_body_armor" 99 {cell 0 9}}
-			{item "usa-helmet_2" 99 {cell 0 7}}
+			{item "bandage" 99 {cell 10 11}}
+			{item "barbwire_kit" 99 {cell 8 14}}
+			{item "can" 99 filling "fuel" 60 {cell 6 10}}
+			{item "dynamite" 99 {cell 6 14}}
+			{item "f1" "grenade" 30 {cell 11 6}}
+			{item "hedgehog_kit" 99 {cell 10 14}}
+			{item "knife_union" 30 {cell 10 7}}
+			{item "knife_union" 30 {cell 6 7}}
+			{item "knife_union" 30 {cell 8 7}}
+			{item "m1941" 99 filling "mgun" "ammo" 3000 {cell 8 12}}
+			{item "m61" "grenade" 30 {cell 10 6}}
+			{item "n73at" "grenade" 30 {cell 4 7}}
+			{item "panzershreck" "ammo" 1000 {cell 3 11}}
+			{item "panzershreck" "weapon" 99 filled {cell 0 14}}
+			{item "remote" "mine" 99 {cell 6 12}}
+			{item "repair_kit" 99 {cell 8 9}}
+			{item "rpg40" "grenade" 30 {cell 0 7}}
+			{item "rpg43" "grenade" 30 {cell 0 8}}
+			{item "rpg43" "grenade" 30 {cell 2 7}}
+			{item "rpg43" "grenade" 30 {cell 2 8}}
+			{item "sandbag_kit" 99 {cell 2 9}}
+			{item "sandbag_kit2" 99 {cell 4 9}}
+			{item "sapper_shovel" 99 {cell 3 12}}
+			{item "signal" "heavy" "grenade" 30 {cell 10 8}}
+			{item "signal" "heavy" "grenade" 30 {cell 4 8}}
+			{item "signal" "heavy" "grenade" 30 {cell 6 8}}
+			{item "signal" "heavy" "grenade" 30 {cell 6 9}}
+			{item "signal" "heavy" "grenade" 30 {cell 8 8}}
+			{item "smoke" "grenade" 30 {cell 8 11}}
+			{item "supp_point_kit" 99 {cell 10 9}}
+			{item "us_body_armor" 99 {cell 0 11}}
+			{item "usa-helmet_2" 99 {cell 0 9}}
 		}
 	}
 }
