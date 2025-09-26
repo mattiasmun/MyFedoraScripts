@@ -19,19 +19,18 @@ cat README.md
 cat ~/.gitconfig
 cd
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II"
-cd "$HOME/.local/share/Steam/steamapps/common/Men of War II/"
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/entity"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
-cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger/"
+cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3480663038/scene/entity/-vehicle"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3553934930"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3553934930/scene/entity/-vehicle"
 cd "$HOME/Men of War II/packages/editor-local-changes/global"
-cd "$HOME/Men of War II/sentry/"
-cd -- -vehicle/
+cd "$HOME/Men of War II/sentry"
+cd -- -vehicle
 cd ..
 clicker 12 0.025
 clicker 120 0.025
@@ -107,8 +106,8 @@ git gc
 git pull
 git status
 gitcfg
-gitty ~/529340/
-gitty ~/Bash/MyFedoraScripts/
+gitty ~/529340
+gitty ~/Bash/MyFedoraScripts
 glxgears -swapinterval 0 & sleep 15.5; pkill glxgears
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
 grep -nirI "supp++"
@@ -124,7 +123,7 @@ l
 lame --help
 lame --longhelp
 ll
-ll "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
+ll "$HOME/Bash/MyFedoraScripts/FedoraScripts"
 ll "$HOME/Men of War II/sentry/last_crash"
 ll $(locate auto_restore)
 ll $(locate supp+++++++++.def)
@@ -174,8 +173,8 @@ pkill -sigkill mow2
 py
 r
 rm $temp_file
-rm -r 3480663038/global/sound/human/talk/rus_sniper_female 3480663038/global/sound/human/talk/rus_medic_female 3271667155/global/sound/human/talk/rus_medic_female 3271667155/global/sound/human/talk/rus_sniper_female
-rm 3480663038/scene/entity_soviet_female.pak 3271667155/scene/entity_soviet_female.pak 3480663038/global/interface/scene/portrait/rus_sniper_female.png 3271667155/global/interface/scene/portrait/rus_sniper_female.png 3480663038/global/interface/scene/portrait/rus_medic_female.png 3271667155/global/interface/scene/portrait/rus_medic_female.png
+rm -r 3480663038/global/sound/human/talk/rus_sniper_female 3480663038/global/sound/human/talk/rus_medic_female 3553934930/global/sound/human/talk/rus_medic_female 3553934930/global/sound/human/talk/rus_sniper_female
+rm 3480663038/scene/entity_soviet_female.pak 3553934930/scene/entity_soviet_female.pak 3480663038/global/interface/scene/portrait/rus_sniper_female.png 3553934930/global/interface/scene/portrait/rus_sniper_female.png 3480663038/global/interface/scene/portrait/rus_medic_female.png 3553934930/global/interface/scene/portrait/rus_medic_female.png
 rm ~/.bash_history-*.tmp
 setup-my-env.sh
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
@@ -237,6 +236,6 @@ yt-dlp -f 140 https://www.youtube.com/watch?v=E9lVXoezkFM
 z --help
 z Fe
 zoxide --help
-zoxide add "$HOME/Bash/MyFedoraScripts/FedoraScripts/"
+zoxide add "$HOME/Bash/MyFedoraScripts/FedoraScripts"
 zoxide add --help
 zoxide edit
