@@ -1,7 +1,7 @@
 #!/bin/bash
-# Beskrivning: Använder fzf för att söka efter filer och mappar, visar en
-# detaljerad förhandsgranskning med 'ls -l', och öppnar den valda filen/mappen
-# med 'xdg-open' vid tryck på ENTER.
+# Beskrivning: Använder fzf för att välja en fil. Sparar resultatet i en variabel,
+# visar detaljerad information med 'ls -l', och frågar sedan användaren om filen
+# ska öppnas med 'xdg-open'.
 
 # Kontrollera om xdg-open är tillgängligt (för Linux/UNIX-liknande system)
 if ! command -v xdg-open &> /dev/null; then
@@ -20,29 +20,47 @@ fzf_open_preview() {
 	
 	# Använder find för att hitta alla filer och mappar, exkluderar vanliga
 	# utvecklingskataloger för att göra sökningen snabbare.
-	find . -type f -o -type d -not -path "./.git/*" -not -path "./node_modules/*" |
 	
-	# Kör fzf med de nödvändiga inställningarna
-	fzf --ansi \
-		--multi \
-		--cycle \
-		--layout=reverse \
-		--info=inline \
-		--border \
-		--height=80% \
-		--header="Sök, ENTER för att öppna, ESC för att avbryta. Förhandsgranskning: ls -l" \
-		\
-		# Konfigurerar förhandsgranskningen (Preview)
-		# 'ls -ld' visar detaljerad information även för mappar.
-		--preview 'ls -ld --color=always "{}"' \
-		--preview-window=right:50% \
-		\
-		# Konfigurerar åtgärden när ENTER trycks (Action)
-		# execute(xdg-open {}) kör kommandot.
-		# > /dev/tty 2>&1 säkerställer att utdata från xdg-open inte stör fzf.
-		# +abort stänger fzf efter att filen har öppnats.
-		--bind "enter:execute(xdg-open {} > /dev/tty 2>&1)+abort"
+	# Kör fzf och sparar det valda resultatet (en enskild rad) i variabeln SELECTED_FILE.
+	SELECTED_FILE=$(
+		find . -type f -o -type d -not -path "./.git/*" -not -path "./node_modules/*" |
+		fzf --layout=reverse \
+			--border \
+			--height=80% \
+			--header="Välj en fil. ENTER för att välja, ESC för att avbryta."
+	)
+
+	# 1. Kontrollera om användaren avbröt (SELECTED_FILE är tom)
+	if [ -z "$SELECTED_FILE" ]; then
+		echo "Val av fil avbröts. Avslutar skriptet."
+		return 0
+	fi
+
+	echo ""
+	echo "--- Detaljerad information (ls -ld) ---"
+	
+	# 2. Kör ls -l på den valda filen. Vi använder -ld för att säkerställa att
+	# även kataloger visas i detalj och inte dess innehåll.
+	if ! ls -ld --color=always "$SELECTED_FILE"; then
+		echo "Fel: Kunde inte hitta eller lista detaljer för '$SELECTED_FILE'."
+		return 1
+	fi
+	
+	echo "-------------------------------------"
+	
+	# 3. Fråga användaren om de vill öppna filen
+	read -r -p "Vill du öppna '$SELECTED_FILE' med xdg-open? (j/n): " response
+
+	if [[ "$response" =~ ^([jJ][aA]|[jJ])$ ]]; then
+		echo "Öppnar $SELECTED_FILE..."
+		# Använder '&> /dev/null &' för att köra i bakgrunden och tysta utdata.
+		xdg-open "$SELECTED_FILE" &> /dev/null &
+		echo "Klart. Fönstret kommer nu att visas."
+	else
+		echo "Öppning av fil avbröts. Avslutar skriptet."
+	fi
 }
 
 # Kör funktionen
 fzf_open_preview
+
