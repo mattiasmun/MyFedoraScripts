@@ -1,6 +1,6 @@
 #!/bin/bash
 # Beskrivning: Använder fzf för att välja en fil. Sparar resultatet i en variabel,
-# visar detaljerad information med 'ls -l', och frågar sedan användaren om filen
+# visar detaljerad information med 'ls -ld', och frågar sedan användaren om filen
 # ska öppnas med 'xdg-open'.
 
 # Kontrollera om xdg-open är tillgängligt (för Linux/UNIX-liknande system)
@@ -39,7 +39,7 @@ fzf_open_preview() {
 	echo ""
 	echo "--- Detaljerad information (ls -ld) ---"
 	
-	# 2. Kör ls -l på den valda filen. Vi använder -ld för att säkerställa att
+	# 2. Kör ls -ld på den valda filen. Vi använder -ld för att säkerställa att
 	# även kataloger visas i detalj och inte dess innehåll.
 	if ! ls -ld --color=always "$SELECTED_FILE"; then
 		echo "Fel: Kunde inte hitta eller lista detaljer för '$SELECTED_FILE'."
