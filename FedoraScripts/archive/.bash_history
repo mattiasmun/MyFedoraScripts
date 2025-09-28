@@ -20,8 +20,8 @@ cd "$HOME/Men of War II/packages/editor-local-changes/global"
 cd -- -vehicle
 cd ..
 closeall
-cp "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set"
 cp "$HOME/Dokument/Men_of_war2/1927_cannon+++++++++.def" "$HOME/Men of War II/packages/Unit booster/scene/entity/-vehicle/cannon/76_rk_27/1927_cannon+++++++++.def"
+cp "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set"
 d
 d $(tu 21:00:00)
 df
@@ -81,6 +81,7 @@ fuck
 fuck --help
 fzf --multi --cycle
 fzf-select-open.sh
+gedit "$HOME/Men of War II/log/game.log"
 git add *
 git clone https://git.sr.ht/~geb/dotool
 git gc
@@ -105,8 +106,8 @@ lame --longhelp
 ll
 ln --help
 locate "+++.def" | while IFS= read -r file; do ls -ld "$file"; done
-locate "Men of War II" | while IFS= read -r file; do ls -ld "$file"; done
 locate "1927_cannon" | while IFS= read -r file; do ls -ld "$file"; done
+locate "Men of War II" | while IFS= read -r file; do ls -ld "$file"; done
 locate "bm31+++" | while IFS= read -r file; do ls -ld "$file"; done
 locate "m30+++" | while IFS= read -r file; do ls -ld "$file"; done
 locate "su122+++" | while IFS= read -r file; do ls -ld "$file"; done
@@ -132,7 +133,6 @@ mkdir --help
 more --help
 mpg123
 mplayer
-gedit "$HOME/Men of War II/log/game.log"
 nautilus .
 newton_raphson
 nslookup google.com
