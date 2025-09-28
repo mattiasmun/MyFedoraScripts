@@ -23,7 +23,7 @@
 			{item "knife_union" 30 {cell 10 7}}
 			{item "knife_union" 30 {cell 6 7}}
 			{item "knife_union" 30 {cell 8 7}}
-			{item "m1941" 99 filling "mgun" "ammo" 3000 {cell 8 12}}
+			{item "m1941" 99 filling "ptr" "ammo" 3000 {cell 8 12}}
 			{item "m61" "grenade" 30 {cell 10 6}}
 			{item "n73at" "grenade" 30 {cell 4 7}}
 			{item "panzershreck" "ammo" 1000 {cell 3 11}}
