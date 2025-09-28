@@ -144,7 +144,7 @@ pidof firefox
 pidof flatpak
 pip list
 pip list --user
-pip3 install pyautogui pip-date tsp-solver2
+pip3 install pip-date pyautogui pynput tsp-solver2
 pip3update
 pkill -sigkill Civ6
 pkill -sigkill TransportFever2
