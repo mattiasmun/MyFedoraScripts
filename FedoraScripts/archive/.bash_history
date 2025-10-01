@@ -21,7 +21,7 @@ cd -- -vehicle
 cd ..
 closeall
 cp "$HOME/Dokument/Men_of_war2/1927_cannon+++++++++.def" "$HOME/Men of War II/packages/Unit booster/scene/entity/-vehicle/cannon/76_rk_27/1927_cannon+++++++++.def"
-cp "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set"
+cp "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/auto_restore_inventory+++++++++.set"
 d
 d $(tu 21:00:00)
 df
@@ -124,9 +124,9 @@ mediainfo
 meld "$HOME/.bash_history" "$HOME/.bash_history2" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"
 meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py"
 meld "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/auto_restore_inventory+++++++++.set"
-meld "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/auto_restore_inventory+++++++++.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3553934930/scene/set/auto_restore_inventory+++++++++.set"
-meld "$HOME/Dokument/Men_of_war2/corpsmanx_ai.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/corpsmanx_ai.set"
-meld "$HOME/Dokument/Men_of_war2/engineerx_ai.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/engineerx_ai.set"
+meld "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/auto_restore_inventory+++++++++.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3553934930/scene/set/auto_restore_inventory+++++++++.set"
+meld "$HOME/Dokument/Men_of_war2/corpsmanx_ai.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/corpsmanx_ai.set"
+meld "$HOME/Dokument/Men_of_war2/engineerx_ai.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/engineerx_ai.set"
 meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
 meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 mkdir --help
