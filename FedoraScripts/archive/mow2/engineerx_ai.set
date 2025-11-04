@@ -37,9 +37,9 @@
 		{"minedetection" 30}
 	}
 	{inventory
-		{item "avs36" filling "rifle" "ammo" 99}
+		{item "avs36" filling "rifle ammo" 99}
 		{item "ammo rifle" 350}
-		{item "panzershreck" "weapon" filling "bullet40" "ap" "ally" "bofors" "ammo" 199}
+		{item "panzershreck weapon" filling "bullet40 ap ally bofors ammo" 199}
 		{item "bandage" 5}
 		{item "knife_union"}
 		{item "grenade m61" 2}
