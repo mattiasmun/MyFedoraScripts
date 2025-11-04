@@ -16,6 +16,7 @@ cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3553934930"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3553934930/scene/entity/-vehicle"
+cd "$HOME/Men of War II/packages/Unit_booster"
 cd "$HOME/Men of War II/packages/Unit_booster/scene/entity"
 cd "$HOME/Men of War II/packages/editor-local-changes/global"
 cd -- -vehicle
@@ -66,6 +67,9 @@ exit
 ffprobe --help
 ffprobe output.mp3
 fg
+find . -type f -name '*++*'
+find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then         echo "PREVIEW: '$old_path' -> '$new_path'";     fi; done
+find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then         mv -v -- "$old_path" "$new_path";     fi; done
 find_and_sort_files .
 find_and_sort_files .mi
 find_and_sort_files car
@@ -124,16 +128,6 @@ man wlrctl
 mediainfo
 meld "$HOME/.bash_history" "$HOME/.bash_history2" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"
 meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py"
-meld "$HOME/Dokument/Men_of_war2/1927_cannon+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/cannon/76_rk_27/1927_cannon+++++++++.def"
-meld "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/auto_restore_inventory+++++++++.set"
-meld "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/auto_restore_inventory+++++++++.set" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3553934930/scene/set/auto_restore_inventory+++++++++.set"
-meld "$HOME/Dokument/Men_of_war2/bm31+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/bm31/bm31+++++++++.def"
-meld "$HOME/Dokument/Men_of_war2/corpsmanx_ai.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/corpsmanx_ai.set"
-meld "$HOME/Dokument/Men_of_war2/engineerx_ai.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/engineerx_ai.set"
-meld "$HOME/Dokument/Men_of_war2/m30+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/cannon/m30/m30+++++++++.def"
-meld "$HOME/Dokument/Men_of_war2/su122+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/tank_medium/su122/su122+++++++++.def"
-meld /etc/dnf/automatic.conf /etc/dnf/automatic.conf.rpmnew
-meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 mkdir --help
 more --help
 mpg123
