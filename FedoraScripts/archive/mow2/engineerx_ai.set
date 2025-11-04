@@ -12,40 +12,23 @@
 	}
 	{perks (include "\set\breed\perks.inc")
 		{"spy"}
-		{"health" "400%"
-		}
-		{"power" "1000%"
-		}
-		{"vision" arena_hunter
-		}
-		{"pistol" hero
-		}
-		{"smg" hero
-		}
-		{"autorifle" hero
-		}
-		{"sniper" hero
-		}
-		{"mgun" hero
-		}
-		{"rifle" hero
-		}
-		{"rocketlauncher" hero
-		}
-		{"speed" 2
-		}
-		{"melee" master
-		}
-		{"housewarrior" hero
-		}
-		{"houseassault" hero
-		}
-		{"suppressresistance" hero
-		}
-		{"firearmssuperiority" hero
-		}
-		{"spotter" hero
-		}
+		{"health" "400%"}
+		{"power" "1000%"}
+		{"vision" arena_hunter}
+		{"pistol" hero}
+		{"smg" hero}
+		{"autorifle" hero}
+		{"sniper" hero}
+		{"mgun" hero}
+		{"rifle" hero}
+		{"rocketlauncher" hero}
+		{"speed" 2}
+		{"melee" master}
+		{"housewarrior" hero}
+		{"houseassault" hero}
+		{"suppressresistance" hero}
+		{"firearmssuperiority" hero}
+		{"spotter" hero}
 		{"field_glass"}
 		{"stealth"}
 		{"repair" 7}
@@ -54,15 +37,16 @@
 		{"minedetection" 30}
 	}
 	{inventory
-		{item "avs36" filled}
+		{item "avs36" filling "rifle" "ammo" 99}
 		{item "ammo rifle" 350}
+		{item "panzershreck" "weapon" filling "bullet40" "ap" "ally" "bofors" "ammo" 199}
 		{item "bandage" 5}
 		{item "knife_union"}
-		{item "grenade m61" 3}
-		{item "grenade n73at" 6}
+		{item "grenade m61" 2}
+		{item "grenade n73at" 2}
 		{item "remote mine"}
 		{item "dynamite"}
-		{item "signal grenade" 2}
+		{item "signal heavy grenade" 2}
 		{item "repair_kit"}
 		{item "sandbag_kit"}
 		{item "barbwire_kit"}
