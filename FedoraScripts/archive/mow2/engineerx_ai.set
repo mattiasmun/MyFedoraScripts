@@ -1,7 +1,7 @@
 {breed
 	{behaviour soldier}
 	{hero}
-	{skin "usa-ranger"}
+	{skin "usa-engineer"}
 	{portrait "usa_engineer_m1903"}
 	{icon "engineers"}
 	{icon_priority 1}
