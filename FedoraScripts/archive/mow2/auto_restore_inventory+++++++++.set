@@ -1,9 +1,8 @@
-
 {recovery_items
 	{"ammo m18rr ap" 1}
 	{"ammo m18rr fg" 1}
-	{"ammo rs310" 7}
-	{"ammo rs82" 5}
+	{"ammo rs310" 1}
+	{"ammo rs82" 1}
 	{"bandage" 1}
 	{"barbwire_kit" 1}
 	{"dot_kit" 1}
@@ -34,6 +33,7 @@
 	{"sandbag_kit2" 1}
 	{"sapper_shovel" 1}
 	{"signal grenade" 1}
+	{"signal heavy grenade" 1}
 	{"smoke grenade" 1}
 	{"supp_point_kit" 1}
 	{"tower_usa_kit" 1}
