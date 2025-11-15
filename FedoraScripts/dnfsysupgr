@@ -64,7 +64,7 @@ close_and_dnf_reboot() {
 
 	echo "Starting system reboot for upgrade to F$NEXT_VERSION..."
 	# Initiates the actual DNF system upgrade reboot.
-	sudo -A dnf system-upgrade reboot
+	sudo -A dnf5 offline reboot
 }
 
 # --- Main Script ---
@@ -95,5 +95,5 @@ then
 	# Starts the reboot process including graceful application closure
 	close_and_dnf_reboot 
 else
-	echo "Upgrade aborted. You can reboot and run 'sudo dnf system-upgrade reboot' manually later."
+	echo "Upgrade aborted. You can reboot and run 'sudo -A dnf5 offline reboot' manually later."
 fi

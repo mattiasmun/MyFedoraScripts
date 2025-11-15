@@ -34,7 +34,7 @@ function _closeall
 		systemctl reboot
 	elif [[ "$1" == 3 ]]
 	then
-		sudo -A dnf system-upgrade reboot
+		sudo -A dnf5 offline reboot
 	fi
 }
 
