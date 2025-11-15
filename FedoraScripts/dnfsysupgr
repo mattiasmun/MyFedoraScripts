@@ -14,7 +14,7 @@ NEXT_VERSION="$((CURRENT_VERSION + 1))"
 
 # List of processes to attempt a graceful closure for before rebooting.
 # Add or remove applications here as needed.
-APPLICATIONS_TO_CLOSE=("firefox" "gnome-terminal" "nautilus" "code")
+APPLICATIONS_TO_CLOSE=("firefox" "gedit" "gnome-terminal" "nautilus" "thunderbird")
 
 # --- Functions ---
 
