@@ -22,8 +22,6 @@ cd "$HOME/Men of War II/packages/editor-local-changes/global"
 cd -- -vehicle
 cd ..
 closeall
-cp "$HOME/Dokument/Men_of_war2/1927_cannon+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/cannon/76_rk_27/1927_cannon+++++++++.def"
-cp "$HOME/Dokument/Men_of_war2/auto_restore_inventory+++++++++.set" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/auto_restore_inventory+++++++++.set"
 d
 d $(tu 21:00:00)
 df
@@ -37,6 +35,7 @@ dnf group list
 dnf history info last
 dnf history list
 dnf history list | more
+dnf list installed | grep @
 dnf repoquery --duplicates
 dnf repoquery --extras
 dnf repoquery --help
@@ -67,6 +66,8 @@ exit
 ffprobe --help
 ffprobe output.mp3
 fg
+find . -name "*~"
+find . -name "*~" -delete
 find . -type f -name '*++*'
 find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then         echo "PREVIEW: '$old_path' -> '$new_path'";     fi; done
 find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then         mv -v -- "$old_path" "$new_path";     fi; done
@@ -78,10 +79,7 @@ find_and_sort_files m30
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak update -y
 for file in "$HOME/.bash_history" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"; do cp "$HOME/.bash_history2" "$file"; done
-for file in "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/cannon/m30/m30+++++++++.def"; do cp "$HOME/Dokument/Men_of_war2/m30+++++++++.def" "$file"; done
-for file in "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/bm31/bm31+++++++++.def"; do cp "$HOME/Dokument/Men_of_war2/bm31+++++++++.def" "$file"; done
-for file in "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/opel_blitz_highback/opel_blitz_highback+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gmc/gmc_supp+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gmc_inf/gmc_inf+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gaz_aa/gaz_aa_supp+++++++++.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gaz_aa_untented/gaz_aa_untented+++++++++.def"; do cp "$HOME/Dokument/Men_of_war2/opel_blitz_supp+++++++++.def" "$file"; done
-for file in "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/tank_medium/su122/su122+++++++++.def"; do cp "$HOME/Dokument/Men_of_war2/su122+++++++++.def" "$file"; done
+for file in "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/opel_blitz_highback/opel_blitz_highback+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gmc/gmc_supp+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gmc_inf/gmc_inf+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gaz_aa_untented/gaz_aa_untented+.def"; do cp "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gaz_aa/gaz_aa_supp+.def" "$file"; done
 fuck
 fuck --help
 fzf --multi --cycle
@@ -96,7 +94,7 @@ gitcfg
 gitty ~/529340
 gitty ~/Bash/MyFedoraScripts
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
-grep -nirI "supp++"
+grep -nirI "supp+"
 groupadd -f input
 groups
 gs
@@ -110,14 +108,15 @@ lame --help
 lame --longhelp
 ll
 ln --help
-locate "+++.def" | while IFS= read -r file; do ls -ld "$file"; done
+locate "+.def" | while IFS= read -r file; do ls -ld "$file"; done
 locate "1927_cannon" | while IFS= read -r file; do ls -ld "$file"; done
 locate "Men of War II" | while IFS= read -r file; do ls -ld "$file"; done
-locate "bm31+++" | while IFS= read -r file; do ls -ld "$file"; done
-locate "m30+++" | while IFS= read -r file; do ls -ld "$file"; done
-locate "su122+++" | while IFS= read -r file; do ls -ld "$file"; done
-locate "supp+++" | while IFS= read -r file; do ls -ld "$file"; done
+locate "bm31+" | while IFS= read -r file; do ls -ld "$file"; done
+locate "m30+" | while IFS= read -r file; do ls -ld "$file"; done
+locate "su122+" | while IFS= read -r file; do ls -ld "$file"; done
+locate "supp+" | while IFS= read -r file; do ls -ld "$file"; done
 ls
+ls -Al
 lsattr Dokument/IDLE_py.py
 lsblk
 lspci
@@ -127,6 +126,7 @@ man fzf
 man wlrctl
 mediainfo
 meld "$HOME/.bash_history" "$HOME/.bash_history2" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"
+meld "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc"
 meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py"
 mkdir --help
 more --help
@@ -134,11 +134,13 @@ mpg123
 mplayer
 nautilus .
 newton_raphson
+nslookup duckduckgo.com
 nslookup google.com
 nslookup google.com 8.26.56.26
 nvidia-smi
 nvtop
 pgrep firefox
+pgrep thunderbird
 pidof firefox
 pidof flatpak
 pip list
@@ -163,6 +165,8 @@ strcmp asdfsdf gertergdfg
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever=43 &
 sudo -A dnf autoremove
 sudo -A dnf check
+sudo -A dnf check-update --refresh
+sudo -A dnf clean all
 sudo -A dnf system-upgrade reboot
 sudo -A dnf upgrade
 sudo -A dnf upgrade --best --allowerasing
@@ -184,7 +188,7 @@ systemctl status bluetooth
 systemctl status dnf5-automatic.service
 systemctl status dnf5-automatic.timer
 temp_file=$(mktemp)
-time find_and_sort_files supp+++++++++.def
+time find_and_sort_files supp+.def
 uname -a
 uname -r
 unique_lines

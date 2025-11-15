@@ -1,15 +1,99 @@
 #!/bin/bash
-source yesno
-v="$(rpm -E %fedora)"
-v="$((v+1))"
+# -------------------------------------------------------------------------
+# Script to automate the Fedora system upgrade process.
+# Gracefully closes known applications using pkill (SIGTERM) before rebooting.
+# -------------------------------------------------------------------------
 
-function close_and_dnf_reboot
-{
-	closeall 3
+# --- Variables ---
+
+# Retrieves the current Fedora version number (e.g., 42)
+CURRENT_VERSION="$(rpm -E %fedora)"
+
+# Calculates the next target version (e.g., 43)
+NEXT_VERSION="$((CURRENT_VERSION + 1))"
+
+# List of processes to attempt a graceful closure for before rebooting.
+# Add or remove applications here as needed.
+APPLICATIONS_TO_CLOSE=("firefox" "gnome-terminal" "nautilus" "code")
+
+# --- Functions ---
+
+# Function to handle user confirmation (Yes/No)
+confirm() {
+	while true; do
+		# Prints the question ($1)
+		read -r -p "$1" reply
+
+		case "$reply" in
+			[yY][eE][sS]|[yY])
+				# Returns 0 (true) for Yes
+				return 0
+				;;
+			[nN][oO]|[nN])
+				# Returns 1 (false) for No
+				return 1
+				;;
+			*)
+				echo "Invalid input. Please answer Yes (y) or No (n)."
+				;;
+		esac
+	done
 }
 
-sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever="$v"
-if confirm 'Reboot to perform system upgrade now[Y/n]? '
+# Function to close known applications gracefully and initiate the upgrade reboot
+close_and_dnf_reboot() {
+	echo "--- Attempting to gracefully close known applications (SIGTERM) ---"
+
+	# Loop through the list of applications
+	for app in "${APPLICATIONS_TO_CLOSE[@]}"; do
+		
+		# Uses 'pgrep -x' to check if the app is running. 
+		# '-x' ensures an exact match of the process name.
+		if pgrep -x "$app" > /dev/null; then
+			echo "Found and attempting to terminate process: $app..."
+			# pkill sends SIGTERM (graceful shutdown) by default.
+			pkill "$app"
+		else
+			echo "$app is not running, skipping."
+		fi
+	done
+	
+	# Waits 3 seconds to allow programs to shut down, save data, and clear memory
+	echo "Waiting 3 seconds for graceful termination..."
+	sleep 3
+
+	echo "Starting system reboot for upgrade to F$NEXT_VERSION..."
+	# Initiates the actual DNF system upgrade reboot.
+	sudo -A dnf system-upgrade reboot
+}
+
+# --- Main Script ---
+
+echo "--- Fedora System Upgrade Initiated ---"
+echo "Current Version: F$CURRENT_VERSION. Next Target Version: F$NEXT_VERSION"
+
+# Step 1: Perform package download for the upgrade.
+echo "Step 1: Downloading upgrade packages for Fedora $NEXT_VERSION..."
+
+# --refresh: Updates DNF metadata.
+# --allowerasing: Allows deletion of packages that block the upgrade.
+# --releasever="$NEXT_VERSION": Specifies the target installation version.
+# -y: Automatically accepts prompts.
+sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever="$NEXT_VERSION"
+
+# Checks if the download was successful.
+if [ $? -ne 0 ]; then
+	echo "ERROR: Package download failed. Please fix the error and try again."
+	exit 1
+fi
+
+echo "Download complete."
+
+# Step 2: Prompt the user for reboot confirmation.
+if confirm "Are you ready to close known applications and reboot for the system upgrade [Y/n]? "
 then
-	close_and_dnf_reboot &
+	# Starts the reboot process including graceful application closure
+	close_and_dnf_reboot 
+else
+	echo "Upgrade aborted. You can reboot and run 'sudo dnf system-upgrade reboot' manually later."
 fi
