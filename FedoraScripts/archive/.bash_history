@@ -162,6 +162,7 @@ rm $temp_file
 rm -r 3553934930/global/sound/human/talk/rus_medic_female 3553934930/global/sound/human/talk/rus_sniper_female
 rm 3553934930/scene/entity_soviet_female.pak 3553934930/global/interface/scene/portrait/rus_sniper_female.png 3553934930/global/interface/scene/portrait/rus_medic_female.png
 rm ~/.bash_history-*.tmp
+rsync -avz --update "$HOME/Men of War II/packages/Unit_booster.7z" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/"
 setup-my-env.sh
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
 source ~/.bashrc
