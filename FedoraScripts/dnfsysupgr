@@ -14,7 +14,7 @@ NEXT_VERSION="$((CURRENT_VERSION + 1))"
 
 # List of processes to attempt a graceful closure for before rebooting.
 # Add or remove applications here as needed.
-APPLICATIONS_TO_CLOSE=("firefox" "gedit" "gnome-terminal" "nautilus" "thunderbird")
+APPLICATIONS_TO_CLOSE=("firefox" "gedit" "nautilus" "thunderbird")
 
 # --- Functions ---
 
@@ -46,8 +46,8 @@ close_and_dnf_reboot() {
 
 	# Loop through the list of applications
 	for app in "${APPLICATIONS_TO_CLOSE[@]}"; do
-		
-		# Uses 'pgrep -x' to check if the app is running. 
+
+		# Uses 'pgrep -x' to check if the app is running.
 		# '-x' ensures an exact match of the process name.
 		if pgrep -x "$app" > /dev/null; then
 			echo "Found and attempting to terminate process: $app..."
@@ -57,12 +57,17 @@ close_and_dnf_reboot() {
 			echo "$app is not running, skipping."
 		fi
 	done
-	
-	# Waits 3 seconds to allow programs to shut down, save data, and clear memory
-	echo "Waiting 3 seconds for graceful termination..."
-	sleep 3
+
+	# Waits 4 seconds to allow programs to shut down, save data, and clear memory
+	echo "Waiting 4 seconds for graceful termination..."
+	sleep 4
 
 	echo "Starting system reboot for upgrade to F$NEXT_VERSION..."
+
+	# Opens the Activities Overview
+	sleep 2.5 && echo key leftmeta | dotoolc
+	sleep 2
+
 	# Initiates the actual DNF system upgrade reboot.
 	sudo -A dnf5 offline reboot
 }
@@ -93,7 +98,7 @@ echo "Download complete."
 if confirm "Are you ready to close known applications and reboot for the system upgrade [Y/n]? "
 then
 	# Starts the reboot process including graceful application closure
-	close_and_dnf_reboot 
+	close_and_dnf_reboot
 else
 	echo "Upgrade aborted. You can reboot and run 'sudo -A dnf5 offline reboot' manually later."
 fi
