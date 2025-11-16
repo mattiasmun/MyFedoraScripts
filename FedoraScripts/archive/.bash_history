@@ -22,6 +22,7 @@ cd "$HOME/Men of War II/packages/editor-local-changes/global"
 cd -- -vehicle
 cd ..
 closeall
+conditional_7z_backup.sh "$HOME/Men of War II/packages/Unit_booster"
 d
 d $(tu 21:00:00)
 df
@@ -46,12 +47,14 @@ dnf repoquery --unneeded
 dnf repoquery --userinstalled --queryformat "%{name} \"
 dnfsysupgr
 dnfusrins
+dotool --help
 dotool --list-keys
 dotoold &
 du
 du $temp_file
 du --help
 du -c
+du -h
 du car
 echo $((1+2))
 echo $PATH
@@ -59,6 +62,7 @@ echo $SHELL
 echo $XDG_SESSION_TYPE
 echo $temp_file
 echo key k:26 k:39 k:40 | dotoolc
+echo key leftmeta | dotoolc
 echo key shift+1 x:exclam shift+k:2 | dotoolc
 env
 ex --help
@@ -128,6 +132,7 @@ mediainfo
 meld "$HOME/.bash_history" "$HOME/.bash_history2" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"
 meld "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc"
 meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py"
+meld *
 mkdir --help
 more --help
 mpg123
@@ -140,9 +145,8 @@ nslookup google.com 8.26.56.26
 nvidia-smi
 nvtop
 pgrep firefox
+pgrep flatpak
 pgrep thunderbird
-pidof firefox
-pidof flatpak
 pip list
 pip list --user
 pip3 install pip-date pyautogui pynput tsp-solver2
@@ -150,8 +154,10 @@ pip3update
 pkill -sigkill Civ6
 pkill -sigkill TransportFever2
 pkill -sigkill mow2
+pkill firefox
 py
 r
+remove-retired-packages
 rm $temp_file
 rm -r 3553934930/global/sound/human/talk/rus_medic_female 3553934930/global/sound/human/talk/rus_sniper_female
 rm 3553934930/scene/entity_soviet_female.pak 3553934930/global/interface/scene/portrait/rus_sniper_female.png 3553934930/global/interface/scene/portrait/rus_medic_female.png
