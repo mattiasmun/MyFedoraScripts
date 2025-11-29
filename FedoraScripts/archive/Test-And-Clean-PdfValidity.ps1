@@ -22,6 +22,7 @@ if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?
     Write-Host "Key Parameters:"
     Write-Host "  -PDFPath (Mandatory) The full path to the PDF file(s) to check."
     Write-Host "  -DeleteOnInvalid (Switch) If present, the file is deleted if validation fails."
+    Write-Host "  -LogFunction (Internal) Used by Convert-Docs-And-Validate.ps1 to append to its log file."
     Write-Host ""
     Write-Host "Outputs an Enum status: Valid, ValidWithWarnings, InvalidHeader, InvalidAccess, InvalidCorrupt."
     Write-Host "For detailed parameter help, run: Get-Help Test-And-Clean-PdfValidity -Full"
@@ -62,6 +63,10 @@ A switch parameter. If present, the function will attempt to permanently delete
 the PDF file if its status is determined to be InvalidHeader, InvalidAccess,
 or InvalidCorrupt.
 
+.PARAMETER LogFunction
+(Internal Use Only) A scriptblock passed by the calling function (Convert-Docs-And-Validate)
+to write all output messages directly to the batch log file.
+
 .OUTPUTS
 PdfValidationStatus
 Returns one of the PdfValidationStatus enumeration values (Valid, InvalidHeader, etc.)
@@ -85,28 +90,57 @@ function Test-And-Clean-PdfValidity {
         [string]$PDFPath,
 
         [Parameter(Mandatory=$false)]
-        [bool]$DeleteOnInvalid = $false
+        [bool]$DeleteOnInvalid = $false,
+
+        [Parameter(Mandatory=$false)]
+        [scriptblock]$LogFunction # New parameter for unified logging
     )
+
+    # Helper function to consolidate all output, using the passed LogFunction if available
+    function Write-TestLog {
+        param(
+            [Parameter(Mandatory=$true)][string]$Message,
+            [Parameter(Mandatory=$false)][ConsoleColor]$ForegroundColor,
+            [Parameter(Mandatory=$false)][bool]$IsError = $false
+        )
+
+        if ($LogFunction) {
+            # Execute the LogFunction scriptblock provided by the caller
+            # The Write-Log function handles both file logging and console output
+            & $LogFunction -Message $Message -ForegroundColor $ForegroundColor -IsError $IsError
+        } else {
+            # Fallback for standalone use (or if LogFunction wasn't passed)
+            if ($IsError) {
+                Write-Error $Message -ForegroundColor Pink
+            } elseif ($ForegroundColor) {
+                Write-Host $Message -ForegroundColor $ForegroundColor
+            } else {
+                Write-Host $Message
+            }
+        }
+    }
+    # ----------------------------------------------------------------------------------
 
     # PROCESS BLOCK allows the function to handle pipeline input (e.g., Get-ChildItem)
     process {
-        Write-Host "--- Checking $($PDFPath) ---" -ForegroundColor White
+        Write-TestLog -Message "--- Checking $($PDFPath) ---" -ForegroundColor White
 
         # --- Nested Deletion Function ---
         function Delete-File {
             param([string]$PathToDelete)
             try {
                 Remove-Item -Path $PathToDelete -Force
-                Write-Host "🗑️ Successfully deleted invalid file: $PathToDelete" -ForegroundColor Magenta
+                Write-TestLog -Message "🗑️ Successfully deleted invalid file: $PathToDelete" -ForegroundColor Magenta
             } catch {
-                Write-Error "Failed to delete file '$PathToDelete': $($_.Exception.Message)" -ForegroundColor Pink
+                # Use IsError $true to ensure it gets logged as an error
+                Write-TestLog -Message "Failed to delete file '$PathToDelete': $($_.Exception.Message)" -IsError $true
             }
         }
         # --------------------------------
 
         # --- 1. FILE EXISTENCE AND PATH CHECK
         if (-not (Test-Path -Path $PDFPath -PathType Leaf)) {
-            Write-Host "❌ File Not Found: $PDFPath" -ForegroundColor Pink
+            Write-TestLog -Message "❌ File Not Found: $PDFPath" -ForegroundColor Pink
             return [PdfValidationStatus]::InvalidAccess # Treated as access/path error
         }
 
@@ -117,7 +151,7 @@ function Test-And-Clean-PdfValidity {
             $HeaderBytes = New-Object byte[] 5
 
             if ($Stream.Read($HeaderBytes, 0, 5) -lt 5) {
-                Write-Host "❌ File too small to be a PDF header (less than 5 bytes)." -ForegroundColor Pink
+                Write-TestLog -Message "❌ File too small to be a PDF header (less than 5 bytes)." -ForegroundColor Pink
                 if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
                 return [PdfValidationStatus]::InvalidAccess
             }
@@ -125,16 +159,16 @@ function Test-And-Clean-PdfValidity {
             $Header = [System.Text.Encoding]::ASCII.GetString($HeaderBytes)
 
             if ($Header -ne "%PDF-") {
-                Write-Host "❌ Basic Header Check Failed. Header starts with '$Header', not '%PDF-'." -ForegroundColor Pink
+                Write-TestLog -Message "❌ Basic Header Check Failed. Header starts with '$Header', not '%PDF-'." -ForegroundColor Pink
                 if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
                 return [PdfValidationStatus]::InvalidHeader # Explicit Header Failure
             } else {
-                Write-Host "✅ Basic Header Check Passed. Proceeding to structural check..." -ForegroundColor Green
+                Write-TestLog -Message "✅ Basic Header Check Passed. Proceeding to structural check..." -ForegroundColor Green
             }
 
         } catch {
             # This handles permission denied or file lock errors
-            Write-Host "❌ Access Error: Could not read file header (File might be locked or permission denied)." -ForegroundColor Pink
+            Write-TestLog -Message "❌ Access Error: Could not read file header (File might be locked or permission denied)." -ForegroundColor Pink
             if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
             return [PdfValidationStatus]::InvalidAccess # Explicit Access/IO Failure
         } finally {
@@ -146,7 +180,7 @@ function Test-And-Clean-PdfValidity {
 
         # Check if qpdf is available
         if (-not (Get-Command -Name $QPDFCmd -ErrorAction SilentlyContinue)) {
-            Write-Host "❌ qpdf command not found. Please ensure qpdf CLI is installed." -ForegroundColor Pink
+            Write-TestLog -Message "❌ qpdf command not found. Please ensure qpdf CLI is installed." -ForegroundColor Pink
             return [PdfValidationStatus]::InvalidAccess # Treat lack of dependency as failure
         }
 
@@ -161,22 +195,24 @@ function Test-And-Clean-PdfValidity {
 
         if ($ExitCode -eq 0) {
             # Status 0: Success, no warnings
-            Write-Host "✅ Structural Check Passed: PDF is valid." -ForegroundColor Green
+            Write-TestLog -Message "✅ Structural Check Passed: PDF is valid." -ForegroundColor Green
             return [PdfValidationStatus]::Valid
         } elseif ($ExitCode -eq 3) {
             # Status 3: Success with warnings
-            Write-Host "⚠️ Structural Check Passed with Warnings." -ForegroundColor Yellow
+            Write-TestLog -Message "⚠️ Structural Check Passed with Warnings." -ForegroundColor Yellow
             if ($QPDFOutput) {
-                Write-Host "--- QPDF Warnings ---\n" -ForegroundColor Yellow
-                $QPDFOutput | ForEach-Object { Write-Host "   $_" -ForegroundColor DarkYellow }
+                Write-TestLog -Message "--- QPDF Warnings ---" -ForegroundColor Yellow
+                # Log each line of QPDF output using Write-TestLog
+                $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -ForegroundColor DarkYellow }
             }
             return [PdfValidationStatus]::ValidWithWarnings
         } else {
             # Status 2 (or other non-success code): Fatal Error/Corruption
-            Write-Host "❌ Structural Check Failed. PDF is corrupted (Exit Code: $ExitCode)." -ForegroundColor Pink
+            Write-TestLog -Message "❌ Structural Check Failed. PDF is corrupted (Exit Code: $ExitCode)." -ForegroundColor Pink
             if ($QPDFOutput) {
-                Write-Host "--- QPDF Diagnostic Output ---" -ForegroundColor Pink
-                $QPDFOutput | ForEach-Object { Write-Host "   $_" -ForegroundColor Pink }
+                Write-TestLog -Message "--- QPDF Diagnostic Output ---" -ForegroundColor Pink
+                # Log each line of QPDF output using Write-TestLog and marking as error
+                $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -ForegroundColor Pink -IsError $true }
             }
 
             if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
