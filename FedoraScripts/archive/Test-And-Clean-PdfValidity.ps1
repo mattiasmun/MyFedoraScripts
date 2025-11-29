@@ -1,3 +1,36 @@
+# -----------------------------------------------------------------------------
+# PowerShell Script: Test-And-Clean-PdfValidity.ps1
+# Description: Defines a function to check the structural validity of a PDF
+#              using qpdf, optionally cleaning or deleting invalid files.
+# Prerequisites: qpdf CLI must be installed and accessible in the system PATH.
+# -----------------------------------------------------------------------------
+
+# --- GLOBAL SCRIPT HELP CHECK (New) ---
+# Check if the user requested help before proceeding to define the function.
+if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?' -or $args -contains '/?') {
+    Write-Host ""
+    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "       Test-And-Clean-PdfValidity.ps1 Usage             " -ForegroundColor Yellow
+    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "This script defines a single function to validate PDF integrity."
+    Write-Host "It uses the 'qpdf' CLI tool to check for structural corruption."
+    Write-Host ""
+    Write-Host "To load and execute the function, you must first dot-source the script:"
+    Write-Host "  . .\Test-And-Clean-PdfValidity.ps1"
+    Write-Host "  Test-And-Clean-PdfValidity -PDFPath <path> -DeleteOnInvalid"
+    Write-Host ""
+    Write-Host "Key Parameters:"
+    Write-Host "  -PDFPath (Mandatory) The full path to the PDF file(s) to check."
+    Write-Host "  -DeleteOnInvalid (Switch) If present, the file is deleted if validation fails."
+    Write-Host ""
+    Write-Host "Outputs an Enum status: Valid, ValidWithWarnings, InvalidHeader, InvalidAccess, InvalidCorrupt."
+    Write-Host "For detailed parameter help, run: Get-Help Test-And-Clean-PdfValidity -Full"
+    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    exit
+}
+# ----------------------------------------
+
+
 # Define the custom Enum for return status
 Add-Type -TypeDefinition @'
 public enum PdfValidationStatus {
@@ -9,8 +42,43 @@ public enum PdfValidationStatus {
 }
 '@ -Language CSharp
 
+
+<#
+.SYNOPSIS
+Checks the structural integrity of a PDF file using qpdf.
+
+.DESCRIPTION
+This function performs a series of checks on a PDF file: file existence, header
+validation, and a structural check using the 'qpdf --check' command. It returns
+a specific Enum status indicating the result and can optionally delete the file
+if it is found to be invalid.
+
+.PARAMETER PDFPath
+The full path to the PDF file(s) to be checked. This parameter supports pipeline
+input, allowing you to pass multiple file paths at once (e.g., from Get-ChildItem).
+
+.PARAMETER DeleteOnInvalid
+A switch parameter. If present, the function will attempt to permanently delete
+the PDF file if its status is determined to be InvalidHeader, InvalidAccess,
+or InvalidCorrupt.
+
+.OUTPUTS
+PdfValidationStatus
+Returns one of the PdfValidationStatus enumeration values (Valid, InvalidHeader, etc.)
+
+.EXAMPLE
+# Check a single file and delete it if it's corrupt
+Test-And-Clean-PdfValidity -PDFPath "C:\Data\Test.pdf" -DeleteOnInvalid $true
+
+.EXAMPLE
+# Check all files in a folder and output their status
+Get-ChildItem -Path "C:\Incoming" -Filter "*.pdf" | Test-And-Clean-PdfValidity
+
+.NOTES
+Requires the 'qpdf' command line utility to be installed and accessible in the system PATH.
+#>
 function Test-And-Clean-PdfValidity {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName='Path')]
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [Alias('FullName')]
@@ -22,7 +90,7 @@ function Test-And-Clean-PdfValidity {
 
     # PROCESS BLOCK allows the function to handle pipeline input (e.g., Get-ChildItem)
     process {
-        Write-Host "--- Checking $($PDFPath) ---"
+        Write-Host "--- Checking $($PDFPath) ---" -ForegroundColor White
 
         # --- Nested Deletion Function ---
         function Delete-File {
@@ -31,16 +99,15 @@ function Test-And-Clean-PdfValidity {
                 Remove-Item -Path $PathToDelete -Force
                 Write-Host "🗑️ Successfully deleted invalid file: $PathToDelete" -ForegroundColor Magenta
             } catch {
-                Write-Error "Failed to delete file '$PathToDelete': $($_.Exception.Message)"
+                Write-Error "Failed to delete file '$PathToDelete': $($_.Exception.Message)" -ForegroundColor Pink
             }
         }
         # --------------------------------
 
-        # 1. FILE EXISTENCE AND PATH CHECK
+        # --- 1. FILE EXISTENCE AND PATH CHECK
         if (-not (Test-Path -Path $PDFPath -PathType Leaf)) {
-            Write-Error "File not found or is a directory: $PDFPath"
-            # Return InvalidAccess if file can't even be found
-            return [PdfValidationStatus]::InvalidAccess
+            Write-Host "❌ File Not Found: $PDFPath" -ForegroundColor Pink
+            return [PdfValidationStatus]::InvalidAccess # Treated as access/path error
         }
 
         # --- 2. SIMPLE HEADER CHECK (Robust Stream Read) ---
@@ -66,35 +133,50 @@ function Test-And-Clean-PdfValidity {
             }
 
         } catch {
-            Write-Error "❌ Error accessing file '$PDFPath': $($_.Exception.Message)"
+            # This handles permission denied or file lock errors
+            Write-Host "❌ Access Error: Could not read file header (File might be locked or permission denied)." -ForegroundColor Pink
             if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
             return [PdfValidationStatus]::InvalidAccess # Explicit Access/IO Failure
         } finally {
             if ($Stream) { $Stream.Dispose() }
         }
 
-        # --- 3. QPDF STRUCTURAL CHECK ---
-        $QPDFOutput = & qpdf --check $PDFPath 2>&1
+        # --- 3. QPDF STRUCTURAL VALIDATION CHECK
+        $QPDFCmd = "qpdf"
 
-        if ($LASTEXITCODE -eq 0) {
-            # Status 0: Perfect Success
-            Write-Host "✅ Structural Check Passed. PDF is fully valid." -ForegroundColor Green
+        # Check if qpdf is available
+        if (-not (Get-Command -Name $QPDFCmd -ErrorAction SilentlyContinue)) {
+            Write-Host "❌ qpdf command not found. Please ensure qpdf CLI is installed." -ForegroundColor Pink
+            return [PdfValidationStatus]::InvalidAccess # Treat lack of dependency as failure
+        }
+
+        # qpdf --check returns non-zero exit codes for issues:
+        # 0: Success
+        # 2: Serious/fatal error/corruption
+        # 3: Warnings
+
+        # Capture the output and the exit code
+        $QPDFOutput = & $QPDFCmd --check $PDFPath 2>&1
+        $ExitCode = $LASTEXITCODE
+
+        if ($ExitCode -eq 0) {
+            # Status 0: Success, no warnings
+            Write-Host "✅ Structural Check Passed: PDF is valid." -ForegroundColor Green
             return [PdfValidationStatus]::Valid
-        }
-        elseif ($LASTEXITCODE -eq 3) {
-            # Status 3: Success with Warnings
-            Write-Host "⚠️ Structural Check Passed with Warnings (Exit Code: 3):" -ForegroundColor Yellow
+        } elseif ($ExitCode -eq 3) {
+            # Status 3: Success with warnings
+            Write-Host "⚠️ Structural Check Passed with Warnings." -ForegroundColor Yellow
             if ($QPDFOutput) {
-                $QPDFOutput | ForEach-Object { Write-Host "   $_" }
+                Write-Host "--- QPDF Warnings ---\n" -ForegroundColor Yellow
+                $QPDFOutput | ForEach-Object { Write-Host "   $_" -ForegroundColor DarkYellow }
             }
-            return [PdfValidationStatus]::ValidWithWarnings # Explicit Warning Status
-        }
-        else {
+            return [PdfValidationStatus]::ValidWithWarnings
+        } else {
             # Status 2 (or other non-success code): Fatal Error/Corruption
-            Write-Host "❌ Structural Check Failed. PDF is corrupted (Exit Code: $LASTEXITCODE)." -ForegroundColor Pink
+            Write-Host "❌ Structural Check Failed. PDF is corrupted (Exit Code: $ExitCode)." -ForegroundColor Pink
             if ($QPDFOutput) {
-                Write-Host "--- QPDF Diagnostic Output ---"
-                $QPDFOutput | ForEach-Object { Write-Host "   $_" }
+                Write-Host "--- QPDF Diagnostic Output ---" -ForegroundColor Pink
+                $QPDFOutput | ForEach-Object { Write-Host "   $_" -ForegroundColor Pink }
             }
 
             if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
@@ -102,26 +184,3 @@ function Test-And-Clean-PdfValidity {
         }
     } # End Process Block
 }
-
-# Run this command to load the function into your current session:
-# . .\Test-And-Clean-PdfValidity.ps1
-
-# Example usage:
-
-# 1. Check a single file and delete it if invalid
-# Test-And-Clean-PdfValidity -PDFPath "C:\Data\Test.pdf" -DeleteOnInvalid $true
-
-# 2. Use with the pipeline (e.g., to check all files in a folder)
-# Get-ChildItem -Path "C:\Incoming" -Filter "*.pdf" | Test-And-Clean-PdfValidity
-
-# 3. Run the function
-# $Status = Test-And-Clean-PdfValidity -PDFPath "C:\file_to_check.pdf" -DeleteOnInvalid $true
-
-# 4. Check the result
-# if ($Status -eq [PdfValidationStatus]::Valid) {
-#     Write-Host "File is completely good!"
-# } elseif ($Status -eq [PdfValidationStatus]::ValidWithWarnings) {
-#     Write-Host "File is usable but needs inspection." -ForegroundColor Yellow
-# } elseif ($Status -eq [PdfValidationStatus]::InvalidCorrupt) {
-#     Write-Host "FATAL ERROR: File must be discarded." -ForegroundColor Pink
-# }
