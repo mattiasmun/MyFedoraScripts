@@ -26,7 +26,7 @@ if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?
     Write-Host ""
     Write-Host "Key Parameters:"
     Write-Host "  -SourceDirectory    (Mandatory) The root folder to scan for DOCX files."
-    Write-Host "  -OutputDirectory    (Optional) The folder to save PDFs (maintains sub-structure)."
+    Write-Host "  -OutputDirectory    (Optional)  The folder to save PDFs (maintains sub-structure)."
     Write-Host "  -DeleteOriginalDocx (Switch)    Deletes the source DOCX upon successful conversion and validation."
     Write-Host "  -SkipExistingPdf    (Switch)    Skips conversion if the target PDF already exists."
     Write-Host "  -WhatIf             (Switch)    Previews all actions (conversions, deletions) without execution."
@@ -37,6 +37,43 @@ if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?
 }
 # ----------------------------------
 
+# --- SCRIPT-SCOPE LOGGING FUNCTION (Moved outside the main function) ---
+# Global variable to hold the path to the current log file
+$Script:LogFilePath = $null
+
+function Write-Log {
+    param(
+        [Parameter(Mandatory=$true)][string]$Message,
+        [Parameter(Mandatory=$false)][ConsoleColor]$ForegroundColor,
+        [Parameter(Mandatory=$false)][bool]$IsError = $false
+    )
+
+    # 1. Format the message for the log file
+    $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $LogEntry = "[$Timestamp] $($Message)"
+
+    # 2. Append to log file (only if the path has been set by Convert-Docs-And-Validate)
+    if ($Script:LogFilePath) {
+        try {
+            Add-Content -Path $Script:LogFilePath -Value $LogEntry -ErrorAction SilentlyContinue
+        } catch {
+            # Write a warning to the console if log file writing fails, but continue the main process
+            Write-Host "Warning: Failed to write to log file '$Script:LogFilePath'. Log message: '$LogEntry'" -ForegroundColor Yellow
+        }
+    }
+
+    # 3. Write to console (using original Write-Host/Write-Error behavior)
+    if ($IsError) {
+        Write-Error $Message -ForegroundColor Pink # Use Pink for errors as requested
+    } elseif ($ForegroundColor) {
+        Write-Host $Message -ForegroundColor $ForegroundColor
+    } else {
+        Write-Host $Message
+    }
+}
+# ----------------------------------------------------------------------
+
+
 # --- 1. Load the Test-And-Clean-PdfValidity function ---
 # This assumes the validation script is in the same directory as this script.
 # If it is not, adjust the path below.
@@ -44,7 +81,7 @@ $ValidationScriptPath = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.De
 
 if (Test-Path -Path $ValidationScriptPath) {
     . $ValidationScriptPath
-    Write-Host "Loaded validation function from: $ValidationScriptPath" -ForegroundColor Cyan
+    Write-Log -Message "Loaded validation function from: $ValidationScriptPath" -ForegroundColor Cyan
 } else {
     Write-Error "Test-And-Clean-PdfValidity.ps1 not found at '$ValidationScriptPath'. Please ensure it is loaded." -ForegroundColor Pink
     # Exit script if the critical validation function cannot be found
@@ -104,45 +141,22 @@ function Convert-Docs-And-Validate {
         [switch]$SkipExistingPdf = $false
     )
 
-    # --- LOGGING SETUP ---
+    # --- LOGGING SETUP (Initialize the log file path) ---
     $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
     $LogFileName = "Conversion_Validation_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
-    $LogFilePath = Join-Path $ScriptDir $LogFileName
+    $Script:LogFilePath = Join-Path $ScriptDir $LogFileName # Set the script-level variable
 
-    # Helper function to write to both console and the log file
-    function Write-Log {
-        param(
-            [Parameter(Mandatory=$true)][string]$Message,
-            [Parameter(Mandatory=$false)][ConsoleColor]$ForegroundColor,
-            [Parameter(Mandatory=$false)][bool]$IsError = $false
-        )
-
-        # 1. Format the message for the log file
-        $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-        $LogEntry = "[$Timestamp] $($Message)"
-
-        # 2. Append to log file
-        try {
-            Add-Content -Path $LogFilePath -Value $LogEntry -ErrorAction SilentlyContinue
-        } catch {
-            # Write a warning to the console if log file writing fails, but continue the main process
-            Write-Host "Warning: Failed to write to log file '$LogFilePath'. Log message: '$LogEntry'" -ForegroundColor Yellow
-        }
-
-        # 3. Write to console (using original Write-Host/Write-Error behavior)
-        if ($IsError) {
-            Write-Error $Message -ForegroundColor Pink # Use Pink for errors as requested
-        } elseif ($ForegroundColor) {
-            Write-Host $Message -ForegroundColor $ForegroundColor
-        } else {
-            Write-Host $Message
-        }
+    # Define the logger scriptblock to pass to Test-And-Clean-PdfValidity
+    # This closure ensures the validation function uses our Write-Log wrapper
+    $Logger = {
+        param([string]$Message, [ConsoleColor]$ForegroundColor, [bool]$IsError)
+        Write-Log -Message $Message -ForegroundColor $ForegroundColor -IsError $IsError
     }
     # --- END LOGGING SETUP ---
 
     # Log the start of the script
     Write-Log -Message "--- Starting Conversion and Validation Script ---" -ForegroundColor Cyan
-    Write-Log -Message "Log file created at: $LogFilePath" -ForegroundColor Cyan
+    Write-Log -Message "Log file created at: $Script:LogFilePath" -ForegroundColor Cyan
     Write-Log -Message "Source Directory: $SourceDirectory" -ForegroundColor Cyan
     Write-Log -Message "Output Directory: $OutputDirectory" -ForegroundColor Cyan
     Write-Log -Message "Delete Original DOCX: $DeleteOriginalDocx" -ForegroundColor Cyan
@@ -239,9 +253,9 @@ function Convert-Docs-And-Validate {
 
                 Write-Log -Message "  ✅ Conversion Successful. Starting validation." -ForegroundColor Green
 
-                # --- 3. Run Validation and Cleanup ---
+                # --- 3. Run Validation and Cleanup (NOW PASSING THE LOGGER) ---
                 # We explicitly ask the validation function to delete the PDF if it's corrupt.
-                $Status = Test-And-Clean-PdfValidity -PDFPath $PdfPath -DeleteOnInvalid $true
+                $Status = Test-And-Clean-PdfValidity -PDFPath $PdfPath -DeleteOnInvalid $true -LogFunction $Logger
 
                 if ($Status -eq [PdfValidationStatus]::Valid) {
                     $ValidCount++ # Increment Valid counter
@@ -286,7 +300,10 @@ function Convert-Docs-And-Validate {
     Write-Log -Message "  ✅ Valid PDFs (Clean): $($ValidCount)" -ForegroundColor Green
     Write-Log -Message "  ⚠️ Valid PDFs with Warnings: $($WarningsCount)" -ForegroundColor Yellow
     Write-Log -Message "  ❌ Invalid PDFs (Deleted): $($InvalidCount)" -ForegroundColor Pink
-    Write-Log -Message "--- End of Log File $LogFileName ---" -ForegroundColor Cyan
+    Write-Log -Message "--- End of Log File $Script:LogFilePath ---" -ForegroundColor Cyan
+
+    # Clean up the script-level variable after the run is complete
+    $Script:LogFilePath = $null
 }
 
 # --- EXAMPLE USAGE ---
