@@ -4,8 +4,10 @@
 #              using RocketPDF, and then validates the output using the
 #              Test-And-Clean-PdfValidity function (which must be loaded).
 # Prerequisites:
-# 1. RocketPDF CLI must be installed and accessible in the system PATH.
-# 2. qpdf (used by Test-And-Clean-PdfValidity) must be installed and accessible.
+# 1. RocketPDF CLI must be installed and accessible in the system PATH, OR
+#    the global variable $global:RocketPDFPath must be set in the profile.
+# 2. qpdf (used by Test-And-Clean-PdfValidity) must be accessible, OR
+#    the global variable $global:QPDFPath must be set in the profile.
 # 3. The file 'Test-And-Clean-PdfValidity.ps1' must be loaded in the same session.
 # -----------------------------------------------------------------------------
 
@@ -154,6 +156,17 @@ function Convert-Docs-And-Validate {
     }
     # --- END LOGGING SETUP ---
 
+    # --- EXECUTABLE PATH RESOLUTION (New) ---
+    # Use the global path defined in the profile if available, otherwise assume it's in PATH.
+    $RocketPdfCmd = if ($global:RocketPDFPath -and (Test-Path -Path $global:RocketPDFPath -PathType Leaf)) {
+        $global:RocketPDFPath
+    } else {
+        "RocketPDF"
+    }
+    # We will pass the QPDF path resolution logic to the Test-And-Clean-PdfValidity function
+    # via the $global:QPDFPath variable.
+    # --- END PATH RESOLUTION ---
+
     # Log the start of the script
     Write-Log -Message "--- Starting Conversion and Validation Script ---" -ForegroundColor Cyan
     Write-Log -Message "Log file created at: $Script:LogFilePath" -ForegroundColor Cyan
@@ -181,12 +194,9 @@ function Convert-Docs-And-Validate {
     $InvalidCount = 0
     $SkippedCount = 0 # New counter for skipped files
 
-    # RocketPDF command path (assuming it's in PATH)
-    $RocketPdfCmd = "RocketPDF"
-
     # Check if RocketPDF is available
-    if (-not (Get-Command -Name $RocketPdfCmd -ErrorAction SilentlyContinue)) {
-        Write-Log -Message "RocketPDF command not found. Please ensure the RocketPDF CLI is installed and in your system PATH." -IsError $true
+    if (($RocketPdfCmd -eq "RocketPDF") -and -not (Get-Command -Name $RocketPdfCmd -ErrorAction SilentlyContinue)) {
+        Write-Log -Message "RocketPDF command not found. Ensure the CLI is in your PATH, or set the \$global:RocketPDFPath variable in your profile." -IsError $true
         return
     }
 
@@ -254,7 +264,7 @@ function Convert-Docs-And-Validate {
                 Write-Log -Message "  ✅ Conversion Successful. Starting validation." -ForegroundColor Green
 
                 # --- 3. Run Validation and Cleanup (NOW PASSING THE LOGGER) ---
-                # We explicitly ask the validation function to delete the PDF if it's corrupt.
+                # The validation function will now look for $global:QPDFPath
                 $Status = Test-And-Clean-PdfValidity -PDFPath $PdfPath -DeleteOnInvalid $true -LogFunction $Logger
 
                 if ($Status -eq [PdfValidationStatus]::Valid) {

@@ -2,7 +2,8 @@
 # PowerShell Script: Test-And-Clean-PdfValidity.ps1
 # Description: Defines a function to check the structural validity of a PDF
 #              using qpdf, optionally cleaning or deleting invalid files.
-# Prerequisites: qpdf CLI must be installed and accessible in the system PATH.
+# Prerequisites: qpdf CLI must be installed and accessible in the system PATH, OR
+#                the global variable $global:QPDFPath must be set in the profile.
 # -----------------------------------------------------------------------------
 
 # --- GLOBAL SCRIPT HELP CHECK (New) ---
@@ -80,7 +81,8 @@ Test-And-Clean-PdfValidity -PDFPath "C:\Data\Test.pdf" -DeleteOnInvalid $true
 Get-ChildItem -Path "C:\Incoming" -Filter "*.pdf" | Test-And-Clean-PdfValidity
 
 .NOTES
-Requires the 'qpdf' command line utility to be installed and accessible in the system PATH.
+Requires the 'qpdf' command line utility to be installed and accessible in the system PATH,
+or the global variable $global:QPDFPath to be set in the PowerShell profile.
 #>
 function Test-And-Clean-PdfValidity {
     [CmdletBinding(DefaultParameterSetName='Path')]
@@ -175,19 +177,23 @@ function Test-And-Clean-PdfValidity {
             if ($Stream) { $Stream.Dispose() }
         }
 
-        # --- 3. QPDF STRUCTURAL VALIDATION CHECK
-        $QPDFCmd = "qpdf"
 
-        # Check if qpdf is available
-        if (-not (Get-Command -Name $QPDFCmd -ErrorAction SilentlyContinue)) {
-            Write-TestLog -Message "❌ qpdf command not found. Please ensure qpdf CLI is installed." -ForegroundColor Pink
+        # --- 3. QPDF STRUCTURAL VALIDATION CHECK (Updated Path Logic) ---
+        # 1. Check for global path first (set in profile)
+        $QPDFCmd = if ($global:QPDFPath -and (Test-Path -Path $global:QPDFPath -PathType Leaf)) {
+            $global:QPDFPath
+        } else {
+            "qpdf"
+        }
+
+        # 2. Check if the command is available (either in PATH or via the explicit path)
+        if (($QPDFCmd -eq "qpdf") -and -not (Get-Command -Name $QPDFCmd -ErrorAction SilentlyContinue)) {
+            Write-TestLog -Message "❌ qpdf command not found. Ensure the CLI is in your PATH, or set the \$global:QPDFPath variable in your profile." -ForegroundColor Pink
             return [PdfValidationStatus]::InvalidAccess # Treat lack of dependency as failure
         }
 
         # qpdf --check returns non-zero exit codes for issues:
-        # 0: Success
-        # 2: Serious/fatal error/corruption
-        # 3: Warnings
+        # 0: Success, 2: Serious/fatal error/corruption, 3: Warnings
 
         # Capture the output and the exit code
         $QPDFOutput = & $QPDFCmd --check $PDFPath 2>&1
