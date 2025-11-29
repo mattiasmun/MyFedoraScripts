@@ -6,8 +6,7 @@
 #                the global variable $global:QPDFPath must be set in the profile.
 # -----------------------------------------------------------------------------
 
-# --- GLOBAL SCRIPT HELP CHECK (New) ---
-# Check if the user requested help before proceeding to define the function.
+# --- GLOBAL SCRIPT HELP CHECK ---
 if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?' -or $args -contains '/?') {
     Write-Host ""
     Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
@@ -16,11 +15,7 @@ if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?
     Write-Host "This script defines a single function to validate PDF integrity."
     Write-Host "It uses the 'qpdf' CLI tool to check for structural corruption."
     Write-Host ""
-    Write-Host "To load and execute the function, you must first dot-source the script:"
-    Write-Host "  . .\Test-And-Clean-PdfValidity.ps1"
-    Write-Host "  Test-And-Clean-PdfValidity -PDFPath <path> -DeleteOnInvalid"
-    Write-Host ""
-    Write-Host "Key Parameters:"
+    Write_Host "Key Parameters:"
     Write-Host "  -PDFPath (Mandatory) The full path to the PDF file(s) to check."
     Write-Host "  -DeleteOnInvalid (Switch) If present, the file is deleted if validation fails."
     Write-Host "  -LogFunction (Internal) Used by Convert-Docs-And-Validate.ps1 to append to its log file."
@@ -108,10 +103,9 @@ function Test-And-Clean-PdfValidity {
 
         if ($LogFunction) {
             # Execute the LogFunction scriptblock provided by the caller
-            # The Write-Log function handles both file logging and console output
             & $LogFunction -Message $Message -ForegroundColor $ForegroundColor -IsError $IsError
         } else {
-            # Fallback for standalone use (or if LogFunction wasn't passed)
+            # Fallback for standalone use
             if ($IsError) {
                 Write-Error $Message -ForegroundColor Pink
             } elseif ($ForegroundColor) {
@@ -177,8 +171,7 @@ function Test-And-Clean-PdfValidity {
             if ($Stream) { $Stream.Dispose() }
         }
 
-
-        # --- 3. QPDF STRUCTURAL VALIDATION CHECK (Updated Path Logic) ---
+        # --- 3. QPDF STRUCTURAL VALIDATION CHECK (Using global path if available) ---
         # 1. Check for global path first (set in profile)
         $QPDFCmd = if ($global:QPDFPath -and (Test-Path -Path $global:QPDFPath -PathType Leaf)) {
             $global:QPDFPath
@@ -224,5 +217,5 @@ function Test-And-Clean-PdfValidity {
             if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
             return [PdfValidationStatus]::InvalidCorrupt # Explicit Corruption Status
         }
-    } # End Process Block
+    }
 }
