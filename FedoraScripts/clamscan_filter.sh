@@ -52,8 +52,7 @@ fi
 # 1. KÖR CLAMDSCA MED FLYTT TILL KARANTÄN
 # --------------------------
 # --move: Flyttar infekterade filer till karantän (detta är clamdscans inbyggda flagga)
-# -r: Skanna rekursivt
-"$CLAMSCAN_BIN" --move="$KARANTAN_DIR" -r --no-summary "$SPARAD_BILAGA_DIR" >> "$LOGG_FIL" 2>&1
+"$CLAMSCAN_BIN" --move="$KARANTAN_DIR" --no-summary "$SPARAD_BILAGA_DIR" >> "$LOGG_FIL" 2>&1
 
 # Fånga exit-koden från clamdscan.
 CLAMSCAN_STATUS=$?
