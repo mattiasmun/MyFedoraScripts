@@ -29,7 +29,7 @@ mkdir -p "$HOME/.clamtk/log"
 
 # Lägg till tidsstämpel och miljövärden i loggen
 echo "--- Skanning startad: $(date) ---" >> "$LOGG_FIL"
-echo "VERKTYG: clamdscan (--stream aktiv)" >> "$LOGG_FIL"
+echo "VERKTYG: clamdscan (--stream aktiv, ansluter via TCP/IP från scan.conf)" >> "$LOGG_FIL"
 echo "Kontrollerad \$HOME: $HOME" >> "$LOGG_FIL"
 echo "Skanningskatalog: $SPARAD_BILAGA_DIR" >> "$LOGG_FIL"
 echo "Karantänkatalog: $KARANTAN_DIR" >> "$LOGG_FIL"
@@ -52,7 +52,7 @@ fi
 # 1. KÖR CLAMDSCA MED FLYTT TILL KARANTÄN
 # --------------------------
 # --stream tvingar clamdscan att läsa filen (som mmunster) och strömma den till clamd.
-# Detta kringgår behörighetsfelet på filsystemet (File path check failure).
+# Denna flagga löser behörighetsfelet på filsystemet (File path check failure).
 "$CLAMSCAN_BIN" --stream --move="$KARANTAN_DIR" --no-summary "$SPARAD_BILAGA_DIR" >> "$LOGG_FIL" 2>&1
 
 # Fånga exit-koden från clamdscan.
@@ -77,7 +77,7 @@ elif [ "$CLAMSCAN_STATUS" -eq 1 ]; then
 else
     # Andra fel. Logga felkoden för diagnostik.
     echo "Skanning klar: FEL UPPSTOD (Exit Code $CLAMSCAN_STATUS)." >> "$LOGG_FIL"
-    echo "Felet kan bero på: clamd-daemonen körs inte eller att clamdscan inte hittade daemonen." >> "$LOGG_FIL"
+    echo "Felet kan bero på: clamd-daemonen körs inte, eller att clamdscan inte hittade daemonen (fel i scan.conf)." >> "$LOGG_FIL"
     # Låt mappen vara kvar för felsökning vid fel.
     exit 99
 fi
