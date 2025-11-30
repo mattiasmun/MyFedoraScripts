@@ -2,9 +2,7 @@
 f="$HOME"'/Bash/MyFedoraScripts/FedoraScripts/progs'
 echo '#!/bin/bash' > "$f"
 data='sudo -A dnf -y install '
-que="$(dnf5 repoquery --userinstalled --queryformat '%{name} \')"
+que="$(dnf5 repoquery --userinstalled --queryformat '%{name}.%{arch} \\n')"
 que="${que::-2}"
 echo "$data$que" >> "$f"
-sed -i 's/\\/\\\n/g' "$f"
 chmod +x "$f"
-ex +g/'x86_64'/d -scwq "$f"
