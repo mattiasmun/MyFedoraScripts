@@ -28,6 +28,20 @@ mkdir -p "$HOME/.clamtk/log"
 echo "--- Skanning startad: $(date) ---" >> "$LOGG_FIL"
 
 # --------------------------
+# 0.5. KONTROLLERA INNEHÅLL
+# --------------------------
+# Säkerställ att om det inte finns några filer i mappen, avslutas skriptet.
+# 'shopt -s nullglob' ser till att '*.+' blir en tom sträng om det inte finns matchningar.
+shopt -s nullglob
+files=("$SPARAD_BILAGA_DIR"/*)
+shopt -u nullglob
+
+if [ ${#files[@]} -eq 0 ]; then
+    echo "Skanning klar: Ingen bilaga hittades i mappen. Avslutas." >> "$LOGG_FIL"
+    exit 0
+fi
+
+# --------------------------
 # 1. KÖR CLAMSCAN MED LOGGNING
 # --------------------------
 # Argument:
