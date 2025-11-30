@@ -1,6 +1,6 @@
 #!/bin/bash
 # Detta skript fungerar som en mellanhand mellan FiltaQuilla och ClamAV.
-# Det skannar en FIXXAD SÖKVÄG där Thunderbird/FiltaQuilla sparar bilagorna.
+# Det skannar den fixa sökvägen där Thunderbird/FiltaQuilla sparar bilagorna.
 
 # --------------------------
 # VARIABLER
@@ -14,21 +14,27 @@ KARANTAN_DIR="$HOME/.clamtk/quarantine"
 # Sökväg till Clamscan binärfil
 CLAMSCAN_BIN="/usr/bin/clamscan"
 
+# Loggfilens sökväg (vi lägger den i .clamtk/log/)
+LOGG_FIL="$HOME/.clamtk/log/clamscan_filter.log"
+
 # --------------------------
 # 0. FÖRBEREDELSER
 # --------------------------
-# Skapa karantänmappen om den inte redan finns, för att undvika fel i clamscan.
+# Skapa karantän- och loggmappar om de inte redan finns.
 mkdir -p "$KARANTAN_DIR"
+mkdir -p "$HOME/.clamtk/log"
+
+# Lägg till tidsstämpel i loggen
+echo "--- Skanning startad: $(date) ---" >> "$LOGG_FIL"
 
 # --------------------------
-# 1. KÖR CLAMSCAN MOT DEN FIXA SÖKVÄGEN
+# 1. KÖR CLAMSCAN MED LOGGNING
 # --------------------------
 # Argument:
-# --no-summary: Håll utdata ren
 # -r: Skanna rekursivt
 # --move: Flytta den infekterade filen direkt till karantän
-# Sökväg: Vi skannar den sparade mappen direkt.
-"$CLAMSCAN_BIN" --no-summary -r --move="$KARANTAN_DIR" "$SPARAD_BILAGA_DIR"
+# --log: Skriver alla meddelanden till loggfilen
+"$CLAMSCAN_BIN" -r --move="$KARANTAN_DIR" --log="$LOGG_FIL" "$SPARAD_BILAGA_DIR"
 
 # Fånga exit-koden från clamscan.
 CLAMSCAN_STATUS=$?
@@ -39,17 +45,19 @@ CLAMSCAN_STATUS=$?
 
 if [ "$CLAMSCAN_STATUS" -eq 0 ]; then
     # Exit code 0: Rent. Inga hot hittades.
+    echo "Skanning klar: Rent." >> "$LOGG_FIL"
     # Rensa den temporära sparade bilagemappen.
     rm -rf "$SPARAD_BILAGA_DIR"/*
     exit 0
 elif [ "$CLAMSCAN_STATUS" -eq 1 ]; then
     # Exit code 1: Virushot hittades OCH flyttades till karantän.
-    # Returnerar 10 för att Thunderbird ska fånga att en åtgärd utfördes.
+    echo "Skanning klar: VIRUS HITTAT och flyttat till karantän: $KARANTAN_DIR" >> "$LOGG_FIL"
     # Rensa den nu tomma sparade bilagemappen.
     rm -rf "$SPARAD_BILAGA_DIR"/*
     exit 10
 else
-    # Andra fel (t.ex. databasfel, sökvägsproblem).
+    # Andra fel.
+    echo "Skanning klar: FEL UPPSTOD (Exit Code $CLAMSCAN_STATUS). Kontrollera ClamAV-databasen." >> "$LOGG_FIL"
     # Låt mappen vara kvar för felsökning vid fel.
     exit 99
 fi
