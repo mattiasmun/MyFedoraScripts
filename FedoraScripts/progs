@@ -170,6 +170,7 @@ clamav-filesystem.noarch \
 clamav-freshclam.x86_64 \
 clamav-lib.x86_64 \
 clamav.x86_64 \
+clamd.x86_64 \
 clamtk.noarch \
 clang-libs.x86_64 \
 clang-resource-filesystem.x86_64 \
