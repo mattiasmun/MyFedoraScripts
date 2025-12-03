@@ -14,12 +14,12 @@ if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?
     Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
     Write-Host "This script defines a single function to validate PDF integrity."
     Write-Host "It uses the 'qpdf' CLI tool to check for structural corruption."
-    Write-Host ""
-    Write_Host "Key Parameters:"
+    Write-Host " "
+    Write-Host "Key Parameters:"
     Write-Host "  -PDFPath (Mandatory) The full path to the PDF file(s) to check."
     Write-Host "  -DeleteOnInvalid (Switch) If present, the file is deleted if validation fails."
     Write-Host "  -LogFunction (Internal) Used by Convert-Docs-And-Validate.ps1 to append to its log file."
-    Write-Host ""
+    Write-Host " "
     Write-Host "Outputs an Enum status: Valid, ValidWithWarnings, InvalidHeader, InvalidAccess, InvalidCorrupt."
     Write-Host "For detailed parameter help, run: Get-Help Test-And-Clean-PdfValidity -Full"
     Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
