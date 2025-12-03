@@ -610,12 +610,6 @@ kf5-filesystem.x86_64 \
 khmer-os-content-fonts.noarch \
 khmer-os-system-fonts.noarch \
 kid3-common.x86_64 \
-kmod-VirtualBox-6.17.7-300.fc43.x86_64.x86_64 \
-kmod-VirtualBox-6.17.8-300.fc43.x86_64.x86_64 \
-kmod-VirtualBox-6.17.9-300.fc43.x86_64.x86_64 \
-kmod-nvidia-6.17.7-300.fc43.x86_64.x86_64 \
-kmod-nvidia-6.17.8-300.fc43.x86_64.x86_64 \
-kmod-nvidia-6.17.9-300.fc43.x86_64.x86_64 \
 kmod-nvidia.x86_64 \
 kmodtool.noarch \
 krb5-devel.x86_64 \
