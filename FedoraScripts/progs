@@ -1870,6 +1870,7 @@ whois.x86_64 \
 wine-common.noarch \
 wine-core.x86_64 \
 wine-filesystem.noarch \
+wine-mono.noarch \
 winetricks.noarch \
 wireplumber.x86_64 \
 wkhtmltopdf.x86_64 \
