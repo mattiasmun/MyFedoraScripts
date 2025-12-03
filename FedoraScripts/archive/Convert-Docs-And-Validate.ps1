@@ -228,7 +228,7 @@ function Convert-Docs-And-Validate {
         # Construct the final PDF path
         $PdfPath = Join-Path $OutputFolder ($File.BaseName + ".pdf")
 
-        Write-Log -Message ""
+        Write-Log -Message " "
         Write-Log -Message "Processing: $($File.Name)" -ForegroundColor White
 
         # --- Create Output Directory if it doesn't exist ---
@@ -301,7 +301,7 @@ function Convert-Docs-And-Validate {
     $EndTime = Get-Date
     $TotalTime = New-TimeSpan -Start $StartTime -End $EndTime
 
-    Write-Log -Message ""
+    Write-Log -Message " "
     Write-Log -Message "--- Conversion and Validation Process Complete ---" -ForegroundColor Cyan
     Write-Log -Message "Total processing time: $($TotalTime.TotalSeconds) seconds ($($TotalTime.Minutes)m $($TotalTime.Seconds)s)" -ForegroundColor Cyan
     Write-Log -Message "--- Summary of Results ---" -ForegroundColor Yellow
