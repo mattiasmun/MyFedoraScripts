@@ -610,12 +610,12 @@ kf5-filesystem.x86_64 \
 khmer-os-content-fonts.noarch \
 khmer-os-system-fonts.noarch \
 kid3-common.x86_64 \
-kmod-VirtualBox-6.17.7-200.fc42.x86_64.x86_64 \
 kmod-VirtualBox-6.17.7-300.fc43.x86_64.x86_64 \
 kmod-VirtualBox-6.17.8-300.fc43.x86_64.x86_64 \
-kmod-nvidia-6.17.7-200.fc42.x86_64.x86_64 \
+kmod-VirtualBox-6.17.9-300.fc43.x86_64.x86_64 \
 kmod-nvidia-6.17.7-300.fc43.x86_64.x86_64 \
 kmod-nvidia-6.17.8-300.fc43.x86_64.x86_64 \
+kmod-nvidia-6.17.9-300.fc43.x86_64.x86_64 \
 kmod-nvidia.x86_64 \
 kmodtool.noarch \
 krb5-devel.x86_64 \
@@ -1594,6 +1594,7 @@ python3-yui.x86_64 \
 python3-zombie-imp.noarch \
 qadwaitadecorations-qt5.x86_64 \
 qemu-guest-agent.x86_64 \
+qpdf.x86_64 \
 qqwing-libs.x86_64 \
 qt5-qtbase-gui.x86_64 \
 qt5-qtbase.x86_64 \
