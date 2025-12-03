@@ -66,7 +66,7 @@ function Write-Log {
 
     # 3. Write to console (using original Write-Host/Write-Error behavior)
     if ($IsError) {
-        Write-Error $Message -ForegroundColor Pink # Use Pink for errors as requested
+        Write-Error $Message -ForegroundColor Magenta # Use Magenta for errors as requested
     } elseif ($ForegroundColor) {
         Write-Host $Message -ForegroundColor $ForegroundColor
     } else {
@@ -85,7 +85,7 @@ if (Test-Path -Path $ValidationScriptPath) {
     . $ValidationScriptPath
     Write-Log -Message "Loaded validation function from: $ValidationScriptPath" -ForegroundColor Cyan
 } else {
-    Write-Error "Test-And-Clean-PdfValidity.ps1 not found at '$ValidationScriptPath'. Please ensure it is loaded." -ForegroundColor Pink
+    Write-Error "Test-And-Clean-PdfValidity.ps1 not found at '$ValidationScriptPath'. Please ensure it is loaded." -ForegroundColor Magenta
     # Exit script if the critical validation function cannot be found
     exit 1
 }
@@ -288,7 +288,7 @@ function Convert-Docs-And-Validate {
                     $InvalidCount++ # Increment Invalid counter
                     # If InvalidHeader, InvalidAccess, or InvalidCorrupt, the Test-And-Clean function
                     # handled the deletion because we passed -DeleteOnInvalid $true.
-                    Write-Log -Message "  🚫 PDF validation failed (Status: $Status). PDF was invalid and has been deleted." -ForegroundColor Pink
+                    Write-Log -Message "  🚫 PDF validation failed (Status: $Status). PDF was invalid and has been deleted." -ForegroundColor Magenta
                 }
 
             } catch {
@@ -309,7 +309,7 @@ function Convert-Docs-And-Validate {
     Write-Log -Message "  ⏩ Files Skipped (PDF Existed): $($SkippedCount)" -ForegroundColor DarkYellow
     Write-Log -Message "  ✅ Valid PDFs (Clean): $($ValidCount)" -ForegroundColor Green
     Write-Log -Message "  ⚠️ Valid PDFs with Warnings: $($WarningsCount)" -ForegroundColor Yellow
-    Write-Log -Message "  ❌ Invalid PDFs (Deleted): $($InvalidCount)" -ForegroundColor Pink
+    Write-Log -Message "  ❌ Invalid PDFs (Deleted): $($InvalidCount)" -ForegroundColor Magenta
     Write-Log -Message "--- End of Log File $Script:LogFilePath ---" -ForegroundColor Cyan
 
     # Clean up the script-level variable after the run is complete
