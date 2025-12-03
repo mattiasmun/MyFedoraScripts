@@ -1,30 +1,29 @@
 #!/bin/bash
 
 # Define the output file path
-f="$HOME"'/Bash/MyFedoraScripts/FedoraScripts/progs'
+target_script_path="$HOME"'/Bash/MyFedoraScripts/FedoraScripts/progs'
 
 # 1. Start writing the new script file
-echo '#!/bin/bash' > "$f"
+echo '#!/bin/bash' > "$target_script_path"
 
 # Define the command prefix
-data='sudo -A dnf -y install '
+install_command_prefix='sudo -A dnf -y install '
 
 # 2. Query user-installed packages, then pipe the result to grep -vE
 # dnf5 repoquery outputs one package per line.
 # grep -vE: 
 #   -v: Invert the match (output lines that *DO NOT* match the pattern)
 #   -E: Enable extended regex for the '|' (OR) operator
-# The pattern excludes any line containing 'kmod-VirtualBox' OR 'kmod-nvidia'.
-# The queryformat now includes a backslash before the newline for multi-line command output.
-que="$(dnf5 repoquery --userinstalled --queryformat '%{name}.%{arch} \\n' | grep -vE 'kmod-(VirtualBox|nvidia)-')"
+# The pattern excludes any line containing 'kmod-VirtualBox-' OR 'kmod-nvidia-'.
+package_query_result="$(dnf5 repoquery --userinstalled --queryformat '%{name}.%{arch} \\n' | grep -vE 'kmod-(VirtualBox|nvidia)-')"
 
-# 3. Remove the trailing space and newline (\n) added by the queryformat
-# This trimming logic should now leave a trailing backslash in the 'que' variable,
+# 3. Remove the final trailing space and backslash added by the queryformat
+# The trimming logic should now leave a trailing backslash in the 'package_query_result' variable,
 # which allows the final 'dnf install' command to continue gracefully.
-que="${que::-2}"
+package_query_result="${package_query_result::-2}"
 
 # 4. Write the final command to the file
-echo "$data$que" >> "$f"
+echo "$install_command_prefix$package_query_result" >> "$target_script_path"
 
 # 5. Make the new file executable
-chmod +x "$f"
+chmod +x "$target_script_path"
