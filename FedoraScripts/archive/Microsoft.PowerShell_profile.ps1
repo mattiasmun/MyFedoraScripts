@@ -133,8 +133,8 @@ if ($Host.Name -eq 'ConsoleHost') {
     Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath
 
     # Optional: Add aliases for quick execution
-    Set-Alias -Name cdocs -Value Convert-Docs-And-Validate -Scope Global
-    Set-Alias -Name tpdf -Value Test-And-Clean-PdfValidity -Scope Global
+    Set-Alias -Name cdocs -Value "$ScriptPath\Convert-Docs-And-Validate.ps1" -Scope Global
+    Set-Alias -Name tpdf -Value "$ScriptPath\Test-And-Clean-PdfValidity.ps1" -Scope Global
 
     Write-Host "--- Ready to convert documents (use 'cdocs') and test PDFs (use 'tpdf') ---" -ForegroundColor Cyan
 
