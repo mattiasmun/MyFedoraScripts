@@ -14,25 +14,25 @@
 # --- GLOBAL SCRIPT HELP CHECK ---
 # Check if the user requested help before proceeding to load the function or execute.
 if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?' -or $args -contains '/?') {
-    Write-Host ""
+    Write-Host " "
     Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
     Write-Host "          Convert-Docs-And-Validate.ps1 Usage           " -ForegroundColor Yellow
     Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
     Write-Host "This script converts all DOCX files in a directory (recursively)"
     Write-Host "to compressed PDFs using RocketPDF, and then validates the PDF"
     Write-Host "structure using Test-And-Clean-PdfValidity (qpdf dependency)."
-    Write-Host ""
+    Write-Host " "
     Write-Host "To execute the main function, you must first load the script (dot-source):"
     Write-Host "  . .\Convert-Docs-And-Validate.ps1"
     Write-Host "  Convert-Docs-And-Validate -SourceDirectory <path> [options]"
-    Write-Host ""
+    Write-Host " "
     Write-Host "Key Parameters:"
     Write-Host "  -SourceDirectory    (Mandatory) The root folder to scan for DOCX files."
     Write-Host "  -OutputDirectory    (Optional)  The folder to save PDFs (maintains sub-structure)."
     Write-Host "  -DeleteOriginalDocx (Switch)    Deletes the source DOCX upon successful conversion and validation."
     Write-Host "  -SkipExistingPdf    (Switch)    Skips conversion if the target PDF already exists."
     Write-Host "  -WhatIf             (Switch)    Previews all actions (conversions, deletions) without execution."
-    Write-Host ""
+    Write-Host " "
     Write-Host "For detailed parameter help, run: Get-Help Convert-Docs-And-Validate -Full"
     Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
     exit
