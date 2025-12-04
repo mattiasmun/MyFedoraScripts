@@ -80,7 +80,8 @@ $ScriptPath = if ($ScriptPathPlaceholder -eq $PlaceholderCheck) {
 function Load-CustomScript {
     param(
         [Parameter(Mandatory=$true)][string]$FileName,
-        [Parameter(Mandatory=$true)][string]$BaseDir
+        [Parameter(Mandatory=$true)][string]$BaseDir,
+        [Parameter(Mandatory=$false)][string]$AnAlias
     )
     $FullPath = Join-Path -Path $BaseDir -ChildPath $FileName
     # Extract the command name from the file name (e.g., Test-And-Clean-PdfValidity)
@@ -90,6 +91,10 @@ function Load-CustomScript {
         try {
             # Explicitly dot-source the script into the global scope.
             . $FullPath
+            if ($AnAlias) {
+                # Optional: Add aliases for quick execution
+                Set-Alias -Name $AnAlias -Value $FullPath -Scope Global
+            }
             
             # IMMEDIATE POST-LOAD CHECK
             $FunctionCheck = Get-Command $FunctionName -ErrorAction SilentlyContinue
@@ -127,14 +132,10 @@ if ($Host.Name -eq 'ConsoleHost') {
     Write-Host "-> Determined Script Path: '$ScriptPath'" -ForegroundColor Yellow
 
     # 1. Load the validation function (Test-And-Clean-PdfValidity.ps1)
-    Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath
+    Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath -AnAlias cdocs
 
     # 2. Load the main converter function (Convert-Docs-And-Validate.ps1)
-    Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath
-
-    # Optional: Add aliases for quick execution
-    Set-Alias -Name cdocs -Value "$ScriptPath\Convert-Docs-And-Validate.ps1" -Scope Global
-    Set-Alias -Name tpdf -Value "$ScriptPath\Test-And-Clean-PdfValidity.ps1" -Scope Global
+    Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath -AnAlias tpdf
 
     Write-Host "--- Ready to convert documents (use 'cdocs') and test PDFs (use 'tpdf') ---" -ForegroundColor Cyan
 
