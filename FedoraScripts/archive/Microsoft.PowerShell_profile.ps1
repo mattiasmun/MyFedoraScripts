@@ -89,23 +89,21 @@ function Load-CustomScript {
 
     if (Test-Path -Path $FullPath -PathType Leaf) {
         try {
-            # Explicitly dot-source the script into the global scope.
-            . $FullPath
             if ($AnAlias) {
                 # Optional: Add aliases for quick execution
                 Set-Alias -Name $AnAlias -Value $FullPath -Scope Global
             }
             
             # IMMEDIATE POST-LOAD CHECK
-            $FunctionCheck = Get-Command $FunctionName -ErrorAction SilentlyContinue
-            if ($FunctionCheck -is [System.Management.Automation.FunctionInfo]) {
-                Write-Host "✅ Loaded and verified function: $FunctionName" -ForegroundColor Green
-            } else {
+            # $FunctionCheck = Get-Command $FunctionName -ErrorAction SilentlyContinue
+            # if ($FunctionCheck -is [System.Management.Automation.FunctionInfo]) {
+            #     Write-Host "✅ Loaded and verified function: $FunctionName" -ForegroundColor Green
+            # } else {
                 # This should catch cases where the file was found, but the function 
                 # definition (e.g., the 'function { ... }' block) wasn't recognized or defined.
-                Write-Host "⚠️ Loaded script '$FileName', but could not find the function '$FunctionName'." -ForegroundColor Yellow
-                Write-Host "   -> Ensure the function is defined inside the file using the 'function' keyword." -ForegroundColor Yellow
-            }
+            #     Write-Host "⚠️ Loaded script '$FileName', but could not find the function '$FunctionName'." -ForegroundColor Yellow
+            #     Write-Host "   -> Ensure the function is defined inside the file using the 'function' keyword." -ForegroundColor Yellow
+            # }
 
         } catch {
             # Use Red for failed loading due to script error
