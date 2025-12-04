@@ -46,7 +46,7 @@ $Script:LogFilePath = $null
 function Write-Log {
     param(
         [Parameter(Mandatory=$true)][string]$Message,
-        [Parameter(Mandatory=$false)][ConsoleColor]$ForegroundColor,
+        [Parameter(Mandatory=$false)][ConsoleColor]$ForegroundColor = $Host.UI.RawUI.ForegroundColor,
         [Parameter(Mandatory=$false)][bool]$IsError = $false
     )
 
@@ -67,10 +67,8 @@ function Write-Log {
     # 3. Write to console (using original Write-Host/Write-Error behavior)
     if ($IsError) {
         Write-Error $Message -ForegroundColor Magenta # Use Magenta for errors as requested
-    } elseif ($ForegroundColor) {
-        Write-Host $Message -ForegroundColor $ForegroundColor
     } else {
-        Write-Host $Message
+        Write-Host $Message -ForegroundColor $ForegroundColor
     }
 }
 # ----------------------------------------------------------------------

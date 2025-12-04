@@ -97,7 +97,7 @@ function Test-And-Clean-PdfValidity {
     function Write-TestLog {
         param(
             [Parameter(Mandatory=$true)][string]$Message,
-            [Parameter(Mandatory=$false)][ConsoleColor]$ForegroundColor,
+            [Parameter(Mandatory=$false)][ConsoleColor]$ForegroundColor = $Host.UI.RawUI.ForegroundColor,
             [Parameter(Mandatory=$false)][bool]$IsError = $false
         )
 
@@ -108,10 +108,8 @@ function Test-And-Clean-PdfValidity {
             # Fallback for standalone use
             if ($IsError) {
                 Write-Error $Message -ForegroundColor Magenta
-            } elseif ($ForegroundColor) {
-                Write-Host $Message -ForegroundColor $ForegroundColor
             } else {
-                Write-Host $Message
+                Write-Host $Message -ForegroundColor $ForegroundColor
             }
         }
     }

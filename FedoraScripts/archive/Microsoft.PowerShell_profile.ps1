@@ -158,12 +158,12 @@ if ($Host.Name -eq 'ConsoleHost') {
     }
     
     # Check the underlying custom script functions themselves
-    $cdocsFunction = Get-Command Convert-Docs-And-Validate -ErrorAction SilentlyContinue
-    if ($cdocsFunction -is [System.Management.Automation.FunctionInfo]) {
-        Write-Host "  ✅ Function 'Convert-Docs-And-Validate' is defined." -ForegroundColor DarkGreen
-    } else {
-        Write-Host "  ❌ Function 'Convert-Docs-And-Validate' is MISSING. Ensure it is defined with 'function' in your .ps1 file." -ForegroundColor Red
-    }
+    #$cdocsFunction = Get-Command Convert-Docs-And-Validate -ErrorAction SilentlyContinue
+    #if ($cdocsFunction -is [System.Management.Automation.FunctionInfo]) {
+    #    Write-Host "  ✅ Function 'Convert-Docs-And-Validate' is defined." -ForegroundColor DarkGreen
+    #} else {
+    #    Write-Host "  ❌ Function 'Convert-Docs-And-Validate' is MISSING. Ensure it is defined with 'function' in your .ps1 file." -ForegroundColor Red
+    #}
     
     # Check Executable Wrappers
     @("qpdf", "rocketpdf", "java", "verapdf-cli") | ForEach-Object {
