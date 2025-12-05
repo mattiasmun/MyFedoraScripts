@@ -93,22 +93,22 @@ function Load-CustomScript {
                 # Optional: Add aliases for quick execution
                 Set-Alias -Name $AnAlias -Value $FullPath -Scope Global
             }
-            
+<#
             # IMMEDIATE POST-LOAD CHECK
-            # $FunctionCheck = Get-Command $FunctionName -ErrorAction SilentlyContinue
-            # if ($FunctionCheck -is [System.Management.Automation.FunctionInfo]) {
-            #     Write-Host "✅ Loaded and verified function: $FunctionName" -ForegroundColor Green
-            # } else {
+            $FunctionCheck = Get-Command $FunctionName -ErrorAction SilentlyContinue
+            if ($FunctionCheck -is [System.Management.Automation.FunctionInfo]) {
+                Write-Host "✅ Loaded and verified function: $FunctionName" -ForegroundColor Green
+            } else {
                 # This should catch cases where the file was found, but the function 
-                # definition (e.g., the 'function { ... }' block) wasn't recognized or defined.
-            #     Write-Host "⚠️ Loaded script '$FileName', but could not find the function '$FunctionName'." -ForegroundColor Yellow
-            #     Write-Host "   -> Ensure the function is defined inside the file using the 'function' keyword." -ForegroundColor Yellow
-            # }
-
+                # definition (e.g., the 'function { … }' block) wasn't recognized or defined.
+                Write-Host "⚠️ Loaded script '$FileName', but could not find the function '$FunctionName'." -ForegroundColor Yellow
+                Write-Host "   → Ensure the function is defined inside the file using the 'function' keyword." -ForegroundColor Yellow
+            }
+#>
         } catch {
             # Use Red for failed loading due to script error
             Write-Host "❌ Failed to load script '$FileName' due to error: $($_.Exception.Message)" -ForegroundColor Red
-            Write-Host "   -> Check the content of the script file for syntax errors." -ForegroundColor Yellow
+            Write-Host "   → Check the content of the script file for syntax errors." -ForegroundColor Yellow
         }
     } else {
         # Use Magenta for file not found
@@ -123,11 +123,11 @@ if ($Host.Name -eq 'ConsoleHost') {
     $policy = Get-ExecutionPolicy -Scope CurrentUser
     if ($policy -eq 'Restricted') {
         Write-Host "🛑 WARNING: Execution Policy is '$policy'. Scripts cannot run." -ForegroundColor Red
-        Write-Host "   -> Run 'Set-ExecutionPolicy RemoteSigned -Scope CurrentUser' to fix." -ForegroundColor Yellow
+        Write-Host "   → Run 'Set-ExecutionPolicy RemoteSigned -Scope CurrentUser' to fix." -ForegroundColor Yellow
     }
 
     Write-Host "--- Loading Custom PowerShell Utilities ---" -ForegroundColor Cyan
-    Write-Host "-> Determined Script Path: '$ScriptPath'" -ForegroundColor Yellow
+    Write-Host "→ Determined Script Path: '$ScriptPath'" -ForegroundColor Yellow
 
     # 1. Load the validation function (Test-And-Clean-PdfValidity.ps1)
     Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath -AnAlias tpdf
@@ -156,15 +156,15 @@ if ($Host.Name -eq 'ConsoleHost') {
     } else {
         Write-Host "  ❌ Alias 'tpdf' FAILED to resolve. Check function name spelling." -ForegroundColor Red
     }
-    
+<#
     # Check the underlying custom script functions themselves
-    #$cdocsFunction = Get-Command Convert-Docs-And-Validate -ErrorAction SilentlyContinue
-    #if ($cdocsFunction -is [System.Management.Automation.FunctionInfo]) {
-    #    Write-Host "  ✅ Function 'Convert-Docs-And-Validate' is defined." -ForegroundColor DarkGreen
-    #} else {
-    #    Write-Host "  ❌ Function 'Convert-Docs-And-Validate' is MISSING. Ensure it is defined with 'function' in your .ps1 file." -ForegroundColor Red
-    #}
-    
+    $cdocsFunction = Get-Command Convert-Docs-And-Validate -ErrorAction SilentlyContinue
+    if ($cdocsFunction -is [System.Management.Automation.FunctionInfo]) {
+        Write-Host "  ✅ Function 'Convert-Docs-And-Validate' is defined." -ForegroundColor DarkGreen
+    } else {
+        Write-Host "  ❌ Function 'Convert-Docs-And-Validate' is MISSING. Ensure it is defined with 'function' in your .ps1 file." -ForegroundColor Red
+    }
+#>
     # Check Executable Wrappers
     @("qpdf", "rocketpdf", "java", "verapdf-cli") | ForEach-Object {
         $check = Get-Command $_ -ErrorAction SilentlyContinue
