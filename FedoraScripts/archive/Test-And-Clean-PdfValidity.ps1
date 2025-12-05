@@ -207,7 +207,7 @@ function Test-And-Clean-PdfValidity {
         if ($QPDFOutput) {
             Write-TestLog -Message "--- QPDF Diagnostic Output ---" -ForegroundColor Magenta
             # Log each line of QPDF output using Write-TestLog and marking as error
-            $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -ForegroundColor Magenta -IsError $true }
+            $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -IsError $true }
         }
 
         if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
