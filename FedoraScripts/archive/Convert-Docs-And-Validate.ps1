@@ -66,7 +66,7 @@ function Write-Log {
 
     # 3. Write to console (using original Write-Host/Write-Error behavior)
     if ($IsError) {
-        Write-Error $Message # Use Magenta for errors as requested
+        Write-Error $Message
     } else {
         Write-Host $Message -ForegroundColor $ForegroundColor
     }
@@ -142,9 +142,9 @@ function Convert-Docs-And-Validate {
     )
 
     # --- LOGGING SETUP (Initialize the log file path) ---
-    $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+    # $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
     $LogFileName = "Conversion_Validation_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
-    $Script:LogFilePath = Join-Path $ScriptDir $LogFileName # Set the script-level variable
+    $Script:LogFilePath = Join-Path $OutputDirectory $LogFileName # Set the script-level variable
 
     # Define the logger scriptblock to pass to Test-And-Clean-PdfValidity
     # This closure ensures the validation function uses our Write-Log wrapper
