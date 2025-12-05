@@ -130,10 +130,10 @@ if ($Host.Name -eq 'ConsoleHost') {
     Write-Host "-> Determined Script Path: '$ScriptPath'" -ForegroundColor Yellow
 
     # 1. Load the validation function (Test-And-Clean-PdfValidity.ps1)
-    Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath -AnAlias cdocs
+    Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath -AnAlias tpdf
 
     # 2. Load the main converter function (Convert-Docs-And-Validate.ps1)
-    Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath -AnAlias tpdf
+    Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath -AnAlias cdocs
 
     Write-Host "--- Ready to convert documents (use 'cdocs') and test PDFs (use 'tpdf') ---" -ForegroundColor Cyan
 
