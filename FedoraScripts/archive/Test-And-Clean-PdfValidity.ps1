@@ -82,7 +82,7 @@ or the global variable $global:QPDFPath to be set in the PowerShell profile.
 function Test-And-Clean-PdfValidity {
     [CmdletBinding(DefaultParameterSetName='Path')]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory=$true)]
         [Alias('FullName')]
         [string]$PDFPath,
 
@@ -107,7 +107,7 @@ function Test-And-Clean-PdfValidity {
         } else {
             # Fallback for standalone use
             if ($IsError) {
-                Write-Error $Message -ForegroundColor Magenta
+                Write-Error $Message
             } else {
                 Write-Host $Message -ForegroundColor $ForegroundColor
             }
@@ -115,105 +115,102 @@ function Test-And-Clean-PdfValidity {
     }
     # ----------------------------------------------------------------------------------
 
-    # PROCESS BLOCK allows the function to handle pipeline input (e.g., Get-ChildItem)
-    process {
-        Write-TestLog -Message "--- Checking $($PDFPath) ---" -ForegroundColor White
+    Write-TestLog -Message "--- Checking $($PDFPath) ---" -ForegroundColor White
 
-        # --- Nested Deletion Function ---
-        function Delete-File {
-            param([string]$PathToDelete)
-            try {
-                Remove-Item -Path $PathToDelete -Force
-                Write-TestLog -Message "🗑️ Successfully deleted invalid file: $PathToDelete" -ForegroundColor Magenta
-            } catch {
-                # Use IsError $true to ensure it gets logged as an error
-                Write-TestLog -Message "Failed to delete file '$PathToDelete': $($_.Exception.Message)" -IsError $true
-            }
-        }
-        # --------------------------------
-
-        # --- 1. FILE EXISTENCE AND PATH CHECK
-        if (-not (Test-Path -Path $PDFPath -PathType Leaf)) {
-            Write-TestLog -Message "❌ File Not Found: $PDFPath" -ForegroundColor Magenta
-            return [PdfValidationStatus]::InvalidAccess # Treated as access/path error
-        }
-
-        # --- 2. SIMPLE HEADER CHECK (Robust Stream Read) ---
-        $Stream = $null
+    # --- Nested Deletion Function ---
+    function Delete-File {
+        param([string]$PathToDelete)
         try {
-            $Stream = [System.IO.File]::OpenRead($PDFPath)
-            $HeaderBytes = New-Object byte[] 5
-
-            if ($Stream.Read($HeaderBytes, 0, 5) -lt 5) {
-                Write-TestLog -Message "❌ File too small to be a PDF header (less than 5 bytes)." -ForegroundColor Magenta
-                if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
-                return [PdfValidationStatus]::InvalidAccess
-            }
-
-            $Header = [System.Text.Encoding]::ASCII.GetString($HeaderBytes)
-
-            if ($Header -ne "%PDF-") {
-                Write-TestLog -Message "❌ Basic Header Check Failed. Header starts with '$Header', not '%PDF-'." -ForegroundColor Magenta
-                if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
-                return [PdfValidationStatus]::InvalidHeader # Explicit Header Failure
-            } else {
-                Write-TestLog -Message "✅ Basic Header Check Passed. Proceeding to structural check…" -ForegroundColor Green
-            }
-
+            Remove-Item -Path $PathToDelete -Force
+            Write-TestLog -Message "🗑️ Successfully deleted invalid file: $PathToDelete" -ForegroundColor Magenta
         } catch {
-            # This handles permission denied or file lock errors
-            Write-TestLog -Message "❌ Access Error: Could not read file header (File might be locked or permission denied)." -ForegroundColor Magenta
+            # Use IsError $true to ensure it gets logged as an error
+            Write-TestLog -Message "Failed to delete file '$PathToDelete': $($_.Exception.Message)" -IsError $true
+        }
+    }
+    # --------------------------------
+
+    # --- 1. FILE EXISTENCE AND PATH CHECK
+    if (-not (Test-Path -Path $PDFPath -PathType Leaf)) {
+        Write-TestLog -Message "❌ File Not Found: $PDFPath" -ForegroundColor Magenta
+        return [PdfValidationStatus]::InvalidAccess # Treated as access/path error
+    }
+
+    # --- 2. SIMPLE HEADER CHECK (Robust Stream Read) ---
+    $Stream = $null
+    try {
+        $Stream = [System.IO.File]::OpenRead($PDFPath)
+        $HeaderBytes = New-Object byte[] 5
+
+        if ($Stream.Read($HeaderBytes, 0, 5) -lt 5) {
+            Write-TestLog -Message "❌ File too small to be a PDF header (less than 5 bytes)." -ForegroundColor Magenta
             if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
-            return [PdfValidationStatus]::InvalidAccess # Explicit Access/IO Failure
-        } finally {
-            if ($Stream) { $Stream.Dispose() }
+            return [PdfValidationStatus]::InvalidAccess
         }
 
-        # --- 3. QPDF STRUCTURAL VALIDATION CHECK (Using global path if available) ---
-        # 1. Check for global path first (set in profile)
-        $QPDFCmd = if ($global:QPDFPath -and (Test-Path -Path $global:QPDFPath -PathType Leaf)) {
-            $global:QPDFPath
-        } else {
-            "qpdf"
-        }
+        $Header = [System.Text.Encoding]::ASCII.GetString($HeaderBytes)
 
-        # 2. Check if the command is available (either in PATH or via the explicit path)
-        if (($QPDFCmd -eq "qpdf") -and -not (Get-Command -Name $QPDFCmd -ErrorAction SilentlyContinue)) {
-            Write-TestLog -Message "❌ qpdf command not found. Ensure the CLI is in your PATH, or set the \$global:QPDFPath variable in your profile." -ForegroundColor Magenta
-            return [PdfValidationStatus]::InvalidAccess # Treat lack of dependency as failure
-        }
-
-        # qpdf --check returns non-zero exit codes for issues:
-        # 0: Success, 2: Serious/fatal error/corruption, 3: Warnings
-
-        # Capture the output and the exit code
-        $QPDFOutput = & $QPDFCmd --check $PDFPath 2>&1
-        $ExitCode = $LASTEXITCODE
-
-        if ($ExitCode -eq 0) {
-            # Status 0: Success, no warnings
-            Write-TestLog -Message "✅ Structural Check Passed: PDF is valid." -ForegroundColor Green
-            return [PdfValidationStatus]::Valid
-        } elseif ($ExitCode -eq 3) {
-            # Status 3: Success with warnings
-            Write-TestLog -Message "⚠️ Structural Check Passed with Warnings." -ForegroundColor Yellow
-            if ($QPDFOutput) {
-                Write-TestLog -Message "--- QPDF Warnings ---" -ForegroundColor Yellow
-                # Log each line of QPDF output using Write-TestLog
-                $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -ForegroundColor DarkYellow }
-            }
-            return [PdfValidationStatus]::ValidWithWarnings
-        } else {
-            # Status 2 (or other non-success code): Fatal Error/Corruption
-            Write-TestLog -Message "❌ Structural Check Failed. PDF is corrupted (Exit Code: $ExitCode)." -ForegroundColor Magenta
-            if ($QPDFOutput) {
-                Write-TestLog -Message "--- QPDF Diagnostic Output ---" -ForegroundColor Magenta
-                # Log each line of QPDF output using Write-TestLog and marking as error
-                $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -ForegroundColor Magenta -IsError $true }
-            }
-
+        if ($Header -ne "%PDF-") {
+            Write-TestLog -Message "❌ Basic Header Check Failed. Header starts with '$Header', not '%PDF-'." -ForegroundColor Magenta
             if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
-            return [PdfValidationStatus]::InvalidCorrupt # Explicit Corruption Status
+            return [PdfValidationStatus]::InvalidHeader # Explicit Header Failure
+        } else {
+            Write-TestLog -Message "✅ Basic Header Check Passed. Proceeding to structural check…" -ForegroundColor Green
         }
+
+    } catch {
+        # This handles permission denied or file lock errors
+        Write-TestLog -Message "❌ Access Error: Could not read file header (File might be locked or permission denied)." -ForegroundColor Magenta
+        if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
+        return [PdfValidationStatus]::InvalidAccess # Explicit Access/IO Failure
+    } finally {
+        if ($Stream) { $Stream.Dispose() }
+    }
+
+    # --- 3. QPDF STRUCTURAL VALIDATION CHECK (Using global path if available) ---
+    # 1. Check for global path first (set in profile)
+    $QPDFCmd = if ($global:QPDFPath -and (Test-Path -Path $global:QPDFPath -PathType Leaf)) {
+        $global:QPDFPath
+    } else {
+        "qpdf"
+    }
+
+    # 2. Check if the command is available (either in PATH or via the explicit path)
+    if (($QPDFCmd -eq "qpdf") -and -not (Get-Command -Name $QPDFCmd -ErrorAction SilentlyContinue)) {
+        Write-TestLog -Message "❌ qpdf command not found. Ensure the CLI is in your PATH, or set the \$global:QPDFPath variable in your profile." -ForegroundColor Magenta
+        return [PdfValidationStatus]::InvalidAccess # Treat lack of dependency as failure
+    }
+
+    # qpdf --check returns non-zero exit codes for issues:
+    # 0: Success, 2: Serious/fatal error/corruption, 3: Warnings
+
+    # Capture the output and the exit code
+    $QPDFOutput = & $QPDFCmd --check $PDFPath 2>&1
+    $ExitCode = $LASTEXITCODE
+
+    if ($ExitCode -eq 0) {
+        # Status 0: Success, no warnings
+        Write-TestLog -Message "✅ Structural Check Passed: PDF is valid." -ForegroundColor Green
+        return [PdfValidationStatus]::Valid
+    } elseif ($ExitCode -eq 3) {
+        # Status 3: Success with warnings
+        Write-TestLog -Message "⚠️ Structural Check Passed with Warnings." -ForegroundColor Yellow
+        if ($QPDFOutput) {
+            Write-TestLog -Message "--- QPDF Warnings ---" -ForegroundColor Yellow
+            # Log each line of QPDF output using Write-TestLog
+            $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -ForegroundColor DarkYellow }
+        }
+        return [PdfValidationStatus]::ValidWithWarnings
+    } else {
+        # Status 2 (or other non-success code): Fatal Error/Corruption
+        Write-TestLog -Message "❌ Structural Check Failed. PDF is corrupted (Exit Code: $ExitCode)." -ForegroundColor Magenta
+        if ($QPDFOutput) {
+            Write-TestLog -Message "--- QPDF Diagnostic Output ---" -ForegroundColor Magenta
+            # Log each line of QPDF output using Write-TestLog and marking as error
+            $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -ForegroundColor Magenta -IsError $true }
+        }
+
+        if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
+        return [PdfValidationStatus]::InvalidCorrupt # Explicit Corruption Status
     }
 }
