@@ -213,7 +213,7 @@ function Convert-Docs-And-Validate {
         return
     }
 
-    Write-Log -Message "Found $($DocxFiles.Count) DOCX file(s). Starting conversion..." -ForegroundColor Yellow
+    Write-Log -Message "Found $($DocxFiles.Count) DOCX file(s). Starting conversion…" -ForegroundColor Yellow
 
     # Process each file
     foreach ($File in $DocxFiles) {
@@ -231,7 +231,7 @@ function Convert-Docs-And-Validate {
 
         # --- Create Output Directory if it doesn't exist ---
         if (-not (Test-Path -Path $OutputFolder -PathType Container)) {
-            Write-Log -Message "  -> Creating output directory: $OutputFolder" -ForegroundColor DarkGray
+            Write-Log -Message "  → Creating output directory: $OutputFolder" -ForegroundColor DarkGray
             # Check if ShouldProcess is supported before creating the directory
             if ($PSCmdlet.ShouldProcess("Creating output directory '$OutputFolder'")) {
                 New-Item -Path $OutputFolder -ItemType Directory | Out-Null
@@ -248,7 +248,7 @@ function Convert-Docs-And-Validate {
         # --- 2. RocketPDF Conversion and Compression (Wrapped in ShouldProcess) ---
         if ($PSCmdlet.ShouldProcess("Converting '$($File.FullName)'", "Convert and save to '$PdfPath'")) {
             try {
-                Write-Log -Message "  -> Converting and compressing to: $PdfPath" -ForegroundColor DarkGray
+                Write-Log -Message "  → Converting and compressing to: $PdfPath" -ForegroundColor DarkGray
 
                 # The -Force argument is added to overwrite existing PDFs without prompt
                 $RocketPdfOutput = & $RocketPdfCmd convert $File.FullName $PdfPath --compress -Force 2>&1

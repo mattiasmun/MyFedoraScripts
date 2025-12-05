@@ -157,7 +157,7 @@ function Test-And-Clean-PdfValidity {
                 if ($DeleteOnInvalid) { Delete-File -PathToDelete $PDFPath }
                 return [PdfValidationStatus]::InvalidHeader # Explicit Header Failure
             } else {
-                Write-TestLog -Message "✅ Basic Header Check Passed. Proceeding to structural check..." -ForegroundColor Green
+                Write-TestLog -Message "✅ Basic Header Check Passed. Proceeding to structural check…" -ForegroundColor Green
             }
 
         } catch {
