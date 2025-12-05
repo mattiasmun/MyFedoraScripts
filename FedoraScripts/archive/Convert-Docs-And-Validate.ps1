@@ -66,7 +66,7 @@ function Write-Log {
 
     # 3. Write to console (using original Write-Host/Write-Error behavior)
     if ($IsError) {
-        Write-Error $Message -ForegroundColor Magenta # Use Magenta for errors as requested
+        Write-Error $Message # Use Magenta for errors as requested
     } else {
         Write-Host $Message -ForegroundColor $ForegroundColor
     }
@@ -83,7 +83,7 @@ if (Test-Path -Path $ValidationScriptPath) {
     . $ValidationScriptPath
     Write-Log -Message "Loaded validation function from: $ValidationScriptPath" -ForegroundColor Cyan
 } else {
-    Write-Error "Test-And-Clean-PdfValidity.ps1 not found at '$ValidationScriptPath'. Please ensure it is loaded." -ForegroundColor Magenta
+    Write-Error "Test-And-Clean-PdfValidity.ps1 not found at '$ValidationScriptPath'. Please ensure it is loaded."
     # Exit script if the critical validation function cannot be found
     exit 1
 }
