@@ -91,9 +91,11 @@ function Load-CustomScript {
         try {
             if ($AnAlias) {
                 # Optional: Add aliases for quick execution
-                Set-Alias -Name $AnAlias -Value $FullPath -Scope Global
+                Set-Alias -Name $AnAlias -Value $FunctionName -Scope Global
             }
-<#
+            # Dot-source the file.
+            . $FullPath
+
             # IMMEDIATE POST-LOAD CHECK
             $FunctionCheck = Get-Command $FunctionName -ErrorAction SilentlyContinue
             if ($FunctionCheck -is [System.Management.Automation.FunctionInfo]) {
@@ -104,7 +106,6 @@ function Load-CustomScript {
                 Write-Host "⚠️ Loaded script '$FileName', but could not find the function '$FunctionName'." -ForegroundColor Yellow
                 Write-Host "   → Ensure the function is defined inside the file using the 'function' keyword." -ForegroundColor Yellow
             }
-#>
         } catch {
             # Use Red for failed loading due to script error
             Write-Host "❌ Failed to load script '$FileName' due to error: $($_.Exception.Message)" -ForegroundColor Red
@@ -156,7 +157,7 @@ if ($Host.Name -eq 'ConsoleHost') {
     } else {
         Write-Host "  ❌ Alias 'tpdf' FAILED to resolve. Check function name spelling." -ForegroundColor Red
     }
-<#
+
     # Check the underlying custom script functions themselves
     $cdocsFunction = Get-Command Convert-Docs-And-Validate -ErrorAction SilentlyContinue
     if ($cdocsFunction -is [System.Management.Automation.FunctionInfo]) {
@@ -164,7 +165,7 @@ if ($Host.Name -eq 'ConsoleHost') {
     } else {
         Write-Host "  ❌ Function 'Convert-Docs-And-Validate' is MISSING. Ensure it is defined with 'function' in your .ps1 file." -ForegroundColor Red
     }
-#>
+
     # Check Executable Wrappers
     @("qpdf", "rocketpdf", "java", "verapdf-cli") | ForEach-Object {
         $check = Get-Command $_ -ErrorAction SilentlyContinue

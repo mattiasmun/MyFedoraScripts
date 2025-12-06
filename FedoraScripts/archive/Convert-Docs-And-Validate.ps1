@@ -125,7 +125,7 @@ C:\PS> Convert-Docs-And-Validate -SourceDirectory "C:\Input" -DeleteOriginalDocx
 .NOTES
 To see the full help, run: Get-Help Convert-Docs-And-Validate -Full
 #>
-function Convert-Docs-And-Validate {
+function global:Convert-Docs-And-Validate {
     [CmdletBinding(SupportsShouldProcess=$true)] # Added SupportsShouldProcess for -WhatIf safety
     param(
         [Parameter(Mandatory=$true)]
@@ -159,7 +159,7 @@ function Convert-Docs-And-Validate {
     $RocketPdfCmd = if ($global:RocketPDFPath -and (Test-Path -Path $global:RocketPDFPath -PathType Leaf)) {
         $global:RocketPDFPath
     } else {
-        "RocketPDF"
+        "rocketpdf"
     }
     # We will pass the QPDF path resolution logic to the Test-And-Clean-PdfValidity function
     # via the $global:QPDFPath variable.

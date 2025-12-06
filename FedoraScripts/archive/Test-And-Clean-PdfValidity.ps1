@@ -79,7 +79,7 @@ Get-ChildItem -Path "C:\Incoming" -Filter "*.pdf" | Test-And-Clean-PdfValidity
 Requires the 'qpdf' command line utility to be installed and accessible in the system PATH,
 or the global variable $global:QPDFPath to be set in the PowerShell profile.
 #>
-function Test-And-Clean-PdfValidity {
+function global:Test-And-Clean-PdfValidity {
     [CmdletBinding(DefaultParameterSetName='Path')]
     param(
         [Parameter(Mandatory=$true)]
