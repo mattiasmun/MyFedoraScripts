@@ -1709,6 +1709,7 @@ sil-nuosu-fonts.noarch \
 simple-scan.x86_64 \
 skopeo.x86_64 \
 smartmontools.x86_64 \
+snapd.x86_64 \
 snapshot.x86_64 \
 sos.noarch \
 spandsp.x86_64 \
