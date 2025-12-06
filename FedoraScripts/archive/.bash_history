@@ -1,5 +1,6 @@
 auto_clicker_gui
 bc -lq
+bg
 c
 cat "$HOME/.git-credentials"
 cat "$HOME/.gitconfig"
@@ -11,6 +12,7 @@ cd
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II"
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/entity"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860"
+cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3259735408/scene/entity/-vehicle"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/entity/-vehicle"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/breed/mp2/ger"
@@ -21,6 +23,8 @@ cd "$HOME/Men of War II/packages/Unit_booster/scene/entity"
 cd "$HOME/Men of War II/packages/editor-local-changes/global"
 cd -- -vehicle
 cd ..
+clamdscan --stream "$HOME/.clamtk/attachment"
+clamscan_filter.sh
 closeall
 conditional_7z_backup.sh "$HOME/Men of War II/packages/Unit_booster"
 d
@@ -42,9 +46,8 @@ dnf repoquery --extras
 dnf repoquery --help
 dnf repoquery --installonly
 dnf repoquery --leaves
-dnf repoquery --leaves | wc -l
 dnf repoquery --unneeded
-dnf repoquery --userinstalled --queryformat "%{name} \"
+dnf repoquery --userinstalled --queryformat '%{name}.%{arch} \\n'
 dnfsysupgr
 dnfusrins
 dotool --help
@@ -76,10 +79,8 @@ find . -type f -name '*++*'
 find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then         echo "PREVIEW: '$old_path' -> '$new_path'";     fi; done
 find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then         mv -v -- "$old_path" "$new_path";     fi; done
 find_and_sort_files .
-find_and_sort_files .mi
-find_and_sort_files car
 find_and_sort_files female
-find_and_sort_files m30
+flatpak list
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak update -y
 for file in "$HOME/.bash_history" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"; do cp "$HOME/.bash_history2" "$file"; done
@@ -97,6 +98,7 @@ git status
 gitcfg
 gitty ~/529340
 gitty ~/Bash/MyFedoraScripts
+gnome-shell --version
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
 grep -nirI "supp+"
 groupadd -f input
@@ -112,11 +114,13 @@ lame --help
 lame --longhelp
 ll
 ln --help
+locate "*.py" | while IFS= read -r file; do ls -ld "$file"; done
 locate "+.def" | while IFS= read -r file; do ls -ld "$file"; done
 locate "1927_cannon" | while IFS= read -r file; do ls -ld "$file"; done
 locate "Men of War II" | while IFS= read -r file; do ls -ld "$file"; done
 locate "bm31+" | while IFS= read -r file; do ls -ld "$file"; done
 locate "m30+" | while IFS= read -r file; do ls -ld "$file"; done
+locate "rocketpdf" | while IFS= read -r file; do ls -ld "$file"; done
 locate "su122+" | while IFS= read -r file; do ls -ld "$file"; done
 locate "supp+" | while IFS= read -r file; do ls -ld "$file"; done
 ls
@@ -149,19 +153,25 @@ pgrep flatpak
 pgrep thunderbird
 pip list
 pip list --user
-pip3 install pip-date pyautogui pynput tsp-solver2
+pip list --user | tail -n +3 | awk '{print $1}' > requirements.txt
+pip3 install pip-date pyautogui pynput rocketpdf tsp-solver2
 pip3update
 pkill -sigkill Civ6
 pkill -sigkill TransportFever2
 pkill -sigkill mow2
 pkill firefox
 py
+pyenv
+qpdf
+qpdf --help
+qpdf --help=exit-status
 r
 remove-retired-packages
 rm $temp_file
 rm -r 3553934930/global/sound/human/talk/rus_medic_female 3553934930/global/sound/human/talk/rus_sniper_female
 rm 3553934930/scene/entity_soviet_female.pak 3553934930/global/interface/scene/portrait/rus_sniper_female.png 3553934930/global/interface/scene/portrait/rus_medic_female.png
 rm ~/.bash_history-*.tmp
+rocketpdf --help
 rsync -avz --update "$HOME/Men of War II/packages/Unit_booster.7z" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/"
 setup-my-env.sh
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
@@ -169,6 +179,7 @@ source ~/.bashrc
 stat /
 steam steam://rungameid/1128860
 strcmp asdfsdf gertergdfg
+sudo -A ./build.sh install
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever=43 &
 sudo -A dnf autoremove
 sudo -A dnf check
@@ -178,20 +189,30 @@ sudo -A dnf system-upgrade reboot
 sudo -A dnf upgrade
 sudo -A dnf upgrade --best --allowerasing
 sudo -A dnf-automatic
-sudo -A gedit /etc/dnf/automatic.conf
+sudo -A gedit /etc/clamd.d/scan.conf &
+sudo -A gedit /etc/dnf/automatic.conf &
+sudo -A gedit /etc/freshclam.conf &
 sudo -A make install
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
+sudo -A snap install hello-world
+sudo -A snap install powershell
+sudo -A systemctl reset-failed
 sudo -A systemctl restart gdm
+sudo -A systemctl status clamav-freshclam
+sudo -A systemctl status clamd@scan.service
 sudo -A updatedb
+sudo -A wlrctl keyboard type "Hello, world!"
+sudo -A wlrctl pointer move 50 -70
+sudo -A wlrctl window focus firefox
 sudo -A wmctrl -xl
-sudo ./build.sh install
-sudo wlrctl keyboard type "Hello, world!"
-sudo wlrctl pointer move 50 -70
-sudo wlrctl window focus firefox
 systemctl --user status dotool.service
 systemctl enable --now dnf5-automatic.timer
 systemctl status
 systemctl status bluetooth
+systemctl status clamav-freshclam
+systemctl status clamav-freshclam.service
+systemctl status clamd@scan
+systemctl status clamd@scan.service
 systemctl status dnf5-automatic.service
 systemctl status dnf5-automatic.timer
 temp_file=$(mktemp)
@@ -201,12 +222,16 @@ uname -r
 unique_lines
 update-alternatives
 update-alternatives --list
+users
 wc -l "$HOME/Bash/MyFedoraScripts/FedoraScripts/progs"
 wc -lL .bash_history
 wc -lL .bash_history2
 wc -lL < .bash_history
 wc -lL < .bash_history2
 wev
+who
+who -r
+whoami
 wlrctl --help
 wlrctl keyboard type "Hello, world!"
 wlrctl pointer move 50 -70
