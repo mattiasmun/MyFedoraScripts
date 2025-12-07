@@ -73,7 +73,7 @@ $ScriptPath = if ($ScriptPathPlaceholder -eq $PlaceholderCheck) {
 } else {
     $ScriptPathPlaceholder
 }
-# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯-
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 
 # ⎯⎯ Function to Safely Load a Script (ENHANCED FOR EXPLICIT SCOPING) ⎯⎯
