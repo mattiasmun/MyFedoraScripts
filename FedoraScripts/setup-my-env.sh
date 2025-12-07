@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ==============================================================================
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # SCRIPT: setup-my-env.sh
 # PURPOSE: Configures the user's Fedora environment for custom scripts.
 #
@@ -9,9 +9,9 @@
 #	ensuring the directory is only added once.
 # 2. Desktop Files: Creates autostart and application registration links.
 # 3. History Files: Initializes .bash_history files from a source archive.
-# ==============================================================================
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
-# --- Variable Definitions ---
+# ⎯⎯ Variable Definitions ⎯⎯
 # Define all necessary paths using clear, descriptive names.
 # Note: Using explicit paths ($HOME) ensures robustness across environments.
 SOURCE_DIR="$HOME/Bash/MyFedoraScripts/FedoraScripts"
@@ -23,8 +23,8 @@ BASH_HISTORY_SOURCE="$SOURCE_DIR/archive/.bash_history"
 BASH_HISTORY_TARGET1="$HOME/.bash_history"
 BASH_HISTORY_TARGET2="$HOME/.bash_history2" # Note: This target might be used for specific history configurations.
 
-# --- Step 1: Updating PATH and History Sync in .bashrc ---
-echo "--- Step 1: Updating PATH and History Sync in $BASHRC_FILE ---"
+# ⎯⎯ Step 1: Updating PATH and History Sync in .bashrc ⎯⎯
+echo "⎯⎯ Step 1: Updating PATH and History Sync in $BASHRC_FILE ⎯⎯"
 
 # Check if the configuration block has already been added.
 # We use a unique marker (a specific comment) to prevent duplication in .bashrc.
@@ -54,15 +54,14 @@ fi
 # This setup ensures all terminals share the command history in real-time.
 export PROMPT_COMMAND="history -n; history -a; $PROMPT_COMMAND"
 EOF
-	
 	echo "Successfully added the PATH conditional block and history sync to '$BASHRC_FILE'."
 fi
 
-# ------------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
-# --- Step 2: Copy .desktop file for Autostart and Application Registration ---
+# ⎯⎯ Step 2: Copy .desktop file for Autostart and Application Registration ⎯⎯
 echo ""
-echo "--- Step 2: Copying $DESKTOP_FILE ---"
+echo "⎯⎯ Step 2: Copying $DESKTOP_FILE ⎯⎯"
 
 # Verify that the necessary source file exists before proceeding.
 if [ ! -f "$DESKTOP_FILE" ]; then
@@ -97,11 +96,11 @@ else
 	echo "Error: Failed to copy to applications directory. Check permissions."
 fi
 
-# ------------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
-# --- Step 3: Copying Initial Bash History Files ---
+# ⎯⎯ Step 3: Copying Initial Bash History Files ⎯⎯
 echo ""
-echo "--- Step 3: Copying Initial Bash History files ---"
+echo "⎯⎯ Step 3: Copying Initial Bash History files ⎯⎯"
 
 # Check the integrity of the source history file first.
 if [ ! -f "$BASH_HISTORY_SOURCE" ]; then
@@ -126,10 +125,10 @@ else
 	fi
 fi
 
-# ------------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 echo ""
-echo "--- Script finished. Configuration complete. ---"
+echo "⎯⎯ Script finished. Configuration complete. ⎯⎯"
 # Apply changes immediately to the current shell environment
 echo "Sourcing $BASHRC_FILE to apply PATH and history synchronization changes immediately."
 source "$BASHRC_FILE"

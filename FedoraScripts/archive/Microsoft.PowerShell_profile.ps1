@@ -1,24 +1,24 @@
-# -----------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # PowerShell Profile Script (Microsoft.PowerShell_profile.ps1)
 # This script runs every time PowerShell starts.
-# -----------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # If this file does not exist, you can create it by running this command:
 # New-Item -Path $PROFILE -ItemType File -Force
 
-# --- Custom Executable Paths (REQUIRED IF NOT IN SYSTEM PATH) ---
+# ⎯⎯ Custom Executable Paths (REQUIRED IF NOT IN SYSTEM PATH) ⎯⎯
 # Set these paths to your custom installation locations.
 # IMPORTANT: Use the full path to the executable file (e.g., C:\Program Files\qpdf\bin\qpdf.exe)
 $global:QPDFPath = "C:\Users\ai21558\Program\qpdf-12.2.0-mingw64\bin\qpdf.exe"
 $global:RocketPDFPath = "C:\Users\ai21558\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\Scripts\rocketpdf.exe"
 
-# --- New Paths for Java and VeraPDF Validation ---
+# ⎯⎯ New Paths for Java and VeraPDF Validation ⎯⎯
 # JavaPath should point directly to the java.exe executable.
 $global:JavaPath = "C:\Users\ai21558\Program\jdk-24.0.1\bin\java.exe"
 # VeraPDFPath should point directly to the vera-pdf-cli.jar file.
 $global:VeraPDFPath = "C:\Users\ai21558\Program\verapdf-greenfield-1.28.1\bin\greenfield-apps-1.28.1.jar"
 
-# --- Executable Wrapper Functions (Allows calling by base name, e.g., 'qpdf') ---
+# ⎯⎯ Executable Wrapper Functions (Allows calling by base name, e.g., 'qpdf') ⎯⎯
 
 function qpdf {
     if (Test-Path -Path $global:QPDFPath -PathType Leaf) {
@@ -55,13 +55,13 @@ function verapdf-cli {
         Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath'. Cannot run VeraPDF."
         return
     }
-    
-    # Call java.exe with the -jar argument pointing to the VeraPDF jar, 
+
+    # Call java.exe with the -jar argument pointing to the VeraPDF jar,
     # followed by all arguments passed to verapdf-cli function.
     & $global:JavaPath -jar $global:VeraPDFPath @($args)
 }
 
-# --- Set Default Location for Custom Scripts ---
+# ⎯⎯ Set Default Location for Custom Scripts ⎯⎯
 # IMPORTANT: Change the path below to the actual folder path where you save your scripts.
 # If the path is left as the placeholder, it defaults to a safe location.
 $ScriptPathPlaceholder = "C:\Users\ai21558\Program"
@@ -73,10 +73,10 @@ $ScriptPath = if ($ScriptPathPlaceholder -eq $PlaceholderCheck) {
 } else {
     $ScriptPathPlaceholder
 }
-# -------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯-
 
 
-# --- Function to Safely Load a Script (ENHANCED FOR EXPLICIT SCOPING) ---
+# ⎯⎯ Function to Safely Load a Script (ENHANCED FOR EXPLICIT SCOPING) ⎯⎯
 function Load-CustomScript {
     param(
         [Parameter(Mandatory=$true)][string]$FileName,
@@ -101,7 +101,7 @@ function Load-CustomScript {
             if ($FunctionCheck -is [System.Management.Automation.FunctionInfo]) {
                 Write-Host "✅ Loaded and verified function: $FunctionName" -ForegroundColor Green
             } else {
-                # This should catch cases where the file was found, but the function 
+                # This should catch cases where the file was found, but the function
                 # definition (e.g., the 'function { … }' block) wasn't recognized or defined.
                 Write-Host "⚠️ Loaded script '$FileName', but could not find the function '$FunctionName'." -ForegroundColor Yellow
                 Write-Host "   → Ensure the function is defined inside the file using the 'function' keyword." -ForegroundColor Yellow
@@ -117,7 +117,7 @@ function Load-CustomScript {
     }
 }
 
-# --- Main Script Loading Block ---
+# ⎯⎯ Main Script Loading Block ⎯⎯
 # Only show startup messages if the session is interactive (not running in the background)
 if ($Host.Name -eq 'ConsoleHost') {
     # Diagnostic: Check Execution Policy
@@ -127,7 +127,7 @@ if ($Host.Name -eq 'ConsoleHost') {
         Write-Host "   → Run 'Set-ExecutionPolicy RemoteSigned -Scope CurrentUser' to fix." -ForegroundColor Yellow
     }
 
-    Write-Host "--- Loading Custom PowerShell Utilities ---" -ForegroundColor Cyan
+    Write-Host "⎯⎯ Loading Custom PowerShell Utilities ⎯⎯" -ForegroundColor Cyan
     Write-Host "→ Determined Script Path: '$ScriptPath'" -ForegroundColor Yellow
 
     # 1. Load the validation function (Test-And-Clean-PdfValidity.ps1)
@@ -136,12 +136,12 @@ if ($Host.Name -eq 'ConsoleHost') {
     # 2. Load the main converter function (Convert-Docs-And-Validate.ps1)
     Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath -AnAlias cdocs
 
-    Write-Host "--- Ready to convert documents (use 'cdocs') and test PDFs (use 'tpdf') ---" -ForegroundColor Cyan
+    Write-Host "⎯⎯ Ready to convert documents (use 'cdocs') and test PDFs (use 'tpdf') ⎯⎯" -ForegroundColor Cyan
 
-    # -----------------------------------------------------------------------
+    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
     # DIAGNOSTIC CHECKS: Verify functions and aliases are actually available
-    # -----------------------------------------------------------------------
-    
+    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
     # Check custom script functions
     $cdocsCheck = Get-Command cdocs -ErrorAction SilentlyContinue
     $tpdfCheck = Get-Command tpdf -ErrorAction SilentlyContinue

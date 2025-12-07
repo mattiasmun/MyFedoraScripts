@@ -15,7 +15,7 @@ _eps = _eps0 * gp.mpfr(8 << 23)
 def newton_raphson(f, df, x0, rtol = _eps, atol = _eps, max_iter = 100):
 	"""
 	Implements the Newton-Raphson method to find a root of the function f.
-	
+
 	Args:
 		f: The function to find the root of.
 		df: The derivative of the function f.
@@ -23,11 +23,11 @@ def newton_raphson(f, df, x0, rtol = _eps, atol = _eps, max_iter = 100):
 		rtol: Relative tolerance for isclose.
 		atol: Absolute tolerance for isclose.
 		max_iter: The maximum number of iterations.
-	
+
 	Returns:
 		The approximate root of the function f.
 	"""
-	
+
 	for i in range(max_iter):
 		x1 = x0 - f(x0) / df(x0)
 #		print("x1:", x1)
@@ -39,39 +39,39 @@ def newton_raphson(f, df, x0, rtol = _eps, atol = _eps, max_iter = 100):
 def ITP(f, a, b, k1 = None, k2 = 2, n0 = 1, rtol = _eps, atol = _eps, max_iter = 100):
 	if k1 is None:
 		k1 = gp.mpfr('0.2') / (b - a)
-	
+
 	if not (0 < _itr(k1) or gp.is_finite(k1)):
 		raise ValueError("k1 must be between 0 and ∞")
 	if not (1 <= k2 < 1 + (1 + gp.sqrt(5)) / 2):
 		raise ValueError("k2 must be between 1 and 1 + (1 + √5)/2 (1 + the golden ratio)")
 	if not (0 < n0 < gp.inf()):
 		raise ValueError("n0 must be between 0 and ∞")
-	
+
 	n_1div2 = _ceil(gp.log((b - a) / (2 * rtol)) / gp.const_log2())
 	n_max = n_1div2 + n0
 	y_a = f(a)
 	y_b = f(b)
-	
+
 	if gp.sign(_itr(y_a)) == gp.sign(_itr(y_b)):
 		raise ValueError("sign(f(a)) = sign(f(b)). There is no guaranteed root in the given interval.")
-	
+
 	j = 0
 	while isnotclose(a, b, rtol = rtol, atol = atol) and j < max_iter:
 		# Calculating parameters:
 		x_1div2 = (a + b) / 2
 		r = rtol * 2 ** (n_max - j) - (b - a) / 2
 		delta = k1 * (b - a) ** k2
-		
+
 		# Interpolation:
 		x_f = (y_b * a - y_a * b) / (y_b - y_a)
-		
+
 		# Truncation:
 		sigma = gp.sign(_itr(x_1div2 - x_f))
 		x_t = x_f + sigma * delta if _le(delta, abs(x_1div2 - x_f)) else x_1div2
-		
+
 		# Projection:
 		x_ITP = x_t if _le(abs(x_t - x_1div2), r) else x_1div2 - sigma * r
-		
+
 		# Updating Interval:
 		y_ITP = f(x_ITP)
 		if _itr(y_ITP) > 0:
@@ -82,7 +82,7 @@ def ITP(f, a, b, k1 = None, k2 = 2, n0 = 1, rtol = _eps, atol = _eps, max_iter =
 			y_a = y_ITP
 		else:
 			a = b = x_ITP
-		
+
 		j += 1
 	print("j", j)
 	return (a + b) / 2
@@ -119,11 +119,11 @@ def secant(f, x1, x2, rtol = _eps, atol = _eps, max_iter = 100):
 			y1, y2 = f(x1), f(x2)
 			oldx0 = x0
 			x0 = ((x1 * y2 - x2 * y1) / (y2 - y1))
-			
+
 			# check if x0 is root of
 			# equation or not
 			c = y1 * f(x0)
-			
+
 			# update the value of interval
 			x1, x2 = x2, x0
 #			print(i, _itr(c))
@@ -134,40 +134,40 @@ def secant(f, x1, x2, rtol = _eps, atol = _eps, max_iter = 100):
 		return x0
 	else:
 		return None
-		
+
 def isclose(a, b, rtol = _eps, atol = _eps):
 	if a is None or b is None:
 		return False
-	
+
 	# Handle NaN and infinity cases
 	if gp.is_nan(a) or gp.is_nan(b):
 		return False
 	if a == b:
 		return True
-	
+
 	# Calculate relative and absolute differences
 	diff = abs(a - b)
 	top = max(abs(a), abs(b))
 	rdiff = diff / top if top > 0 else diff
-	
+
 	# Check tolerances
 	return rdiff <= rtol or diff <= atol
-	
+
 def isnotclose(a, b, rtol = _eps, atol = _eps):
 	if a is None or b is None:
 		return True
-	
+
 	# Handle NaN and infinity cases
 	if gp.is_nan(a) or gp.is_nan(b):
 		return True
 	if a == b:
 		return False
-	
+
 	# Calculate relative and absolute differences
 	diff = abs(a - b)
 	top = max(abs(a), abs(b))
 	rdiff = diff / top if top > 0 else diff
-	
+
 	# Check tolerances
 	return rdiff > rtol and diff > atol
 

@@ -5,12 +5,12 @@
 # This script creates a new 7-zip archive of a specified directory only if
 # any file within that directory is newer than the existing archive file.
 # The archive file will be placed in the same directory as the source folder.
-# For example, if the source is '/home/user/data_project', the archive will be 
+# For example, if the source is '/home/user/data_project', the archive will be
 # '/home/user/data_project.7z'.
 #
 # Usage: ./conditional_7z_backup.sh <source_directory_path>
 
-# --- Configuration ---
+# ⎯⎯ Configuration ⎯⎯
 SOURCE_DIR="$1"
 
 # 1. Get the simple folder name (e.g., 'my_project')
@@ -23,7 +23,7 @@ ARCHIVE_DIR=$(dirname "$SOURCE_DIR")
 # 3. Combine to form the full path to the archive file
 ARCHIVE_FILE="${ARCHIVE_DIR}/${ARCHIVE_NAME}.7z"
 
-# --- Functions ---
+# ⎯⎯ Functions ⎯⎯
 
 # Function to check for required tools
 check_prerequisites() {
@@ -46,7 +46,7 @@ validate_source_dir() {
         echo "❌ ERROR: Source directory '$SOURCE_DIR' does not exist." >&2
         exit 1
     fi
-    
+
     # Check if the destination directory for the archive is writable
     if [ ! -w "$ARCHIVE_DIR" ]; then
         echo "❌ ERROR: Destination directory '$ARCHIVE_DIR' is not writable. Cannot create '$ARCHIVE_FILE'." >&2
@@ -60,7 +60,7 @@ create_archive() {
 
     echo "Starting $type_of_run archive creation for directory: '$SOURCE_DIR'"
     echo "Archive destination: '$ARCHIVE_FILE'"
-    
+
     # The 'a' command adds files to the archive. If the archive exists, it updates it.
     # -t7z: Specify 7z format
     # -mx=9: Maximum compression
@@ -75,18 +75,18 @@ create_archive() {
     fi
 }
 
-# --- Main Logic ---
+# ⎯⎯ Main Logic ⎯⎯
 check_prerequisites
 validate_source_dir
 
-# --- 1. Check Initial Archive Existence (Base Case) ---
+# ⎯⎯ 1. Check Initial Archive Existence (Base Case) ⎯⎯
 if [ ! -f "$ARCHIVE_FILE" ]; then
     echo "Archive '$ARCHIVE_FILE' not found. This is the initial run."
     create_archive "initial"
 fi
 
-# --- 2. Check for Newer Files ---
-echo "Checking for new or modified files in '$SOURCE_DIR' compared to '$ARCHIVE_FILE'..."
+# ⎯⎯ 2. Check for Newer Files ⎯⎯
+echo "Checking for new or modified files in '$SOURCE_DIR' compared to '$ARCHIVE_FILE'…"
 
 # Use 'find' with -newer flag for maximum efficiency.
 # -type f: Only check regular files (ignore directories, links, etc.)

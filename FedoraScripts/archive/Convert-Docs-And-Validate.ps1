@@ -1,4 +1,4 @@
-# -----------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # PowerShell Script: Convert-Docs-And-Validate.ps1
 # Description: Recursively finds DOCX files, converts them to compressed PDFs
 #              using RocketPDF, and then validates the output using the
@@ -9,15 +9,15 @@
 # 2. qpdf (used by Test-And-Clean-PdfValidity) must be accessible, OR
 #    the global variable $global:QPDFPath must be set in the profile.
 # 3. The file 'Test-And-Clean-PdfValidity.ps1' must be loaded in the same session.
-# -----------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
-# --- GLOBAL SCRIPT HELP CHECK ---
+# ⎯⎯ GLOBAL SCRIPT HELP CHECK ⎯⎯
 # Check if the user requested help before proceeding to load the function or execute.
 if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?' -or $args -contains '/?') {
     Write-Host " "
-    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯" -ForegroundColor Yellow
     Write-Host "          Convert-Docs-And-Validate.ps1 Usage           " -ForegroundColor Yellow
-    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯" -ForegroundColor Yellow
     Write-Host "This script converts all DOCX files in a directory (recursively)"
     Write-Host "to compressed PDFs using RocketPDF, and then validates the PDF"
     Write-Host "structure using Test-And-Clean-PdfValidity (qpdf dependency)."
@@ -34,12 +34,12 @@ if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?
     Write-Host "  -WhatIf             (Switch)    Previews all actions (conversions, deletions) without execution."
     Write-Host " "
     Write-Host "For detailed parameter help, run: Get-Help Convert-Docs-And-Validate -Full"
-    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯" -ForegroundColor Yellow
     exit
 }
-# ----------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯-
 
-# --- SCRIPT-SCOPE LOGGING FUNCTION (Moved outside the main function) ---
+# ⎯⎯ SCRIPT-SCOPE LOGGING FUNCTION (Moved outside the main function) ⎯⎯
 # Global variable to hold the path to the current log file
 $Script:LogFilePath = $null
 
@@ -71,10 +71,10 @@ function Write-Log {
         Write-Host $Message -ForegroundColor $ForegroundColor
     }
 }
-# ----------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯-
 
 
-# --- 1. Load the Test-And-Clean-PdfValidity function ---
+# ⎯⎯ 1. Load the Test-And-Clean-PdfValidity function ⎯⎯
 # This assumes the validation script is in the same directory as this script.
 # If it is not, adjust the path below.
 $ValidationScriptPath = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) "Test-And-Clean-PdfValidity.ps1"
@@ -87,7 +87,7 @@ if (Test-Path -Path $ValidationScriptPath) {
     # Exit script if the critical validation function cannot be found
     exit 1
 }
-# -------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯-
 
 <#
 .SYNOPSIS
@@ -141,7 +141,7 @@ function global:Convert-Docs-And-Validate {
         [switch]$SkipExistingPdf = $false
     )
 
-    # --- LOGGING SETUP (Initialize the log file path) ---
+    # ⎯⎯ LOGGING SETUP (Initialize the log file path) ⎯⎯
     # $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
     $LogFileName = "Conversion_Validation_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
     $Script:LogFilePath = Join-Path $OutputDirectory $LogFileName # Set the script-level variable
@@ -152,9 +152,9 @@ function global:Convert-Docs-And-Validate {
         param([string]$Message, [ConsoleColor]$ForegroundColor, [bool]$IsError)
         Write-Log -Message $Message -ForegroundColor $ForegroundColor -IsError $IsError
     }
-    # --- END LOGGING SETUP ---
+    # ⎯⎯ END LOGGING SETUP ⎯⎯
 
-    # --- EXECUTABLE PATH RESOLUTION (New) ---
+    # ⎯⎯ EXECUTABLE PATH RESOLUTION (New) ⎯⎯
     # Use the global path defined in the profile if available, otherwise assume it's in PATH.
     $RocketPdfCmd = if ($global:RocketPDFPath -and (Test-Path -Path $global:RocketPDFPath -PathType Leaf)) {
         $global:RocketPDFPath
@@ -163,10 +163,10 @@ function global:Convert-Docs-And-Validate {
     }
     # We will pass the QPDF path resolution logic to the Test-And-Clean-PdfValidity function
     # via the $global:QPDFPath variable.
-    # --- END PATH RESOLUTION ---
+    # ⎯⎯ END PATH RESOLUTION ⎯⎯
 
     # Log the start of the script
-    Write-Log -Message "--- Starting Conversion and Validation Script ---" -ForegroundColor Cyan
+    Write-Log -Message "⎯⎯ Starting Conversion and Validation Script ⎯⎯" -ForegroundColor Cyan
     Write-Log -Message "Log file created at: $Script:LogFilePath" -ForegroundColor Cyan
     Write-Log -Message "Source Directory: $SourceDirectory" -ForegroundColor Cyan
     Write-Log -Message "Output Directory: $OutputDirectory" -ForegroundColor Cyan
@@ -208,7 +208,7 @@ function global:Convert-Docs-And-Validate {
         # Calculate time even if no files were found
         $EndTime = Get-Date
         $TotalTime = New-TimeSpan -Start $StartTime -End $EndTime
-        Write-Log -Message "--- Conversion and Validation Process Complete ---" -ForegroundColor Cyan
+        Write-Log -Message "⎯⎯ Conversion and Validation Process Complete ⎯⎯" -ForegroundColor Cyan
         Write-Log -Message "Total processing time (no files found): $($TotalTime.TotalSeconds) seconds" -ForegroundColor Cyan
         return
     }
@@ -229,7 +229,7 @@ function global:Convert-Docs-And-Validate {
         Write-Log -Message " "
         Write-Log -Message "Processing: $($File.Name)" -ForegroundColor White
 
-        # --- Create Output Directory if it doesn't exist ---
+        # ⎯⎯ Create Output Directory if it doesn't exist ⎯⎯
         if (-not (Test-Path -Path $OutputFolder -PathType Container)) {
             Write-Log -Message "  → Creating output directory: $OutputFolder" -ForegroundColor DarkGray
             # Check if ShouldProcess is supported before creating the directory
@@ -238,14 +238,14 @@ function global:Convert-Docs-And-Validate {
             }
         }
 
-        # --- Check for existing PDF and skip if requested ---
+        # ⎯⎯ Check for existing PDF and skip if requested ⎯⎯
         if ($SkipExistingPdf -and (Test-Path -Path $PdfPath -PathType Leaf)) {
             $SkippedCount++
             Write-Log -Message "  ⏩ Skipped: Matching PDF already exists at '$PdfPath'." -ForegroundColor DarkYellow
             continue
         }
 
-        # --- 2. RocketPDF Conversion and Compression (Wrapped in ShouldProcess) ---
+        # ⎯⎯ 2. RocketPDF Conversion and Compression (Wrapped in ShouldProcess) ⎯⎯
         if ($PSCmdlet.ShouldProcess("Converting '$($File.FullName)'", "Convert and save to '$PdfPath'")) {
             try {
                 Write-Log -Message "  → Converting and compressing to: $PdfPath" -ForegroundColor DarkGray
@@ -261,7 +261,7 @@ function global:Convert-Docs-And-Validate {
 
                 Write-Log -Message "  ✅ Conversion Successful. Starting validation." -ForegroundColor Green
 
-                # --- 3. Run Validation and Cleanup (NOW PASSING THE LOGGER) ---
+                # ⎯⎯ 3. Run Validation and Cleanup (NOW PASSING THE LOGGER) ⎯⎯
                 # The validation function will now look for $global:QPDFPath
                 $Status = Test-And-Clean-PdfValidity -PDFPath $PdfPath -DeleteOnInvalid $true -LogFunction $Logger
 
@@ -269,7 +269,7 @@ function global:Convert-Docs-And-Validate {
                     $ValidCount++ # Increment Valid counter
                     Write-Log -Message "  ✨ PDF validation complete: Valid." -ForegroundColor Green
 
-                    # --- 4. Optional Original File Deletion (Wrapped in ShouldProcess) ---
+                    # ⎯⎯ 4. Optional Original File Deletion (Wrapped in ShouldProcess) ⎯⎯
                     if ($DeleteOriginalDocx) {
                         if ($PSCmdlet.ShouldProcess("Deleting original file '$($File.Name)'")) {
                             Write-Log -Message "  🗑️ Deleting original DOCX file: $($File.Name)" -ForegroundColor Magenta
@@ -295,26 +295,26 @@ function global:Convert-Docs-And-Validate {
         } # End ShouldProcess for conversion
     }
 
-    # --- 5. Calculate and display total time and summary ---
+    # ⎯⎯ 5. Calculate and display total time and summary ⎯⎯
     $EndTime = Get-Date
     $TotalTime = New-TimeSpan -Start $StartTime -End $EndTime
 
     Write-Log -Message " "
-    Write-Log -Message "--- Conversion and Validation Process Complete ---" -ForegroundColor Cyan
+    Write-Log -Message "⎯⎯ Conversion and Validation Process Complete ⎯⎯" -ForegroundColor Cyan
     Write-Log -Message "Total processing time: $($TotalTime.TotalSeconds) seconds ($($TotalTime.Minutes)m $($TotalTime.Seconds)s)" -ForegroundColor Cyan
-    Write-Log -Message "--- Summary of Results ---" -ForegroundColor Yellow
+    Write-Log -Message "⎯⎯ Summary of Results ⎯⎯" -ForegroundColor Yellow
     Write-Log -Message "  Total Files Found: $($DocxFiles.Count)" -ForegroundColor White
     Write-Log -Message "  ⏩ Files Skipped (PDF Existed): $($SkippedCount)" -ForegroundColor DarkYellow
     Write-Log -Message "  ✅ Valid PDFs (Clean): $($ValidCount)" -ForegroundColor Green
     Write-Log -Message "  ⚠️ Valid PDFs with Warnings: $($WarningsCount)" -ForegroundColor Yellow
     Write-Log -Message "  ❌ Invalid PDFs (Deleted): $($InvalidCount)" -ForegroundColor Magenta
-    Write-Log -Message "--- End of Log File $Script:LogFilePath ---" -ForegroundColor Cyan
+    Write-Log -Message "⎯⎯ End of Log File $Script:LogFilePath ⎯⎯" -ForegroundColor Cyan
 
     # Clean up the script-level variable after the run is complete
     $Script:LogFilePath = $null
 }
 
-# --- EXAMPLE USAGE ---
+# ⎯⎯ EXAMPLE USAGE ⎯⎯
 # IMPORTANT: Replace "C:\Your\Docs\Folder" with the actual path you want to process.
 
 # Example 1 (Original): Convert files in place, delete original DOCX, skip if PDF exists

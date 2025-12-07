@@ -13,7 +13,7 @@ function confirm
       return 1
       ;;
     *)
-      echo "Invalid input..."
+      echo "Invalid input…"
       ;;
     esac
   done

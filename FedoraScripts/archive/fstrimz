@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# ==============================================================================
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # This script performs a manual trim of mounted filesystems.
 # It is designed to be used with a systemd timer for periodic execution.
 #
 # The script logs its actions to the system journal for easy debugging.
-# ==============================================================================
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # Exit immediately if a command exits with a non-zero status.
 set -e
@@ -15,8 +15,8 @@ log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | systemd-cat -t fstrimz
 }
 
-# --- Step 1: Execute fstrim with --fstab option ---
-log "Starting fstrim on all mounted filesystems listed in /etc/fstab..."
+# ⎯⎯ Step 1: Execute fstrim with --fstab option ⎯⎯
+log "Starting fstrim on all mounted filesystems listed in /etc/fstab…"
 
 # Use the 'fstrim' command with the '--fstab' flag to trim all filesystems
 # that are mounted and support the discard operation.

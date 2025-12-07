@@ -11,16 +11,16 @@ _epsrt = gp.mpfr(8 << 100)
 def richardson_extrapolation(f, x, h):
 	"""
 	Computes the derivative using Richardson extrapolation.
-	
+
 	Args:
 		f: The function to differentiate.
 		x: The point at which to calculate the derivative.
 		h: The initial step size.
-	
+
 	Returns:
 		The approximate derivative using Richardson extrapolation.
 	"""
-	
+
 	h2 = h / 2
 	D1 = (f(x + h) - f(x - h)) / (2 * h)
 	D2 = (f(x + h2) - f(x - h2)) / (2 * h2)

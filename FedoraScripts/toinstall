@@ -1,30 +1,30 @@
 #!/bin/bash
 
-# ==============================================================================
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # This script automates initial system setup tasks for a fresh Fedora installation.
 # It installs core packages, configures repositories, and runs custom setup scripts.
-# ==============================================================================
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-# --- Variable Definitions ---
+# ⎯⎯ Variable Definitions ⎯⎯
 # The Fedora version is needed for RPM Fusion links.
 FEDORA_VERSION="$(rpm -E %fedora)"
 # Define the script's directory using an absolute path.
 SCRIPT_DIR="$HOME/Bash/MyFedoraScripts/FedoraScripts"
 
-# --- Step 1: Run sudo configuration script ---
-echo "--- Step 1: Running sudo configuration script ---"
+# ⎯⎯ Step 1: Run sudo configuration script ⎯⎯
+echo "⎯⎯ Step 1: Running sudo configuration script ⎯⎯"
 if [ -x "$SCRIPT_DIR/sudocfg" ]; then
     "$SCRIPT_DIR/sudocfg"
 else
     echo "Warning: 'sudocfg' script not found or is not executable. Skipping."
 fi
 
-# --- Step 2: Install core packages and repositories ---
+# ⎯⎯ Step 2: Install core packages and repositories ⎯⎯
 echo ""
-echo "--- Step 2: Installing Git and RPM Fusion repositories ---"
+echo "⎯⎯ Step 2: Installing Git and RPM Fusion repositories ⎯⎯"
 # Install git and the RPM Fusion repositories.
 # The `|| true` prevents the script from exiting if the repos are already installed.
 sudo -A dnf -y install \
@@ -33,18 +33,18 @@ sudo -A dnf -y install \
     "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_VERSION}.noarch.rpm" || true
 echo "Core packages and repositories installed."
 
-# --- Step 3: Run sub-scripts for further configuration ---
+# ⎯⎯ Step 3: Run sub-scripts for further configuration ⎯⎯
 echo ""
-echo "--- Step 3: Running subsequent setup scripts ---"
+echo "⎯⎯ Step 3: Running subsequent setup scripts ⎯⎯"
 
 # Upgrade all packages to the latest version.
-echo "Running full system upgrade..."
+echo "Running full system upgrade…"
 sudo -A dnf -y upgrade
 echo "System upgrade complete."
 
 # Run the script to get Git repositories.
 if [ -x "$SCRIPT_DIR/getgitrepos" ]; then
-    echo "Running 'getgitrepos' script..."
+    echo "Running 'getgitrepos' script…"
     "$SCRIPT_DIR/getgitrepos"
 else
     echo "Warning: 'getgitrepos' script not found or is not executable. Skipping."
@@ -52,7 +52,7 @@ fi
 
 # Run the script for bash profile and autostart.
 if [ -x "$SCRIPT_DIR/setup-my-env.sh" ]; then
-    echo "Running 'setup-my-env.sh' script..."
+    echo "Running 'setup-my-env.sh' script…"
     "$SCRIPT_DIR/setup-my-env.sh"
 else
     echo "Warning: 'setup-my-env.sh' script not found or is not executable. Skipping."
@@ -60,18 +60,18 @@ fi
 
 # Run the script to install programs.
 if [ -x "$SCRIPT_DIR/progs" ]; then
-    echo "Running 'progs' script..."
+    echo "Running 'progs' script…"
     "$SCRIPT_DIR/progs"
 else
     echo "Warning: 'progs' script not found or is not executable. Skipping."
 fi
 
-# --- Step 4: Final group updates ---
+# ⎯⎯ Step 4: Final group updates ⎯⎯
 echo ""
-echo "--- Step 4: Updating system package groups ---"
+echo "⎯⎯ Step 4: Updating system package groups ⎯⎯"
 sudo -A dnf -y groupupdate 'core' 'multimedia' 'sound-and-video' 'workstation-product-environment'
 echo "Package groups updated."
 
 echo ""
-echo "--- Installation script finished successfully! ---"
+echo "⎯⎯ Installation script finished successfully! ⎯⎯"
 ```eof

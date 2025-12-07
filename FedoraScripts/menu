@@ -1,5 +1,5 @@
 #!/bin/bash
-# choose 'choice 1' 'choice 2' ...
+# choose 'choice 1' 'choice 2' …
 #  Prints menu to standard error. Prompts with PS3.
 #  Reads REPLY from standard input. Sets CHOICE.
 s00='fee fie'
@@ -41,5 +41,5 @@ function list
 while true
 do
   list
-  echo -----------------------------------
+  echo ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 done

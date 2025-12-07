@@ -1,10 +1,10 @@
 #!/bin/bash
-# -------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # Script to automate the Fedora system upgrade process.
 # Gracefully closes known applications using pkill (SIGTERM) before rebooting.
-# -------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
-# --- Variables ---
+# ⎯⎯ Variables ⎯⎯
 
 # Retrieves the current Fedora version number (e.g., 42)
 CURRENT_VERSION="$(rpm -E %fedora)"
@@ -16,7 +16,7 @@ NEXT_VERSION="$((CURRENT_VERSION + 1))"
 # Add or remove applications here as needed.
 APPLICATIONS_TO_CLOSE=("firefox" "gedit" "nautilus" "thunderbird")
 
-# --- Functions ---
+# ⎯⎯ Functions ⎯⎯
 
 # Function to handle user confirmation (Yes/No)
 confirm() {
@@ -42,7 +42,7 @@ confirm() {
 
 # Function to close known applications gracefully and initiate the upgrade reboot
 close_and_dnf_reboot() {
-	echo "--- Attempting to gracefully close known applications (SIGTERM) ---"
+	echo "⎯⎯ Attempting to gracefully close known applications (SIGTERM) ⎯⎯"
 
 	# Loop through the list of applications
 	for app in "${APPLICATIONS_TO_CLOSE[@]}"; do
@@ -50,7 +50,7 @@ close_and_dnf_reboot() {
 		# Uses 'pgrep -x' to check if the app is running.
 		# '-x' ensures an exact match of the process name.
 		if pgrep -x "$app" > /dev/null; then
-			echo "Found and attempting to terminate process: $app..."
+			echo "Found and attempting to terminate process: $app…"
 			# pkill sends SIGTERM (graceful shutdown) by default.
 			pkill "$app"
 		else
@@ -59,10 +59,10 @@ close_and_dnf_reboot() {
 	done
 
 	# Waits 4 seconds to allow programs to shut down, save data, and clear memory
-	echo "Waiting 4 seconds for graceful termination..."
+	echo "Waiting 4 seconds for graceful termination…"
 	sleep 4
 
-	echo "Starting system reboot for upgrade to F$NEXT_VERSION..."
+	echo "Starting system reboot for upgrade to F$NEXT_VERSION…"
 
 	# Opens the Activities Overview
 	sleep 2.5 && echo key leftmeta | dotoolc
@@ -72,13 +72,13 @@ close_and_dnf_reboot() {
 	sudo -A dnf5 offline reboot
 }
 
-# --- Main Script ---
+# ⎯⎯ Main Script ⎯⎯
 
-echo "--- Fedora System Upgrade Initiated ---"
+echo "⎯⎯ Fedora System Upgrade Initiated ⎯⎯"
 echo "Current Version: F$CURRENT_VERSION. Next Target Version: F$NEXT_VERSION"
 
 # Step 1: Perform package download for the upgrade.
-echo "Step 1: Downloading upgrade packages for Fedora $NEXT_VERSION..."
+echo "Step 1: Downloading upgrade packages for Fedora $NEXT_VERSION…"
 
 # --refresh: Updates DNF metadata.
 # --allowerasing: Allows deletion of packages that block the upgrade.
