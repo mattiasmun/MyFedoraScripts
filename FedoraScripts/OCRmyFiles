@@ -91,7 +91,7 @@ fi
 
 if [[ ! -d "${outputDir}" ]]
 then
-  echo "The output directory does not exist -> creating ${outputDir}"
+  echo "The output directory does not exist → creating ${outputDir}"
   mkdir -p "${outputDir}"
   echo
 fi
@@ -110,7 +110,7 @@ then
   # Remove lockdir when the script finishes
   trap cleanup_locks 0
 else
-  errorecho "Script is currently running for input directory ${inputDir}, aborting..."
+  errorecho "Script is currently running for input directory ${inputDir}, aborting…"
   exit 1
 fi
 
@@ -157,18 +157,18 @@ function ocr_recursive
       if [[ -f "${outputDir}${tmp%.*}.pdf" ]]
       then
         # If the file already exist in the output directory, skip it.
-        echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping..."
+        echo "File ${outputDir}${tmp%.*}.pdf already exists, skipping…"
         continue
       fi
 
       if [[ "${fileType%%,*}" == "PDF document" ]]
       then
-        # It's a PDF file -> OCR it
-        echo "Processing (PDF) $i -> ${outputDir}${tmp}"
+        # It's a PDF file → OCR it
+        echo "Processing (PDF) $i → ${outputDir}${tmp}"
 
         if ! ocrmypdf ${ocrmypdfCmdArgs} "${i}" "${outputDir}${tmp}"
         then
-          # Error while processing PDF file, maybe it already contains a text layer -> simply copy to output directory
+          # Error while processing PDF file, maybe it already contains a text layer → simply copy to output directory
           cp "${i}" "${outputDir}${tmp}"
         fi
 
@@ -177,16 +177,16 @@ function ocr_recursive
         countPDF="$((countPDF + 1))"
       elif  [[ "${fileType}" = *"image data"* ]]
       then
-        # It's an image -> convert to PDF and OCR it
-        echo "Processing (image) $i -> ${outputDir}${tmp%.*}.pdf"
+        # It's an image → convert to PDF and OCR it
+        echo "Processing (image) $i → ${outputDir}${tmp%.*}.pdf"
         fullpath="${outputDir}${tmp}"
         tesseract "${i}" "${fullpath%.*}" "${imageConvertCmdArgs}"
         echo "Done"
         echo
         countImage="$((countImage + 1))"
       else
-        # Other file types -> just copy to output directory.
-        echo "Copy $i -> ${outputDir}${tmp}"
+        # Other file types → just copy to output directory.
+        echo "Copy $i → ${outputDir}${tmp}"
         cp "${i}" "${outputDir}${tmp}"
         echo "Done"
         echo

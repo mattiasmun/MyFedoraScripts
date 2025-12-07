@@ -1,17 +1,17 @@
-# -----------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # PowerShell Script: Test-And-Clean-PdfValidity.ps1
 # Description: Defines a function to check the structural validity of a PDF
 #              using qpdf, optionally cleaning or deleting invalid files.
 # Prerequisites: qpdf CLI must be installed and accessible in the system PATH, OR
 #                the global variable $global:QPDFPath must be set in the profile.
-# -----------------------------------------------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
-# --- GLOBAL SCRIPT HELP CHECK ---
+# ⎯⎯ GLOBAL SCRIPT HELP CHECK ⎯⎯
 if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?' -or $args -contains '/?') {
-    Write-Host ""
-    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host " "
+    Write-Host "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯" -ForegroundColor Yellow
     Write-Host "       Test-And-Clean-PdfValidity.ps1 Usage             " -ForegroundColor Yellow
-    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯" -ForegroundColor Yellow
     Write-Host "This script defines a single function to validate PDF integrity."
     Write-Host "It uses the 'qpdf' CLI tool to check for structural corruption."
     Write-Host " "
@@ -22,10 +22,10 @@ if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?
     Write-Host " "
     Write-Host "Outputs an Enum status: Valid, ValidWithWarnings, InvalidHeader, InvalidAccess, InvalidCorrupt."
     Write-Host "For detailed parameter help, run: Get-Help Test-And-Clean-PdfValidity -Full"
-    Write-Host "--------------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯" -ForegroundColor Yellow
     exit
 }
-# ----------------------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯-
 
 
 # Define the custom Enum for return status
@@ -113,11 +113,11 @@ function global:Test-And-Clean-PdfValidity {
             }
         }
     }
-    # ----------------------------------------------------------------------------------
+    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯-
 
-    Write-TestLog -Message "--- Checking $($PDFPath) ---" -ForegroundColor White
+    Write-TestLog -Message "⎯⎯ Checking $($PDFPath) ⎯⎯" -ForegroundColor White
 
-    # --- Nested Deletion Function ---
+    # ⎯⎯ Nested Deletion Function ⎯⎯
     function Delete-File {
         param([string]$PathToDelete)
         try {
@@ -128,15 +128,15 @@ function global:Test-And-Clean-PdfValidity {
             Write-TestLog -Message "Failed to delete file '$PathToDelete': $($_.Exception.Message)" -IsError $true
         }
     }
-    # --------------------------------
+    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
-    # --- 1. FILE EXISTENCE AND PATH CHECK
+    # ⎯⎯ 1. FILE EXISTENCE AND PATH CHECK
     if (-not (Test-Path -Path $PDFPath -PathType Leaf)) {
         Write-TestLog -Message "❌ File Not Found: $PDFPath" -ForegroundColor Magenta
         return [PdfValidationStatus]::InvalidAccess # Treated as access/path error
     }
 
-    # --- 2. SIMPLE HEADER CHECK (Robust Stream Read) ---
+    # ⎯⎯ 2. SIMPLE HEADER CHECK (Robust Stream Read) ⎯⎯
     $Stream = $null
     try {
         $Stream = [System.IO.File]::OpenRead($PDFPath)
@@ -167,7 +167,7 @@ function global:Test-And-Clean-PdfValidity {
         if ($Stream) { $Stream.Dispose() }
     }
 
-    # --- 3. QPDF STRUCTURAL VALIDATION CHECK (Using global path if available) ---
+    # ⎯⎯ 3. QPDF STRUCTURAL VALIDATION CHECK (Using global path if available) ⎯⎯
     # 1. Check for global path first (set in profile)
     $QPDFCmd = if ($global:QPDFPath -and (Test-Path -Path $global:QPDFPath -PathType Leaf)) {
         $global:QPDFPath
@@ -196,7 +196,7 @@ function global:Test-And-Clean-PdfValidity {
         # Status 3: Success with warnings
         Write-TestLog -Message "⚠️ Structural Check Passed with Warnings." -ForegroundColor Yellow
         if ($QPDFOutput) {
-            Write-TestLog -Message "--- QPDF Warnings ---" -ForegroundColor Yellow
+            Write-TestLog -Message "⎯⎯ QPDF Warnings ⎯⎯" -ForegroundColor Yellow
             # Log each line of QPDF output using Write-TestLog
             $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -ForegroundColor DarkYellow }
         }
@@ -205,7 +205,7 @@ function global:Test-And-Clean-PdfValidity {
         # Status 2 (or other non-success code): Fatal Error/Corruption
         Write-TestLog -Message "❌ Structural Check Failed. PDF is corrupted (Exit Code: $ExitCode)." -ForegroundColor Magenta
         if ($QPDFOutput) {
-            Write-TestLog -Message "--- QPDF Diagnostic Output ---" -ForegroundColor Magenta
+            Write-TestLog -Message "⎯⎯ QPDF Diagnostic Output ⎯⎯" -ForegroundColor Magenta
             # Log each line of QPDF output using Write-TestLog and marking as error
             $QPDFOutput | ForEach-Object { Write-TestLog -Message "   $_" -IsError $true }
         }

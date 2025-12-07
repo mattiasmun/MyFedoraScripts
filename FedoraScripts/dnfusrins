@@ -11,7 +11,7 @@ install_command_prefix='sudo -A dnf -y install '
 
 # 2. Query user-installed packages, then pipe the result to grep -vE
 # dnf5 repoquery outputs one package per line.
-# grep -vE: 
+# grep -vE:
 #   -v: Invert the match (output lines that *DO NOT* match the pattern)
 #   -E: Enable extended regex for the '|' (OR) operator
 # The pattern excludes any line containing 'kmod-VirtualBox-' OR 'kmod-nvidia-'.

@@ -14,11 +14,11 @@ BASHRC_FILE="$HOME/.bashrc"
 # Check if the required executable exists. If not, attempt to install it.
 if [ ! -f "$ASKPASS_PATH" ]; then
     echo "The required executable '$ASKPASS_PATH' was not found."
-    echo "Attempting to install the gcr3 package using dnf..."
-    
+    echo "Attempting to install the gcr3 package using dnf…"
+
     # Use sudo to install the package non-interactively
     sudo dnf install gcr3 -y
-    
+
     # After the installation attempt, check again if the file exists
     if [ ! -f "$ASKPASS_PATH" ]; then
         echo "Installation failed or the package does not provide the executable. Please install it manually and try again."
@@ -31,11 +31,11 @@ fi
 # Check if the required executable exists. If not, attempt to install it.
 if [ ! -f "$GNOME_ASKPASS_PATH" ]; then
     echo "The required executable '$GNOME_ASKPASS_PATH' was not found."
-    echo "Attempting to install the openssh-askpass package using dnf..."
-    
+    echo "Attempting to install the openssh-askpass package using dnf…"
+
     # Use sudo to install the package non-interactively
     sudo dnf install openssh-askpass -y
-    
+
     # After the installation attempt, check again if the file exists
     if [ ! -f "$GNOME_ASKPASS_PATH" ]; then
         echo "Installation failed or the package does not provide the executable. Please install it manually and try again."
@@ -57,7 +57,7 @@ else
     echo "" >> "$BASHRC_FILE"
     echo "# Added by script to set the graphical ssh-askpass program" >> "$BASHRC_FILE"
     echo "$ASKPASS_LINE" >> "$BASHRC_FILE"
-    
+
     echo "Successfully added the line to $BASHRC_FILE."
 fi
 
@@ -73,7 +73,7 @@ else
     echo "" >> "$BASHRC_FILE"
     echo "# Added by script to set the graphical ssh-askpass program" >> "$BASHRC_FILE"
     echo "$GNOME_ASKPASS_LINE" >> "$BASHRC_FILE"
-    
+
     echo "Successfully added the line to $BASHRC_FILE."
 fi
 

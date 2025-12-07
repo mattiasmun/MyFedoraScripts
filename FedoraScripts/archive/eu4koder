@@ -4,7 +4,7 @@ fow					Toggles fog of war on/off.
 norevolts			Toggles revolts.
 ti					Toggles terra incognita on/off.
 yesman				Toggle AI diplomatic responses (on: always accept; off: normal response).
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 add_baseunrest [<Province ID>] [<Base Unrest>]			Adds base unrest to a province.
 add_idea_group [<Idea group key>] [<Country tag> OPTIONAL]		Adds the specified idea group. For example "add_idea_group diplomatic_ideas GER"
 add_local_autonomy [<Province ID>] [<Amount>]			Adds local autonomy to a province.
@@ -46,7 +46,7 @@ embrace [<Province ID>] [<institution name> optional]		Embraces an institutions 
 		Printing Press: printing_press		Global Trade: global_trade			Manufactories: manufactories
 		Enlightenment: enlightenment		Industrialization: industrialization
 event 700										Allows player to gain 1 / 1 / 1 to the current leader (Will Replace Queen Regents and Regency Councils).
-event 2001												Starts the Protestantism protestant reformation and spawns a center of reformation in the capital. 
+event 2001												Starts the Protestantism protestant reformation and spawns a center of reformation in the capital.
 event 700027 [<Province ID>] 								Changes tradegood to paper in a province.
 fast_colonize													Toggles the fast colonize cheat (affects AI as well).
 findcommands [<Search string>]									Finds console commands.

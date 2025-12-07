@@ -2,14 +2,14 @@
 # Detta skript fungerar som en mellanhand mellan FiltaQuilla och ClamAV.
 # Det skannar den fixa sökvägen där Thunderbird/FiltaQuilla sparar bilagorna.
 
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # VARIABLER
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # Sökväg till den mapp Thunderbird/FiltaQuilla sparar bilagorna.
 SPARAD_BILAGA_DIR="$HOME/.clamtk/attachment"
 
 # Sökväg till din karantänmapp (där infekterade filer flyttas)
-KARANTAN_DIR="$HOME/.clamtk/quarantine" 
+KARANTAN_DIR="$HOME/.clamtk/quarantine"
 
 # Byt till clamdscan för snabbare skanning via daemonen.
 CLAMSCAN_BIN="/usr/bin/clamdscan"
@@ -17,9 +17,9 @@ CLAMSCAN_BIN="/usr/bin/clamdscan"
 # Loggfilens sökväg (vi lägger den i .clamtk/log/)
 LOGG_FIL="$HOME/.clamtk/log/clamscan_filter.log"
 
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # 0. FÖRBEREDELSER
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # Tvinga Bash att starta i hemmakatalogen för att säkra att \$HOME är korrekt.
 cd "$HOME"
 
@@ -28,16 +28,16 @@ mkdir -p "$KARANTAN_DIR"
 mkdir -p "$HOME/.clamtk/log"
 
 # Lägg till tidsstämpel och miljövärden i loggen
-echo "--- Skanning startad: $(date) ---" >> "$LOGG_FIL"
+echo "⎯⎯ Skanning startad: $(date) ⎯⎯" >> "$LOGG_FIL"
 echo "VERKTYG: clamdscan (--stream aktiv, ansluter via TCP/IP från scan.conf)" >> "$LOGG_FIL"
 echo "Kontrollerad \$HOME: $HOME" >> "$LOGG_FIL"
 echo "Skanningskatalog: $SPARAD_BILAGA_DIR" >> "$LOGG_FIL"
 echo "Karantänkatalog: $KARANTAN_DIR" >> "$LOGG_FIL"
 
 
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # 0.5. KONTROLLERA INNEHÅLL
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # Säkerställ att om det inte finns några filer i mappen, avslutas skriptet.
 shopt -s nullglob
 files=("$SPARAD_BILAGA_DIR"/*)
@@ -48,9 +48,9 @@ if [ ${#files[@]} -eq 0 ]; then
     exit 0
 fi
 
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # 1. KÖR CLAMDSCA MED FLYTT TILL KARANTÄN
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # --stream tvingar clamdscan att läsa filen (som mmunster) och strömma den till clamd.
 # Denna flagga löser behörighetsfelet på filsystemet (File path check failure).
 "$CLAMSCAN_BIN" --stream --move="$KARANTAN_DIR" --no-summary "$SPARAD_BILAGA_DIR" >> "$LOGG_FIL" 2>&1
@@ -58,9 +58,9 @@ fi
 # Fånga exit-koden från clamdscan.
 CLAMSCAN_STATUS=$?
 
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # 2. HANTERA RESULTAT & RENSNING
-# --------------------------
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 if [ "$CLAMSCAN_STATUS" -eq 0 ]; then
     # Exit code 0: Rent. Inga hot hittades.

@@ -28,14 +28,14 @@ find "$START_PATH" -type f -print0 | \
 
 # Kontrollera om den temporära filen är tom (storlek noll)
 if [ ! -s "$temp_file" ]; then
-    echo "----------------------------------------------------"
+    echo "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"
     echo "Inga filer hittades som matchar söksträngen."
     rm "$temp_file"
     exit 0
 fi
 
 echo "Sorterar efter storlek i fallande ordning:"
-echo "----------------------------------------------------"
+echo "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"
 
 # Använd de funna filerna från den temporära filen för att fortsätta pipelinen
 # 'cat' skickar innehållet till xargs som nu korrekt tolkar null-avgränsningarna.
@@ -49,7 +49,6 @@ cat "$temp_file" | \
                 # ls -l utdata: permissions, links, owner, group, size, month, day, time, filename
                 # $5 = size (human readable)
                 # $6, $7, $8 = date/time (formatted)
-                
                 # För att få korrekt filnamn som kan hantera mellanslag:
                 file_start_col = 9;
                 for (i = file_start_col; i <= NF; i++) {

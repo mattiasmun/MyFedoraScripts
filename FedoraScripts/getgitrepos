@@ -1,24 +1,24 @@
 #!/bin/bash
 
-# ==============================================================================
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 # This script automates the setup of a new environment by:
 # 1. Running a configuration script for Git.
 # 2. Cloning two specific Git repositories into designated directories.
 # The script is designed to be idempotent and provides clear user feedback.
-# ==============================================================================
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-# --- Variable Definitions ---
+# ⎯⎯ Variable Definitions ⎯⎯
 REPO1_DIR="$HOME/Bash/MyFedoraScripts"
 REPO1_URL="https://github.com/mattiasmun/MyFedoraScripts.git"
 REPO2_DIR="$HOME/Git/noscriptsettings"
 REPO2_URL="https://github.com/mattiasmun/noscriptsettings.git"
 
-# --- Clone Git Repositories ---
+# ⎯⎯ Clone Git Repositories ⎯⎯
 echo ""
-echo "--- Step 2: Cloning Git repositories ---"
+echo "⎯⎯ Step 2: Cloning Git repositories ⎯⎯"
 
 # Function to clone a repository if it doesn't already exist
 clone_repo() {
@@ -26,11 +26,11 @@ clone_repo() {
     local repo_url="$2"
     local parent_dir=$(dirname "$repo_dir")
 
-    echo "Checking for repository at '$repo_dir'..."
+    echo "Checking for repository at '$repo_dir'…"
     if [ -d "$repo_dir" ]; then
         echo "Repository directory already exists. Skipping clone."
     else
-        echo "Repository not found. Creating parent directory '$parent_dir' and cloning..."
+        echo "Repository not found. Creating parent directory '$parent_dir' and cloning…"
         mkdir -p "$parent_dir"
         git clone "$repo_url" "$repo_dir"
         echo "Successfully cloned repository."
@@ -46,5 +46,5 @@ echo ""
 clone_repo "$REPO2_DIR" "$REPO2_URL"
 
 echo ""
-echo "--- Script finished. ---"
+echo "⎯⎯ Script finished. ⎯⎯"
 

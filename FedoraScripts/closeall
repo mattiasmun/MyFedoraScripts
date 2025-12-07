@@ -6,7 +6,7 @@ APPLICATIONS_TO_CLOSE=("firefox" "gedit" "nautilus" "thunderbird")
 # Function to close known applications gracefully and then shutdown the PC in different ways
 function _closeall
 {
-	echo "--- Attempting to gracefully close known applications (SIGTERM) ---"
+	echo "⎯⎯ Attempting to gracefully close known applications (SIGTERM) ⎯⎯"
 
 	# Loop through the list of applications
 	for app in "${APPLICATIONS_TO_CLOSE[@]}"; do
@@ -14,7 +14,7 @@ function _closeall
 		# Uses 'pgrep -x' to check if the app is running.
 		# '-x' ensures an exact match of the process name.
 		if pgrep -x "$app" > /dev/null; then
-			echo "Found and attempting to terminate process: $app..."
+			echo "Found and attempting to terminate process: $app…"
 			# pkill sends SIGTERM (graceful shutdown) by default.
 			pkill "$app"
 		else
@@ -23,7 +23,7 @@ function _closeall
 	done
 
 	# Waits 4 seconds to allow programs to shut down, save data, and clear memory
-	echo "Waiting 4 seconds for graceful termination..."
+	echo "Waiting 4 seconds for graceful termination…"
 	sleep 4
 
 	# Opens the Activities Overview

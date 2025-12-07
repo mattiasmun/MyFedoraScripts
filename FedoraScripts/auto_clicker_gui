@@ -19,7 +19,7 @@ class AutoClickerGUI(tk.Tk):
         self.is_running = False
         self.thread = None
         self.listener = None
-        
+
         # Get screen dimensions once when the app starts
         try:
             output = subprocess.run(['xrandr'], capture_output=True, text=True, check=True)
@@ -34,11 +34,11 @@ class AutoClickerGUI(tk.Tk):
         except (subprocess.CalledProcessError, FileNotFoundError) as e:
             self.screen_width, self.screen_height = 1920, 1080
             messagebox.showerror("Error", f"Could not run xrandr to get screen dimensions: {e}. Using default 1920x1080.")
-            
+
         # New thread for cursor position tracking
         self.cursor_pos_thread = None
         self.stop_cursor_thread = threading.Event()
-        
+
         # File for persistent settings
         self.SETTINGS_FILE = "settings.json"
 
@@ -63,7 +63,7 @@ class AutoClickerGUI(tk.Tk):
         # Cursor Position Label
         self.cursor_pos_label = ttk.Label(self.main_frame, text="Cursor Position: (0, 0)", font=('Arial', 12, 'bold'))
         self.cursor_pos_label.pack(pady=5)
-        
+
         # Coordinates Input
         self.coords_frame = ttk.Frame(self.main_frame)
         self.coords_frame.pack(fill=tk.X, pady=5)
@@ -87,7 +87,7 @@ class AutoClickerGUI(tk.Tk):
         ttk.Label(self.delay_frame, text="Delay between clicks (seconds):").pack(side=tk.LEFT, padx=(0, 5))
         self.delay_entry = ttk.Entry(self.delay_frame, width=10)
         self.delay_entry.pack(side=tk.LEFT)
-        
+
         # Alt+Tab Checkbox
         self.alt_tab_var = tk.BooleanVar()
         self.alt_tab_check = ttk.Checkbutton(self.main_frame, text="Switch Window (Alt+Tab)", variable=self.alt_tab_var)
@@ -106,7 +106,7 @@ class AutoClickerGUI(tk.Tk):
         self.status_label.pack(pady=10)
 
         # Instructions Section
-        self.instructions_label = ttk.Label(self.main_frame, 
+        self.instructions_label = ttk.Label(self.main_frame,
             text="Instructions:\n"
                  "1. Move your mouse to the desired position. The coordinates will update automatically.\n"
                  "2. Enter the X and Y coordinates to click.\n"
@@ -115,19 +115,19 @@ class AutoClickerGUI(tk.Tk):
                  "5. **Press the ESC key on your keyboard to stop the process at any time.**",
             justify=tk.LEFT)
         self.instructions_label.pack(pady=10, fill=tk.X)
-        
+
         # Start the keyboard listener thread
         self.listener = keyboard.Listener(on_press=self.on_press)
         self.listener.start()
-        
+
         # Load and set the initial settings
         self.load_settings()
-        
+
         # Start the cursor position update thread
         self.cursor_pos_thread = threading.Thread(target=self.update_cursor_position)
         self.cursor_pos_thread.daemon = True
         self.cursor_pos_thread.start()
-        
+
         # Bind the closing event to the on_closing method
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
@@ -156,7 +156,7 @@ class AutoClickerGUI(tk.Tk):
         """
         x_pct = x / self.screen_width
         y_pct = y / self.screen_height
-        
+
         # Now move to the target coordinates and click
         self.send_dotool_command(f"mouseto {x_pct} {y_pct}")
         time.sleep(0.1)
@@ -169,24 +169,24 @@ class AutoClickerGUI(tk.Tk):
         self.send_dotool_command("key alt+k:15")
         # A short delay is still good practice to give the system time to react
         time.sleep(0.5)
-    
+
     def on_closing(self):
         """Handles the window closing event."""
         # Save settings before closing
         self.save_settings()
-        
+
         # Stop all threads
         self.stop_clicking()
         self.stop_cursor_thread.set()
-        
+
         # Close the Tkinter window
         self.destroy()
-        
+
     def on_press(self, key):
         """Pynput callback to stop the clicking loop on ESC key press."""
         try:
             if key == keyboard.Key.esc:
-                print("Escape key pressed. Stopping script...")
+                print("Escape key pressed. Stopping script…")
                 self.stop_clicking()
                 return False  # Stops the listener
         except AttributeError:
@@ -243,7 +243,7 @@ class AutoClickerGUI(tk.Tk):
             y = int(self.y_entry.get())
             duration = float(self.duration_entry.get())
             delay = float(self.delay_entry.get())
-            
+
             if delay <= 0:
                 messagebox.showerror("Invalid Input", "Delay must be a positive number.")
                 return
@@ -255,7 +255,7 @@ class AutoClickerGUI(tk.Tk):
         self.stop_event.clear()
         self.start_button.config(state=tk.DISABLED)
         self.stop_button.config(state=tk.NORMAL)
-        self.status_label.config(text="Status: Running...")
+        self.status_label.config(text="Status: Running…")
 
         self.thread = threading.Thread(target=self.clicking_loop, args=(x, y, duration, delay))
         self.thread.daemon = True
@@ -267,8 +267,8 @@ class AutoClickerGUI(tk.Tk):
 
         self.is_running = False
         self.stop_event.set()
-        self.status_label.config(text="Status: Stopping...")
-        
+        self.status_label.config(text="Status: Stopping…")
+
         # No longer need to self-join; the thread will naturally exit after the loop.
 
         self.start_button.config(state=tk.NORMAL)
@@ -284,7 +284,7 @@ class AutoClickerGUI(tk.Tk):
 
         # Dummy move to (0,0) once before the loop to ensure 'mouseto' works
         self.send_dotool_command("mouseto 0 0")
-        
+
         start_time = time.time()
         while not self.stop_event.is_set() and (duration == 0 or time.time() - start_time < duration):
             try:
@@ -293,9 +293,9 @@ class AutoClickerGUI(tk.Tk):
             except Exception as e:
                 print(f"Error during clicking: {e}")
                 self.stop_event.set()
-            
+
         self.stop_clicking()
-        
+
 if __name__ == "__main__":
     app = AutoClickerGUI()
     app.mainloop()
