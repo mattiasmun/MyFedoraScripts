@@ -91,7 +91,7 @@ function Load-CustomScript {
         try {
             if ($AnAlias) {
                 # Optional: Add aliases for quick execution
-                Set-Alias -Name $AnAlias -Value $FunctionName -Scope Global
+                Set-Alias -Name $AnAlias -Value $FullPath -Scope Global
             }
             # Dot-source the file.
             . $FullPath
