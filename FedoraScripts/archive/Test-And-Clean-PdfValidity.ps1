@@ -135,7 +135,7 @@ function global:Test-And-Clean-PdfValidity {
         Write-TestLog -Message "❌ File Not Found: $PDFPath" -ForegroundColor Magenta
         return [PdfValidationStatus]::InvalidAccess # Treated as access/path error
     }
-
+<#
     # ⎯⎯ 2. SIMPLE HEADER CHECK (Robust Stream Read) ⎯⎯
     $Stream = $null
     try {
@@ -166,7 +166,7 @@ function global:Test-And-Clean-PdfValidity {
     } finally {
         if ($Stream) { $Stream.Dispose() }
     }
-
+#>
     # ⎯⎯ 3. QPDF STRUCTURAL VALIDATION CHECK (Using global path if available) ⎯⎯
     # 1. Check for global path first (set in profile)
     $QPDFCmd = if ($global:QPDFPath -and (Test-Path -Path $global:QPDFPath -PathType Leaf)) {
@@ -174,13 +174,13 @@ function global:Test-And-Clean-PdfValidity {
     } else {
         "qpdf"
     }
-
+<#
     # 2. Check if the command is available (either in PATH or via the explicit path)
     if (($QPDFCmd -eq "qpdf") -and -not (Get-Command -Name $QPDFCmd -ErrorAction SilentlyContinue)) {
         Write-TestLog -Message "❌ qpdf command not found. Ensure the CLI is in your PATH, or set the \$global:QPDFPath variable in your profile." -ForegroundColor Magenta
         return [PdfValidationStatus]::InvalidAccess # Treat lack of dependency as failure
     }
-
+#>
     # qpdf --check returns non-zero exit codes for issues:
     # 0: Success, 2: Serious/fatal error/corruption, 3: Warnings
 

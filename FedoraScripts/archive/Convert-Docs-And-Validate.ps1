@@ -43,7 +43,7 @@ if ($args -contains '-help' -or $args -contains '--help' -or $args -contains '-?
 # Global variable to hold the path to the current log file
 $Script:LogFilePath = $null
 
-function Write-Log {
+function global:Write-Log {
     param(
         [Parameter(Mandatory=$true)][string]$Message,
         [Parameter(Mandatory=$false)][ConsoleColor]$ForegroundColor = $Host.UI.RawUI.ForegroundColor,
@@ -251,7 +251,7 @@ function global:Convert-Docs-And-Validate {
                 Write-Log -Message "  → Converting and compressing to: $PdfPath" -ForegroundColor DarkGray
 
                 # The -Force argument is added to overwrite existing PDFs without prompt
-                $RocketPdfOutput = & $RocketPdfCmd convert $File.FullName $PdfPath --compress -Force 2>&1
+                $RocketPdfOutput = & $RocketPdfCmd parsedoc $File.FullName compress 2>&1
 
                 if ($LASTEXITCODE -ne 0) {
                     Write-Log -Message "  ❌ RocketPDF Conversion Failed for $($File.Name). Exit Code: $LASTEXITCODE" -IsError $true
