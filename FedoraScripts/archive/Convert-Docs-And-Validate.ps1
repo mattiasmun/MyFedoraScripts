@@ -251,7 +251,7 @@ function global:Convert-Docs-And-Validate {
                 Write-Log -Message "  → Converting and compressing to: $PdfPath" -ForegroundColor DarkGray
 
                 # The -Force argument is added to overwrite existing PDFs without prompt
-                $RocketPdfOutput = & $RocketPdfCmd parsedoc $File.FullName compress 2>&1
+                $RocketPdfOutput = & $RocketPdfCmd parsedoc "$($File.FullName)" compress
 
                 if ($LASTEXITCODE -ne 0) {
                     Write-Log -Message "  ❌ RocketPDF Conversion Failed for $($File.Name). Exit Code: $LASTEXITCODE" -IsError $true
