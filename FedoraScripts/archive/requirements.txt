@@ -2,6 +2,7 @@ altgraph
 docx2pdf
 evdev
 fire
+git-filter-repo
 MouseInfo
 numpy
 opencv-python-headless
