@@ -1,0 +1,20 @@
+# --- Build Artifacts (PyInstaller) ---
+# Ignore the temporary build folder
+build/
+
+# Ignore the output distribution folder containing the final executable
+dist/
+
+# --- Python Environment Files ---
+# Virtual environment files
+.venv/
+venv/
+
+# --- Compiled Python Files ---
+# Compiled python files
+__pycache__/
+*.pyc
+
+# --- Log Files ---
+# Your log file placed in the input/output directory (optional, but clean)
+*.log
