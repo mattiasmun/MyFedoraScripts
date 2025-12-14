@@ -1,1 +1,2 @@
-FedoraScripts/dist/* filter=lfs diff=lfs merge=lfs -text
+FedoraScripts/dist/doc_converter_cli filter=lfs diff=lfs merge=lfs -text
+FedoraScripts/dist/pdf_optimizer_cli filter=lfs diff=lfs merge=lfs -text
