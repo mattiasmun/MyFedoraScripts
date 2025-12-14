@@ -326,7 +326,7 @@ def main():
     logging.info(f"Skip Existing PDFs: {'YES' if args.skip_existing else 'NO'}")
 
     # 2. Processing
-    logging.info("Starting recursive file conversion, validation, and optimization...")
+    logging.info("Starting recursive file conversion, validation, and optimization…")
     results = process_directory_recursively(args)
 
     # 3. Time Measurement and Summary
