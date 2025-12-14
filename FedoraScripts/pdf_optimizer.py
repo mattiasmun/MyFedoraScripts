@@ -82,11 +82,10 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, 
         skip_existing: If True, skips optimization if the output file is newer than the script log.
 
     Returns:
-        A tuple (status: int, is_compressed: bool).
+        A tuple (status: int, size_was_reduced: bool).
     """
     file_size_before = 0
     file_size_after = 0
-    is_compressed = False
 
     try:
         file_size_before = os.path.getsize(pdf_path)
@@ -100,7 +99,7 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, 
              # If the PDF was last modified BEFORE the log was created/updated, skip.
              if pdf_modified_time < log_modified_time:
                  logging.warning(f"SKIPPED: '{pdf_path}' is older than the last optimization run (log file).")
-                 # Return success so it's not counted as a failure, but is_compressed is False
+                 # Return success so it's not counted as a failure, but size_was_reduced is False
                  return PDF_SKIPPED, False
 
         # 2. Validation and Optimization
@@ -121,7 +120,6 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, 
 
         file_size_after = os.path.getsize(pdf_path)
 
-        # RENAME variable to reflect what it tracks
         size_was_reduced = False
 
         if file_size_after < file_size_before:
