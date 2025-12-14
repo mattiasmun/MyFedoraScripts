@@ -5,23 +5,23 @@ import logging
 import argparse
 from datetime import datetime
 
-# You must have rocketpdf and pikepdf installed:
-# pip install rocketpdf pikepdf
-
+# ⎯⎯ IMPORTANT CORRECTION ⎯⎯
+# Replaced the hypothetical 'rocketpdf' with the real 'docx2pdf' library.
 try:
-    from rocketpdf import RocketPDF
+    from docx2pdf import convert
     from pikepdf import Pdf, PdfError
 except ImportError as e:
-    print(f"Error: Required library not found. Please run 'pip install rocketpdf pikepdf'")
+    print("Error: Required library not found. Please run 'pip install docx2pdf pikepdf'")
     print(f"Details: {e}")
     exit(1)
+# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # ⎯⎯ Configuration ⎯⎯
 SOURCE_DIR = 'input_docs'
 DESTINATION_DIR = 'output_pdfs'
-# LOG_FILE path is determined in main based on DESTINATION_DIR
+LOG_FILE = '' # Will be set in setup_logging
 
-# ⎯⎯ Setup Functions ⎯⎯
+# ⎯⎯ Setup Functions (Code remains the same as previous version) ⎯⎯
 
 def setup_directories(dest_dir: str):
     """
@@ -43,6 +43,7 @@ def setup_logging(dest_dir: str) -> str:
     Returns:
         The full path to the log file.
     """
+    global LOG_FILE 
     LOG_FILE = os.path.join(dest_dir, 'conversion_log.log')
     
     # Configure logging to write to file
@@ -59,7 +60,7 @@ def setup_logging(dest_dir: str) -> str:
     formatter = logging.Formatter('%(levelname)s: %(message)s')
     console.setFormatter(formatter)
     
-    # Clear existing handlers (ensures no duplicate console output if run repeatedly)
+    # Clear existing handlers
     root_logger = logging.getLogger('')
     if not root_logger.handlers:
         root_logger.addHandler(console)
@@ -71,7 +72,7 @@ def setup_logging(dest_dir: str) -> str:
 
 def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool) -> bool:
     """
-    Converts a .docx file to a .pdf file using rocketpdf.
+    Converts a .docx file to a .pdf file using the docx2pdf library.
     
     Handles skipping conversion if the destination PDF already exists and the skip flag is set.
 
@@ -89,49 +90,67 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool) -
         return True 
         
     try:
-        pdf_converter = RocketPDF()
-        pdf_converter.convert(source_path, dest_path)
+        # ⎯⎯ THE CORRECTED CONVERSION CALL ⎯⎯
+        # The docx2pdf library uses a simple 'convert' function.
+        convert(source_path, dest_path)
+        # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
         logging.info(f"SUCCESS: Converted '{source_path}' to '{dest_path}'")
         return True
     except Exception as e:
         logging.error(f"CONVERSION_FAIL: Failed to convert '{source_path}'. Error: {e}")
+        # Common failure reason: Missing MS Word/LibreOffice installation
+        if "No module named 'comtypes'" in str(e) or "No LibreOffice" in str(e):
+             logging.error("HINT: Ensure Microsoft Word (Windows/Mac) or LibreOffice (Linux/Mac) is installed.")
         return False
 
-def validate_pdf(pdf_path: str) -> bool:
+def validate_and_compress_pdf(pdf_path: str) -> tuple[bool, bool]:
     """
-    Validates a PDF file using pikepdf's native Python API.
+    Validates a PDF file using pikepdf, and if valid, compresses it.
     
-    The act of opening the PDF with Pdf.open() forces pikepdf to check the file's
-    structural integrity. It raises PdfError if the file is invalid or corrupt.
-
     Args:
-        pdf_path: The full path to the PDF file to validate.
+        pdf_path: The full path to the PDF file to validate and compress.
 
     Returns:
-        True if the PDF is valid, False otherwise.
+        A tuple (is_valid: bool, is_compressed: bool).
     """
-    try:
-        # Using a 'with' statement ensures the file handle is properly closed.
-        with Pdf.open(pdf_path) as pdf:
-            pass # File opened successfully, so it's valid.
+    file_size_before = 0
+    file_size_after = 0
+    is_compressed = False
 
-        logging.info(f"VALIDATION_SUCCESS: '{pdf_path}' is a valid PDF.")
-        return True
+    try:
+        file_size_before = os.path.getsize(pdf_path)
+        
+        # 1. Validation (Pdf.open() raises PdfError if corrupt)
+        with Pdf.open(pdf_path) as pdf:
+            # 2. Compression/Optimization
+            pdf.save(pdf_path, optimize_version=True)
+            
+        file_size_after = os.path.getsize(pdf_path)
+
+        if file_size_after < file_size_before:
+            reduction = ((file_size_before - file_size_after) / file_size_before) * 100
+            logging.info(f"OPTIMIZATION_SUCCESS: '{pdf_path}' valid and compressed. Size reduced by {reduction:.2f}%.")
+            is_compressed = True
+        else:
+            logging.info(f"OPTIMIZATION_SUCCESS: '{pdf_path}' valid. No size reduction (Size: {file_size_after} bytes).")
+            is_compressed = True
+            
+        return True, is_compressed
 
     except PdfError as e:
         # Catch errors related to invalid PDF structure or corruption.
         logging.warning(f"VALIDATION_FAIL: '{pdf_path}' is INVALID/CORRUPTED. Error: {e}")
-        return False
+        return False, False
         
     except FileNotFoundError:
-        # Catch case where the previous conversion step failed to create the file.
-        logging.error(f"VALIDATION_ERROR: File not found at '{pdf_path}'. Cannot validate.")
-        return False
+        # Catch case where the file doesn't exist.
+        logging.error(f"VALIDATION_ERROR: File not found at '{pdf_path}'. Cannot validate/compress.")
+        return False, False
         
     except Exception as e:
         # Catch any other unexpected file access or I/O errors.
-        logging.error(f"VALIDATION_ERROR: Could not open '{pdf_path}' for validation. Unexpected Error: {e}")
-        return False
+        logging.error(f"VALIDATION_ERROR: Could not process '{pdf_path}'. Unexpected Error: {e}")
+        return False, False
 
 def remove_source_file(source_path: str, remove_original: bool):
     """
@@ -150,7 +169,7 @@ def remove_source_file(source_path: str, remove_original: bool):
 
 def process_directory_recursively(args: argparse.Namespace) -> dict:
     """
-    Recursively finds all .docx files, converts them, and validates the output.
+    Recursively finds all .docx files, converts them, validates, and optimizes the output.
 
     Args:
         args: The parsed command-line arguments containing directory paths and flags.
@@ -164,6 +183,7 @@ def process_directory_recursively(args: argparse.Namespace) -> dict:
         'conversion_fail': 0,
         'validation_success': 0,
         'validation_fail': 0,
+        'optimization_success': 0,
         'files_removed': 0,
         'files_skipped': 0
     }
@@ -189,18 +209,30 @@ def process_directory_recursively(args: argparse.Namespace) -> dict:
                     source_file_path, dest_file_path, args.skip_existing
                 )
                 
-                # Check if the file was skipped and the conversion method returned True
+                # Check for skipped file and update count (uses the global LOG_FILE)
                 if conversion_result and args.skip_existing and os.path.exists(dest_file_path):
-                    if 'SKIPPED' in open(LOG_FILE, 'r').read() and f"'{dest_file_path}'" in open(LOG_FILE, 'r').read(): # Crude check for log entry
-                        results['files_skipped'] += 1
-                        
+                    # NOTE: This log check is simplified for demonstration; a more robust solution would check the log file contents or have the conversion function return a specific skip status.
+                    try:
+                        with open(LOG_FILE, 'r') as f:
+                            log_contents = f.read()
+                        if 'SKIPPED' in log_contents and f"'{dest_file_path}'" in log_contents:
+                            results['files_skipped'] += 1
+                    except Exception:
+                         # Ignore error if log file isn't immediately readable
+                        pass
+
                 if conversion_result:
+                    # Note: Files skipped (if skip_existing=True) are still validated/compressed.
                     results['conversion_success'] += 1
                     
-                    # 2. Validate
-                    if validate_pdf(dest_file_path):
+                    # 2. Validate and Compress
+                    is_valid, is_compressed = validate_and_compress_pdf(dest_file_path)
+                    
+                    if is_valid:
                         results['validation_success'] += 1
-                        
+                        if is_compressed:
+                            results['optimization_success'] += 1
+                            
                         # 3. Optional Removal: ONLY if valid
                         if args.remove_original:
                             remove_source_file(source_file_path, args.remove_original)
@@ -212,7 +244,7 @@ def process_directory_recursively(args: argparse.Namespace) -> dict:
                 
     return results
 
-# ⎯⎯ Argument Parsing and Main Execution ⎯⎯
+# ⎯⎯ Argument Parsing and Main Execution (Code remains the same as previous version) ⎯⎯
 
 def parse_args() -> argparse.Namespace:
     """
@@ -222,7 +254,7 @@ def parse_args() -> argparse.Namespace:
         The parsed command-line arguments as a Namespace object.
     """
     parser = argparse.ArgumentParser(
-        description="Recursively convert DOCX files to validated PDF format using rocketpdf and pikepdf.",
+        description="Recursively convert DOCX files to validated and compressed PDF format.",
         formatter_class=argparse.RawTextHelpFormatter
     )
     
@@ -265,10 +297,10 @@ def main():
     1. Default Run (Convert all, don't remove, don't skip):
        python script_name.py
        
-    2. Convert, Validate, and Remove Originals (If valid):
+    2. Convert, Validate, Compress, and Remove Originals (If valid):
        python script_name.py -r
        
-    3. Skip Existing PDFs and Convert New Ones:
+    3. Skip Existing PDFs and Convert/Compress New Ones:
        python script_name.py -s
        
     4. Run with all flags and custom directories:
@@ -279,8 +311,7 @@ def main():
     
     # 1. Setup
     setup_directories(args.destination_dir)
-    global LOG_FILE 
-    LOG_FILE = setup_logging(args.destination_dir)
+    setup_logging(args.destination_dir)
     
     logging.info(f"Source Directory: {args.source_dir}")
     logging.info(f"Destination Directory: {args.destination_dir}")
@@ -289,7 +320,7 @@ def main():
     logging.info(f"Skip Existing PDFs: {'YES' if args.skip_existing else 'NO'}")
     
     # 2. Processing
-    logging.info("Starting recursive file conversion and validation...")
+    logging.info("Starting recursive file conversion, validation, and optimization...")
     results = process_directory_recursively(args)
     
     # 3. Time Measurement and Summary
@@ -309,9 +340,10 @@ Conversion Results:
   - Successful Conversions: {results['conversion_success']}
   - Failed Conversions: {results['conversion_fail']}
 
-Validation Results:
-  - Valid PDFs: {results['validation_success']}
+Validation/Optimization Results:
+  - Valid and Checked PDFs: {results['validation_success']}
   - Invalid/Corrupt PDFs: {results['validation_fail']}
+  - Optimization Attempts (Compression): {results['optimization_success']}
   
 Cleanup Results:
   - Original DOCX Files Removed: {results['files_removed']}
