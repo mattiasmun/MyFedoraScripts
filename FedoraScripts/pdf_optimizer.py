@@ -251,7 +251,7 @@ def main():
     logging.info(f"Skip Previously Optimized Files: {'YES' if args.skip_existing else 'NO'}")
 
     # 2. Processing
-    logging.info("Starting recursive PDF validation and optimization...")
+    logging.info("Starting recursive PDF validation and optimization…")
     results = process_directory_recursively(args)
 
     # 3. Time Measurement and Summary
