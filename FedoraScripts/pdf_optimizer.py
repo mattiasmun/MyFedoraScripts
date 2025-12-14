@@ -22,6 +22,7 @@ LOG_FILE = '' # Global variable set in setup_logging
 # ⎯⎯ Status Constants for Processing ⎯⎯
 PDF_SUCCESS = 1
 PDF_FAIL = 0
+PDF_SKIPPED = 2
 
 # ⎯⎯ Setup Functions ⎯⎯
 
@@ -100,7 +101,7 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, 
              if pdf_modified_time < log_modified_time:
                  logging.warning(f"SKIPPED: '{pdf_path}' is older than the last optimization run (log file).")
                  # Return success so it's not counted as a failure, but is_compressed is False
-                 return PDF_SUCCESS, False
+                 return PDF_SKIPPED, False
 
         # 2. Validation and Optimization
         with Pdf.open(pdf_path, allow_overwriting_input=True) as pdf:
@@ -117,15 +118,19 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, 
 
         file_size_after = os.path.getsize(pdf_path)
 
+        # RENAME variable to reflect what it tracks
+        size_was_reduced = False
+
         if file_size_after < file_size_before:
             reduction = ((file_size_before - file_size_after) / file_size_before) * 100
             logging.info(f"OPTIMIZATION_SUCCESS: '{pdf_path}' valid and compressed. Size reduced by {reduction:.2f}%.")
-            is_compressed = True
+            size_was_reduced = True # ONLY set True if reduction occurred
         else:
+            # The PDF was processed, but the file size did not change or increased.
             logging.info(f"OPTIMIZATION_SUCCESS: '{pdf_path}' valid. No size reduction (Size: {file_size_after} bytes).")
-            is_compressed = True
+            # size_was_reduced remains False
 
-        return PDF_SUCCESS, is_compressed
+        return PDF_SUCCESS, size_was_reduced # Return the accurate boolean flag
 
     except PdfError as e:
         # Catch errors related to invalid PDF structure or corruption.
@@ -169,22 +174,20 @@ def process_directory_recursively(args: argparse.Namespace) -> dict:
                 pdf_file_path = os.path.join(root, filename)
 
                 # 1. Validate and Optimize
-                status, size_reduced = validate_and_compress_pdf(
+                status, size_was_reduced = validate_and_compress_pdf(
                     pdf_file_path, args.skip_existing
                 )
 
-                # 2. Update counts
+                # 2. Update counts based on explicit status code
                 if status == PDF_SUCCESS:
-                    # Determine if the success was a skip or an actual optimization attempt
-                    if "SKIPPED" in open(LOG_FILE, 'r').read() and f"'{pdf_file_path}'" in open(LOG_FILE, 'r').read():
-                         # This complex log check is needed if we want to separate "Success" from "Skipped"
-                         # when using the log file timestamp check.
-                         results['files_skipped'] += 1
-                    else:
-                        results['optimization_success'] += 1
-                        if size_reduced:
-                            results['size_reduction_count'] += 1
-                else:
+                    results['optimization_success'] += 1
+                    if size_was_reduced:
+                        results['size_reduction_count'] += 1
+
+                elif status == PDF_SKIPPED:
+                    results['files_skipped'] += 1
+
+                elif status == PDF_FAIL:
                     results['optimization_fail'] += 1
 
     return results
