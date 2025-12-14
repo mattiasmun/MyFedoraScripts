@@ -1,3 +1,4 @@
+altgraph
 docx2pdf
 evdev
 fire
@@ -8,6 +9,8 @@ pdf2docx
 pip-date
 PyAutoGUI
 PyGetWindow
+pyinstaller
+pyinstaller-hooks-contrib
 PyMsgBox
 PyMuPDF
 pynput
