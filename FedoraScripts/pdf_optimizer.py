@@ -103,7 +103,7 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, 
                  return PDF_SUCCESS, False
 
         # 2. Validation and Optimization
-        with Pdf.open(pdf_path) as pdf:
+        with Pdf.open(pdf_path, allow_overwriting_input=True) as pdf:
             # ⎯⎯ FIX: Using only supported arguments for best optimization ⎯⎯
             pdf.save(
                 pdf_path,
