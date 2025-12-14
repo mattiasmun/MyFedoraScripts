@@ -136,19 +136,17 @@ def validate_and_compress_pdf(pdf_path: str) -> tuple[bool, bool]:
 
         file_size_after = os.path.getsize(pdf_path)
 
-        # RENAME variable to reflect what it tracks
-        size_was_reduced = False
 
         if file_size_after < file_size_before:
             reduction = ((file_size_before - file_size_after) / file_size_before) * 100
             logging.info(f"OPTIMIZATION_SUCCESS: '{pdf_path}' valid and compressed. Size reduced by {reduction:.2f}%.")
-            size_was_reduced = True # ONLY set True if reduction occurred
+            is_compressed = True # ONLY set True if reduction occurred
         else:
             # The PDF was processed, but the file size did not change or increased.
             logging.info(f"OPTIMIZATION_SUCCESS: '{pdf_path}' valid. No size reduction (Size: {file_size_after} bytes).")
-            # size_was_reduced remains False
+            # is_compressed remains False
 
-        return PDF_SUCCESS, size_was_reduced # Return the accurate boolean flag
+        return True, is_compressed # Return the accurate boolean flag
 
     except PdfError as e:
         # Catch errors related to invalid PDF structure or corruption.
