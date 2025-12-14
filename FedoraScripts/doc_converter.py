@@ -8,7 +8,7 @@ from datetime import datetime
 # ⎯⎯ IMPORT LIBRARIES ⎯⎯
 try:
     from docx2pdf import convert
-    from pikepdf import Pdf, PdfError
+    from pikepdf import Pdf, PdfError, ObjectStreamMode
 except ImportError as e:
     print("Error: Required library not found. Please run 'pip install docx2pdf pikepdf'")
     print(f"Details: {e}")
@@ -121,10 +121,18 @@ def validate_and_compress_pdf(pdf_path: str) -> tuple[bool, bool]:
     try:
         file_size_before = os.path.getsize(pdf_path)
 
-        # 1. Validation (Pdf.open() raises PdfError if corrupt)
+        # 2. Validation and Optimization
         with Pdf.open(pdf_path) as pdf:
-            # 2. Compression/Optimization
-            pdf.save(pdf_path, optimize_version=True)
+            # ⎯⎯ FIX: Using only supported arguments for best optimization ⎯⎯
+            pdf.save(
+                pdf_path,
+                compress_streams=True,  # Ensures all content streams are compressed
+                qdf=True,               # Uses QDF mode to clean up the file structure
+                fix_metadata_version=True, # Fixes metadata if necessary
+                # Use 'generate' mode for maximum object stream compression (smallest file size)
+                object_stream_mode=ObjectStreamMode.generate
+            )
+            # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
         file_size_after = os.path.getsize(pdf_path)
 
