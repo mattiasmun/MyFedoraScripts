@@ -121,7 +121,7 @@ def validate_and_compress_pdf(pdf_path: str) -> tuple[bool, bool]:
     try:
         file_size_before = os.path.getsize(pdf_path)
 
-        # 2. Validation and Optimization
+        # 1. Validation and Optimization
         with Pdf.open(pdf_path) as pdf:
             # ⎯⎯ FIX: Using only supported arguments for best optimization ⎯⎯
             pdf.save(
