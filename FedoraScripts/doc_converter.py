@@ -123,6 +123,9 @@ def validate_and_compress_pdf(pdf_path: str) -> tuple[bool, bool]:
 
         # 1. Validation and Optimization
         with Pdf.open(pdf_path, allow_overwriting_input=True) as pdf:
+            # This cleans up objects (like unused images/fonts) before saving/compressing.
+            pdf.remove_unreferenced_resources()
+
             # ⎯⎯ FIX: Using only supported arguments for best optimization ⎯⎯
             pdf.save(
                 pdf_path,

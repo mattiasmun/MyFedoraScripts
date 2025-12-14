@@ -105,7 +105,10 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, 
 
         # 2. Validation and Optimization
         with Pdf.open(pdf_path, allow_overwriting_input=True) as pdf:
-            # ⎯⎯ FIX: Using only supported arguments for best optimization ⎯⎯
+            # This cleans up objects (like unused images/fonts) before saving/compressing.
+            pdf.remove_unreferenced_resources()
+
+            # ⎯⎯ Using only supported arguments for best optimization ⎯⎯
             pdf.save(
                 pdf_path,
                 compress_streams=True,  # Ensures all content streams are compressed
@@ -114,7 +117,7 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, 
                 # Use 'generate' mode for maximum object stream compression (smallest file size)
                 object_stream_mode=ObjectStreamMode.generate
             )
-            # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+            # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
         file_size_after = os.path.getsize(pdf_path)
 
