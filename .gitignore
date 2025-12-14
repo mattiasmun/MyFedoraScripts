@@ -3,7 +3,7 @@
 build/
 
 # Ignore the output distribution folder containing the final executable
-#dist/
+dist/
 
 # --- Python Environment Files ---
 # Virtual environment files
