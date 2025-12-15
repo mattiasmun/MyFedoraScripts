@@ -11,7 +11,7 @@ def process_file(input_path, output_path):
     Kör ocrmypdf med de specificerade optimeringsparametrarna.
     """
     # Vi skriver inte ut "-> Bearbetar" här, det sköter progressbaren
-    
+
     try:
         # ocrmypdf har en egen progressbar. Vi stänger av den här
         # för att undvika konflikter med tqdm's progressbar.
@@ -103,7 +103,7 @@ def main():
     # Vi lindar in pdf_files med tqdm()
 
     for input_path in tqdm(pdf_files, desc="Optimerar PDF-filer", unit=" fil"):
-        
+
         # tqdm.set_postfix lägger till aktuell fil i slutet av baren
         tqdm.set_postfix_str(os.path.basename(input_path))
 
