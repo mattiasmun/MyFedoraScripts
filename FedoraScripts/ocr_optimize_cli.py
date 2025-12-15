@@ -1,7 +1,8 @@
 import ocrmypdf
 import os
 import glob
-import argparse # Import för kommandoradsargument
+import argparse
+from tqdm import tqdm # <--- NY IMPORT
 
 # --- FUNKTION FÖR ENKEL FIL ---
 
@@ -9,9 +10,11 @@ def process_file(input_path, output_path):
     """
     Kör ocrmypdf med de specificerade optimeringsparametrarna.
     """
-    print(f"-> Bearbetar: {os.path.basename(input_path)}")
-
+    # Vi skriver inte ut "-> Bearbetar" här, det sköter progressbaren
+    
     try:
+        # ocrmypdf har en egen progressbar. Vi stänger av den här
+        # för att undvika konflikter med tqdm's progressbar.
         ocrmypdf.ocr(
             input_path,
             output_path,
@@ -26,7 +29,7 @@ def process_file(input_path, output_path):
             clean=True,
             remove_vectors=True,
             fast_web_view=True,
-            output_type='pdfa-3u',
+            output_type='pdfa-3',
 
             # --- OCR-Kontroll ---
             redo_ocr=True,
@@ -39,19 +42,20 @@ def process_file(input_path, output_path):
             progress_bar=False,
             log_level='WARNING'
         )
-        print(f"<- Klar: Sparad i {os.path.basename(output_path)}")
+        # print(f"<- Klar: Sparad i {os.path.basename(output_path)}") # Vi använder loggning istället
 
     except ocrmypdf.exceptions.EncryptedPdfError:
-        print(f"!!! Fel: Filen {os.path.basename(input_path)} är lösenordsskyddad.")
+        # Använd tqdm.write för att skriva ut meddelanden utan att störa baren
+        tqdm.write(f"!!! Fel: Filen {os.path.basename(input_path)} är lösenordsskyddad.")
     except Exception as e:
-        print(f"!!! Ett oväntat fel uppstod vid bearbetning av {os.path.basename(input_path)}: {e}")
+        tqdm.write(f"!!! Ett oväntat fel uppstod vid bearbetning av {os.path.basename(input_path)}: {e}")
 
 
 # --- HUVUDPROGRAM ---
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Batch-optimerar PDF-filer med ocrmypdf för maximal komprimering och PDF/A-kompatibilitet."
+        description="Batch-optimerar PDF-filer för maximal komprimering och PDF/A-kompatibilitet."
     )
 
     # Obligatoriskt argument: Indatamapp
@@ -71,7 +75,7 @@ def main():
 
     args = parser.parse_args()
 
-    # Bestämmer utdatamappen baserat på användarens input
+    # Bestämmer utdatamappen
     INPUT_DIR = args.input_dir
     if args.output_dir:
         OUTPUT_DIR = args.output_dir
@@ -92,11 +96,17 @@ def main():
         return
 
     print(f"\nSTARTAR BATCH-PROCESS (Källmapp: {INPUT_DIR}, Målmapp: {OUTPUT_DIR})")
-    print(f"Hittade {len(pdf_files)} filer...")
+    print(f"Hittade {len(pdf_files)} filer…")
     print("-" * 50)
 
-    for input_path in pdf_files:
-        # Skapa sökvägen till utdatafilen
+    # --- IMPLEMENTERING AV PROGRESSBAR ---
+    # Vi lindar in pdf_files med tqdm()
+
+    for input_path in tqdm(pdf_files, desc="Optimerar PDF-filer", unit=" fil"):
+        
+        # tqdm.set_postfix lägger till aktuell fil i slutet av baren
+        tqdm.set_postfix_str(os.path.basename(input_path))
+
         filename = os.path.basename(input_path)
         output_path = os.path.join(OUTPUT_DIR, filename)
 
