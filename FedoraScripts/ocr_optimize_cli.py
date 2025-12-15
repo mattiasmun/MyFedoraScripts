@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import ocrmypdf
 import os
 import glob
