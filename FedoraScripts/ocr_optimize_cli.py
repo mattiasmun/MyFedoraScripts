@@ -101,17 +101,17 @@ def main():
     print("-" * 50)
 
     # --- IMPLEMENTERING AV PROGRESSBAR ---
-    # Vi lindar in pdf_files med tqdm()
+    # Spara progressbar-instansen i variabeln 'pbar'
+    pbar = tqdm(pdf_files, desc="Optimerar PDF-filer", unit=" fil")
 
-    for input_path in tqdm(pdf_files, desc="Optimerar PDF-filer", unit=" fil"):
+    for input_path in pbar:
 
-        # tqdm.set_postfix lägger till aktuell fil i slutet av baren
-        tqdm.set_postfix_str(os.path.basename(input_path))
+        # ANVÄND NU 'pbar' (instansen) istället för 'tqdm' (klassen/modulen)
+        pbar.set_postfix_str(os.path.basename(input_path))
 
         filename = os.path.basename(input_path)
         output_path = os.path.join(OUTPUT_DIR, filename)
 
-        # Anropa funktionen för varje fil
         process_file(input_path, output_path)
 
     print("-" * 50)
