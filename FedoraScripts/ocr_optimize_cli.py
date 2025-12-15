@@ -70,7 +70,7 @@ def main():
 
     # Obligatoriskt argument: Indatamapp
     parser.add_argument(
-        '-i', 'input_dir',
+        'input_dir',
         type=str,
         help="Sökvägen till mappen som innehåller de PDF-filer som ska optimeras."
     )
