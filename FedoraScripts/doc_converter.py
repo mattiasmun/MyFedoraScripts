@@ -126,14 +126,19 @@ def validate_and_compress_pdf(pdf_path: str) -> tuple[bool, bool]:
             # This cleans up objects (like unused images/fonts) before saving/compressing.
             pdf.remove_unreferenced_resources()
 
-            # ⎯⎯ FIX: Using only supported arguments for best optimization ⎯⎯
+            # ⎯⎯ Using only supported arguments for best optimization ⎯⎯
             pdf.save(
                 pdf_path,
+                fix_metadata_version=True,  # Fixes metadata if necessary
+                # Use 'generate' mode for maximum object stream compression
+                object_stream_mode=ObjectStreamMode.generate,
                 compress_streams=True,  # Ensures all content streams are compressed
-                qdf=True,               # Uses QDF mode to clean up the file structure
-                fix_metadata_version=True, # Fixes metadata if necessary
-                # Use 'generate' mode for maximum object stream compression (smallest file size)
-                object_stream_mode=ObjectStreamMode.generate
+                # Uncompress and recompress streams compressed with the Flate compression algorithm.
+                recompress_flate=True,
+                linearize=True,    # Enables creating linear or “fast web view” PDF-files.
+                # Don't save output in QDF mode. QDF mode is a special output
+                # mode in qpdf to allow editing of PDFs in a text editor.
+                qdf=False
             )
             # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
