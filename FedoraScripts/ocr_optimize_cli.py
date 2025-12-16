@@ -11,7 +11,7 @@ from tqdm import tqdm
 # Använd den exakta sökvägen hittad via 'which jbig2enc'
 JBIG2_PATH = '/var/lib/snapd/snap/bin/jbig2enc'
 # Kontrollera om JBIG2-binären finns innan du använder den
-if not os.path.exists(JBIG2_PATH) and JBIG2_PATH != '/var/lib/snapd/snap/bin/jbig2enc':
+if not os.path.exists(JBIG2_PATH):
     # Du kan lägga till en automatisk sökning här eller bara en varning
     tqdm.write(f"VARNING: JBIG2-programmet hittades INTE på den angivna sökvägen: {JBIG2_PATH}")
     # Ändra JBIG2_PATH till None eller standardvärde om det inte hittas
