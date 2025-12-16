@@ -799,6 +799,7 @@ libpciaccess.i686 \
 libpmemobj.x86_64 \
 libpng-devel.x86_64 \
 libpng.i686 \
+libpng12.x86_64 \
 libpq-devel.x86_64 \
 libpq.x86_64 \
 libproxy-bin.x86_64 \
