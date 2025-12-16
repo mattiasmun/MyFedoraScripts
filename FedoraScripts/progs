@@ -375,6 +375,7 @@ gi-docgen-fonts.noarch \
 giflib-devel.x86_64 \
 gimp-libs.x86_64 \
 gimp.x86_64 \
+git-lfs.x86_64 \
 git.x86_64 \
 glib-networking.i686 \
 glib-networking.x86_64 \
@@ -624,6 +625,7 @@ lash-libs.x86_64 \
 lasi.x86_64 \
 lato-fonts.noarch \
 lcms2.i686 \
+leptonica-devel.x86_64 \
 less.x86_64 \
 libGLEW.x86_64 \
 libICE.i686 \
