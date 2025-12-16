@@ -22,7 +22,7 @@ def process_file(input_path, output_path):
             # --- Optimering och Komprimering ---
             optimize=2,
             jpg_quality=85,
-            #jbig2_lossy=True,
+            jbig2_lossy=True,
 
             # --- Ytterligare Optimering och Rengöring ---
             clean=True,
