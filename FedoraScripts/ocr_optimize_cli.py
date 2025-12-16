@@ -6,18 +6,6 @@ import argparse
 from ocrmypdf.api import configure_logging, Verbosity
 from tqdm import tqdm
 
-# --------------------------------------------------------------------------
-# LÖSNING FÖR JBIG2 Snapd-problem:
-# Använd den exakta sökvägen hittad via 'which jbig2enc'
-JBIG2_PATH = '/var/lib/snapd/snap/bin/jbig2enc'
-# Kontrollera om JBIG2-binären finns innan du använder den
-if not os.path.exists(JBIG2_PATH):
-    # Du kan lägga till en automatisk sökning här eller bara en varning
-    tqdm.write(f"VARNING: JBIG2-programmet hittades INTE på den angivna sökvägen: {JBIG2_PATH}")
-    # Ändra JBIG2_PATH till None eller standardvärde om det inte hittas
-    # Detta kräver en lite mer avancerad hantering inuti process_file
-# --------------------------------------------------------------------------
-
 def process_file(input_path, output_path):
     """
     Kör ocrmypdf med de specificerade optimeringsparametrarna.
@@ -34,7 +22,7 @@ def process_file(input_path, output_path):
             # --- Optimering och Komprimering ---
             optimize=2,
             jpg_quality=85,
-            jbig2_lossy=True,
+            #jbig2_lossy=True,
 
             # --- Ytterligare Optimering och Rengöring ---
             clean=True,
