@@ -112,7 +112,7 @@ def main():
         else:
             total_size_after += size_before
 
-    # --- AVSLUTA OCH BERÄKNA SKILLNAD ---
+    # ⎯⎯ AVSLUTA OCH BERÄKNA SKILLNAD ⎯⎯
     end_time_raw = time.time()
     end_dt = datetime.fromtimestamp(end_time_raw)
 
