@@ -3,6 +3,7 @@ import ocrmypdf
 import os
 import glob
 import argparse
+import time
 from ocrmypdf.api import configure_logging, Verbosity
 from tqdm import tqdm
 
@@ -10,50 +11,31 @@ def process_file(input_path, output_path):
     """
     Kör ocrmypdf med de specificerade optimeringsparametrarna.
     """
-    # Vi skriver inte ut "-> Bearbetar" här, det sköter progressbaren
-
     try:
-        # ocrmypdf har en egen progressbar. Vi stänger av den här
-        # för att undvika konflikter med tqdm's progressbar.
         ocrmypdf.ocr(
             input_path,
             output_path,
-
-            # --- Optimering och Komprimering ---
             optimize=2,
             jpg_quality=85,
             jbig2_lossy=True,
-
-            # --- Ytterligare Optimering och Rengöring ---
             clean=True,
             remove_vectors=True,
             fast_web_view=0.03,
             output_type='pdfa-3',
-
-            # --- OCR-Kontroll ---
             redo_ocr=True,
-
-            # --- Metadata och Språk ---
             title='Optimerad för Arkiv/Webb',
             author='Batch OCR Script',
             language=['swe', 'eng'],
-
             progress_bar=False
         )
-        # print(f"<- Klar: Sparad i {os.path.basename(output_path)}") # Vi använder loggning istället
-
-    except ocrmypdf.exceptions.EncryptedPdfError:
-        # Använd tqdm.write för att skriva ut meddelanden utan att störa baren
-        tqdm.write(f"!!! Fel: Filen {os.path.basename(input_path)} är lösenordsskyddad.")
+        return True
     except Exception as e:
-        tqdm.write(f"!!! Ett oväntat fel uppstod vid bearbetning av {os.path.basename(input_path)}: {e}")
-
-
-# --- HUVUDPROGRAM ---
+        tqdm.write(f"!!! Ett fel uppstod vid bearbetning av {os.path.basename(input_path)}: {e}")
+        return False
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Batch-optimerar PDF-filer för maximal komprimering och PDF/A-kompatibilitet."
+        description="Batch-optimerar PDF-filer med tidtagning och storleksanalys."
     )
 
     # Obligatoriskt argument: Indatamapp
@@ -80,23 +62,16 @@ def main():
 
     args = parser.parse_args()
 
-    # Bestämmer utdatamappen
     INPUT_DIR = args.input_dir
-    if args.output_dir:
-        OUTPUT_DIR = args.output_dir
-    else:
-        # Skapar en standardmapp i indatamappen om output_dir inte angivs
-        OUTPUT_DIR = os.path.join(INPUT_DIR, 'output_optimized')
-
-    # Skapa utdatamappen om den inte finns
+    OUTPUT_DIR = args.output_dir if args.output_dir else os.path.join(INPUT_DIR, 'output_optimized')
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     # Hitta alla PDF-filer
     search_path = os.path.join(INPUT_DIR, '**', '*.pdf') if args.recursive else os.path.join(INPUT_DIR, '*.pdf')
     pdf_files = glob.glob(search_path, recursive=args.recursive)
 
-    # ------------------------------------------------------------------
-    # NYTT STEG: Konfigurera loggningen för Progressbar-kompatibilitet
+    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+    # Konfigurera loggningen för Progressbar-kompatibilitet
     # Verbosity.default motsvarar standardnivån utan extra -v
     try:
         configure_logging(
@@ -107,7 +82,7 @@ def main():
     except Exception as e:
         # Detta kan vara nödvändigt om du kör i en miljö där loggningsstrukturen redan är låst
         print(f"Varning: Kunde inte konfigurera ocrmypdf-loggning: {e}")
-    # ------------------------------------------------------------------
+    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
     if not pdf_files:
         print(f"\nInga PDF-filer hittades i mappen: {INPUT_DIR}")
@@ -116,24 +91,60 @@ def main():
 
     print(f"\nSTARTAR BATCH-PROCESS (Källmapp: {INPUT_DIR}, Målmapp: {OUTPUT_DIR})")
     print(f"Hittade {len(pdf_files)} filer…")
-    print("-" * 50)
+    print("⎯" * 25)
 
-    # --- IMPLEMENTERING AV PROGRESSBAR ---
-    # Spara progressbar-instansen i variabeln 'pbar'
-    pbar = tqdm(pdf_files, desc="Optimerar PDF-filer", unit=" fil")
+    # Variabler för statistik
+    start_time = time.time()
+    total_size_before = 0
+    total_size_after = 0
+    success_count = 0
+
+    pbar = tqdm(pdf_files, desc="Optimerar", unit=" fil")
 
     for input_path in pbar:
-
-        # ANVÄND NU 'pbar' (instansen) istället för 'tqdm' (klassen/modulen)
         pbar.set_postfix_str(os.path.basename(input_path))
-
+        
+        # Mät storlek före
+        size_before = os.path.getsize(input_path)
+        total_size_before += size_before
+        
         filename = os.path.basename(input_path)
         output_path = os.path.join(OUTPUT_DIR, filename)
 
-        process_file(input_path, output_path)
+        if process_file(input_path, output_path):
+            # Mät storlek efter (om filen skapades)
+            if os.path.exists(output_path):
+                size_after = os.path.getsize(output_path)
+                total_size_after += size_after
+                success_count += 1
+        else:
+            # Om det misslyckades, räkna med originalstorleken för att inte få missvisande statistik
+            total_size_after += size_before
 
-    print("-" * 50)
+    # Beräkningar för slutskärmen
+    end_time = time.time()
+    duration = end_time - start_time
+    saved_bytes = total_size_before - total_size_after
+    saved_mb = saved_bytes / (1024 * 1024)
+    
+    # Förhindra division med noll om inga filer bearbetades
+    reduction_percent = (saved_bytes / total_size_before * 100) if total_size_before > 0 else 0
+    # Omvandla till minuter och sekunder för läsbarhet
+    minutes = int(duration // 60)
+    seconds = int(duration % 60)
+
+    print("⎯" * 25)
     print("BATCH-PROCESS SLUTFÖRD.")
+    print(f"Tid: {minutes}m {seconds}s ({success_count}/{len(pdf_files)} filer klara)")
+    
+    if success_count > 0:
+        print(f"Storlek före: {total_size_before / (1024*1024):.2f} MB")
+        print(f"Storlek efter: {total_size_after / (1024*1024):.2f} MB")
+        print(f"Sparat utrymme: {saved_mb:.2f} MB ({reduction_percent:.1f}% mindre)")
+    if len(pdf_files) > 0:
+        avg_time = duration / len(pdf_files)
+        print(f"Genomsnittstid per fil: {avg_time:.1f} sekunder")
+    print("⎯" * 25)
 
 if __name__ == "__main__":
     main()
