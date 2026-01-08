@@ -3,6 +3,9 @@
 # This script runs every time PowerShell starts.
 # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
+# Starta alltid i användarens hemkatalog
+Set-Location $HOME
+
 # If this file does not exist, you can create it by running this command:
 # New-Item -Path $PROFILE -ItemType File -Force
 
@@ -18,14 +21,14 @@ $global:JavaPath = "C:\Users\ai21558\Program\jdk-24.0.1\bin\java.exe"
 # VeraPDFPath should point directly to the vera-pdf-cli.jar file.
 $global:VeraPDFPath = "C:\Users\ai21558\Program\verapdf-greenfield-1.28.1\bin\greenfield-apps-1.28.1.jar"
 
-# ⎯⎯ Executable Wrapper Functions (Allows calling by base name, e.g., 'qpdf') ⎯⎯
+# ⎯⎯ Executable Wrapper Functions ⎯⎯
 
 function qpdf {
     if (Test-Path -Path $global:QPDFPath -PathType Leaf) {
         # The call operator (&) executes the file, and @($args) forwards all parameters.
         & $global:QPDFPath @($args)
     } else {
-        Write-Error "QPDF executable not found at '$global:QPDFPath'. Please check the path."
+        Write-Error "QPDF executable not found at '$global:QPDFPath'."
     }
 }
 
@@ -33,7 +36,7 @@ function rocketpdf {
     if (Test-Path -Path $global:RocketPDFPath -PathType Leaf) {
         & $global:RocketPDFPath @($args)
     } else {
-        Write-Error "RocketPDF executable not found at '$global:RocketPDFPath'. Please check the path."
+        Write-Error "RocketPDF executable not found at '$global:RocketPDFPath'."
     }
 }
 
@@ -41,8 +44,13 @@ function java {
     if (Test-Path -Path $global:JavaPath -PathType Leaf) {
         & $global:JavaPath @($args)
     } else {
-        Write-Error "Java executable not found at '$global:JavaPath'. Please check the path."
+        Write-Error "Java executable not found at '$global:JavaPath'."
     }
+}
+
+# New function for pip that uses python -m pip
+function pip {
+    python -m pip @args
 }
 
 # VeraPDF is a JAR file and requires calling Java with the -jar flag
@@ -62,10 +70,8 @@ function verapdf-cli {
 }
 
 # ⎯⎯ Set Default Location for Custom Scripts ⎯⎯
-# IMPORTANT: Change the path below to the actual folder path where you save your scripts.
-# If the path is left as the placeholder, it defaults to a safe location.
 $ScriptPathPlaceholder = "C:\Users\ai21558\Program"
-$PlaceholderCheck = "C:\Your\Path\To\Scripts" # The string to check against
+$PlaceholderCheck = "C:\Your\Path\To\Scripts"
 $DefaultScriptPath = Join-Path $HOME "Documents\PowerShellScripts"
 
 $ScriptPath = if ($ScriptPathPlaceholder -eq $PlaceholderCheck) {
@@ -75,8 +81,7 @@ $ScriptPath = if ($ScriptPathPlaceholder -eq $PlaceholderCheck) {
 }
 # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
-
-# ⎯⎯ Function to Safely Load a Script (ENHANCED FOR EXPLICIT SCOPING) ⎯⎯
+# ⎯⎯ Function to Safely Load a Script ⎯⎯
 function Load-CustomScript {
     param(
         [Parameter(Mandatory=$true)][string]$FileName,
@@ -84,19 +89,14 @@ function Load-CustomScript {
         [Parameter(Mandatory=$false)][string]$AnAlias
     )
     $FullPath = Join-Path -Path $BaseDir -ChildPath $FileName
-    # Extract the command name from the file name (e.g., Test-And-Clean-PdfValidity)
     $FunctionName = $FileName -replace '\.ps1$'
 
     if (Test-Path -Path $FullPath -PathType Leaf) {
         try {
             if ($AnAlias) {
-                # Optional: Add aliases for quick execution
                 Set-Alias -Name $AnAlias -Value $FullPath -Scope Global
             }
-            # Dot-source the file.
             . $FullPath
-
-            # IMMEDIATE POST-LOAD CHECK
             $FunctionCheck = Get-Command $FunctionName -ErrorAction SilentlyContinue
             if ($FunctionCheck -is [System.Management.Automation.FunctionInfo]) {
                 Write-Host "✅ Loaded and verified function: $FunctionName" -ForegroundColor Green
@@ -118,9 +118,7 @@ function Load-CustomScript {
 }
 
 # ⎯⎯ Main Script Loading Block ⎯⎯
-# Only show startup messages if the session is interactive (not running in the background)
 if ($Host.Name -eq 'ConsoleHost') {
-    # Diagnostic: Check Execution Policy
     $policy = Get-ExecutionPolicy -Scope CurrentUser
     if ($policy -eq 'Restricted') {
         Write-Host "🛑 WARNING: Execution Policy is '$policy'. Scripts cannot run." -ForegroundColor Red
@@ -128,46 +126,14 @@ if ($Host.Name -eq 'ConsoleHost') {
     }
 
     Write-Host "⎯⎯ Loading Custom PowerShell Utilities ⎯⎯" -ForegroundColor Cyan
+    Write-Host "→ Terminal started in: $PWD" -ForegroundColor Gray
     Write-Host "→ Determined Script Path: '$ScriptPath'" -ForegroundColor Yellow
 
-    # 1. Load the validation function (Test-And-Clean-PdfValidity.ps1)
     Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath -AnAlias tpdf
-
-    # 2. Load the main converter function (Convert-Docs-And-Validate.ps1)
     Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath -AnAlias cdocs
 
-    Write-Host "⎯⎯ Ready to convert documents (use 'cdocs') and test PDFs (use 'tpdf') ⎯⎯" -ForegroundColor Cyan
-
-    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-    # DIAGNOSTIC CHECKS: Verify functions and aliases are actually available
-    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-
-    # Check custom script functions
-    $cdocsCheck = Get-Command cdocs -ErrorAction SilentlyContinue
-    $tpdfCheck = Get-Command tpdf -ErrorAction SilentlyContinue
-
-    if ($cdocsCheck -is [System.Management.Automation.AliasInfo]) {
-        Write-Host "  ✅ Alias 'cdocs' is available, pointing to $($cdocsCheck.Definition)" -ForegroundColor DarkGreen
-    } else {
-        Write-Host "  ❌ Alias 'cdocs' FAILED to resolve. Check function name spelling." -ForegroundColor Red
-    }
-
-    if ($tpdfCheck -is [System.Management.Automation.AliasInfo]) {
-        Write-Host "  ✅ Alias 'tpdf' is available, pointing to $($tpdfCheck.Definition)" -ForegroundColor DarkGreen
-    } else {
-        Write-Host "  ❌ Alias 'tpdf' FAILED to resolve. Check function name spelling." -ForegroundColor Red
-    }
-
-    # Check the underlying custom script functions themselves
-    $cdocsFunction = Get-Command Convert-Docs-And-Validate -ErrorAction SilentlyContinue
-    if ($cdocsFunction -is [System.Management.Automation.FunctionInfo]) {
-        Write-Host "  ✅ Function 'Convert-Docs-And-Validate' is defined." -ForegroundColor DarkGreen
-    } else {
-        Write-Host "  ❌ Function 'Convert-Docs-And-Validate' is MISSING. Ensure it is defined with 'function' in your .ps1 file." -ForegroundColor Red
-    }
-
-    # Check Executable Wrappers
-    @("qpdf", "rocketpdf", "java", "verapdf-cli") | ForEach-Object {
+    # Check Wrapper Functions inkl. nya pip
+    @("qpdf", "rocketpdf", "java", "verapdf-cli", "pip") | ForEach-Object {
         $check = Get-Command $_ -ErrorAction SilentlyContinue
         if ($check -is [System.Management.Automation.FunctionInfo]) {
             Write-Host "  🛠️ Wrapper Function '$_' is available." -ForegroundColor DarkCyan
@@ -175,15 +141,6 @@ if ($Host.Name -eq 'ConsoleHost') {
             Write-Host "  ❌ Wrapper Function '$_' is MISSING. Check wrapper function definition." -ForegroundColor Red
         }
     }
-
-    # Diagnostic Output for Custom Paths
-    if (Test-Path -Path $global:QPDFPath -PathType Leaf) {
-        Write-Host "  QPDF Path Resolved: $($global:QPDFPath)" -ForegroundColor DarkGreen
-    }
-    if (Test-Path -Path $global:RocketPDFPath -PathType Leaf) {
-        Write-Host "  RocketPDF Path Resolved: $($global:RocketPDFPath)" -ForegroundColor DarkGreen
-    }
-    if (Test-Path -Path $global:VeraPDFPath -PathType Leaf) {
-        Write-Host "  VeraPDF JAR Path Resolved: $($global:VeraPDFPath)" -ForegroundColor DarkGreen
-    }
+    
+    Write-Host "⎯⎯ Ready to use 'pip', 'cdocs' and 'tpdf' ⎯⎯" -ForegroundColor Cyan
 }
