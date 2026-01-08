@@ -4,6 +4,7 @@ import os
 import glob
 import argparse
 import time
+from datetime import datetime
 from ocrmypdf.api import configure_logging, Verbosity
 from tqdm import tqdm
 
@@ -70,41 +71,33 @@ def main():
     search_path = os.path.join(INPUT_DIR, '**', '*.pdf') if args.recursive else os.path.join(INPUT_DIR, '*.pdf')
     pdf_files = glob.glob(search_path, recursive=args.recursive)
 
-    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-    # Konfigurera loggningen för Progressbar-kompatibilitet
-    # Verbosity.default motsvarar standardnivån utan extra -v
     try:
-        configure_logging(
-            verbosity=Verbosity.default,
-            progress_bar_friendly=True, # Mycket viktigt för tqdm-kompatibilitet
-            manage_root_logger=False    # Låt skriptet hantera sin egen logik
-        )
-    except Exception as e:
-        # Detta kan vara nödvändigt om du kör i en miljö där loggningsstrukturen redan är låst
-        print(f"Varning: Kunde inte konfigurera ocrmypdf-loggning: {e}")
-    # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+        configure_logging(verbosity=Verbosity.default, progress_bar_friendly=True, manage_root_logger=False)
+    except Exception:
+        pass
 
     if not pdf_files:
-        print(f"\nInga PDF-filer hittades i mappen: {INPUT_DIR}")
-        print("Kontrollera sökvägen och att mappen innehåller filer.")
+        print(f"\nInga PDF-filer hittades i: {INPUT_DIR}")
         return
 
-    print(f"\nSTARTAR BATCH-PROCESS (Källmapp: {INPUT_DIR}, Målmapp: {OUTPUT_DIR})")
-    print(f"Hittade {len(pdf_files)} filer…")
-    print("⎯" * 25)
+    # ⎯⎯ STARTA LOGGNING OCH TID ⎯⎯
+    start_time_raw = time.time()
+    start_dt = datetime.fromtimestamp(start_time_raw)
 
-    # Variabler för statistik
-    start_time = time.time()
     total_size_before = 0
     total_size_after = 0
     success_count = 0
+
+    print(f"\nSTARTAR BATCH-PROCESS")
+    print(f"Starttid: {start_dt.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Hittade {len(pdf_files)} filer…")
+    print("⎯" * 25)
 
     pbar = tqdm(pdf_files, desc="Optimerar", unit=" fil")
 
     for input_path in pbar:
         pbar.set_postfix_str(os.path.basename(input_path))
 
-        # Mät storlek före
         size_before = os.path.getsize(input_path)
         total_size_before += size_before
 
@@ -112,37 +105,48 @@ def main():
         output_path = os.path.join(OUTPUT_DIR, filename)
 
         if process_file(input_path, output_path):
-            # Mät storlek efter (om filen skapades)
             if os.path.exists(output_path):
                 size_after = os.path.getsize(output_path)
                 total_size_after += size_after
                 success_count += 1
         else:
-            # Om det misslyckades, räkna med originalstorleken för att inte få missvisande statistik
             total_size_after += size_before
 
-    # Beräkningar för slutskärmen
-    end_time = time.time()
-    duration = end_time - start_time
+    # --- AVSLUTA OCH BERÄKNA SKILLNAD ---
+    end_time_raw = time.time()
+    end_dt = datetime.fromtimestamp(end_time_raw)
+
+    # Beräkna exakt tidsskillnad
+    diff = end_dt - start_dt
+    days = diff.days
+    hours, remainder = divmod(diff.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    # Storleksberäkning
     saved_bytes = total_size_before - total_size_after
     saved_mb = saved_bytes / (1024 * 1024)
-
-    # Förhindra division med noll om inga filer bearbetades
     reduction_percent = (saved_bytes / total_size_before * 100) if total_size_before > 0 else 0
-    # Omvandla till minuter och sekunder för läsbarhet
-    minutes = int(duration // 60)
-    seconds = int(duration % 60)
 
     print("⎯" * 25)
     print("BATCH-PROCESS SLUTFÖRD.")
-    print(f"Tid: {minutes}m {seconds}s ({success_count}/{len(pdf_files)} filer klara)")
+    print(f"Startade: {start_dt.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Slutade:   {end_dt.strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # Visa dagar endast om det faktiskt tagit mer än ett dygn
+    if days > 0:
+        print(f"Total körtid: {days}d {hours}h {minutes}m {seconds}s")
+    else:
+        print(f"Total körtid: {hours}h {minutes}m {seconds}s")
+
+    print(f"Status: {success_count}/{len(pdf_files)} filer optimerade")
 
     if success_count > 0:
         print(f"Storlek före: {total_size_before / (1024*1024):.2f} MB")
         print(f"Storlek efter: {total_size_after / (1024*1024):.2f} MB")
         print(f"Sparat utrymme: {saved_mb:.2f} MB ({reduction_percent:.1f}% mindre)")
+
     if len(pdf_files) > 0:
-        avg_time = duration / len(pdf_files)
+        avg_time = (end_time_raw - start_time_raw) / len(pdf_files)
         print(f"Genomsnittstid per fil: {avg_time:.1f} sekunder")
     print("⎯" * 25)
 
