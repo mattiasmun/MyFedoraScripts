@@ -103,11 +103,11 @@ def main():
 
     for input_path in pbar:
         pbar.set_postfix_str(os.path.basename(input_path))
-        
+
         # Mät storlek före
         size_before = os.path.getsize(input_path)
         total_size_before += size_before
-        
+
         filename = os.path.basename(input_path)
         output_path = os.path.join(OUTPUT_DIR, filename)
 
@@ -126,7 +126,7 @@ def main():
     duration = end_time - start_time
     saved_bytes = total_size_before - total_size_after
     saved_mb = saved_bytes / (1024 * 1024)
-    
+
     # Förhindra division med noll om inga filer bearbetades
     reduction_percent = (saved_bytes / total_size_before * 100) if total_size_before > 0 else 0
     # Omvandla till minuter och sekunder för läsbarhet
@@ -136,7 +136,7 @@ def main():
     print("⎯" * 25)
     print("BATCH-PROCESS SLUTFÖRD.")
     print(f"Tid: {minutes}m {seconds}s ({success_count}/{len(pdf_files)} filer klara)")
-    
+
     if success_count > 0:
         print(f"Storlek före: {total_size_before / (1024*1024):.2f} MB")
         print(f"Storlek efter: {total_size_after / (1024*1024):.2f} MB")
