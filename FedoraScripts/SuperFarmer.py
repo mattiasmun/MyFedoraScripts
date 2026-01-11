@@ -1,66 +1,47 @@
+# ==========================================
+# GEMINI MASTER FARMER v3.0
+# ==========================================
+
 def snake_harvest():
     size = get_world_size()
     x_pos, y_pos = get_pos_x(), get_pos_y()
 
-    # Variabler för att minnas den bästa solrosen
     max_petals = -1
-    best_x, best_y = 0, 0
     sun_points = []
-    y = 0
+
+    # 1. SCANNING & UNDERHÅLL
     for x in my_range(size, x_pos):
+        y = 0
         for y in my_range(size, y_pos):
             move_to(x, y)
             entity = get_entity_type()
 
-            # 1. Scanning-fas: Mät solrosor
+            # Mät solrosor för senare skörd
             if entity == Entities.Sunflower:
                 p = measure()
                 if p > max_petals:
                     max_petals = p
-                    best_x, best_y = x, y
                     sun_points = [(x, y)]
                 elif p == max_petals and p != -1:
                     sun_points.append((x, y))
 
-            # 2. Arbets-fas: Skörda, plantera och vattna
+            # Skörda, plantera och vattna rutan
             manage_tile(entity, x, y)
         y_pos = y
 
-    # 3. Skörde-fas: Sortera och hämta de bästa solrosorna
+    # 2. SELEKTIV SOLROSSKÖRD
     if len(sun_points) > 0:
         cx, cy = get_pos_x(), get_pos_y()
-
-        # Ersättare för lambda-sort:
         sun_points = sort_by_distance(sun_points, cx, cy)
 
         for point in sun_points:
-            x, y = point
-            move_to(x, y)
+            move_to(point[0], point[1])
             if can_harvest():
                 harvest()
 
-def sort_by_distance(points, cx, cy):
-    n = len(points)
-    # En enkel Bubble Sort
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            # Hämta punkt A och punkt B
-            p1 = points[j]
-            p2 = points[j + 1]
-
-            # Räkna ut avståndet för båda (Manhattan-distans)
-            dist1 = abs(p1[0] - cx) + abs(p1[1] - cy)
-            dist2 = abs(p2[0] - cx) + abs(p2[1] - cy)
-
-            # Om punkt 1 är längre bort än punkt 2, byt plats på dem
-            if dist1 > dist2:
-                points[j], points[j + 1] = points[j + 1], points[j]
-    return points
-
-def my_range(size, coordinate):
-    # Väljer start och stopp baserat på var vi står
-    start, stop, step = (0, size, 1) if coordinate < (size / 2) else (size - 1, -1, -1)
-    return range(start, stop, step)
+# ==========================================
+# LOGIK OCH EKONOMI
+# ==========================================
 
 def manage_tile(entity, x, y):
     should_plant = False
@@ -68,110 +49,180 @@ def manage_tile(entity, x, y):
     if entity == None:
         should_plant = True
     elif entity != Entities.Sunflower and can_harvest():
-        harvest()
-        should_plant = True
+        should_plant = harvest()
+        entity = None if should_plant else entity
 
     if should_plant:
         target_crop = get_best_crop()
-
         if target_crop == Entities.Sunflower:
-            plant(Entities.Sunflower)
-        elif target_crop == Entities.Carrot:
+            entity = Entities.Sunflower if plant(Entities.Sunflower) else entity
+        elif target_crop == Entities.Carrots:
             prepare_ground(Grounds.Soil)
-            plant(Entities.Carrots)
+            entity = Entities.Carrots if plant(Entities.Carrots) else entity
         elif target_crop == Entities.Bush:
-            # Schackrutemönster med bitwise-logik
             if (x + y) & 1 == 0:
-                plant(Entities.Tree)
+                entity = Entities.Tree if plant(Entities.Tree) else entity
             else:
-                plant(Entities.Bush)
+                entity = Entities.Bush if plant(Entities.Bush) else entity
         elif target_crop == Entities.Grass:
             prepare_ground(Grounds.Turf)
+            entity = Entities.Grass
 
-    # Vatten-hantering
-    to_water = should_water()
+    # Vatten-hantering (Nu med get_water() och 0.75 tröskel)
+    to_water = should_water(entity)
     if to_water:
-        water_items = num_items(Items.Water_Tank)
-        buy_success = False
-
-        if water_items < 10:
-            buy_success = trade(Items.Water_Tank, 100)
+        water_count = num_items(Items.Water)
+        if (water_count < 10) and (num_items(Items.Empty_Tank) < 10):
+            trade(Items.Empty_Tank, 100) # Eller Items.Empty_Tank
 
         # Kolla om vi har vatten (antingen gamla eller nyköpta)
-        if water_items >= to_water or buy_success:
-            # Vi gör en säkerhetscheck så vi inte använder to_water om vi bara fick 1
-            use_item(Items.Water_Tank, to_water)
+        # Använd to_water stycken Items.Water
+        if num_items(Items.Water) > 0:
+            # Vi begränsar to_water till vad vi faktiskt har i lager för att undvika False
+            actual_use = min(to_water, num_items(Items.Water))
+            use_item(Items.Water, actual_use)
             # Loopar ifall use_item bara tar 1 tank åt gången
             #for i in range(to_water):
-            #    use_item(Items.Water_Tank)
+            #    actual_use = min(to_water, num_items(Items.Water))
+            #    use_item(Items.Water, actual_use)
 
 def get_best_crop():
-    total_tiles = get_world_size() ** 2
-    safe_margin = total_tiles * 2
-    cost_per_carrot = 2
-    required_res = safe_margin * cost_per_carrot
-
-    # Ekonomi-check: Har vi råd med solrosor?
-    gold_items = num_items(Items.Gold)
-    if gold_items > 50000:
-        sunflower_seed_items = num_items(Items.Sunflower_Seed)
-        buy_success = False
-        if sunflower_seed_items < 5:
-            buy_success = trade(Items.Sunflower_Seed, 50)
-        if sunflower_seed_items > 0 or buy_success:
+    # Ekonomi-check
+    if num_items(Items.Gold) > 50000:
+        if num_items(Items.Sunflower_Seed) > 0 or trade(Items.Sunflower_Seed, 50):
             return Entities.Sunflower
 
     # Resurs-balansering
-    hay_items, wood_items = num_items(Items.Hay), num_items(Items.Wood)
-    if hay_items >= required_res and wood_items >= required_res:
-        return Entities.Carrot
+    total_tiles = get_world_size() ** 2
+    req = total_tiles * 4
+    hay, wood = num_items(Items.Hay), num_items(Items.Wood)
 
-    if hay_items < wood_items:
-        return Entities.Grass
-    else:
-        return Entities.Bush
+    if hay >= req and wood >= req:
+        return Entities.Carrots
+    return Entities.Grass if hay < wood else Entities.Bush
 
-def prepare_ground(target_type):
-    if get_ground_type() != target_type:
-        till()
+# ==========================================
+# SÄKRA RÖRELSEFUNKTIONER (Anti-Freeze)
+# ==========================================
 
 def move_to(target_x, target_y):
     # Flytta i X-led
-    x_pos = get_pos_x()
-    while x_pos != target_x:
-        if x_pos < target_x:
-            if not move(East): continue
-        else:
-            if not move(West): continue
-        x_pos = get_pos_x()
-
+    attempts = 0
+    while get_pos_x() != target_x and attempts < 100:
+        cur_x = get_pos_x()
+        move(East if cur_x < target_x else West)
+        if get_pos_x() == cur_x:
+            attempts += 1
+            if can_harvest(): harvest()
+        else: attempts = 0
     # Flytta i Y-led
-    y_pos = get_pos_y()
-    while y_pos != target_y:
-        if y_pos < target_y:
-            if not move(North): continue
-        else:
-            if not move(South): continue
-        y_pos = get_pos_y()
+    attempts = 0
+    while get_pos_y() != target_y and attempts < 100:
+        cur_y = get_pos_y()
+        move(North if cur_y < target_y else South)
+        if get_pos_y() == cur_y:
+            attempts += 1
+            if can_harvest(): harvest()
+        else: attempts = 0
 
-def should_water():
+def move_northeast():
+    size = get_world_size()
+    tx, ty = (get_pos_x() + 1) % size, (get_pos_y() + 1) % size
+    m_e, m_n, attempts = False, False, 0
+    while (not m_e or not m_n) and attempts < 100:
+        if not m_n:
+            m_n = True if move(North) else get_pos_y() == ty
+            attempts = 0 if m_n else attempts + 1
+            if not m_n and can_harvest(): harvest()
+        if not m_e:
+            m_e = True if move(East) else get_pos_x() == tx
+            attempts = 0 if m_e else attempts + 1
+            if not m_e and can_harvest(): harvest()
+    return attempts < 100
+
+def move_northwest():
+    size = get_world_size()
+    tx, ty = (get_pos_x() - 1) % size, (get_pos_y() + 1) % size
+    m_w, m_n, attempts = False, False, 0
+    while (not m_w or not m_n) and attempts < 100:
+        if not m_n:
+            m_n = True if move(North) else get_pos_y() == ty
+            attempts = 0 if m_n else attempts + 1
+            if not m_n and can_harvest(): harvest()
+        if not m_w:
+            m_w = True if move(West) else get_pos_x() == tx
+            attempts = 0 if m_w else attempts + 1
+            if not m_w and can_harvest(): harvest()
+    return attempts < 100
+
+def move_southeast():
+    size = get_world_size()
+    tx, ty = (get_pos_x() + 1) % size, (get_pos_y() - 1) % size
+    m_e, m_s, attempts = False, False, 0
+    while (not m_e or not m_s) and attempts < 100:
+        if not m_s:
+            m_s = True if move(South) else get_pos_y() == ty
+            attempts = 0 if m_s else attempts + 1
+            if not m_s and can_harvest(): harvest()
+        if not m_e:
+            m_e = True if move(East) else get_pos_x() == tx
+            attempts = 0 if m_e else attempts + 1
+            if not m_e and can_harvest(): harvest()
+    return attempts < 100
+
+def move_southwest():
+    size = get_world_size()
+    tx, ty = (get_pos_x() - 1) % size, (get_pos_y() - 1) % size
+    m_w, m_s, attempts = False, False, 0
+    while (not m_w or not m_s) and attempts < 100:
+        if not m_s:
+            m_s = True if move(South) else get_pos_y() == ty
+            attempts = 0 if m_s else attempts + 1
+            if not m_s and can_harvest(): harvest()
+        if not m_w:
+            m_w = True if move(West) else get_pos_x() == tx
+            attempts = 0 if m_w else attempts + 1
+            if not m_w and can_harvest(): harvest()
+    return attempts < 100
+
+# ==========================================
+# HJÄLPFUNKTIONER
+# ==========================================
+
+def should_water(entity):
     # Uppdaterat funktionsnamn
     water_level = get_water()
-
     # Om det redan är över 75% fukt, gör ingenting
     if water_level >= 0.75:
         return False
-
-    entity = get_entity_type()
-    exclusive_crops = [Entities.Carrot, Entities.Sunflower, Entities.Pumpkin]
-
+    exclusive_crops = [Entities.Carrots, Entities.Sunflower, Entities.Pumpkin]
     if entity in exclusive_crops:
-        # Om det är riktigt torrt, returnera 2 tankar, annars 1
-        return 2 if water_level < 0.3 else 1
-
+        # returnera 1 till 3 tankar beroende på fuktighet
+        return 3 - (water_level // 0.25)
     return False
 
-# STARTA PROGRAMMET
+def sort_by_distance(points, cx, cy):
+    n = len(points)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            p1, p2 = points[j], points[j + 1]
+            d1 = abs(p1[0] - cx) + abs(p1[1] - cy)
+            d2 = abs(p2[0] - cx) + abs(p2[1] - cy)
+            if d1 > d2:
+                points[j], points[j + 1] = points[j + 1], points[j]
+    return points
+
+def my_range(size, coordinate):
+    start, stop, step = (0, size, 1) if coordinate < (size / 2) else (size - 1, -1, -1)
+    return range(start, stop, step)
+
+def prepare_ground(target):
+    if get_ground_type() != target:
+        till()
+
+# ==========================================
+# START
+# ==========================================
 while True:
     snake_harvest()
 
