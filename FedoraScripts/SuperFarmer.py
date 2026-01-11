@@ -65,16 +65,9 @@ def my_range(size, coordinate):
 def manage_tile(entity, x, y):
     should_plant = False
 
-    # Solrosor skördas separat i snake_harvest
-    if entity == Entities.Sunflower:
-        should_plant = False
-
-    # Tom ruta behöver planteras
-    elif entity == None:
+    if entity == None:
         should_plant = True
-
-    # Allt annat skördas om det är klart
-    elif can_harvest():
+    elif entity != Entities.Sunflower and can_harvest():
         harvest()
         should_plant = True
 
@@ -99,10 +92,14 @@ def manage_tile(entity, x, y):
     to_water = should_water()
     if to_water:
         water_items = num_items(Items.Water_Tank)
+        buy_success = False
+        
         if water_items < 10:
-            trade(Items.Water_Tank, 100)
+            buy_success = trade(Items.Water_Tank, 100)
 
-        if water_items >= to_water:
+        # Kolla om vi har vatten (antingen gamla eller nyköpta)
+        if water_items >= to_water or buy_success:
+            # Vi gör en säkerhetscheck så vi inte använder to_water om vi bara fick 1
             use_item(Items.Water_Tank, to_water)
             # Loopar ifall use_item bara tar 1 tank åt gången
             #for i in range(to_water):
@@ -118,9 +115,10 @@ def get_best_crop():
     gold_items = num_items(Items.Gold)
     if gold_items > 50000:
         sunflower_seed_items = num_items(Items.Sunflower_Seed)
+        buy_success = False
         if sunflower_seed_items < 5:
-            trade(Items.Sunflower_Seed, 50)
-        if sunflower_seed_items > 0:
+            buy_success = trade(Items.Sunflower_Seed, 50)
+        if sunflower_seed_items > 0 or buy_success:
             return Entities.Sunflower
 
     # Resurs-balansering
