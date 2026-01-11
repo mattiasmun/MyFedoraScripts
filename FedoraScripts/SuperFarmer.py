@@ -20,18 +20,42 @@ def snake_harvest():
                     best_x, best_y = x, y
                     sun_points = [(x, y)]
                 elif p == max_petals and p != -1:
-                    sun_points = [(x, y)] + sun_points
+                    sun_points.append((x, y))
 
             # 2. Arbets-fas: Skörda, plantera och vattna
             manage_tile(entity, x, y)
         y_pos = y
 
-    # 3. Skörde-fas: Om vi hittade en solros, åk och hämta den bästa efter rundan!
-    for point in sun_points:
-        x, y = point
-        move_to(x, y)
-        if can_harvest():
-            harvest()
+    # 3. Skörde-fas: Sortera och hämta de bästa solrosorna
+    if len(sun_points) > 0:
+        cx, cy = get_pos_x(), get_pos_y()
+
+        # Ersättare för lambda-sort:
+        sun_points = sort_by_distance(sun_points, cx, cy)
+
+        for point in sun_points:
+            x, y = point
+            move_to(x, y)
+            if can_harvest():
+                harvest()
+
+def sort_by_distance(points, cx, cy):
+    n = len(points)
+    # En enkel Bubble Sort
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            # Hämta punkt A och punkt B
+            p1 = points[j]
+            p2 = points[j + 1]
+
+            # Räkna ut avståndet för båda (Manhattan-distans)
+            dist1 = abs(p1[0] - cx) + abs(p1[1] - cy)
+            dist2 = abs(p2[0] - cx) + abs(p2[1] - cy)
+
+            # Om punkt 1 är längre bort än punkt 2, byt plats på dem
+            if dist1 > dist2:
+                points[j], points[j + 1] = points[j + 1], points[j]
+    return points
 
 def my_range(size, coordinate):
     # Väljer start och stopp baserat på var vi står
@@ -43,7 +67,7 @@ def manage_tile(entity, x, y):
 
     # Solrosor skördas separat i snake_harvest
     if entity == Entities.Sunflower:
-        should_plant = True if entity == None else False
+        should_plant = False
 
     # Tom ruta behöver planteras
     elif entity == None:
