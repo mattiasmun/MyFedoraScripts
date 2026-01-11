@@ -11,7 +11,7 @@ def snake_harvest():
         for y in my_range(size, y_pos):
             move_to(x, y)
             entity = get_entity_type()
-            
+
             # 1. Scanning-fas: Mät solrosor
             if entity == Entities.Sunflower:
                 p = measure()
@@ -36,23 +36,23 @@ def my_range(size, coordinate):
 
 def manage_tile(entity, x, y):
     should_plant = False
-    
+
     # Solrosor skördas separat i snake_harvest
     if entity == Entities.Sunflower:
         should_plant = False
-    
+
     # Tom ruta behöver planteras
     elif entity == None:
         should_plant = True
-    
+
     # Allt annat skördas om det är klart
     elif can_harvest():
         harvest()
         should_plant = True
-        
+
     if should_plant:
         target_crop = get_best_crop()
-        
+
         if target_crop == Entities.Sunflower:
             plant(Entities.Sunflower)
         elif target_crop == Entities.Carrot:
@@ -118,7 +118,6 @@ def move_to(target_x, target_y):
         else:
             if not move(West): continue
         x_pos = get_pos_x()
-
 
     # Flytta i Y-led
     y_pos = get_pos_y()
