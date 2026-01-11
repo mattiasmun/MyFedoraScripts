@@ -93,7 +93,7 @@ def manage_tile(entity, x, y):
     if to_water:
         water_items = num_items(Items.Water_Tank)
         buy_success = False
-        
+
         if water_items < 10:
             buy_success = trade(Items.Water_Tank, 100)
 
@@ -155,15 +155,19 @@ def move_to(target_x, target_y):
         y_pos = get_pos_y()
 
 def should_water():
-    water_level = get_water_level()
-    if water_level >= 0.5:
+    # Uppdaterat funktionsnamn
+    water_level = get_water()
+
+    # Om det redan är över 75% fukt, gör ingenting
+    if water_level >= 0.75:
         return False
 
     entity = get_entity_type()
     exclusive_crops = [Entities.Carrot, Entities.Sunflower, Entities.Pumpkin]
 
     if entity in exclusive_crops:
-        return 2 if water_level < 0.25 else 1
+        # Om det är riktigt torrt, returnera 2 tankar, annars 1
+        return 2 if water_level < 0.3 else 1
 
     return False
 
