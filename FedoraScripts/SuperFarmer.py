@@ -5,7 +5,7 @@ def snake_harvest():
     # Variabler för att minnas den bästa solrosen
     max_petals = -1
     best_x, best_y = 0, 0
-
+    sun_points = []
     y = 0
     for x in my_range(size, x_pos):
         for y in my_range(size, y_pos):
@@ -18,14 +18,18 @@ def snake_harvest():
                 if p > max_petals:
                     max_petals = p
                     best_x, best_y = x, y
+                    sun_points = [(x, y)]
+                elif p == max_petals and p != -1:
+                    sun_points = [(x, y)] + sun_points
 
             # 2. Arbets-fas: Skörda, plantera och vattna
             manage_tile(entity, x, y)
         y_pos = y
 
     # 3. Skörde-fas: Om vi hittade en solros, åk och hämta den bästa efter rundan!
-    if max_petals != -1:
-        move_to(best_x, best_y)
+    for point in sun_points:
+        x, y = point
+        move_to(x, y)
         if can_harvest():
             harvest()
 
@@ -39,7 +43,7 @@ def manage_tile(entity, x, y):
 
     # Solrosor skördas separat i snake_harvest
     if entity == Entities.Sunflower:
-        should_plant = False
+        should_plant = True if entity == None else False
 
     # Tom ruta behöver planteras
     elif entity == None:
