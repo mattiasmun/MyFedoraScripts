@@ -249,22 +249,31 @@ def get_best_crop():
     return Entities.Grass if hay < wood else Entities.Bush
 
 def auto_unlock_progression():
-    # Lista på upplåsningar i den ordning du vill ha dem
-    # Du kan lägga till fler här allt eftersom du hittar namnen i spelet
+    # Prioriterad ordning för maximal tillväxt
     upgrades = [
-        Unlocks.Speed,
-        Unlocks.Plant_Distance,
-        Unlocks.Expand,
-        Unlocks.Cactus,
-        Unlocks.Pumpkin
+        # 1. Grundläggande logik (Krävs för att koden ska köra)
+        Unlocks.Variables, Unlocks.Operators, Unlocks.Loops,
+        Unlocks.Functions, Unlocks.Lists, Unlocks.Senses,
+
+        # 2. Bas-ekonomi & Överlevnad
+        Unlocks.Plant, Unlocks.Grass, Unlocks.Trees,
+        Unlocks.Carrots, Unlocks.Watering, Unlocks.Fertilizer,
+
+        # 3. Expansion & Snabbhet (Viktigast för v3.0)
+        Unlocks.Expand, Unlocks.Speed, Unlocks.Multi_Trade,
+
+        # 4. High-End Grödor
+        Unlocks.Sunflowers, Unlocks.Cactus, Unlocks.Pumpkin,
+
+        # 5. Avancerat (När du har allt annat)
+        Unlocks.Mazes, Unlocks.Polyculture, Unlocks.Dinosaurs
     ]
 
     for item in upgrades:
-        # unlock() returnerar False om man inte har råd eller om det redan är upplåst
-        # Eftersom det tar 200 operationer vid succé kör vi bara en per loop
         if unlock(item):
-            quick_print("Ny uppgradering upplåst!")
-            break
+            # Vi gör en quick_print för att veta vad som hände i loggen
+            quick_print("Utveckling: " + str(item))
+            break # Tar 200 ops, så vi kör bara en per cykel
 
 def optimize_cactus_field():
     size = get_world_size()
