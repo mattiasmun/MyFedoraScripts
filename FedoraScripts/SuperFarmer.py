@@ -64,18 +64,13 @@ def run_pumpkin_cycle():
         for x in my_range(size, x_pos):
             for y in my_range(size, y_pos):
                 move_to(x, y)
-                # Om pumpan är fullvuxen men fortfarande liten:
-                if can_harvest():
-                    if measure() == -1: # Redan Mega
-                        continue
-                    else:
-                        harvest() # Blev inte Mega, försök igen
-                        ensure_pumpkin_seeds()
-                        plant(Entities.Pumpkin)
-                        to_water = should_water(Entities.Pumpkin)
-                        if to_water:
-                            water_tile(to_water)
-                        all_mega = False
+                if get_entity_type() == Entities.Dead_Pumpkin: # Död pumpa, plantera en ny pumpa
+                    ensure_pumpkin_seeds()
+                    plant(Entities.Pumpkin)
+                    to_water = should_water(Entities.Pumpkin)
+                    if to_water:
+                        water_tile(to_water)
+                    all_mega = False
             y_pos = y
         if all_mega:
             break
@@ -181,31 +176,20 @@ def move_to(target_x, target_y):
     attempts = 0
     while get_pos_x() != target_x and attempts < 100:
         cur_x = get_pos_x()
-        move(East if cur_x < target_x else West)
+        if cur_x < target_x: move(East)
+        else: move(West)
         if get_pos_x() == cur_x:
             attempts += 1
-            safe_harvest_check()
         else: attempts = 0
     # Flytta i Y-led
     attempts = 0
     while get_pos_y() != target_y and attempts < 100:
         cur_y = get_pos_y()
-        move(North if cur_y < target_y else South)
+        if cur_y < target_y: move(North)
+        else: move(South)
         if get_pos_y() == cur_y:
             attempts += 1
-            safe_harvest_check()
         else: attempts = 0
-
-def safe_harvest_check():
-    # Om det är en kaktus, skörda ALDRIG för att lösa ett hinder
-    # Vi vill hellre vänta eller försöka igen än att förstöra n^2
-    if get_entity_type() == Entities.Cactus:
-        return False
-
-    # För alla andra grödor (gräs, morötter, solrosor) är det okej
-    if can_harvest():
-        return harvest()
-    return False
 
 def water_tile(amount):
     water_count = num_items(Items.Water)
@@ -243,10 +227,11 @@ def get_best_crop():
             return Entities.Sunflower
     # Resurs-balansering
     total_tiles = get_world_size() ** 2
-    req = total_tiles * 4
+    req = total_tiles * 40
     hay, wood = num_items(Items.Hay), num_items(Items.Wood)
     if hay >= req and wood >= req: return Entities.Carrots
-    return Entities.Grass if hay < wood else Entities.Bush
+    if hay < wood: return Entities.Grass
+    else: return Entities.Bush
 
 def auto_unlock_progression():
     # Prioriterad ordning för maximal tillväxt
@@ -298,9 +283,11 @@ def optimize_cactus_field():
 
                 # Flytta till nästa ruta i sicksack
                 if x & 1 == 0:
-                    move(North) if y < size - 1 else move(East)
+                    if y < size - 1: move(North)
+                    else: move(East)
                 else:
-                    move(South) if y > 0 else move(East)
+                    if y > 0: move(South)
+                    else: move(East)
 
         # Om vi inte gjorde några byten på hela fältet är det perfekt sorterat!
         if not swapped:
@@ -346,65 +333,29 @@ def sort_by_distance(points, cx, cy):
                 points[j], points[j + 1] = points[j + 1], points[j]
     return points
 
+def smart_move(direction):
+    a, b = True, True
+    if direction & 2:
+        a = move(North)
+    elif direction & 8:
+        a = move(South)
+    if direction & 1:
+        b = move(East)
+    elif direction & 4:
+        b = move(West)
+    return a and b
+
 def move_northeast():
-    size = get_world_size()
-    tx, ty = (get_pos_x() + 1) % size, (get_pos_y() + 1) % size
-    m_e, m_n, attempts = False, False, 0
-    while (not m_e or not m_n) and attempts < 100:
-        if not m_n:
-            m_n = True if move(North) else get_pos_y() == ty
-            attempts = 0 if m_n else attempts + 1
-            if not m_n: safe_harvest_check()
-        if not m_e:
-            m_e = True if move(East) else get_pos_x() == tx
-            attempts = 0 if m_e else attempts + 1
-            if not m_e: safe_harvest_check()
-    return attempts < 100
+    return smart_move(3)
 
 def move_northwest():
-    size = get_world_size()
-    tx, ty = (get_pos_x() - 1) % size, (get_pos_y() + 1) % size
-    m_w, m_n, attempts = False, False, 0
-    while (not m_w or not m_n) and attempts < 100:
-        if not m_n:
-            m_n = True if move(North) else get_pos_y() == ty
-            attempts = 0 if m_n else attempts + 1
-            if not m_n: safe_harvest_check()
-        if not m_w:
-            m_w = True if move(West) else get_pos_x() == tx
-            attempts = 0 if m_w else attempts + 1
-            if not m_w: safe_harvest_check()
-    return attempts < 100
+    return smart_move(6)
 
 def move_southeast():
-    size = get_world_size()
-    tx, ty = (get_pos_x() + 1) % size, (get_pos_y() - 1) % size
-    m_e, m_s, attempts = False, False, 0
-    while (not m_e or not m_s) and attempts < 100:
-        if not m_s:
-            m_s = True if move(South) else get_pos_y() == ty
-            attempts = 0 if m_s else attempts + 1
-            if not m_s: safe_harvest_check()
-        if not m_e:
-            m_e = True if move(East) else get_pos_x() == tx
-            attempts = 0 if m_e else attempts + 1
-            if not m_e: safe_harvest_check()
-    return attempts < 100
+    return smart_move(9)
 
 def move_southwest():
-    size = get_world_size()
-    tx, ty = (get_pos_x() - 1) % size, (get_pos_y() - 1) % size
-    m_w, m_s, attempts = False, False, 0
-    while (not m_w or not m_s) and attempts < 100:
-        if not m_s:
-            m_s = True if move(South) else get_pos_y() == ty
-            attempts = 0 if m_s else attempts + 1
-            if not m_s: safe_harvest_check()
-        if not m_w:
-            m_w = True if move(West) else get_pos_x() == tx
-            attempts = 0 if m_w else attempts + 1
-            if not m_w: safe_harvest_check()
-    return attempts < 100
+    return smart_move(12)
 
 # START
 while True:
