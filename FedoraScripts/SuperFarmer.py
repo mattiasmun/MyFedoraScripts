@@ -357,6 +357,8 @@ def move_southeast():
 def move_southwest():
     return smart_move(12)
 
+moves = {5: [2, 1, 2, 4, 2, 2, 1, 8, 3, 1, 1, 8, 8, 8, 8, 4, 2, 2, 2, 4, 8, 8, 8, 4, 4]}
+
 # START
 while True:
     main_farm_manager()
