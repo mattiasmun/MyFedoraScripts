@@ -158,38 +158,45 @@ def manage_tile(entity, x, y):
         should_plant = harvest()
 
     if should_plant:
-        target = get_best_crop()
+        target = get_best_crop(x, y)
         if target == Entities.Sunflower: plant(Entities.Sunflower)
         elif target == Entities.Carrots:
             prepare_ground(Grounds.Soil)
             plant(Entities.Carrots)
         elif target == Entities.Grass: prepare_ground(Grounds.Turf)
-        elif target == Entities.Bush:
-            if (x + y) & 1 == 0: plant(Entities.Tree)
-            else: plant(Entities.Bush)
+        elif target == Entities.Tree: plant(Entities.Tree)
+        else: plant(Entities.Bush)
 
     water = should_water(get_entity_type())
     if water: water_tile(water)
 
 def move_to(target_x, target_y):
-    # Flytta i X-led
     attempts = 0
-    while get_pos_x() != target_x and attempts < 100:
-        cur_x = get_pos_x()
-        if cur_x < target_x: move(East)
-        else: move(West)
-        if get_pos_x() == cur_x:
+    while (get_pos_x() != target_x or get_pos_y() != target_y) and attempts < 100:
+        move_val = 0
+        cur_x, cur_y = get_pos_x(), get_pos_y()
+
+        # Bestäm horisontell bit (East=1, West=4)
+        if cur_x < target_x:
+            move_val += 1
+        elif cur_x > target_x:
+            move_val += 4
+
+        # Bestäm vertikal bit (North=2, South=8)
+        if cur_y < target_y:
+            move_val += 2
+        elif cur_y > target_y:
+            move_val += 8
+
+        # Utför förflyttningen (smart_move hanterar om det är rakt eller diagonalt)
+        if move_val > 0:
+            smart_move(move_val)
+
+        # Kontrollera om vi faktiskt rörde oss (för att undvika oändliga loopar)
+        if get_pos_x() == cur_x and get_pos_y() == cur_y:
             attempts += 1
-        else: attempts = 0
-    # Flytta i Y-led
-    attempts = 0
-    while get_pos_y() != target_y and attempts < 100:
-        cur_y = get_pos_y()
-        if cur_y < target_y: move(North)
-        else: move(South)
-        if get_pos_y() == cur_y:
-            attempts += 1
-        else: attempts = 0
+        else:
+            attempts = 0
 
 def water_tile(amount):
     water_count = num_items(Items.Water)
@@ -216,7 +223,7 @@ def my_range(size, coordinate):
 def prepare_ground(target):
     if get_ground_type() != target: till()
 
-def get_best_crop():
+def get_best_crop(x, y):
     gold = num_items(Items.Gold)
     # Lyx-grödor
     if gold > 1000000:
@@ -229,9 +236,11 @@ def get_best_crop():
     total_tiles = get_world_size() ** 2
     req = total_tiles * 40
     hay, wood = num_items(Items.Hay), num_items(Items.Wood)
-    if hay >= req and wood >= req: return Entities.Carrots
+    carr = num_items(Items.Carrot)
+    if hay >= req and wood >= req and carr < wood: return Entities.Carrots
     if hay < wood: return Entities.Grass
-    else: return Entities.Bush
+    if (x + y) & 1 == 0: return Entities.Tree
+    return Entities.Bush
 
 def auto_unlock_progression():
     # Prioriterad ordning för maximal tillväxt
