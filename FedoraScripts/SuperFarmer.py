@@ -11,7 +11,7 @@ def main_farm_manager():
         # 1. EVOLUTION: Försök låsa upp nya förmågor
         auto_unlock_progression()
 
-        # Flytta till (0,0) för att scanna typ av fält
+        # Flytta till (0, 0) för att scanna typ av fält
         move_to(0, 0)
         entity = get_entity_type()
         gold = num_items(Items.Gold)
@@ -31,28 +31,25 @@ def main_farm_manager():
 
 def run_pumpkin_cycle():
     size = get_world_size()
+    if size not in moves: return
 
     # Hjälpfunktion för att säkra frön
     def ensure_pumpkin_seeds():
         if num_items(Items.Pumpkin_Seed) < 10:
             trade(Items.Pumpkin_Seed, 100)
-
-    x_pos, y_pos = get_pos_x(), get_pos_y()
-
+    move_to(0, 0)
     # Steg 1: Plantera pumpor effektivt
-    for x in my_range(size, x_pos):
-        for y in my_range(size, y_pos):
-            move_to(x, y)
-            if get_entity_type() != Entities.Pumpkin:
-                if can_harvest():
-                    harvest()
-                prepare_ground(Grounds.Soil)
-                ensure_pumpkin_seeds()
-                plant(Entities.Pumpkin)
-                to_water = should_water(Entities.Pumpkin)
-                if to_water:
-                    water_tile(to_water)
-        y_pos = y
+    for direction in moves[size]:
+        smart_move(direction)
+        if get_entity_type() != Entities.Pumpkin:
+            if can_harvest():
+                harvest()
+            prepare_ground(Grounds.Soil)
+            ensure_pumpkin_seeds()
+            plant(Entities.Pumpkin)
+            to_water = should_water(Entities.Pumpkin)
+            if to_water:
+                water_tile(to_water)
 
     # Steg 2: Vänta och optimera kluster
     max_passes = 20
@@ -60,18 +57,15 @@ def run_pumpkin_cycle():
     while passes < max_passes:
         all_mega = True
         passes += 1
-        x_pos, y_pos = get_pos_x(), get_pos_y()
-        for x in my_range(size, x_pos):
-            for y in my_range(size, y_pos):
-                move_to(x, y)
-                if get_entity_type() == Entities.Dead_Pumpkin: # Död pumpa, plantera en ny pumpa
-                    ensure_pumpkin_seeds()
-                    plant(Entities.Pumpkin)
-                    to_water = should_water(Entities.Pumpkin)
-                    if to_water:
-                        water_tile(to_water)
-                    all_mega = False
-            y_pos = y
+        for direction in moves[size]:
+            smart_move(direction)
+            if get_entity_type() == Entities.Dead_Pumpkin: # Död pumpa, plantera en ny pumpa
+                ensure_pumpkin_seeds()
+                plant(Entities.Pumpkin)
+                to_water = should_water(Entities.Pumpkin)
+                if to_water:
+                    water_tile(to_water)
+                all_mega = False
         if all_mega:
             break
 
@@ -85,17 +79,15 @@ def run_pumpkin_cycle():
 
 def run_cactus_cycle():
     size = get_world_size()
-    x_pos, y_pos = get_pos_x(), get_pos_y()
-
+    if size not in moves: return
+    move_to(0, 0)
     # Steg 1: Plantera
-    for x in my_range(size, x_pos):
-        for y in my_range(size, y_pos):
-            move_to(x, y)
-            if get_entity_type() != Entities.Cactus:
-                if can_harvest(): harvest()
-                prepare_ground(Grounds.Soil)
-                plant(Entities.Cactus)
-        y_pos = y
+    for direction in moves[size]:
+        smart_move(direction)
+        if get_entity_type() != Entities.Cactus:
+            if can_harvest(): harvest()
+            prepare_ground(Grounds.Soil)
+            plant(Entities.Cactus)
 
     # 2. Sortera
     for _ in range(3):
@@ -120,23 +112,24 @@ def run_cactus_cycle():
 
 def snake_harvest():
     size = get_world_size()
-    x_pos, y_pos = get_pos_x(), get_pos_y()
+    if size not in moves: return
+    move_to(0, 0)
+    x, y = 0, 0
     sun_points = []
     max_petals = -1
 
-    for x in my_range(size, x_pos):
-        for y in my_range(size, y_pos):
-            move_to(x, y)
-            entity = get_entity_type()
-            if entity == Entities.Sunflower:
-                p = measure()
-                if p > max_petals:
-                    max_petals = p
-                    sun_points = [(x, y)]
-                elif p == max_petals and p != -1:
-                    sun_points.append((x, y))
-            manage_tile(entity, x, y)
-        y_pos = y
+    for direction in moves[size]:
+        smart_move(direction)
+        entity = get_entity_type()
+        x, y = get_pos_x(), get_pos_y()
+        if entity == Entities.Sunflower:
+            p = measure()
+            if p > max_petals:
+                max_petals = p
+                sun_points = [(x, y)]
+            elif p == max_petals and p != -1:
+                sun_points.append((x, y))
+        manage_tile(entity, x, y)
 
     if len(sun_points) > 0:
         cx, cy = get_pos_x(), get_pos_y()
@@ -327,7 +320,7 @@ def diagonal_cactus_check():
     # Jämför hörnet (0,0) med (size-1, size-1)
     move_to(0, 0)
     val_min = measure()
-    move_to(get_world_size()-1, get_world_size()-1)
+    move_to(get_world_size() - 1, get_world_size() - 1)
     val_max = measure()
     return val_min <= val_max
 
@@ -366,7 +359,35 @@ def move_southeast():
 def move_southwest():
     return smart_move(12)
 
-moves = {5: [2, 1, 2, 4, 2, 2, 1, 8, 3, 1, 1, 8, 8, 8, 8, 4, 2, 2, 2, 4, 8, 8, 8, 4, 4]}
+moves = {3: [3, 4, 2, 1, 1, 8, 8, 4, 4]}
+moves[5] = [2, 1, 2, 4, 2, 2, 1, 8, 3, 1, 1, 8, 8, 8, 8, 4, 2, 2, 2, 4, 8, 8, 8, 4, 4]
+moves[7] = [2, 1, 2, 4, 2, 1, 2, 4, 2, 2, 1, 8, 3, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 4, 4]
+moves[9] = [2, 1, 2, 4, 2, 1, 2, 4, 2, 1, 2, 4, 2, 2, 1, 8, 3, 1, 1, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 8, 8, 4, 4]
+
+for s in [4, 6, 8, 10]:
+    moves[s] = generate_hamiltonian_path(s)
+
+def generate_hamiltonian_path(size):
+    path = [2] * (size - 1)
+    # Vi går igenom fältet kolumn för kolumn
+    for x in range(size - 2):
+        path += [1] # Ta ett steg East (1)
+        # Om vi är på en jämn kolumn (0, 2, 4…), gå North (2)
+        # Om vi är på en udda kolumn (1, 3, 5…), gå South (8)
+        if x & 1 == 0:
+            for y in range(size - 2):
+                path += [8] # North
+        else:
+            for y in range(size - 2):
+                path += [2] # South
+
+    # Efter sista kolumnen är vi längst upp till höger.
+    # För att göra den till en "Circuit" (tillbaka till (0, 0)) lägger vi till hemresan.
+    path += [1]
+    path += [8] * (size - 1) # South ner till (size-1, 0)
+    path += [4] * (size - 1) # West hela vägen tillbaka till (0, 0)
+
+    return path
 
 # START
 while True:
