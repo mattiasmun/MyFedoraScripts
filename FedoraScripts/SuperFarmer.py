@@ -37,7 +37,6 @@ def run_pumpkin_cycle():
     def ensure_pumpkin_seeds():
         if num_items(Items.Pumpkin_Seed) < 10:
             trade(Items.Pumpkin_Seed, 100)
-    move_to(0, 0)
     # Steg 1: Plantera pumpor effektivt
     for direction in moves[size]:
         smart_move(direction)
@@ -67,7 +66,6 @@ def run_pumpkin_cycle():
             break
 
     # Steg 3: Skörda klustret
-    move_to(0, 0)
     harvest()
 
 # ==========================================
@@ -77,7 +75,6 @@ def run_pumpkin_cycle():
 def run_cactus_cycle():
     size = get_world_size()
     if size not in moves: return
-    move_to(0, 0)
     # Steg 1: Plantera
     for direction in moves[size]:
         smart_move(direction)
@@ -109,7 +106,6 @@ def run_cactus_cycle():
 def snake_harvest():
     size = get_world_size()
     if size not in moves: return
-    move_to(0, 0)
     x, y = 0, 0
     sun_points = []
     max_petals = -1
