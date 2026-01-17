@@ -42,14 +42,12 @@ def run_pumpkin_cycle():
     for direction in moves[size]:
         smart_move(direction)
         if get_entity_type() != Entities.Pumpkin:
-            if can_harvest():
-                harvest()
+            if can_harvest(): harvest()
             prepare_ground(Grounds.Soil)
             ensure_pumpkin_seeds()
             plant(Entities.Pumpkin)
-            to_water = should_water(Entities.Pumpkin)
-            if to_water:
-                water_tile(to_water)
+            water = should_water(Entities.Pumpkin)
+            if water: water_tile(water)
 
     # Steg 2: Vänta och optimera kluster
     max_passes = 20
@@ -62,9 +60,8 @@ def run_pumpkin_cycle():
             if get_entity_type() == Entities.Dead_Pumpkin: # Död pumpa, plantera en ny pumpa
                 ensure_pumpkin_seeds()
                 plant(Entities.Pumpkin)
-                to_water = should_water(Entities.Pumpkin)
-                if to_water:
-                    water_tile(to_water)
+                water = should_water(Entities.Pumpkin)
+                if water: water_tile(water)
                 all_mega = False
         if all_mega:
             break
@@ -96,8 +93,7 @@ def run_cactus_cycle():
 
     # 3. Vänta (Smart väntan på sista rutan)
     move_to(size - 1, size - 1)
-    while not can_harvest():
-        pass
+    while not can_harvest(): pass
 
     optimize_cactus_field()
 
@@ -230,7 +226,7 @@ def get_best_crop(x, y):
     req = total_tiles * 40
     hay, wood = num_items(Items.Hay), num_items(Items.Wood)
     carr = num_items(Items.Carrot)
-    if hay >= req and wood >= req and carr < wood: return Entities.Carrots
+    if min(hay, wood) >= req and carr < wood: return Entities.Carrots
     if (x + y) & 1 == 0:
         if wood < hay: return Entities.Tree
     return Entities.Grass
@@ -359,15 +355,14 @@ def move_southeast():
 def move_southwest():
     return smart_move(12)
 
-moves = {3: [3, 4, 2, 1, 1, 8, 8, 4, 4]}
-moves[5] = [2, 1, 2, 4, 2, 2, 1, 8, 3, 1, 1, 8, 8, 8, 8, 4, 2, 2, 2, 4, 8, 8, 8, 4, 4]
-moves[7] = [2, 1, 2, 4, 2, 1, 2, 4, 2, 2, 1, 8, 3, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 4, 4]
-moves[9] = [2, 1, 2, 4, 2, 1, 2, 4, 2, 1, 2, 4, 2, 2, 1, 8, 3, 1, 1, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 8, 8, 4, 2, 2, 2, 2, 2, 2, 2, 4, 8, 8, 8, 8, 8, 8, 8, 4, 4]
+moves = {}
+for s in range(3, 13):
+    if s & 1 == 0:
+        moves[s] = generate_even_hamiltonian_path(s)
+    else:
+        moves[s] = generate_odd_hamiltonian_path(s)
 
-for s in [4, 6, 8, 10]:
-    moves[s] = generate_hamiltonian_path(s)
-
-def generate_hamiltonian_path(size):
+def generate_even_hamiltonian_path(size):
     path = [2] * (size - 1)
     # Vi går igenom fältet kolumn för kolumn
     for x in range(size - 2):
@@ -375,19 +370,95 @@ def generate_hamiltonian_path(size):
         # Om vi är på en jämn kolumn (0, 2, 4…), gå North (2)
         # Om vi är på en udda kolumn (1, 3, 5…), gå South (8)
         if x & 1 == 0:
-            for y in range(size - 2):
+            for _ in range(size - 2):
                 path += [8] # North
         else:
-            for y in range(size - 2):
+            for _ in range(size - 2):
                 path += [2] # South
-
     # Efter sista kolumnen är vi längst upp till höger.
     # För att göra den till en "Circuit" (tillbaka till (0, 0)) lägger vi till hemresan.
     path += [1]
     path += [8] * (size - 1) # South ner till (size-1, 0)
     path += [4] * (size - 1) # West hela vägen tillbaka till (0, 0)
-
     return path
+
+def generate_odd_hamiltonian_path(size):
+    if size == 3:
+        return [3, 4, 2, 1, 1, 8, 8, 4, 4]
+    path = []
+    # 1. Inledande sicksack (skalar med size)
+    # För 5: 1 rep, För 7: 2 reps, För 9: 3 reps
+    for _ in range((size - 3) // 2):
+        path += [2, 1, 2, 4]
+    # 2. Övergång till mittsektionen
+    path += [2, 2, 1, 8, 3]
+    # 3. Expansionen i mitten (Horisontell vidd)
+    # För 5: 1 st, För 7: 3 st, För 9: 5 st, För 11: 7 st
+    num_ones = size - 3
+    path += [1] * num_ones
+    # 4. Den långa vertikala transporten
+    # För 5: 4 st, För 7: 6 st, För 9: 8 st, För 11: 10 st
+    num_eights = size - 1
+    path += [8] * num_eights
+    # 5. Trappstegs-returen (Den stora loop-sektionen)
+    # För size 9 repeteras detta 3 gånger
+    num_steps = (size - 3) // 2
+    for _ in range(num_steps):
+        path += [4]
+        path += [2] * (size - 2)
+        path += [4]
+        path += [8] * (size - 2)
+    # 6. Avslutande steg för att sluta cirkeln
+    path += [4, 4]
+    return path
+
+def verify_path(size, path):
+    # Startposition (0,0)
+    x, y = 0, 0
+    visited = set([(x, y)])
+
+    # Dina specifika riktningar
+    directions = {
+        1: (1, 0),   # East (Höger)
+        2: (0, 1),   # North (Upp)
+        4: (-1, 0),  # West (Vänster)
+        8: (0, -1),  # South (Ner)
+        3: (1, 1)    # North-East (Diagonalt upp-höger)
+    }
+
+    for i, move in enumerate(path):
+        if move not in directions:
+            return False, f"Steg {i}: Okänd move {move}"
+
+        dx, dy = directions[move]
+        x += dx
+        y += dy
+
+        # Kontrollera att vi är inom brädet (0 till size-1)
+        if not (0 <= x < size and 0 <= y < size):
+            return False, f"Steg {i} ({move}): Utanför vid ({x}, {y})"
+
+        # Registrera besöket
+        visited.add((x, y))
+
+    # Slutkontroll
+    at_start = (x, y) == (0, 0)
+    all_visited = len(visited) == size * size
+
+    if not all_visited:
+        return False, f"Missade {size*size - len(visited)} rutor. Landade på ({x}, {y})"
+    if not at_start:
+        return False, f"Besökte alla rutor men landade på ({x}, {y}) istället för (0,0)"
+
+    return True, f"Succé! Alla {len(visited)} rutor besökta. Landade på (0,0)."
+
+# Testkörning för storlekarna 3, 4, 5, 6, 7, 8, 9, 10, 11
+print("--- TESTRESULTAT ---")
+for s in range(3, 13):
+    if s in moves:
+        success, msg = verify_path(s, moves[s])
+        status = "✅" if success else "❌"
+        print(f"Storlek {s:2}: {status} {msg}")
 
 # START
 while True:
