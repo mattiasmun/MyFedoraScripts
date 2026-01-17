@@ -231,9 +231,9 @@ def get_best_crop(x, y):
     hay, wood = num_items(Items.Hay), num_items(Items.Wood)
     carr = num_items(Items.Carrot)
     if hay >= req and wood >= req and carr < wood: return Entities.Carrots
-    if hay < wood: return Entities.Grass
-    if (x + y) & 1 == 0: return Entities.Tree
-    return Entities.Bush
+    if (x + y) & 1 == 0:
+        if wood < hay: return Entities.Tree
+    return Entities.Grass
 
 def auto_unlock_progression():
     # Prioriterad ordning för maximal tillväxt
