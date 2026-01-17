@@ -449,12 +449,13 @@ def verify_path(size, path):
     return True, f"Succé! Alla {len(visited)} rutor besökta. Landade på (0,0)."
 
 # Testkörning för storlekarna 3, 4, 5, 6, 7, 8, 9, 10, 11
-print("--- TESTRESULTAT ---")
-for s in range(3, 13):
-    if s in moves:
-        success, msg = verify_path(s, moves[s])
-        status = "✅" if success else "❌"
-        print(f"Storlek {s:2}: {status} {msg}")
+def test_path(start, stop):
+    print("--- TESTRESULTAT ---")
+    for s in range(start, stop):
+        if s in moves:
+            success, msg = verify_path(s, moves[s])
+            status = "✅" if success else "❌"
+            print(f"Storlek {s:2}: {status} {msg}")
 
 # START
 while True:
