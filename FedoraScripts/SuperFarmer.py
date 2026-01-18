@@ -352,7 +352,7 @@ def move_southwest():
     return smart_move(12)
 
 moves = {}
-for s in range(3, 13):
+for s in range(3, 33):
     if s & 1 == 0:
         moves[s] = generate_even_hamiltonian_path(s)
     else:
