@@ -1,10 +1,10 @@
-# ==========================================
+# ————————————————————————————
 # GEMINI MASTER FARMER v3.0
-# ==========================================
+# ————————————————————————————
 
-# ==========================================
+# ———————————————————————————————————
 # MASTER CONTROL LOOP - STARTA DENNA!
-# ==========================================
+# ———————————————————————————————————
 
 def main_farm_manager():
     while True:
@@ -25,9 +25,9 @@ def main_farm_manager():
             # Annars kör vi din guld-vinnande solros/morots-loop
             snake_harvest()
 
-# ==========================================
+# ————————————————————————————————
 # PUMPA-MODUL (MEGA-KLUSTER LOGIK)
-# ==========================================
+# ————————————————————————————————
 
 def run_pumpkin_cycle():
     size = get_world_size()
@@ -68,9 +68,9 @@ def run_pumpkin_cycle():
     # Steg 3: Skörda klustret
     harvest()
 
-# ==========================================
+# ————————————————————————————
 # KAKTUS-MODUL (SORTERING n^2)
-# ==========================================
+# ————————————————————————————
 
 def run_cactus_cycle():
     size = get_world_size()
@@ -99,9 +99,9 @@ def run_cactus_cycle():
     if harvest(): # Startar kedjereaktionen
         quick_print("Kaktus-vinst inkasserad!")
 
-# ==========================================
+# ————————————————————————————————
 # SNAKE HARVEST (STANDARD EKONOMI)
-# ==========================================
+# ————————————————————————————————
 
 def snake_harvest():
     size = get_world_size()
@@ -130,9 +130,9 @@ def snake_harvest():
             move_to(point[0], point[1])
             if can_harvest(): harvest()
 
-# ==========================================
+# ————————————————————————————
 # HJÄLPFUNKTIONER OCH RÖRELSE
-# ==========================================
+# ————————————————————————————
 
 def manage_tile(entity, x, y):
     if entity == Entities.Cactus: return
@@ -450,11 +450,12 @@ def verify_path(size, path):
 
 # Testkörning för storlekarna 3, 4, 5, 6, 7, 8, 9, 10, 11
 def test_path(start, stop):
-    print("--- TESTRESULTAT ---")
+    print("——— TESTRESULTAT ———")
     for s in range(start, stop):
         if s in moves:
             success, msg = verify_path(s, moves[s])
-            status = "✅" if success else "❌"
+            status = "❌"
+            if success: status = "✅"
             print(f"Storlek {s:2}: {status} {msg}")
 
 # START
