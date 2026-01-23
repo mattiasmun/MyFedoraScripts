@@ -16,8 +16,8 @@ except ImportError as e:
 # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # ⎯⎯ Configuration ⎯⎯
-SOURCE_DIR = 'input_docs'
-DESTINATION_DIR = 'output_pdfs'
+SOURCE_DIR = '.'
+DESTINATION_DIR = '.'
 LOG_FILE = '' # Global variable set in setup_logging
 
 # ⎯⎯ Status Constants for Conversion ⎯⎯

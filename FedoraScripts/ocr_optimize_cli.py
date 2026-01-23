@@ -51,7 +51,7 @@ def main():
         '-o', '--output_dir',
         type=str,
         default=None,
-        help="Valfri sökväg till mappen där de optimerade filerna ska sparas. Om den inte anges skapas 'output_optimized' inuti indatamappen."
+        help="Valfri sökväg till mappen där de optimerade filerna ska sparas."
     )
 
     # Valfritt argument: Rekursiv bearbetning av mappar
@@ -64,7 +64,7 @@ def main():
     args = parser.parse_args()
 
     INPUT_DIR = args.input_dir
-    OUTPUT_DIR = args.output_dir if args.output_dir else os.path.join(INPUT_DIR, 'output_optimized')
+    OUTPUT_DIR = args.output_dir if args.output_dir else INPUT_DIR
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     # Hitta alla PDF-filer
