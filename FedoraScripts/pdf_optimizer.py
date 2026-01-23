@@ -16,7 +16,7 @@ except ImportError as e:
 # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # ⎯⎯ Configuration ⎯⎯
-SOURCE_DIR = 'input_pdfs' # Default folder name changed to reflect input type
+SOURCE_DIR = '.'
 LOG_FILE = '' # Global variable set in setup_logging
 
 # ⎯⎯ Status Constants for Processing ⎯⎯
