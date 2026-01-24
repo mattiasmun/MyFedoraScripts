@@ -1,291 +1,197 @@
 #!/usr/bin/python
 import os
-import time
+import shutil
 import logging
 import argparse
+import subprocess
 from datetime import datetime
+from tqdm import tqdm
 
 # ⎯⎯ IMPORT LIBRARIES ⎯⎯
-# We only need pikepdf for this standalone script.
 try:
     from pikepdf import Pdf, PdfError, ObjectStreamMode
 except ImportError as e:
-    print("Error: Required library not found. Please run 'pip install pikepdf'")
+    print("Error: Required library not found. Please run 'pip install pikepdf tqdm'")
     print(f"Details: {e}")
     exit(1)
-# ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # ⎯⎯ Configuration ⎯⎯
 SOURCE_DIR = '.'
-LOG_FILE = '' # Global variable set in setup_logging
+LOG_FILE = ''
 
 # ⎯⎯ Status Constants for Processing ⎯⎯
 PDF_SUCCESS = 1
 PDF_FAIL = 0
 PDF_SKIPPED = 2
 
-# ⎯⎯ Setup Functions ⎯⎯
+# ⎯⎯ Helper Functions ⎯⎯
+
+def format_size(bytes_size):
+    return bytes_size / (1024 * 1024)
 
 def setup_directories(source_dir: str):
-    """
-    Creates the source directory if it doesn't exist.
-
-    Args:
-        source_dir: The path to the input directory.
-    """
     os.makedirs(source_dir, exist_ok=True)
 
 def setup_logging(source_dir: str) -> str:
-    """
-    Initializes the logging system to output to a file and the console.
-    The log file is placed in the source directory for easy correlation.
-
-    Args:
-        source_dir: The path to the input directory where the log file will reside.
-
-    Returns:
-        The full path to the log file.
-    """
     global LOG_FILE
     LOG_FILE = os.path.join(source_dir, 'pdf_optimization_log.log')
-
-    # Configure logging to write to file
     logging.basicConfig(
         filename=LOG_FILE,
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
-    # Also log to console for immediate feedback
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(levelname)s: %(message)s')
-    console.setFormatter(formatter)
-
-    # Clear existing handlers
-    root_logger = logging.getLogger('')
-    if not root_logger.handlers:
-        root_logger.addHandler(console)
-
-    logging.info("⎯⎯ PDF Optimizer Start ⎯⎯")
+    logging.info("⎯⎯ PDF Advanced Optimizer Start (GS + pikepdf) ⎯⎯")
     return LOG_FILE
 
 # ⎯⎯ Core Processing Function ⎯⎯
 
-def validate_and_compress_pdf(pdf_path: str, skip_existing: bool) -> tuple[int, bool]:
-    """
-    Validates a PDF file using pikepdf, and if valid, compresses it in place.
-    The skip_existing flag is now used to skip optimization if the file has been processed recently.
-
-    Args:
-        pdf_path: The full path to the PDF file to validate and compress.
-        skip_existing: If True, skips optimization if the output file is newer than the script log.
-
-    Returns:
-        A tuple (status: int, size_was_reduced: bool).
-    """
-    file_size_before = 0
-    file_size_after = 0
+def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: str) -> tuple[int, bool, int]:
+    temp_downsampled = f"temp_{os.getpid()}_{os.path.basename(pdf_path)}"
 
     try:
         file_size_before = os.path.getsize(pdf_path)
 
-        # 1. Skip Check (using log file timestamp as a proxy for "processed")
+        # 1. Skip Check
         if skip_existing and os.path.exists(LOG_FILE):
-             # Check if the PDF file is older than the last time the script successfully ran
-             pdf_modified_time = os.path.getmtime(pdf_path)
-             log_modified_time = os.path.getmtime(LOG_FILE)
+            if os.path.getmtime(pdf_path) < os.path.getmtime(LOG_FILE):
+                return PDF_SKIPPED, False, 0
 
-             # If the PDF was last modified BEFORE the log was created/updated, skip.
-             if pdf_modified_time < log_modified_time:
-                 logging.warning(f"SKIPPED: '{pdf_path}' is older than the last optimization run (log file).")
-                 # Return success so it's not counted as a failure, but size_was_reduced is False
-                 return PDF_SKIPPED, False
+        # --- STEG 1: GHOSTSCRIPT (DPI-REDUKTION TILL 200 DPI) ---
+        gs_command = [
+            "gs",
+            "-o", temp_downsampled,
+            "-sDEVICE=pdfwrite",
+            "-dCompatibilityLevel=1.4",
+            "-dPDFSETTINGS=/printer",
+            "-dDownsampleColorImages=true",
+            "-dDownsampleGrayImages=true",
+            "-dDownsampleMonoImages=true",
+            "-dColorImageDownsampleType=/Bicubic",
+            "-dColorImageResolution=200",
+            "-dGrayImageDownsampleType=/Bicubic",
+            "-dGrayImageResolution=200",
+            "-dMonoImageDownsampleType=/Bicubic",
+            "-dMonoImageResolution=200",
+            "-dColorImageDownsampleThreshold=1.0",
+            "-dGrayImageDownsampleThreshold=1.0",
+            "-dMonoImageDownsampleThreshold=1.0",
+            "-dNOPAUSE", "-dBATCH", "-dQUIET",
+            pdf_path
+        ]
 
-        # 2. Validation and Optimization
-        with Pdf.open(pdf_path, allow_overwriting_input=True) as pdf:
-            # This cleans up objects (like unused images/fonts) before saving/compressing.
+        subprocess.run(gs_command, check=True)
+
+        # --- STEG 2: PIKEPDF (STRUKTURELL OPTIMERING) ---
+        # Vi läser in temp-filen från GS och skriver tillbaka till originalet
+        should_linearize = file_size_before <= (8 * 1024 * 1024)
+
+        with Pdf.open(temp_downsampled, allow_overwriting_input=True) as pdf:
             pdf.remove_unreferenced_resources()
-
-            # ⎯⎯ Using only supported arguments for best optimization ⎯⎯
             pdf.save(
                 pdf_path,
-                fix_metadata_version=True,  # Fixes metadata if necessary
-                # Use 'generate' mode for maximum object stream compression
-                object_stream_mode=ObjectStreamMode.generate,
-                compress_streams=True,  # Ensures all content streams are compressed
-                # Uncompress and recompress streams compressed with the Flate compression algorithm.
+                fix_metadata_version=True,
+                object_stream_mode=ObjectStreamMode.disable,
+                compress_streams=True,
                 recompress_flate=True,
-                linearize=True,    # Enables creating linear or “fast web view” PDF-files.
-                # Don't save output in QDF mode. QDF mode is a special output
-                # mode in qpdf to allow editing of PDFs in a text editor.
+                linearize=should_linearize,
                 qdf=False
             )
-            # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+        # Städa upp temp-filen
+        if os.path.exists(temp_downsampled):
+            os.remove(temp_downsampled)
 
         file_size_after = os.path.getsize(pdf_path)
+        bytes_saved = file_size_before - file_size_after
 
-        size_was_reduced = False
+        return PDF_SUCCESS, bytes_saved > 0, bytes_saved
 
-        if file_size_after < file_size_before:
-            reduction = ((file_size_before - file_size_after) / file_size_before) * 100
-            logging.info(f"OPTIMIZATION_SUCCESS: '{pdf_path}' valid and compressed. Size reduced by {reduction:.2f}%.")
-            size_was_reduced = True # ONLY set True if reduction occurred
-        else:
-            # The PDF was processed, but the file size did not change or increased.
-            logging.info(f"OPTIMIZATION_SUCCESS: '{pdf_path}' valid. No size reduction (Size: {file_size_after} bytes).")
-            # size_was_reduced remains False
+    except (PdfError, subprocess.CalledProcessError, Exception) as e:
+        # Städa upp temp-fil om den finns kvar vid fel
+        if os.path.exists(temp_downsampled):
+            os.remove(temp_downsampled)
 
-        return PDF_SUCCESS, size_was_reduced # Return the accurate boolean flag
+        filename = os.path.basename(pdf_path)
+        dest_path = os.path.join(corrupt_dir, filename)
+        if os.path.exists(dest_path):
+            dest_path = os.path.join(corrupt_dir, f"{datetime.now().strftime('%H%M%S')}_{filename}")
 
-    except PdfError as e:
-        # Catch errors related to invalid PDF structure or corruption.
-        logging.warning(f"VALIDATION_FAIL: '{pdf_path}' is INVALID/CORRUPTED. Error: {e}")
-        return PDF_FAIL, False
+        try:
+            shutil.move(pdf_path, dest_path)
+            logging.error(f"CORRUPT/ERROR: '{pdf_path}' flyttad. Fel: {e}")
+        except:
+            pass
 
-    except FileNotFoundError:
-        # Catch case where the file doesn't exist (e.g., deleted during processing).
-        logging.error(f"VALIDATION_ERROR: File not found at '{pdf_path}'. Cannot optimize.")
-        return PDF_FAIL, False
-
-    except Exception as e:
-        # Catch any other unexpected file access or I/O errors.
-        logging.error(f"VALIDATION_ERROR: Could not process '{pdf_path}'. Unexpected Error: {e}")
-        return PDF_FAIL, False
+        return PDF_FAIL, False, 0
 
 def process_directory_recursively(args: argparse.Namespace) -> dict:
-    """
-    Recursively finds all .pdf files, validates, and optimizes them in place.
-
-    Args:
-        args: The parsed command-line arguments containing directory paths and flags.
-
-    Returns:
-        A dictionary summarizing the results of all operations.
-    """
     results = {
-        'files_found': 0,
-        'optimization_success': 0,
-        'optimization_fail': 0,
-        'files_skipped': 0,
-        'size_reduction_count': 0
+        'files_found': 0, 'optimization_success': 0, 'optimization_fail': 0,
+        'files_skipped': 0, 'size_reduction_count': 0, 'total_bytes_saved': 0
     }
 
-    # os.walk traverses the directory tree recursively.
-    for root, _, files in os.walk(args.source_dir):
+    corrupt_dir = os.path.join(args.source_dir, 'corrupt_pdfs')
+    os.makedirs(corrupt_dir, exist_ok=True)
 
+    all_files = []
+    for root, dirs, files in os.walk(args.source_dir):
+        if 'corrupt_pdfs' in dirs:
+            dirs.remove('corrupt_pdfs')
         for filename in files:
-            if filename.lower().endswith('.pdf'):
-                results['files_found'] += 1
-                pdf_file_path = os.path.join(root, filename)
+            if filename.lower().endswith('.pdf') and filename != 'pdf_optimization_log.log':
+                all_files.append(os.path.join(root, filename))
 
-                # 1. Validate and Optimize
-                status, size_was_reduced = validate_and_compress_pdf(
-                    pdf_file_path, args.skip_existing
-                )
+    results['files_found'] = len(all_files)
 
-                # 2. Update counts based on explicit status code
-                if status == PDF_SUCCESS:
-                    results['optimization_success'] += 1
-                    if size_was_reduced:
-                        results['size_reduction_count'] += 1
+    for pdf_path in tqdm(all_files, desc="Bearbetar (GS + pikepdf)", unit="fil"):
+        status, size_was_reduced, saved = validate_and_compress_pdf(pdf_path, args.skip_existing, corrupt_dir)
 
-                elif status == PDF_SKIPPED:
-                    results['files_skipped'] += 1
+        if status == PDF_SUCCESS:
+            results['optimization_success'] += 1
+            results['total_bytes_saved'] += saved
+            if size_was_reduced:
+                results['size_reduction_count'] += 1
+        elif status == PDF_SKIPPED:
+            results['files_skipped'] += 1
+        else:
+            results['optimization_fail'] += 1
 
-                elif status == PDF_FAIL:
-                    results['optimization_fail'] += 1
+    if os.path.exists(corrupt_dir) and not os.listdir(corrupt_dir):
+        os.rmdir(corrupt_dir)
 
     return results
 
-# ⎯⎯ Argument Parsing and Main Execution ⎯⎯
-
-def parse_args() -> argparse.Namespace:
-    """
-    Parses command-line arguments to control program behavior.
-
-    Returns:
-        The parsed command-line arguments as a Namespace object.
-    """
-    parser = argparse.ArgumentParser(
-        description="Recursively validate and compress PDF files using pikepdf.",
-        formatter_class=argparse.RawTextHelpFormatter
-    )
-
-    # Optional Flag for Skipping Existing
-    parser.add_argument(
-        '-s', '--skip-existing',
-        action='store_true',
-        help="If set, skips optimization if the PDF file is older than the last log file timestamp (i.e., already processed)."
-    )
-
-    # Optional Overrides for Directories
-    parser.add_argument(
-        '-i', '--source-dir',
-        type=str,
-        default=SOURCE_DIR,
-        help=f"Input directory containing .pdf files (default: {SOURCE_DIR})"
-    )
-
-    return parser.parse_args()
-
 def main():
-    """
-    The main execution function. Handles setup, processing, timing, and summary generation.
+    parser = argparse.ArgumentParser(description="PDF-optimering med Ghostscript DPI-downsampling och pikepdf.")
+    parser.add_argument('-s', '--skip-existing', action='store_true', help="Hoppa över bearbetade filer.")
+    parser.add_argument('-i', '--source-dir', type=str, default=SOURCE_DIR, help="Mapp att bearbeta.")
+    args = parser.parse_args()
 
-    Usage Examples:
-
-    1. Default Run (Optimize all PDFs):
-       python pdf_optimizer.py
-
-    2. Optimize, skipping files already processed:
-       python pdf_optimizer.py -s
-
-    3. Run on a specific folder:
-       python pdf_optimizer.py -i /path/to/my/pdfs
-    """
-    args = parse_args()
-    start_time = time.time()
-
-    # 1. Setup
+    start_time = datetime.now()
     setup_directories(args.source_dir)
-    # Log file is created and its modification time will be used for '-s' check.
     setup_logging(args.source_dir)
 
-    logging.info(f"Source Directory: {args.source_dir}")
-    logging.info(f"Log File: {LOG_FILE}")
-    logging.info(f"Skip Previously Optimized Files: {'YES' if args.skip_existing else 'NO'}")
-
-    # 2. Processing
-    logging.info("Starting recursive PDF validation and optimization…")
+    tqdm.write(f"Startar avancerad optimering i: {args.source_dir}\n")
     results = process_directory_recursively(args)
 
-    # 3. Time Measurement and Summary
-    end_time = time.time()
-    total_time = end_time - start_time
+    execution_time = datetime.now() - start_time
+    saved_mb = format_size(results['total_bytes_saved'])
 
-    # Generate the Summary
     summary = f"""
-⎯⎯ PROCESSING SUMMARY ⎯⎯
-Total Execution Time: {total_time:.2f} seconds
+⎯⎯ BEARBETNINGSRAPPORT (AVANCERAD) ⎯⎯
+Total körtid: {execution_time}
+Total utrymme sparat: {saved_mb:.2f} MB
 
-Files Processed:
-  - PDF Files Found: {results['files_found']}
-  - Files Skipped (Already Processed): {results['files_skipped']}
-
-Optimization Results:
-  - Successfully Validated & Processed: {results['optimization_success']}
-  - Files with Size Reduction: {results['size_reduction_count']}
-  - Failed (Invalid/Corrupt) PDFs: {results['optimization_fail']}
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Filer:
+  - PDF-filer hittade: {results['files_found']}
+  - Hoppade över: {results['files_skipped']}
+  - Lyckade (DPI + Struktur): {results['optimization_success']}
+  - Korrupta/Fel (flyttade): {results['optimization_fail']}
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 """
-
-    # Log the summary
     logging.info(summary)
-
-    # Also print it to the console for immediate viewing
     print(summary)
-    logging.info("⎯⎯ Program End ⎯⎯")
 
 if __name__ == "__main__":
     main()
