@@ -94,6 +94,7 @@ gedit "$HOME/Men of War II/log/game.log"
 git --help
 git add *
 git clone https://git.sr.ht/~geb/dotool
+git difftool
 git gc
 git gc --prune=now
 git lfs install
@@ -148,6 +149,8 @@ meld "$HOME/.bash_history" "$HOME/.bash_history2" "$HOME/Bash/MyFedoraScripts/Fe
 meld "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc" &
 meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py" &
 meld "$temp_file" "$HOME/Bash/MyFedoraScripts/FedoraScripts/doc_converter.py" &
+meld "$temp_file" "$HOME/Bash/MyFedoraScripts/FedoraScripts/ocr_optimize_cli.py" &
+meld "$temp_file" "$HOME/Bash/MyFedoraScripts/FedoraScripts/pdf_optimizer.py" &
 meld &
 meld * &
 mkdir --help
@@ -163,11 +166,9 @@ numeric_derivative
 nvidia-smi
 nvtop
 ocr_optimize_cli.py --help
-ocr_optimize_cli.py $HOME/Dokument/Input --output_dir $HOME/Dokument/Output
-ocr_optimize_cli.py $HOME/Dokument/Input -o $HOME/Dokument/Output
+ocr_optimize_cli.py .
 pdf_optimizer.py --help
-pdf_optimizer.py -i Dokument/Input
-pdf_optimizer.py -i Input
+pdf_optimizer.py -i .
 pgrep firefox
 pgrep flatpak
 pgrep thunderbird
