@@ -4,64 +4,75 @@ import os
 import glob
 import argparse
 import time
+import subprocess
 from datetime import datetime
 from ocrmypdf.api import configure_logging, Verbosity
 from tqdm import tqdm
 
 def process_file(input_path, output_path):
     """
-    Kör ocrmypdf med de specificerade optimeringsparametrarna.
+    1. Nedskalar bilden till 200 DPI via Ghostscript.
+    2. Kör OCRmyPDF för textigenkänning och PDF/A-arkivering.
     """
+    # Skapa ett unikt namn för temp-filen baserat på process-ID och filnamn
+    temp_downsampled = f"temp_{os.getpid()}_{os.path.basename(input_path)}"
+
     try:
+        # --- STEG 1: GHOSTSCRIPT (DPI-REDUKTION MED LANCZOS) ---
+        gs_command = [
+            "gs", "-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.4",
+            "-dPDFSETTINGS=/printer", 
+            "-dColorImageDownsampleType=/Lanczos",
+            "-dColorImageResolution=200",
+            "-dGrayImageDownsampleType=/Lanczos",
+            "-dGrayImageResolution=200",
+            "-dMonoImageDownsampleType=/Lanczos",
+            "-dMonoImageResolution=200",
+            "-dNOPAUSE", "-dBATCH", "-dQUIET",
+            f"-sOutputFile={temp_downsampled}",
+            input_path
+        ]
+
+        subprocess.run(gs_command, check=True)
+
+        # --- STEG 2: OCRMYPDF (OCR & ARKIVERING) ---
         ocrmypdf.ocr(
-            input_path,
+            temp_downsampled, 
             output_path,
             optimize=2,
             jpg_quality=85,
             jbig2_lossy=True,
             clean=True,
             remove_vectors=True,
-            fast_web_view=0.03,
+            fast_web_view=8,
             output_type='pdfa-3',
             redo_ocr=True,
-            title='Optimerad för Arkiv/Webb',
-            author='Batch OCR Script',
             language=['swe', 'eng'],
             progress_bar=False
         )
+
         return True
     except Exception as e:
         tqdm.write(f"!!! Ett fel uppstod vid bearbetning av {os.path.basename(input_path)}: {e}")
         return False
+    finally:
+        # Ta alltid bort temp-filen oavsett om det lyckades eller misslyckades
+        if os.path.exists(temp_downsampled):
+            os.remove(temp_downsampled)
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Batch-optimerar PDF-filer med tidtagning och storleksanalys."
+        description="Batch-optimerar PDF: Nedskalar till 200 DPI och kör OCR/PDF/A-3."
     )
-
-    # Obligatoriskt argument: Indatamapp
-    parser.add_argument(
-        'input_dir',
-        type=str,
-        help="Sökvägen till mappen som innehåller de PDF-filer som ska optimeras."
-    )
-
-    # Valfritt argument: Utdatamapp
-    parser.add_argument(
-        '-o', '--output_dir',
-        type=str,
-        default=None,
-        help="Valfri sökväg till mappen där de optimerade filerna ska sparas."
-    )
-
-    # Valfritt argument: Rekursiv bearbetning av mappar
-    parser.add_argument(
-        '-r', '--recursive',
-        action='store_true',
-        help="Sök efter PDF-filer i undermappar också."
-    )
+    parser.add_argument('input_dir', type=str, help="Indatamapp")
+    parser.add_argument('-o', '--output_dir', type=str, default=None, help="Utdatamapp")
+    parser.add_argument('-r', '--recursive', action='store_true', help="Sök rekursivt")
 
     args = parser.parse_args()
+
+    # Kontrollera beroenden innan start
+    if not check_gs_version():
+        return
 
     INPUT_DIR = args.input_dir
     OUTPUT_DIR = args.output_dir if args.output_dir else INPUT_DIR
@@ -88,12 +99,12 @@ def main():
     total_size_after = 0
     success_count = 0
 
-    print(f"\nSTARTAR BATCH-PROCESS")
+    print(f"\nSTARTAR BATCH-PROCESS (Mål: 200 DPI + PDF/A-3)")
     print(f"Starttid: {start_dt.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Hittade {len(pdf_files)} filer…")
     print("⎯" * 25)
 
-    pbar = tqdm(pdf_files, desc="Optimerar", unit=" fil")
+    pbar = tqdm(pdf_files, desc="Bearbetar", unit=" fil")
 
     for input_path in pbar:
         pbar.set_postfix_str(os.path.basename(input_path))
@@ -106,8 +117,7 @@ def main():
 
         if process_file(input_path, output_path):
             if os.path.exists(output_path):
-                size_after = os.path.getsize(output_path)
-                total_size_after += size_after
+                total_size_after += os.path.getsize(output_path)
                 success_count += 1
         else:
             total_size_after += size_before
@@ -149,6 +159,22 @@ def main():
         avg_time = (end_time_raw - start_time_raw) / len(pdf_files)
         print(f"Genomsnittstid per fil: {avg_time:.1f} sekunder")
     print("⎯" * 25)
+
+def check_gs_version():
+    """Kontrollerar att Ghostscript är installerat och har en modern version för Lanczos."""
+    try:
+        result = subprocess.run(["gs", "--version"], capture_output=True, text=True, check=True)
+        version_str = result.stdout.strip()
+        # Hanterar versionsnummer som t.ex. "10.02.1" genom att ta de två första delarna
+        parts = version_str.split('.')
+        version_num = float(f"{parts[0]}.{parts[1]}")
+        
+        if version_num < 9.50:
+            print(f"Varning: Din Ghostscript-version ({version_str}) är äldre än 9.50. Lanczos-resampling kan saknas eller fungera sämre.")
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
+        print("Fel: Ghostscript ('gs') hittades inte i systemets PATH. Installera Ghostscript för att fortsätta.")
+        return False
 
 if __name__ == "__main__":
     main()
