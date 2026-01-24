@@ -18,18 +18,29 @@ def process_file(input_path, output_path):
     temp_downsampled = f"temp_{os.getpid()}_{os.path.basename(input_path)}"
 
     try:
-        # --- STEG 1: GHOSTSCRIPT (DPI-REDUKTION MED LANCZOS) ---
+        # --- STEG 1: GHOSTSCRIPT (OPTIMERAD DPI-REDUKTION) ---
         gs_command = [
-            "gs", "-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.4",
-            "-dPDFSETTINGS=/printer", 
-            "-dColorImageDownsampleType=/Lanczos",
+            "gs",
+            "-o", temp_downsampled,
+            "-sDEVICE=pdfwrite",
+            "-dCompatibilityLevel=1.4",
+            "-dPDFSETTINGS=/printer",
+            # Aktivera nerskalning explicit
+            "-dDownsampleColorImages=true",
+            "-dDownsampleGrayImages=true",
+            "-dDownsampleMonoImages=true",
+            # Metod och Upplösning
+            "-dColorImageDownsampleType=/Bicubic",
             "-dColorImageResolution=200",
-            "-dGrayImageDownsampleType=/Lanczos",
+            "-dGrayImageDownsampleType=/Bicubic",
             "-dGrayImageResolution=200",
-            "-dMonoImageDownsampleType=/Lanczos",
+            "-dMonoImageDownsampleType=/Bicubic",
             "-dMonoImageResolution=200",
+            # Threshold=1.0 tvingar nerskalning av allt över 200 DPI
+            "-dColorImageDownsampleThreshold=1.0",
+            "-dGrayImageDownsampleThreshold=1.0",
+            "-dMonoImageDownsampleThreshold=1.0",
             "-dNOPAUSE", "-dBATCH", "-dQUIET",
-            f"-sOutputFile={temp_downsampled}",
             input_path
         ]
 
@@ -37,7 +48,7 @@ def process_file(input_path, output_path):
 
         # --- STEG 2: OCRMYPDF (OCR & ARKIVERING) ---
         ocrmypdf.ocr(
-            temp_downsampled, 
+            temp_downsampled,
             output_path,
             optimize=2,
             jpg_quality=85,
@@ -168,7 +179,7 @@ def check_gs_version():
         # Hanterar versionsnummer som t.ex. "10.02.1" genom att ta de två första delarna
         parts = version_str.split('.')
         version_num = float(f"{parts[0]}.{parts[1]}")
-        
+
         if version_num < 9.50:
             print(f"Varning: Din Ghostscript-version ({version_str}) är äldre än 9.50. Lanczos-resampling kan saknas eller fungera sämre.")
         return True
