@@ -4,60 +4,65 @@ import os
 import glob
 import argparse
 import time
-import subprocess
 from datetime import datetime
 from ocrmypdf.api import configure_logging, Verbosity
 from tqdm import tqdm
 
+# ⎯⎯ IMPORT PYMUPDF ⎯⎯
+try:
+    import pymupdf
+except ImportError:
+    print("Error: PyMuPDF hittades inte. Kör: pip install pymupdf")
+    exit(1)
+
 def process_file(input_path, output_path):
     """
-    1. Nedskalar bilden till 200 DPI via Ghostscript.
-    2. Kör OCRmyPDF för textigenkänning och PDF/A-arkivering.
+    1. Optimerar bilder till 200 DPI via PyMuPDF (J2K + Bicubic).
+    2. Kör OCRmyPDF för textigenkänning och PDF/A-3 arkivering.
     """
-    # Skapa ett unikt namn för temp-filen baserat på process-ID och filnamn
-    temp_downsampled = f"temp_{os.getpid()}_{os.path.basename(input_path)}"
+    temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(input_path)}"
 
     try:
-        # --- STEG 1: GHOSTSCRIPT (OPTIMERAD DPI-REDUKTION) ---
-        gs_command = [
-            "gs",
-            "-o", temp_downsampled,
-            "-sDEVICE=pdfwrite",
-            "-dCompatibilityLevel=1.4",
-            "-dPDFSETTINGS=/printer",
-            # Aktivera nerskalning explicit
-            "-dDownsampleColorImages=true",
-            "-dDownsampleGrayImages=true",
-            "-dDownsampleMonoImages=true",
-            # Metod och Upplösning
-            "-dColorImageDownsampleType=/Bicubic",
-            "-dColorImageResolution=200",
-            "-dGrayImageDownsampleType=/Bicubic",
-            "-dGrayImageResolution=200",
-            "-dMonoImageDownsampleType=/Bicubic",
-            "-dMonoImageResolution=200",
-            # Threshold=1.0 tvingar nerskalning av allt över 200 DPI
-            "-dColorImageDownsampleThreshold=1.0",
-            "-dGrayImageDownsampleThreshold=1.0",
-            "-dMonoImageDownsampleThreshold=1.0",
-            "-dNOPAUSE", "-dBATCH", "-dQUIET",
-            input_path
-        ]
+        # --- STEG 1: PYMUPDF (ERSÄTTER GHOSTSCRIPT) ---
+        doc = pymupdf.open(input_path)
 
-        subprocess.run(gs_command, check=True)
+        opts = pymupdf.mupdf.PdfImageRewriterOptions()
+
+        # J2K Metod (4) och Bicubic Subsampling (1)
+        opts.color_lossy_image_recompress_method = 4
+        opts.color_lossy_image_recompress_quality = "85"
+        opts.color_lossy_image_subsample_method = 1
+        opts.color_lossy_image_subsample_threshold = 210
+        opts.color_lossy_image_subsample_to = 200
+
+        opts.gray_lossy_image_recompress_method = 4
+        opts.gray_lossy_image_recompress_quality = "85"
+        opts.gray_lossy_image_subsample_method = 1
+        opts.gray_lossy_image_subsample_threshold = 210
+        opts.gray_lossy_image_subsample_to = 200
+
+        # Utför bild-optimeringen
+        doc.rewrite_images(options=opts)
+
+        # Spara temporär fil med PDF 1.7 struktur
+        doc.save(
+            temp_optimized,
+            garbage=4,
+            deflate=True,
+            use_objstms=1,
+            clean=True
+        )
+        doc.close()
 
         # --- STEG 2: OCRMYPDF (OCR & ARKIVERING) ---
+        # Eftersom vi redan har optimerat bilderna kan vi sänka kraven i ocrmypdf
         ocrmypdf.ocr(
-            temp_downsampled,
+            temp_optimized,
             output_path,
-            optimize=2,
-            jpg_quality=85,
-            jbig2_lossy=True,
+            optimize=1,            # Låg nivå eftersom vi redan optimerat med PyMuPDF
             clean=True,
-            remove_vectors=True,
-            fast_web_view=8,
             output_type='pdfa-3',
-            redo_ocr=True,
+            force_ocr=True,
             language=['swe', 'eng'],
             progress_bar=False
         )
@@ -67,23 +72,18 @@ def process_file(input_path, output_path):
         tqdm.write(f"!!! Ett fel uppstod vid bearbetning av {os.path.basename(input_path)}: {e}")
         return False
     finally:
-        # Ta alltid bort temp-filen oavsett om det lyckades eller misslyckades
-        if os.path.exists(temp_downsampled):
-            os.remove(temp_downsampled)
+        if os.path.exists(temp_optimized):
+            os.remove(temp_optimized)
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Batch-optimerar PDF: Nedskalar till 200 DPI och kör OCR/PDF/A-3."
+        description="Batch-optimerar PDF: PyMuPDF (200 DPI J2K) + OCRmyPDF (PDF/A-3)."
     )
     parser.add_argument('input_dir', type=str, help="Indatamapp")
     parser.add_argument('-o', '--output_dir', type=str, default=None, help="Utdatamapp")
     parser.add_argument('-r', '--recursive', action='store_true', help="Sök rekursivt")
 
     args = parser.parse_args()
-
-    # Kontrollera beroenden innan start
-    if not check_gs_version():
-        return
 
     INPUT_DIR = args.input_dir
     OUTPUT_DIR = args.output_dir if args.output_dir else INPUT_DIR
@@ -95,7 +95,7 @@ def main():
 
     try:
         configure_logging(verbosity=Verbosity.default, progress_bar_friendly=True, manage_root_logger=False)
-    except Exception:
+    except:
         pass
 
     if not pdf_files:
@@ -110,7 +110,8 @@ def main():
     total_size_after = 0
     success_count = 0
 
-    print(f"\nSTARTAR BATCH-PROCESS (Mål: 200 DPI + PDF/A-3)")
+    print(f"\nSTARTAR BATCH-PROCESS (Motor: PyMuPDF + OCRmyPDF)")
+    print(f"Inställning: J2K @ 200 DPI -> PDF/A-3")
     print(f"Starttid: {start_dt.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Hittade {len(pdf_files)} filer…")
     print("⎯" * 25)
@@ -118,8 +119,11 @@ def main():
     pbar = tqdm(pdf_files, desc="Bearbetar", unit=" fil")
 
     for input_path in pbar:
-        pbar.set_postfix_str(os.path.basename(input_path))
+        # Undvik att processa temp-filer om de råkar ligga i samma mapp
+        if os.path.basename(input_path).startswith("temp_opt_"):
+            continue
 
+        pbar.set_postfix_str(os.path.basename(input_path))
         size_before = os.path.getsize(input_path)
         total_size_before += size_before
 
@@ -133,59 +137,18 @@ def main():
         else:
             total_size_after += size_before
 
-    # ⎯⎯ AVSLUTA OCH BERÄKNA SKILLNAD ⎯⎯
+    # ⎯⎯ AVSLUTA OCH BERÄKNA ⎯⎯
     end_time_raw = time.time()
-    end_dt = datetime.fromtimestamp(end_time_raw)
+    diff = datetime.fromtimestamp(end_time_raw) - start_dt
 
-    # Beräkna exakt tidsskillnad
-    diff = end_dt - start_dt
-    days = diff.days
-    hours, remainder = divmod(diff.seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
-
-    # Storleksberäkning
-    saved_bytes = total_size_before - total_size_after
-    saved_mb = saved_bytes / (1024 * 1024)
-    reduction_percent = (saved_bytes / total_size_before * 100) if total_size_before > 0 else 0
+    saved_mb = (total_size_before - total_size_after) / (1024 * 1024)
+    reduction = ((total_size_before - total_size_after) / total_size_before * 100) if total_size_before > 0 else 0
 
     print("⎯" * 25)
-    print("BATCH-PROCESS SLUTFÖRD.")
-    print(f"Startade: {start_dt.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Slutade:   {end_dt.strftime('%Y-%m-%d %H:%M:%S')}")
-
-    # Visa dagar endast om det faktiskt tagit mer än ett dygn
-    if days > 0:
-        print(f"Total körtid: {days}d {hours}h {minutes}m {seconds}s")
-    else:
-        print(f"Total körtid: {hours}h {minutes}m {seconds}s")
-
-    print(f"Status: {success_count}/{len(pdf_files)} filer optimerade")
-
-    if success_count > 0:
-        print(f"Storlek före: {total_size_before / (1024*1024):.2f} MB")
-        print(f"Storlek efter: {total_size_after / (1024*1024):.2f} MB")
-        print(f"Sparat utrymme: {saved_mb:.2f} MB ({reduction_percent:.1f}% mindre)")
-
-    if len(pdf_files) > 0:
-        avg_time = (end_time_raw - start_time_raw) / len(pdf_files)
-        print(f"Genomsnittstid per fil: {avg_time:.1f} sekunder")
+    print(f"KLAR. Total tid: {str(diff).split('.')[0]}")
+    print(f"Status: {success_count}/{len(pdf_files)} lyckade")
+    print(f"Sparat: {saved_mb:.2f} MB ({reduction:.1f}%)")
     print("⎯" * 25)
-
-def check_gs_version():
-    """Kontrollerar att Ghostscript är installerat och har en modern version för Lanczos."""
-    try:
-        result = subprocess.run(["gs", "--version"], capture_output=True, text=True, check=True)
-        version_str = result.stdout.strip()
-        # Hanterar versionsnummer som t.ex. "10.02.1" genom att ta de två första delarna
-        parts = version_str.split('.')
-        version_num = float(f"{parts[0]}.{parts[1]}")
-
-        if version_num < 9.50:
-            print(f"Varning: Din Ghostscript-version ({version_str}) är äldre än 9.50. Lanczos-resampling kan saknas eller fungera sämre.")
-        return True
-    except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
-        print("Fel: Ghostscript ('gs') hittades inte i systemets PATH. Installera Ghostscript för att fortsätta.")
-        return False
 
 if __name__ == "__main__":
     main()
