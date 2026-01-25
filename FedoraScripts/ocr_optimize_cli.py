@@ -10,9 +10,10 @@ from tqdm import tqdm
 
 # ⎯⎯ IMPORT PYMUPDF ⎯⎯
 try:
-    import pymupdf
-except ImportError:
-    print("Error: PyMuPDF hittades inte. Kör: pip install pymupdf")
+    import pymupdf  # Kraftfull motor för PDF-hantering
+except ImportError as e:
+    print("Error: Required library not found. Please run 'pip install pymupdf'")
+    print(f"Details: {e}")
     exit(1)
 
 def process_file(input_path, output_path):
@@ -23,9 +24,10 @@ def process_file(input_path, output_path):
     temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(input_path)}"
 
     try:
-        # --- STEG 1: PYMUPDF (ERSÄTTER GHOSTSCRIPT) ---
         doc = pymupdf.open(input_path)
 
+        # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
+        # Konfigurera omskrivning av bilder (J2K + Bicubic + 200 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
         # J2K Metod (4) och Bicubic Subsampling (1)
@@ -35,11 +37,16 @@ def process_file(input_path, output_path):
         opts.color_lossy_image_subsample_threshold = 210
         opts.color_lossy_image_subsample_to = 200
 
+        # Samma för gråskala
         opts.gray_lossy_image_recompress_method = 4
         opts.gray_lossy_image_recompress_quality = "85"
         opts.gray_lossy_image_subsample_method = 1
         opts.gray_lossy_image_subsample_threshold = 210
         opts.gray_lossy_image_subsample_to = 200
+
+        # Tvinga även förlustfria bilder till J2K för maximal besparing
+        opts.color_lossless_image_recompress_method = 4
+        opts.gray_lossless_image_recompress_method = 4
 
         # Utför bild-optimeringen
         doc.rewrite_images(options=opts)
@@ -47,14 +54,20 @@ def process_file(input_path, output_path):
         # Spara temporär fil med PDF 1.7 struktur
         doc.save(
             temp_optimized,
-            garbage=4,
-            deflate=True,
-            use_objstms=1,
-            clean=True
+            incremental=False,
+            garbage=4,           # Maximal rensning av dubletter
+            deflate=True,        # Komprimera alla strömmar
+            use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
+            clean=True,          # Sanera innehållsströmmar
+            linear=False,        # Prioritera minsta storlek framför webb-streaming
+            no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
         )
+
+        # Uppgradera versionsnumret i trailern till 1.7
+        doc.init_xref()
         doc.close()
 
-        # --- STEG 2: OCRMYPDF (OCR & ARKIVERING) ---
+        # ⎯⎯ STEG 2: OCRMYPDF (OCR & ARKIVERING) ⎯⎯
         # Eftersom vi redan har optimerat bilderna kan vi sänka kraven i ocrmypdf
         ocrmypdf.ocr(
             temp_optimized,
