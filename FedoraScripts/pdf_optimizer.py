@@ -47,21 +47,28 @@ def is_already_optimized(doc) -> bool:
     och om bilderna använder JPXDecode (JPEG 2000).
     """
     # Kolla version (måste vara 1.7 eller högre)
-    v_str = doc.get_metadata().get("format", "1.0")
+    v_str = doc.metadata.get("format", "1.0")
     try:
+        # Extrahera siffrorna (t.ex. från "PDF 1.7" eller "1.7")
         version = float(v_str.replace("PDF ", "").replace("PDF-", ""))
-    except ValueError:
+    except (ValueError, AttributeError):
         version = 1.0
 
-    # Stickprov på de första bilderna för att se om de använder J2K (JPXDecode)
-    img_list = doc.get_page_images(0)
-    if not img_list:
-        return True # Inga bilder att optimera, räknas som klar
+    if version < 1.7:
+        return False
 
-    for img in img_list[:3]: # Kolla max 3 bilder för snabbhet
-        xref = img[0]
-        if "JPXDecode" in doc.xref_object(xref):
-            return True
+    # Stickprov på de första bilderna för att se om de använder J2K (JPXDecode)
+    try:
+        img_list = doc.get_page_images(0)
+        if not img_list:
+            return True # Inga bilder att optimera, räknas som klar
+
+        for img in img_list[:3]: # Kolla max 3 bilder för snabbhet
+            xref = img[0]
+            if "JPXDecode" in doc.xref_object(xref):
+                return True
+    except Exception:
+        return False # Om vi inte kan läsa bilderna, optimera för säkerhets skull
 
     return False
 
