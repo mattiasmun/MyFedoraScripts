@@ -47,7 +47,7 @@ def is_already_optimized(doc) -> bool:
     och om bilderna använder JPXDecode (JPEG 2000).
     """
     # Kolla version (måste vara 1.7 eller högre)
-    v_str = doc.pdf_get_metadata().get("format", "1.0")
+    v_str = doc.get_metadata().get("format", "1.0")
     try:
         version = float(v_str.replace("PDF ", "").replace("PDF-", ""))
     except ValueError:
