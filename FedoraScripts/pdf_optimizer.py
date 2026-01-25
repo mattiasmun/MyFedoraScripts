@@ -6,11 +6,11 @@ import argparse
 from datetime import datetime
 from tqdm import tqdm
 
-# ⎯⎯ IMPORT LIBRARIES ⎯⎯
+# ⎯⎯ IMPORT PYMUPDF ⎯⎯
 try:
     import pymupdf  # Kraftfull motor för PDF-hantering
 except ImportError as e:
-    print("Error: Required library not found. Please run 'pip install pymupdf tqdm'")
+    print("Error: Required library not found. Please run 'pip install pymupdf'")
     print(f"Details: {e}")
     exit(1)
 
@@ -77,38 +77,40 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
             doc.close()
             return PDF_ALREADY_OPTIMIZED, False, 0
 
-        # --- PYMUPDF OPTIMERING ---
+        # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
         # Konfigurera omskrivning av bilder (J2K + Bicubic + 200 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
-        # Metod 4 = J2K, Metod 1 = Bicubic
+        # J2K Metod (4) och Bicubic Subsampling (1)
         opts.color_lossy_image_recompress_method = 4
         opts.color_lossy_image_recompress_quality = "85"
         opts.color_lossy_image_subsample_method = 1
         opts.color_lossy_image_subsample_threshold = 210
         opts.color_lossy_image_subsample_to = 200
 
+        # Samma för gråskala
         opts.gray_lossy_image_recompress_method = 4
         opts.gray_lossy_image_recompress_quality = "85"
         opts.gray_lossy_image_subsample_method = 1
         opts.gray_lossy_image_subsample_threshold = 210
         opts.gray_lossy_image_subsample_to = 200
 
-        # Inkludera även förlustfria format
+        # Tvinga även förlustfria bilder till J2K för maximal besparing
         opts.color_lossless_image_recompress_method = 4
         opts.gray_lossless_image_recompress_method = 4
 
-        # Utför bild-omskrivningen
+        # Utför bild-optimeringen
         doc.rewrite_images(options=opts)
 
         # Spara och uppgradera till PDF 1.7 struktur
         doc.save(
             pdf_path,
             incremental=False,
-            garbage=4,          # Tar bort dubbletter och oanvända objekt
-            deflate=True,        # Komprimerar strömmar
-            use_objstms=1,       # Packar PDF-objekt i strömmar (PDF 1.5+)
-            clean=True,          # Sanerar innehåll
+            garbage=4,           # Maximal rensning av dubletter
+            deflate=True,        # Komprimera alla strömmar
+            use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
+            clean=True,          # Sanera innehållsströmmar
+            linear=False,        # Prioritera minsta storlek framför webb-streaming
             no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
         )
 

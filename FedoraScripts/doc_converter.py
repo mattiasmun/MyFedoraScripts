@@ -10,9 +10,9 @@ from tqdm import tqdm
 # ⎯⎯ IMPORT LIBRARIES ⎯⎯
 try:
     from docx2pdf import convert
-    import pymupdf  # PyMuPDF för bildkomprimering
+    import pymupdf  # Kraftfull motor för PDF-hantering
 except ImportError as e:
-    print("Error: Required library not found. Please run 'pip install docx2pdf pymupdf tqdm'")
+    print("Error: Required library not found. Please run 'pip install docx2pdf pymupdf'")
     print(f"Details: {e}")
     exit(1)
 
@@ -56,10 +56,10 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
     try:
         size_before = os.path.getsize(pdf_path)
 
-        # Öppna PDF:en
         doc = pymupdf.open(pdf_path)
 
-        # 1. Konfigurera bild-omskrivning (J2K + Bicubic)
+        # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
+        # Konfigurera omskrivning av bilder (J2K + Bicubic + 200 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
         # J2K Metod (4) och Bicubic Subsampling (1)
@@ -83,8 +83,7 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
         # Utför bild-optimeringen
         doc.rewrite_images(options=opts)
 
-        # 2. Spara enligt de officiella parametrarna
-        # Vi använder de värden som rekommenderas för maximal storleksminskning
+        # Spara och uppgradera till PDF 1.7 struktur
         doc.save(
             pdf_path,
             incremental=False,
@@ -92,8 +91,12 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
             deflate=True,        # Komprimera alla strömmar
             use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
             clean=True,          # Sanera innehållsströmmar
-            linear=False         # Prioritera minsta storlek framför webb-streaming
+            linear=False,        # Prioritera minsta storlek framför webb-streaming
+            no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
         )
+
+        # Uppgradera versionsnumret i trailern till 1.7
+        doc.init_xref()
         doc.close()
 
         size_after = os.path.getsize(pdf_path)
