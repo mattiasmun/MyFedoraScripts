@@ -48,13 +48,11 @@ def process_file(input_path, output_path):
         opts.color_lossless_image_recompress_method = 4
         opts.gray_lossless_image_recompress_method = 4
 
-        # Utför bild-optimeringen
+        # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # Spara temporär fil med PDF 1.7 struktur
-        doc.save(
-            temp_optimized,
-            incremental=False,
+        # 2. Spara till en minnesbuffert (bytearray) för att tillåta full optimering
+        buffer = doc.tobytes(
             garbage=4,           # Maximal rensning av dubletter
             deflate=True,        # Komprimera alla strömmar
             use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
@@ -62,11 +60,11 @@ def process_file(input_path, output_path):
             linear=False,        # Prioritera minsta storlek framför webb-streaming
             no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
         )
-
-        # Uppgradera versionsnumret i trailern till 1.7
-        doc.init_xref()
         doc.close()
 
+        # 3. Skriv över originalfilen med den optimerade datan
+        with open(temp_optimized, "wb") as f:
+            f.write(buffer)
         # ⎯⎯ STEG 2: OCRMYPDF (OCR & ARKIVERING) ⎯⎯
         # Eftersom vi redan har optimerat bilderna kan vi sänka kraven i ocrmypdf
         ocrmypdf.ocr(
