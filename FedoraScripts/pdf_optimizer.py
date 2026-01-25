@@ -106,13 +106,11 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         opts.color_lossless_image_recompress_method = 4
         opts.gray_lossless_image_recompress_method = 4
 
-        # Utför bild-optimeringen
+        # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # Spara och uppgradera till PDF 1.7 struktur
-        doc.save(
-            pdf_path,
-            incremental=False,
+        # 2. Spara till en minnesbuffert (bytearray) för att tillåta full optimering
+        buffer = doc.tobytes(
             garbage=4,           # Maximal rensning av dubletter
             deflate=True,        # Komprimera alla strömmar
             use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
@@ -120,11 +118,11 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
             linear=False,        # Prioritera minsta storlek framför webb-streaming
             no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
         )
-
-        # Uppgradera versionsnumret i trailern till 1.7
-        doc.init_xref()
         doc.close()
 
+        # 3. Skriv över originalfilen med den optimerade datan
+        with open(pdf_path, "wb") as f:
+            f.write(buffer)
         file_size_after = os.path.getsize(pdf_path)
         bytes_saved = file_size_before - file_size_after
 
