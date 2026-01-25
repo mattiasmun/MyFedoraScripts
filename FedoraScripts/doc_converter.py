@@ -104,17 +104,24 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
         return False, 0
 
 def run_verapdf_batch(directory: str) -> dict:
-    """Kör veraPDF via Flatpak på hela målmappen."""
+    """Kör veraPDF via batch-fil på Windows (Greenfield-version)."""
     results = {}
+    
+    # Vi expanderar $HOME (som i Windows motsvaras av %USERPROFILE%)
+    # Vi lägger även till \verapdf.bat – kontrollera om den ligger direkt här eller i \bin\
+    home = os.path.expanduser("~")
+    verapdf_path = os.path.join(home, "Program", "verapdf-greenfield-1.28.1", "verapdf.bat")
+    
+    # Om filen ligger i en bin-mapp, ändra till:
+    # verapdf_path = os.path.join(home, "Program", "verapdf-greenfield-1.28.1", "bin", "verapdf.bat")
+
     try:
-        cmd = [
-            "flatpak", "run", "--command=verapdf",
-            "org.verapdf.veraPDF", "--format", "xml", directory
-        ]
-        process = subprocess.run(cmd, capture_output=True, text=True)
+        # På Windows krävs shell=True för att köra .bat-filer via subprocess
+        cmd = [verapdf_path, "--format", "xml", directory]
+        process = subprocess.run(cmd, capture_output=True, text=True, shell=True)
 
         if process.returncode != 0:
-            logging.error("veraPDF exekverades med felkod.")
+            logging.error(f"veraPDF exekverades med felkod: {process.returncode}")
             return results
 
         root = ET.fromstring(process.stdout)
