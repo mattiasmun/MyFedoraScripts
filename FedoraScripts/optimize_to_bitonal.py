@@ -23,39 +23,39 @@ def process_single_image(args):
     input_path, doc_target_dpi = args
     photo_target_dpi = 200
     # Vi siktar på att bilden ska vara ca 200mm bred (nästan en full A4)
-    TARGET_WIDTH_MM = 200 
+    TARGET_WIDTH_MM = 200
     TARGET_WIDTH_INCHES = TARGET_WIDTH_MM / 25.4
 
     try:
         img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
         if img is None: return None
-        
+
         # 1. Foto-detektering (Tröskel 45)
         std_dev = np.std(img)
-        is_photo = std_dev < 45 
-        
-        # 2. Skalningslogik: Vi skalar om bilden så att den får rätt 
+        is_photo = std_dev < 45
+
+        # 2. Skalningslogik: Vi skalar om bilden så att den får rätt
         # antal pixlar för att vara 200mm bred vid mål-DPI.
         actual_target_dpi = photo_target_dpi if is_photo else doc_target_dpi
         required_pixels_width = int(TARGET_WIDTH_INCHES * actual_target_dpi)
-        
+
         scale_factor = required_pixels_width / img.shape[1]
-        
+
         # 3. Utför skalning
         img_resized = cv2.resize(img, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LANCZOS4)
         img_processed = deskew_image(img_resized)
-        
+
         if is_photo:
             # Spara som Gråskala 8-bit
             return (Image.fromarray(img_processed).convert('L'), actual_target_dpi)
         else:
             # Spara som Bitonal 1-bit
             bitonal_cv = cv2.adaptiveThreshold(
-                img_processed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                img_processed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                 cv2.THRESH_BINARY, 11, 2
             )
             return (Image.fromarray(bitonal_cv).convert('1'), actual_target_dpi)
-            
+
     except Exception as e:
         print(f"\nFel vid bearbetning av {input_path}: {e}")
         return None
@@ -63,7 +63,7 @@ def process_single_image(args):
 def main(input_folder, output_filename, target_dpi=600):
     valid_ext = ('.jpg', '.jpeg', '.png', '.tiff', '.bmp')
     files = sorted([os.path.join(input_folder, f) for f in os.listdir(input_folder) if f.lower().endswith(valid_ext)])
-    
+
     if not files: return
 
     print(f"Skapar PDF. Mål: Dokument {target_dpi} DPI, Foto 200 DPI.")
@@ -93,5 +93,5 @@ if __name__ == '__main__':
     home = os.path.expanduser("~")
     IN_MAP = os.path.join(home, "Bilder")
     UT_FIL = os.path.join(IN_MAP, "optimerat_arkiv.pdf")
-    
+
     main(IN_MAP, UT_FIL)
