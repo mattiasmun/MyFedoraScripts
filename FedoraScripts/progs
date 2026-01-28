@@ -1246,6 +1246,7 @@ perl-IO-Compress.noarch \
 perl-IO-HTML.noarch \
 perl-IO-String.noarch \
 perl-IO-stringy.noarch \
+perl-Image-ExifTool.noarch \
 perl-JSON-PP.noarch \
 perl-JSON-Parse.x86_64 \
 perl-JSON.noarch \
