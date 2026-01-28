@@ -1,6 +1,5 @@
 #!/bin/python3
-cmds = """\
-import gmpy2 as gp
+exec("""import gmpy2 as gp
 import numpy as np
 from timeit import timeit
 ctx = gp.get_context()
@@ -52,9 +51,7 @@ def cont_frac_to_frac(seq, max_den = _lf(1e15)):
 		if den > max_den:
 			if d > 0:
 				return gp.mpq(n, d)
-	return gp.mpq(num, den)\
-"""
-exec(cmds)
+	return gp.mpq(num, den)""")
 x = frac_to_cont_frac(π)
 y = cont_frac_to_frac(x[:34])
 
