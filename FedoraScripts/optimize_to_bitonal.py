@@ -27,17 +27,23 @@ def process_single_image(args):
     photo_target_dpi = 200
     TARGET_WIDTH_MM = 200
     TARGET_WIDTH_INCHES = TARGET_WIDTH_MM / 25.4
+    filename_lower = os.path.basename(input_path).lower()
 
     try:
         img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
         if img is None: return None
 
-        # Foto-detektering baserat på standardavvikelse
-        std_dev = np.std(img)
-        # Vi höjer tröskeln något så att illustrationer/porträtt 
-        # klassas som foton om de har mycket gråskala
-        is_photo = std_dev < 42 
+        # 1. Bestäm läge (Override via filnamn har företräde)
+        if "foto" in filename_lower:
+            is_photo = True
+        elif "doc" in filename_lower:
+            is_photo = False
+        else:
+            # Automatisk detektering om inget nyckelord finns
+            std_dev = np.std(img)
+            is_photo = std_dev < 42 
 
+        # 2. Beräkna DPI och skalning
         actual_target_dpi = photo_target_dpi if is_photo else doc_target_dpi
         required_pixels_width = int(TARGET_WIDTH_INCHES * actual_target_dpi)
         scale_factor = required_pixels_width / img.shape[1]
@@ -50,12 +56,11 @@ def process_single_image(args):
         pil_img = Image.fromarray(img_processed)
 
         if is_photo:
-            # För foton: Använd JPEG2000 för att behålla äkta gråskala
+            # JPEG2000 Gråskala (Bevarar mjuka toner)
             pil_img.convert('L').save(img_io, format='JPEG2000', quality_layers=[20])
         else:
-            # För dokument/illustrationer som ska bli bitonala:
-            # Vi använder FLOYDSTEINBERG dithering istället för hård tröskling.
-            # Detta simulerar gråtoner med prickar, vilket ser mycket bättre ut för porträtt.
+            # CCITT Group 4 med Dithering (Simulerar gråskala med punkter)
+            # Detta bevarar detaljer i porträtt men sparar som 1-bit
             bitonal_dithered = pil_img.convert('1', dither=Image.FLOYDSTEINBERG)
             bitonal_dithered.save(img_io, format='TIFF', compression='group4')
         
