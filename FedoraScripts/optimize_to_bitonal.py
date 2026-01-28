@@ -41,7 +41,7 @@ def process_single_image(args):
         else:
             # Automatisk detektering om inget nyckelord finns
             std_dev = np.std(img)
-            is_photo = std_dev < 42 
+            is_photo = std_dev < 45
 
         # 2. Skalning och upprättning
         actual_target_dpi = photo_target_dpi if is_photo else doc_target_dpi
@@ -60,11 +60,11 @@ def process_single_image(args):
             # Adaptiv tröskel för dokument (Ger ren 1-bit för CCITT)
             # block_size=11 och C=2 är bra standardvärden för text
             bitonal = cv2.adaptiveThreshold(
-                img_processed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                img_processed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                 cv2.THRESH_BINARY, 11, 2
             )
             Image.fromarray(bitonal).convert('1').save(img_io, format='TIFF', compression='group4')
-        
+
         return img_io.getvalue(), actual_target_dpi
 
     except Exception as e:
@@ -94,7 +94,7 @@ def main(input_folder, output_filename, target_dpi=600):
     for page_data in pdf_pages:
         with pikepdf.open(io.BytesIO(page_data)) as src:
             final_pdf.pages.extend(src.pages)
-    
+
     final_pdf.save(output_filename)
     print(f"Klar! Hybrid-PDF sparad som {output_filename}")
 
