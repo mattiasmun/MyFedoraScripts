@@ -7,6 +7,7 @@ from concurrent.futures import ProcessPoolExecutor
 from tqdm import tqdm
 
 def deskew_image(gray_img):
+    # Rätar upp bilden baserat på textens lutning.
     thresh = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
     coords = np.column_stack(np.where(thresh > 0))
     if len(coords) == 0: return gray_img
@@ -20,6 +21,7 @@ def deskew_image(gray_img):
     return cv2.warpAffine(gray_img, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
 
 def process_single_image(args):
+    # Bearbetar en enskild bild med hybrid-logik.
     input_path, doc_target_dpi = args
     photo_target_dpi = 200
     # Vi siktar på att bilden ska vara ca 200mm bred (nästan en full A4)
@@ -34,14 +36,12 @@ def process_single_image(args):
         std_dev = np.std(img)
         is_photo = std_dev < 45
 
-        # 2. Skalningslogik: Vi skalar om bilden så att den får rätt
-        # antal pixlar för att vara 200mm bred vid mål-DPI.
+        # 2. Skalningslogik
         actual_target_dpi = photo_target_dpi if is_photo else doc_target_dpi
         required_pixels_width = int(TARGET_WIDTH_INCHES * actual_target_dpi)
-
         scale_factor = required_pixels_width / img.shape[1]
 
-        # 3. Utför skalning
+        # 3. Utför skalning och upprätning
         img_resized = cv2.resize(img, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LANCZOS4)
         img_processed = deskew_image(img_resized)
 
@@ -80,7 +80,7 @@ def main(input_folder, output_filename, target_dpi=600):
     images = [r[0] for r in valid_results]
     res_list = [r[1] for r in valid_results]
 
-    # Spara med individuella DPI-inställningar per sida
+    # Spara PDF med den första sidans upplösning som referens
     images[0].save(
         output_filename,
         save_all=True,
