@@ -33,7 +33,7 @@ def process_single_image(args):
         img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
         if img is None: return None
 
-        # 1. Bestäm läge (Override via filnamn har företräde)
+        # 1. Bestäm läge (Override via filnamn eller automatik)
         if "foto" in filename_lower:
             is_photo = True
         elif "doc" in filename_lower:
@@ -43,26 +43,27 @@ def process_single_image(args):
             std_dev = np.std(img)
             is_photo = std_dev < 42 
 
-        # 2. Beräkna DPI och skalning
+        # 2. Skalning och upprättning
         actual_target_dpi = photo_target_dpi if is_photo else doc_target_dpi
         required_pixels_width = int(TARGET_WIDTH_INCHES * actual_target_dpi)
         scale_factor = required_pixels_width / img.shape[1]
 
-        # Skalning och upprätning
         img_resized = cv2.resize(img, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LANCZOS4)
         img_processed = deskew_image(img_resized)
 
         img_io = io.BytesIO()
-        pil_img = Image.fromarray(img_processed)
 
         if is_photo:
-            # JPEG2000 Gråskala (Bevarar mjuka toner)
-            pil_img.convert('L').save(img_io, format='JPEG2000', quality_layers=[20])
+            # JPEG2000 för foton (Bevarar gråskala snyggt)
+            Image.fromarray(img_processed).convert('L').save(img_io, format='JPEG2000', quality_layers=[20])
         else:
-            # CCITT Group 4 med Dithering (Simulerar gråskala med punkter)
-            # Detta bevarar detaljer i porträtt men sparar som 1-bit
-            bitonal_dithered = pil_img.convert('1', dither=Image.FLOYDSTEINBERG)
-            bitonal_dithered.save(img_io, format='TIFF', compression='group4')
+            # Adaptiv tröskel för dokument (Ger ren 1-bit för CCITT)
+            # block_size=11 och C=2 är bra standardvärden för text
+            bitonal = cv2.adaptiveThreshold(
+                img_processed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                cv2.THRESH_BINARY, 11, 2
+            )
+            Image.fromarray(bitonal).convert('1').save(img_io, format='TIFF', compression='group4')
         
         return img_io.getvalue(), actual_target_dpi
 
