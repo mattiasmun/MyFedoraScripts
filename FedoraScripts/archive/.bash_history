@@ -70,6 +70,7 @@ echo key leftmeta | dotoolc
 echo key shift+1 x:exclam shift+k:2 | dotoolc
 env
 ex --help
+exiftool portrait-man-cartoon-style.jpg
 exit
 ffprobe --help
 ffprobe output.mp3
@@ -81,6 +82,7 @@ find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do  
 find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then         mv -v -- "$old_path" "$new_path";     fi; done
 find_and_sort_files .
 find_and_sort_files female
+flatpak install veraPDF
 flatpak list
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak update -y
@@ -167,8 +169,10 @@ nvidia-smi
 nvtop
 ocr_optimize_cli.py --help
 ocr_optimize_cli.py .
+optimize_to_bitonal.py
 pdf_optimizer.py --help
 pdf_optimizer.py -i .
+pdfimages -list optimerat_hybrid_arkiv.pdf
 pgrep firefox
 pgrep flatpak
 pgrep thunderbird
@@ -241,7 +245,7 @@ systemctl status clamd@scan
 systemctl status clamd@scan.service
 systemctl status dnf5-automatic.service
 systemctl status dnf5-automatic.timer
-temp_file=$(mktemp)
+temp_file=$(mktemp); ls $temp_file
 time find_and_sort_files .
 uname -a
 uname -r
