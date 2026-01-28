@@ -3,11 +3,13 @@ import cv2
 import os
 import numpy as np
 from PIL import Image
+import io
+import img2pdf
+import pikepdf
 from concurrent.futures import ProcessPoolExecutor
 from tqdm import tqdm
 
 def deskew_image(gray_img):
-    # Rätar upp bilden baserat på textens lutning.
     thresh = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
     coords = np.column_stack(np.where(thresh > 0))
     if len(coords) == 0: return gray_img
@@ -21,10 +23,8 @@ def deskew_image(gray_img):
     return cv2.warpAffine(gray_img, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
 
 def process_single_image(args):
-    # Bearbetar en enskild bild med hybrid-logik.
     input_path, doc_target_dpi = args
     photo_target_dpi = 200
-    # Vi siktar på att bilden ska vara ca 200mm bred (nästan en full A4)
     TARGET_WIDTH_MM = 200
     TARGET_WIDTH_INCHES = TARGET_WIDTH_MM / 25.4
 
@@ -32,29 +32,29 @@ def process_single_image(args):
         img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
         if img is None: return None
 
-        # 1. Foto-detektering (Tröskel 45)
+        # Foto-detektering baserat på standardavvikelse
         std_dev = np.std(img)
-        is_photo = std_dev < 45
+        is_photo = std_dev < 38
 
-        # 2. Skalningslogik
         actual_target_dpi = photo_target_dpi if is_photo else doc_target_dpi
         required_pixels_width = int(TARGET_WIDTH_INCHES * actual_target_dpi)
         scale_factor = required_pixels_width / img.shape[1]
 
-        # 3. Utför skalning och upprätning
+        # Skalning och upprätning
         img_resized = cv2.resize(img, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LANCZOS4)
         img_processed = deskew_image(img_resized)
 
+        img_io = io.BytesIO()
         if is_photo:
-            # Spara som Gråskala 8-bit
-            return (Image.fromarray(img_processed).convert('L'), actual_target_dpi)
+            # Spara som JPEG2000 (.jp2) för foton
+            Image.fromarray(img_processed).convert('L').save(img_io, format='JPEG2000', quality_layers=[20])
         else:
-            # Spara som Bitonal 1-bit
-            bitonal_cv = cv2.adaptiveThreshold(
-                img_processed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                cv2.THRESH_BINARY, 11, 2
-            )
-            return (Image.fromarray(bitonal_cv).convert('1'), actual_target_dpi)
+            # CCITT Group 4 kräver strikt 1-bit
+            # Vi använder en tröskel (Otsu) för att göra bilden helt svartvit
+            _, bitonal_cv = cv2.threshold(img_processed, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            Image.fromarray(bitonal_cv).convert('1').save(img_io, format='TIFF', compression='group4')
+        
+        return img_io.getvalue(), actual_target_dpi
 
     except Exception as e:
         print(f"\nFel vid bearbetning av {input_path}: {e}")
@@ -66,32 +66,29 @@ def main(input_folder, output_filename, target_dpi=600):
 
     if not files: return
 
-    print(f"Skapar PDF. Mål: Dokument {target_dpi} DPI, Foto 200 DPI.")
+    print(f"Skapar hybrid-PDF (CCITT G4 + JPEG2000).")
     tasks = [(f, target_dpi) for f in files]
 
     with ProcessPoolExecutor() as executor:
-        results = list(tqdm(executor.map(process_single_image, tasks),
-                                     total=len(tasks),
-                                     desc="Bearbetar",
-                                     unit="sid"))
+        results = list(tqdm(executor.map(process_single_image, tasks), total=len(tasks), desc="Bearbetar"))
 
-    # Filtrera bort fel och separera bild från DPI
-    valid_results = [r for r in results if r is not None]
-    images = [r[0] for r in valid_results]
-    res_list = [r[1] for r in valid_results]
+    # Använd img2pdf för att skapa individuella PDF-sidor (behåller rådata)
+    pdf_pages = []
+    for img_data, dpi in [r for r in results if r is not None]:
+        layout = img2pdf.get_layout_fun(pagesize=(img2pdf.mm_to_pt(200), None))
+        pdf_pages.append(img2pdf.convert(img_data, layout_fun=layout))
 
-    # Spara PDF med den första sidans upplösning som referens
-    images[0].save(
-        output_filename,
-        save_all=True,
-        append_images=images[1:],
-        resolution=res_list[0]
-    )
-    print(f"Klar! Fil sparad som {output_filename}")
+    # Slå ihop sidorna med pikepdf
+    final_pdf = pikepdf.Pdf.new()
+    for page_data in pdf_pages:
+        with pikepdf.open(io.BytesIO(page_data)) as src:
+            final_pdf.pages.extend(src.pages)
+    
+    final_pdf.save(output_filename)
+    print(f"Klar! Hybrid-PDF sparad som {output_filename}")
 
 if __name__ == '__main__':
     home = os.path.expanduser("~")
     IN_MAP = os.path.join(home, "Bilder")
-    UT_FIL = os.path.join(IN_MAP, "optimerat_arkiv.pdf")
-
+    UT_FIL = os.path.join(IN_MAP, "optimerat_hybrid_arkiv.pdf")
     main(IN_MAP, UT_FIL)
