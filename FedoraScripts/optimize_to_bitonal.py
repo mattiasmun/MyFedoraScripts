@@ -99,7 +99,7 @@ def main(input_folder, output_filename, target_dpi=600):
 
 if __name__ == '__main__':
     # JUSTERA DESSA TVÅ RADER:
-    IN_MAP = "mina_skanningar" 
-    UT_FIL = "optimerat_arkiv.pdf"
+    IN_MAP = "$HOME/Bilder"
+    UT_FIL = IN_MAP + "optimerat_arkiv.pdf"
     
     main(IN_MAP, UT_FIL)
