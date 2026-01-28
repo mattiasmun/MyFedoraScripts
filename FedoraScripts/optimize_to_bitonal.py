@@ -34,7 +34,9 @@ def process_single_image(args):
 
         # Foto-detektering baserat på standardavvikelse
         std_dev = np.std(img)
-        is_photo = std_dev < 38
+        # Vi höjer tröskeln något så att illustrationer/porträtt 
+        # klassas som foton om de har mycket gråskala
+        is_photo = std_dev < 42 
 
         actual_target_dpi = photo_target_dpi if is_photo else doc_target_dpi
         required_pixels_width = int(TARGET_WIDTH_INCHES * actual_target_dpi)
@@ -45,14 +47,17 @@ def process_single_image(args):
         img_processed = deskew_image(img_resized)
 
         img_io = io.BytesIO()
+        pil_img = Image.fromarray(img_processed)
+
         if is_photo:
-            # Spara som JPEG2000 (.jp2) för foton
-            Image.fromarray(img_processed).convert('L').save(img_io, format='JPEG2000', quality_layers=[20])
+            # För foton: Använd JPEG2000 för att behålla äkta gråskala
+            pil_img.convert('L').save(img_io, format='JPEG2000', quality_layers=[20])
         else:
-            # CCITT Group 4 kräver strikt 1-bit
-            # Vi använder en tröskel (Otsu) för att göra bilden helt svartvit
-            _, bitonal_cv = cv2.threshold(img_processed, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-            Image.fromarray(bitonal_cv).convert('1').save(img_io, format='TIFF', compression='group4')
+            # För dokument/illustrationer som ska bli bitonala:
+            # Vi använder FLOYDSTEINBERG dithering istället för hård tröskling.
+            # Detta simulerar gråtoner med prickar, vilket ser mycket bättre ut för porträtt.
+            bitonal_dithered = pil_img.convert('1', dither=Image.FLOYDSTEINBERG)
+            bitonal_dithered.save(img_io, format='TIFF', compression='group4')
         
         return img_io.getvalue(), actual_target_dpi
 
