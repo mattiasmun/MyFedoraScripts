@@ -1,63 +1,105 @@
 import cv2
 import os
-from PIL import Image
 import numpy as np
+from PIL import Image
+from concurrent.futures import ProcessPoolExecutor
+from tqdm import tqdm
 
-def process_to_single_pdf(input_folder, output_filename, target_dpi=600):
-    valid_extensions = ('.jpg', '.jpeg', '.png', '.tiff', '.bmp')
-    processed_images = []
+def deskew_image(gray_img):
+    """Rätar upp bilden för bättre läsbarhet och OCR-resultat."""
+    # Invertera för att hitta textstrukturer (Otsu's binarisering hjälper detekteringen)
+    thresh = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
     
-    # Hämta och sortera filerna (viktigt för sidordning)
-    files = sorted([f for f in os.listdir(input_folder) if f.lower().endswith(valid_extensions)])
+    # Hitta koordinater för alla text-pixlar
+    coords = np.column_stack(np.where(thresh > 0))
     
-    for filename in files:
-        input_path = os.path.join(input_folder, filename)
+    # Beräkna vinkeln på den minsta omslutande rektangeln
+    angle = cv2.minAreaRect(coords)[-1]
+    
+    # Justera vinkeln så den blir korrekt för rotation
+    if angle < -45:
+        angle = -(90 + angle)
+    else:
+        angle = -angle
         
-        # 1. Hitta ursprungs-DPI med Pillow
+    if abs(angle) < 0.1: # Ingen märkbar lutning
+        return gray_img
+
+    # Rotera bilden med högkvalitativ interpolation
+    (h, w) = gray_img.shape[:2]
+    center = (w // 2, h // 2)
+    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+    return cv2.warpAffine(gray_img, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+
+def process_single_image(args):
+    """Huvudfunktion för bearbetning av en enskild sida."""
+    input_path, target_dpi = args
+    try:
+        # 1. Detektera ursprungs-DPI
         with Image.open(input_path) as temp_img:
-            # info.get('dpi') returnerar ofta en tuple (x, y)
-            orig_dpi_tuple = temp_img.info.get('dpi')
-            if orig_dpi_tuple:
-                orig_dpi = orig_dpi_tuple[0]
-            else:
-                orig_dpi = 200  # Fallback om info saknas
-                print(f"Varning: Ingen DPI funnen i {filename}, antar 200.")
+            orig_dpi = temp_img.info.get('dpi', (200, 200))[0]
         
-        # 2. Läs in med OpenCV för bildbehandling
+        # 2. Läs in gråskala
         img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
-        if img is None: continue
-
-        # 3. Beräkna dynamisk skalningsfaktor
-        # Här använder vi din logik: (Mål-DPI / Ursprungs-DPI)
+        if img is None: return None
+        
+        # 3. Uppskalning (enligt din logik för att bevara detaljer vid bitonal konvertering)
         scale = target_dpi / orig_dpi
-        print(f"Bearbetar {filename}: Ursprungs-DPI={orig_dpi}, Skalar med faktor {scale:.2f}")
-
-        # 4. Skala upp
         img_resized = cv2.resize(img, None, fx=scale, fy=scale, interpolation=cv2.INTER_LANCZOS4)
-
-        # 5. Adaptiv Thresholding (Gaussian)
+        
+        # 4. Deskew (görs i gråskala för att minimera pixel-aliasing)
+        img_deskewed = deskew_image(img_resized)
+        
+        # 5. Adaptiv Thresholding (hanterar skuggor och ojämnt papper)
         bitonal_cv = cv2.adaptiveThreshold(
-            img_resized, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+            img_deskewed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
             cv2.THRESH_BINARY, 11, 2
         )
+        
+        # 6. Konvertera till 1-bit format för PDF
+        return Image.fromarray(bitonal_cv).convert('1')
+    except Exception as e:
+        print(f"\nFel vid bearbetning av {input_path}: {e}")
+        return None
 
-        # 6. Konvertera till 1-bit (PIL)
-        pil_img = Image.fromarray(bitonal_cv).convert('1')
-        processed_images.append(pil_img)
+def main(input_folder, output_filename, target_dpi=600):
+    valid_ext = ('.jpg', '.jpeg', '.png', '.tiff', '.bmp')
+    files = sorted([os.path.join(input_folder, f) for f in os.listdir(input_folder) if f.lower().endswith(valid_ext)])
+    
+    if not files:
+        print("Inga bilder hittades.")
+        return
 
-    # 7. Spara allt till EN flersidig PDF
+    print(f"Startar arkiv-optimering ({len(files)} sidor) → {target_dpi} DPI")
+    
+    tasks = [(f, target_dpi) for f in files]
+    processed_images = []
+
+    # Kör parallellt på alla CPU-kärnor
+    print(f"Startar optimering till {target_dpi} DPI…")
+    with ProcessPoolExecutor() as executor:
+        processed_images = list(tqdm(executor.map(process_single_image, tasks),
+                                     total=len(tasks),
+                                     desc="Bearbetar",
+                                     unit="sid"))
+
+    # Städa bort eventuella None-värden
+    processed_images = [img for img in processed_images if img is not None]
+
     if processed_images:
-        # Första bilden sparas, resten läggs till som "append_images"
+        print("Kompilerar PDF med CCITT G4-komprimering…")
         processed_images[0].save(
-            output_filename, 
-            save_all=True, 
-            append_images=processed_images[1:], 
-            resolution=target_dpi, 
+            output_filename,
+            save_all=True,
+            append_images=processed_images[1:],
+            resolution=target_dpi,
             compression="group4"
         )
-        print(f"\nKlart! Skapade '{output_filename}' med {len(processed_images)} sidor.")
-    else:
-        print("Inga bilder hittades.")
+        print(f"Klart! Resultat sparat i: {output_filename}")
 
-# Kör scriptet
-process_to_single_pdf("mina_skanningar", "sammanställt_dokument.pdf")
+if __name__ == '__main__':
+    # JUSTERA DESSA TVÅ RADER:
+    IN_MAP = "mina_skanningar" 
+    UT_FIL = "optimerat_arkiv.pdf"
+    
+    main(IN_MAP, UT_FIL)
