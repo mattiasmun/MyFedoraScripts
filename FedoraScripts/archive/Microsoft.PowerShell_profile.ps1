@@ -13,13 +13,13 @@ Set-Location $HOME
 # Set these paths to your custom installation locations.
 # IMPORTANT: Use the full path to the executable file (e.g., C:\Program Files\qpdf\bin\qpdf.exe)
 $global:QPDFPath = "C:\Users\ai21558\Program\qpdf-12.2.0-mingw64\bin\qpdf.exe"
-$global:RocketPDFPath = "C:\Users\ai21558\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\Scripts\rocketpdf.exe"
+$global:RocketPDFPath = "C:\Users\ai21558\AppData\Local\Python\pythoncore-3.14-64\Scripts\rocketpdf.exe"
 
 # ⎯⎯ New Paths for Java and VeraPDF Validation ⎯⎯
 # JavaPath should point directly to the java.exe executable.
 $global:JavaPath = "C:\Users\ai21558\Program\jdk-24.0.1\bin\java.exe"
 # VeraPDFPath should point directly to the vera-pdf-cli.jar file.
-$global:VeraPDFPath = "C:\Users\ai21558\Program\verapdf-greenfield-1.28.1\bin\greenfield-apps-1.28.1.jar"
+$global:VeraPDFPath = "C:\Users\ai21558\Program\verapdf-greenfield-1.28.1\verapdf-gui.bat"
 
 # ⎯⎯ Executable Wrapper Functions ⎯⎯
 
@@ -53,8 +53,7 @@ function pip {
     python -m pip @args
 }
 
-# VeraPDF is a JAR file and requires calling Java with the -jar flag
-function verapdf-cli {
+function verapdf-gui {
     if (-not (Test-Path -Path $global:JavaPath -PathType Leaf)) {
         Write-Error "Java executable not found at '$global:JavaPath'. Cannot run VeraPDF."
         return
@@ -66,7 +65,7 @@ function verapdf-cli {
 
     # Call java.exe with the -jar argument pointing to the VeraPDF jar,
     # followed by all arguments passed to verapdf-cli function.
-    & $global:JavaPath -jar $global:VeraPDFPath @($args)
+    & $global:VeraPDFPath @($args)
 }
 
 # ⎯⎯ Set Default Location for Custom Scripts ⎯⎯
@@ -129,11 +128,11 @@ if ($Host.Name -eq 'ConsoleHost') {
     Write-Host "→ Terminal started in: $PWD" -ForegroundColor Gray
     Write-Host "→ Determined Script Path: '$ScriptPath'" -ForegroundColor Yellow
 
-    Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath -AnAlias tpdf
-    Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath -AnAlias cdocs
+    # Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath -AnAlias tpdf
+    # Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath -AnAlias cdocs
 
     # Check Wrapper Functions inkl. nya pip
-    @("qpdf", "rocketpdf", "java", "verapdf-cli", "pip") | ForEach-Object {
+    @("verapdf-gui", "pip") | ForEach-Object {
         $check = Get-Command $_ -ErrorAction SilentlyContinue
         if ($check -is [System.Management.Automation.FunctionInfo]) {
             Write-Host "  🛠️ Wrapper Function '$_' is available." -ForegroundColor DarkCyan
@@ -142,5 +141,5 @@ if ($Host.Name -eq 'ConsoleHost') {
         }
     }
     
-    Write-Host "⎯⎯ Ready to use 'pip', 'cdocs' and 'tpdf' ⎯⎯" -ForegroundColor Cyan
+    Write-Host "⎯⎯ Ready to use 'pip', 'verapdf-gui' ⎯⎯" -ForegroundColor Cyan
 }
