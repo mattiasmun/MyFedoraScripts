@@ -32,21 +32,36 @@ def process_file(input_path, output_path):
 
         # J2K Metod (4) och Bicubic Subsampling (1)
         opts.color_lossy_image_recompress_method = 4
-        opts.color_lossy_image_recompress_quality = "85"
+        opts.color_lossy_image_recompress_quality = "[20]"
         opts.color_lossy_image_subsample_method = 1
         opts.color_lossy_image_subsample_threshold = 210
         opts.color_lossy_image_subsample_to = 200
 
         # Samma för gråskala
         opts.gray_lossy_image_recompress_method = 4
-        opts.gray_lossy_image_recompress_quality = "85"
+        opts.gray_lossy_image_recompress_quality = "[20]"
         opts.gray_lossy_image_subsample_method = 1
         opts.gray_lossy_image_subsample_threshold = 210
         opts.gray_lossy_image_subsample_to = 200
 
         # Tvinga även förlustfria bilder till J2K för maximal besparing
         opts.color_lossless_image_recompress_method = 4
+        opts.color_lossless_image_recompress_quality = "[20]"
+        opts.color_lossless_image_subsample_method = 1
+        opts.color_lossless_image_subsample_threshold = 210
+        opts.color_lossless_image_subsample_to = 200
         opts.gray_lossless_image_recompress_method = 4
+        opts.gray_lossless_image_recompress_quality = "[20]"
+        opts.gray_lossless_image_subsample_method = 1
+        opts.gray_lossless_image_subsample_threshold = 210
+        opts.gray_lossless_image_subsample_to = 200
+
+        # ⎯⎯ BITONALA BILDER (Svartvitt / 1-bit) ⎯⎯
+        # Vi använder Metod 5 (FAX/CCITT G4) för maximal skärpa och kompatibilitet
+        opts.bitonal_image_recompress_method = 5
+        opts.bitonal_image_subsample_method = 1
+        opts.bitonal_image_subsample_threshold = 630
+        opts.bitonal_image_subsample_to = 600
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
@@ -71,9 +86,9 @@ def process_file(input_path, output_path):
             temp_optimized,
             output_path,
             optimize=1,            # Låg nivå eftersom vi redan optimerat med PyMuPDF
-            clean=True,
+            clean=False,
             output_type='pdfa-3',
-            force_ocr=True,
+            skip_text=True,
             language=['swe', 'eng'],
             progress_bar=False
         )

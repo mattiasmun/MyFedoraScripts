@@ -64,21 +64,36 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
 
         # J2K Metod (4) och Bicubic Subsampling (1)
         opts.color_lossy_image_recompress_method = 4
-        opts.color_lossy_image_recompress_quality = "85"
+        opts.color_lossy_image_recompress_quality = "[20]"
         opts.color_lossy_image_subsample_method = 1
         opts.color_lossy_image_subsample_threshold = 210
         opts.color_lossy_image_subsample_to = 200
 
         # Samma för gråskala
         opts.gray_lossy_image_recompress_method = 4
-        opts.gray_lossy_image_recompress_quality = "85"
+        opts.gray_lossy_image_recompress_quality = "[20]"
         opts.gray_lossy_image_subsample_method = 1
         opts.gray_lossy_image_subsample_threshold = 210
         opts.gray_lossy_image_subsample_to = 200
 
         # Tvinga även förlustfria bilder till J2K för maximal besparing
         opts.color_lossless_image_recompress_method = 4
+        opts.color_lossless_image_recompress_quality = "[20]"
+        opts.color_lossless_image_subsample_method = 1
+        opts.color_lossless_image_subsample_threshold = 210
+        opts.color_lossless_image_subsample_to = 200
         opts.gray_lossless_image_recompress_method = 4
+        opts.gray_lossless_image_recompress_quality = "[20]"
+        opts.gray_lossless_image_subsample_method = 1
+        opts.gray_lossless_image_subsample_threshold = 210
+        opts.gray_lossless_image_subsample_to = 200
+
+        # ⎯⎯ BITONALA BILDER (Svartvitt / 1-bit) ⎯⎯
+        # Vi använder Metod 5 (FAX/CCITT G4) för maximal skärpa och kompatibilitet
+        opts.bitonal_image_recompress_method = 5
+        opts.bitonal_image_subsample_method = 1
+        opts.bitonal_image_subsample_threshold = 630
+        opts.bitonal_image_subsample_to = 600
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
