@@ -38,7 +38,7 @@ def setup_logging(source_dir: str) -> str:
         format='%(asctime)s - %(levelname)s - %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
-    logging.info("⎯⎯ PDF Advanced Optimizer Start (Smart Check + J2K + PDF 1.7) ⎯⎯")
+    logging.info("⎯⎯ PDF Advanced Optimizer Start (Smart Check + J2K + PDF 1.5) ⎯⎯")
     return LOG_FILE
 
 def is_already_optimized(doc) -> bool:
@@ -46,28 +46,35 @@ def is_already_optimized(doc) -> bool:
     Kollar om filen redan är optimerad genom att kontrollera version
     och om bilderna använder JPXDecode (JPEG 2000).
     """
-    # Kolla version (måste vara 1.7 eller högre)
+    # Kolla version (måste vara 1.5 eller högre)
     v_str = doc.metadata.get("format", "1.0")
     try:
-        # Extrahera siffrorna (t.ex. från "PDF 1.7" eller "1.7")
+        # Extrahera siffrorna (t.ex. från "PDF 1.5" eller "1.5")
         version = float(v_str.replace("PDF ", "").replace("PDF-", ""))
     except (ValueError, AttributeError):
         version = 1.0
 
-    if version < 1.7:
+    if version < 1.5:
         return False
 
     # Stickprov på de första bilderna för att se om de använder J2K (JPXDecode)
     try:
-        img_list = doc.get_page_images(0)
-        if not img_list:
-            return True # Inga bilder att optimera, räknas som klar
+        # Sök efter första bilden i hela dokumentet istället för bara sida 0
+        found_image = False
+        for page_index in range(min(doc.page_count, 5)): # Kolla de första 5 sidorna
+            img_list = doc.get_page_images(page_index)
+            if img_list:
+                found_image = True
+                for img in img_list[:2]: # Kolla de första två bilderna på den sidan
+                    xref = img[0]
+                    if "JPXDecode" in doc.xref_object(xref):
+                        return True
+                break # Vi hittade bilder men ingen var JPX, gå till return False
 
-        for img in img_list[:3]: # Kolla max 3 bilder för snabbhet
-            xref = img[0]
-            if "JPXDecode" in doc.xref_object(xref):
-                return True
-    except Exception:
+        if not found_image:
+            return True # Inga bilder hittades alls i stickprovet
+    except Exception as e:
+        logging.error(f"Fel: {e}")
         return False # Om vi inte kan läsa bilderna, optimera för säkerhets skull
 
     return False
@@ -76,7 +83,7 @@ def is_already_optimized(doc) -> bool:
 
 def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: str, force: bool) -> tuple[int, bool, int]:
     try:
-        file_size_before = os.path.getsize(pdf_path)
+        size_before = os.path.getsize(pdf_path)
         doc = pymupdf.open(pdf_path)
 
         # Smart Check: Hoppa över om den redan är optimerad (om inte --force används)
@@ -90,21 +97,36 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
 
         # J2K Metod (4) och Bicubic Subsampling (1)
         opts.color_lossy_image_recompress_method = 4
-        opts.color_lossy_image_recompress_quality = "85"
+        opts.color_lossy_image_recompress_quality = "[20]"
         opts.color_lossy_image_subsample_method = 1
         opts.color_lossy_image_subsample_threshold = 210
         opts.color_lossy_image_subsample_to = 200
 
         # Samma för gråskala
         opts.gray_lossy_image_recompress_method = 4
-        opts.gray_lossy_image_recompress_quality = "85"
+        opts.gray_lossy_image_recompress_quality = "[20]"
         opts.gray_lossy_image_subsample_method = 1
         opts.gray_lossy_image_subsample_threshold = 210
         opts.gray_lossy_image_subsample_to = 200
 
         # Tvinga även förlustfria bilder till J2K för maximal besparing
         opts.color_lossless_image_recompress_method = 4
+        opts.color_lossless_image_recompress_quality = "[20]"
+        opts.color_lossless_image_subsample_method = 1
+        opts.color_lossless_image_subsample_threshold = 210
+        opts.color_lossless_image_subsample_to = 200
         opts.gray_lossless_image_recompress_method = 4
+        opts.gray_lossless_image_recompress_quality = "[20]"
+        opts.gray_lossless_image_subsample_method = 1
+        opts.gray_lossless_image_subsample_threshold = 210
+        opts.gray_lossless_image_subsample_to = 200
+
+        # ⎯⎯ BITONALA BILDER (Svartvitt / 1-bit) ⎯⎯
+        # Vi använder Metod 5 (FAX/CCITT G4) för maximal skärpa och kompatibilitet
+        opts.bitonal_image_recompress_method = 5
+        opts.bitonal_image_subsample_method = 1
+        opts.bitonal_image_subsample_threshold = 630
+        opts.bitonal_image_subsample_to = 600
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
@@ -123,8 +145,8 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         # 3. Skriv över originalfilen med den optimerade datan
         with open(pdf_path, "wb") as f:
             f.write(buffer)
-        file_size_after = os.path.getsize(pdf_path)
-        bytes_saved = file_size_before - file_size_after
+        size_after = os.path.getsize(pdf_path)
+        bytes_saved = size_before - size_after
 
         return PDF_SUCCESS, bytes_saved > 0, bytes_saved
 
@@ -179,7 +201,7 @@ def process_directory_recursively(args: argparse.Namespace) -> dict:
     return results
 
 def main():
-    parser = argparse.ArgumentParser(description="Smart PDF-optimering med J2K och PDF 1.7.")
+    parser = argparse.ArgumentParser(description="Smart PDF-optimering med J2K och PDF 1.5.")
     parser.add_argument('-s', '--skip-existing', action='store_true', help="Hoppa över baserat på loggens tidsstämpel.")
     parser.add_argument('-f', '--force', action='store_true', help="Tvinga optimering även om filen ser klar ut.")
     parser.add_argument('-i', '--source-dir', type=str, default=SOURCE_DIR, help="Mapp att bearbeta.")
