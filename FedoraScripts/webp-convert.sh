@@ -24,7 +24,7 @@ for f in *.jpg *.jpeg; do
     fi
 
     output="${f%.*}.webp"
-    echo -n "Bearbetar: $f (Kvalitet: $orig_quality)... "
+    echo -n "Bearbetar: $f (Kvalitet: $orig_quality)… "
 
     # 2. Konvertera med ImageMagick
     if magick "$f" -quality "$orig_quality" "$output"; then
