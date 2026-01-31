@@ -55,8 +55,16 @@ def convert_to_webp(target_dir):
                 img.save(output_path, "WEBP", quality=quality)
 
             # 3. Kopiera metadata med ExifTool
+            # I webp-convert.py, ersätt subprocess-anropet med detta:
+            quality_str = f"Original JPEG Quality: {quality}"
             subprocess.run(
-                ["exiftool", "-overwrite_original", "-TagsFromFile", str(file_path), str(output_path)],
+                [
+                    "exiftool",
+                    "-overwrite_original",
+                    "-TagsFromFile", str(file_path),
+                    f"-ImageDescription={quality_str}", # Här sparar vi värdet
+                    str(output_path)
+                ],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 check=True
