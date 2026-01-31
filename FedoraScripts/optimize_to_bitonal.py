@@ -8,6 +8,7 @@ import img2pdf
 import pikepdf
 from concurrent.futures import ProcessPoolExecutor
 from tqdm import tqdm
+from datetime import datetime
 
 def deskew_image(gray_img):
     thresh = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
@@ -75,15 +76,22 @@ def main(input_folder, output_filename, target_dpi=600):
     valid_ext = ('.jpg', '.jpeg', '.png', '.tiff', '.bmp')
     files = sorted([os.path.join(input_folder, f) for f in os.listdir(input_folder) if f.lower().endswith(valid_ext)])
 
-    if not files: return
+    if not files:
+        print("Inga filer hittades.")
+        return
+
+    # ⎯⎯ STARTA TIDTAGNING ⎯⎯
+    start_time = datetime.now()
+    print(f"Startar hybrid-PDF skapande: {start_time.strftime('%H:%M:%S')}")
+    print(f"Bearbetar {len(files)} bilder...")
 
     print(f"Skapar hybrid-PDF (CCITT G4 + JPEG2000).")
     tasks = [(f, target_dpi) for f in files]
 
     with ProcessPoolExecutor() as executor:
-        results = list(tqdm(executor.map(process_single_image, tasks), total=len(tasks), desc="Bearbetar"))
+        results = list(tqdm(executor.map(process_single_image, tasks), total=len(tasks), desc="Bildbehandling"))
 
-    # Använd img2pdf för att skapa individuella PDF-sidor (behåller rådata)
+    # Använd img2pdf för att skapa individuella PDF-sidor
     pdf_pages = []
     for img_data, dpi in [r for r in results if r is not None]:
         layout = img2pdf.get_layout_fun(pagesize=(img2pdf.mm_to_pt(200), None))
@@ -96,7 +104,16 @@ def main(input_folder, output_filename, target_dpi=600):
             final_pdf.pages.extend(src.pages)
 
     final_pdf.save(output_filename)
+
+    # ⎯⎯ AVSLUTA OCH BERÄKNA TIDSSKILLNAD ⎯⎯
+    end_time = datetime.now()
+    duration = end_time - start_time  # Detta skapar ett timedelta-objekt
+
+    print("\n" + "⎯" * 30)
     print(f"Klar! Hybrid-PDF sparad som {output_filename}")
+    print(f"Sluttid: {end_time.strftime('%H:%M:%S')}")
+    print(f"Total tid: {duration}")
+    print("⎯" * 30)
 
 if __name__ == '__main__':
     home = os.path.expanduser("~")
