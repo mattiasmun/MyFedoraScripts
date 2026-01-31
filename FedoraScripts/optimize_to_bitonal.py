@@ -33,7 +33,16 @@ def process_single_image(args):
     try:
         # Extrahera JPEG-kvalitet med Pillow innan OpenCV tar över
         with Image.open(input_path) as pilot_img:
-            original_quality = pilot_img.info.get("quality", "Okänd")
+            # 1. Kolla om det är en JPG med direkt info
+            q_val = pilot_img.info.get("quality")
+
+            # 2. Om det är en WebP, kolla ImageDescription i EXIF
+            if q_val is None:
+                exif_data = pilot_img.getexif()
+                # 270 är tag-ID för ImageDescription
+                q_val = exif_data.get(270, "Okänd")
+
+            original_quality = q_val
 
         img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
         if img is None: return None
