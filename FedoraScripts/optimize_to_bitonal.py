@@ -31,6 +31,10 @@ def process_single_image(args):
     filename_lower = os.path.basename(input_path).lower()
 
     try:
+        # Extrahera JPEG-kvalitet med Pillow innan OpenCV tar över
+        with Image.open(input_path) as pilot_img:
+            original_quality = pilot_img.info.get("quality", "Okänd")
+
         img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
         if img is None: return None
 
@@ -74,7 +78,8 @@ def process_single_image(args):
             )
             final_img = Image.fromarray(bitonal).convert('1')
 
-        return final_img, actual_target_dpi
+        # Returnera bild, DPI och den hittade originalkvaliteten
+        return final_img, actual_target_dpi, original_quality
 
     except Exception as e:
         print(f"\nFel vid bearbetning av {input_path}: {e}")
@@ -105,7 +110,7 @@ def main(input_folder, output_filename, target_dpi=600):
 
     for i, result in enumerate(processed_images):
         if result is None: continue
-        img_obj, dpi = result
+        img_obj, dpi, quality = result
         img_w_px, img_h_px = img_obj.size
         is_landscape = img_w_px > img_h_px
         page_num = i + 1
@@ -124,7 +129,6 @@ def main(input_folder, output_filename, target_dpi=600):
         available_w = p_width - m_west - m_east
         available_h = p_height - m_north - m_south
 
-        # Bildens storlek i mm (omvandlat till punkter för ReportLab)
         draw_w = img_w_px * (72 / dpi)
         draw_h = img_h_px * (72 / dpi)
 
@@ -148,9 +152,14 @@ def main(input_folder, output_filename, target_dpi=600):
         img_reader = ImageReader(img_obj)
         c.drawImage(img_reader, x_pos, y_pos, width=draw_w, height=draw_h)
 
-        # 3. Lägg till sidnumrering (nere till höger)
+        # 3. Sidnumrering och kvalitetsinfo (nere till höger och vänster)
         c.setFont("Helvetica", 8)
         c.setFillColorRGB(0.5, 0.5, 0.5)
+
+        # Originalkvalitet till vänster
+        c.drawString(m_west, m_south / 2, f"Originalkvalitet: {quality}")
+
+        # Sidnummer till höger
         page_info = f"Sida {page_num} av {total_pages}"
         c.drawRightString(p_width - m_east, m_south / 2, page_info)
 
