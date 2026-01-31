@@ -188,18 +188,21 @@ def main(input_folder, output_filename, target_dpi=600):
 if __name__ == '__main__':
     import sys
 
-    # Kontrollera om användaren skickat med en mapp
+    # 1. Kontrollera att en mapp har skickats med som argument
     if len(sys.argv) < 2:
         print("Användning: python optimize_to_bitonal.py <mappsökväg>")
         sys.exit(1)
 
-    # Hämta mappen från terminal-argumentet
-    IN_MAP = os.path.abspath(sys.argv[1])
+    # 2. Hämta och städa upp sökvägen
+    input_path = os.path.abspath(sys.argv[1])
 
-    # Skapa filnamnet baserat på mappen, eller lägg det i mappen
-    UT_FIL = os.path.join(IN_MAP, "arkiv_slutversion.pdf")
+    # 3. Validera att det faktiskt är en mapp
+    if not os.path.isdir(input_path):
+        print(f"Fel: '{input_path}' är inte en giltig mapp.")
+        sys.exit(1)
 
-    if os.path.isdir(IN_MAP):
-        main(IN_MAP, UT_FIL)
-    else:
-        print(f"Fel: {IN_MAP} är inte en giltig mapp.")
+    # 4. Definiera utdatafilen i samma mapp
+    output_pdf = os.path.join(input_path, "arkiv_slutversion.pdf")
+
+    # 5. Kör huvudfunktionen
+    main(input_path, output_pdf)
