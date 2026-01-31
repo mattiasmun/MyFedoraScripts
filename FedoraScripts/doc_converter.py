@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import os
+import shutil
 import logging
 import argparse
 import subprocess
@@ -53,6 +54,8 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
     """
     Optimerar PDF med J2K, Bicubic subsampling och avancerad ström-kompression.
     """
+    temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
+
     try:
         size_before = os.path.getsize(pdf_path)
 
@@ -63,33 +66,13 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
         # J2K Metod (4) och Bicubic Subsampling (1)
-        opts.color_lossy_image_recompress_method = 4
-        opts.color_lossy_image_recompress_quality = "[20]"
-        opts.color_lossy_image_subsample_method = 1
-        opts.color_lossy_image_subsample_threshold = 210
-        opts.color_lossy_image_subsample_to = 200
+        for opt_set in ['color_lossy', 'gray_lossy', 'color_lossless', 'gray_lossless']:
+            setattr(opts, f"{opt_set}_image_recompress_method", 4)
+            setattr(opts, f"{opt_set}_image_recompress_quality", "[20]")
+            setattr(opts, f"{opt_set}_image_subsample_method", 1)
+            setattr(opts, f"{opt_set}_image_subsample_threshold", 210)
+            setattr(opts, f"{opt_set}_image_subsample_to", 200)
 
-        # Samma för gråskala
-        opts.gray_lossy_image_recompress_method = 4
-        opts.gray_lossy_image_recompress_quality = "[20]"
-        opts.gray_lossy_image_subsample_method = 1
-        opts.gray_lossy_image_subsample_threshold = 210
-        opts.gray_lossy_image_subsample_to = 200
-
-        # Tvinga även förlustfria bilder till J2K för maximal besparing
-        opts.color_lossless_image_recompress_method = 4
-        opts.color_lossless_image_recompress_quality = "[20]"
-        opts.color_lossless_image_subsample_method = 1
-        opts.color_lossless_image_subsample_threshold = 210
-        opts.color_lossless_image_subsample_to = 200
-        opts.gray_lossless_image_recompress_method = 4
-        opts.gray_lossless_image_recompress_quality = "[20]"
-        opts.gray_lossless_image_subsample_method = 1
-        opts.gray_lossless_image_subsample_threshold = 210
-        opts.gray_lossless_image_subsample_to = 200
-
-        # ⎯⎯ BITONALA BILDER (Svartvitt / 1-bit) ⎯⎯
-        # Vi använder Metod 5 (FAX/CCITT G4) för maximal skärpa och kompatibilitet
         opts.bitonal_image_recompress_method = 5
         opts.bitonal_image_subsample_method = 1
         opts.bitonal_image_subsample_threshold = 630
@@ -98,8 +81,9 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # 2. Spara till en minnesbuffert (bytearray) för att tillåta full optimering
-        buffer = doc.tobytes(
+        # 2. Spara direkt till den temporära filen på disk
+        doc.save(
+            temp_optimized,
             garbage=4,           # Maximal rensning av dubletter
             deflate=True,        # Komprimera alla strömmar
             use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
@@ -109,14 +93,16 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
         )
         doc.close()
 
-        # 3. Skriv över originalfilen med den optimerade datan
-        with open(pdf_path, "wb") as f:
-            f.write(buffer)
+        shutil.move(temp_optimized, pdf_path)
         size_after = os.path.getsize(pdf_path)
         return True, (size_before - size_after)
     except Exception as e:
         logging.error(f"OPTIMIZATION_ERROR på {pdf_path}: {e}")
         return False, 0
+    finally:
+        # Sista städning av temp-filen om den finns kvar
+        if os.path.exists(temp_optimized):
+            os.remove(temp_optimized)
 
 def run_verapdf_batch(directory: str) -> dict:
     """Kör veraPDF via batch-fil på Windows (Greenfield-version)."""
