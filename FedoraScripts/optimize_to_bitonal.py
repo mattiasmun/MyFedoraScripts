@@ -186,7 +186,20 @@ def main(input_folder, output_filename, target_dpi=600):
     print("⎯" * 40)
 
 if __name__ == '__main__':
-    home = os.path.expanduser("~")
-    IN_MAP = os.path.join(home, "Bilder")
+    import sys
+
+    # Kontrollera om användaren skickat med en mapp
+    if len(sys.argv) < 2:
+        print("Användning: python optimize_to_bitonal.py <mappsökväg>")
+        sys.exit(1)
+
+    # Hämta mappen från terminal-argumentet
+    IN_MAP = os.path.abspath(sys.argv[1])
+
+    # Skapa filnamnet baserat på mappen, eller lägg det i mappen
     UT_FIL = os.path.join(IN_MAP, "arkiv_slutversion.pdf")
-    main(IN_MAP, UT_FIL)
+
+    if os.path.isdir(IN_MAP):
+        main(IN_MAP, UT_FIL)
+    else:
+        print(f"Fel: {IN_MAP} är inte en giltig mapp.")
