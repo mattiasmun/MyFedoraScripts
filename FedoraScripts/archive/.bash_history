@@ -75,6 +75,7 @@ exit
 ffprobe --help
 ffprobe output.mp3
 fg
+file *
 find . -name "*~"
 find . -name "*~" -delete
 find . -type f -name '*++*'
@@ -94,6 +95,7 @@ fzf --multi --cycle
 fzf-select-open.sh
 gedit "$HOME/Men of War II/log/game.log"
 git --help
+git -C ~/Bash/MyFedoraScripts status
 git add *
 git clone https://git.sr.ht/~geb/dotool
 git difftool
@@ -170,8 +172,12 @@ nvtop
 ocr_optimize_cli.py --help
 ocr_optimize_cli.py .
 optimize_to_bitonal.py
+optimize_to_bitonal.py --help
 pdf_optimizer.py --help
 pdf_optimizer.py -i .
+pdfimages -list file-sample_100kB.pdf
+pdfimages -list file-sample_1MB.pdf
+pdfimages -list file-sample_500kB.pdf
 pdfimages -list optimerat_hybrid_arkiv.pdf
 pgrep firefox
 pgrep flatpak
