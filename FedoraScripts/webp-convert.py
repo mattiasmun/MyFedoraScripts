@@ -1,3 +1,4 @@
+#!/bin/python
 import os
 import glob
 import subprocess
@@ -5,16 +6,28 @@ from datetime import datetime
 from pathlib import Path
 from PIL import Image
 
+def log_message(message, log_file):
+    """Skriver ett meddelande till både terminalen och loggfilen."""
+    print(message)
+    with open(log_file, "a", encoding="utf-8") as f:
+        f.write(message + "\n")
+
 def convert_to_webp():
-    # Starta tidtagning
+    # Setup för tider och loggfil
     start_time = datetime.now()
-    print(f"Starttid: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print("⎯" * 50)
+    log_file = "conversion_log.txt"
+
+    # Initiera loggfilen med en rubrik
+    with open(log_file, "a", encoding="utf-8") as f:
+        f.write(f"\n{'='*50}\nNY KÖRNING: {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n{'='*50}\n")
+
+    log_message(f"Starttid: {start_time.strftime('%Y-%m-%d %H:%M:%S')}", log_file)
+    log_message("⎯" * 50, log_file)
 
     count = 0
     total_saved_bytes = 0
 
-    # Hitta JPG-filer (hanterar .jpg, .JPG, .jpeg, .JPEG)
+    # Hitta JPG-filer
     extensions = ('*.jpg', '*.jpeg', '*.JPG', '*.JPEG')
     files = []
     for ext in extensions:
@@ -33,8 +46,6 @@ def convert_to_webp():
                 # Om den inte hittas, faller vi tillbaka på 75
                 quality = img.info.get("quality", 75)
 
-                print(f"Bearbetar: {f} (Kvalitet: {quality})... ", end="", flush=True)
-
                 # 2. Spara som WebP via Pillow
                 img.save(output_path, "WEBP", quality=quality)
 
@@ -46,7 +57,7 @@ def convert_to_webp():
                 check=True
             )
 
-            # Statistik
+            # Beräkna besparing
             new_size = output_path.stat().st_size
             saved = old_size - new_size
             total_saved_bytes += saved
@@ -54,23 +65,23 @@ def convert_to_webp():
             # 4. Radera originalet
             file_path.unlink()
 
-            print(f"KLART ({saved / (1024*1024):.2f} MB sparade)")
+            log_message(f"Bearbetat: {f} | Kvalitet: {quality} | Sparat: {saved / (1024*1024):.2f} MB", log_file)
             count += 1
 
         except Exception as e:
-            print(f"\nFEL vid bearbetning av {f}: {e}")
+            log_message(f"FEL vid bearbetning av {f}: {str(e)}", log_file)
 
     # Slutlig rapport
     end_time = datetime.now()
     duration = end_time - start_time
     total_saved_mb = total_saved_bytes / (1024 * 1024)
 
-    print("⎯" * 50)
-    print("RESULTAT:")
-    print(f"Antal filer bearbetade: {count}")
-    print(f"Total plats sparad:     {total_saved_mb:.2f} MB")
-    print(f"Total tid (timedelta):  {duration}")
-    print("⎯" * 50)
+    log_message("⎯" * 50, log_file)
+    log_message("RESULTAT:", log_file)
+    log_message(f"Antal filer bearbetade: {count}", log_file)
+    log_message(f"Total plats sparad:     {total_saved_mb:.2f} MB", log_file)
+    log_message(f"Total tid (timedelta):  {duration}", log_file)
+    log_message("⎯" * 50, log_file)
 
 if __name__ == "__main__":
     convert_to_webp()
