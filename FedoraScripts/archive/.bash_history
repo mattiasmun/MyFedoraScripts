@@ -148,7 +148,6 @@ man dotool
 man fzf
 man ocrmypdf
 man wlrctl
-mediainfo
 meld "$HOME/.bash_history" "$HOME/.bash_history2" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history" &
 meld "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc" &
 meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py" &
