@@ -16,48 +16,28 @@ except ImportError as e:
     print(f"Details: {e}")
     exit(1)
 
-def process_file(input_path, output_path):
+def process_file(pdf_path, output_path):
     """
     1. Optimerar bilder till 200 DPI via PyMuPDF (J2K + Bicubic).
     2. Kör OCRmyPDF för textigenkänning och PDF/A-3 arkivering.
     """
-    temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(input_path)}"
+    temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
 
     try:
-        doc = pymupdf.open(input_path)
+        doc = pymupdf.open(pdf_path)
 
         # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
         # Konfigurera omskrivning av bilder (J2K + Bicubic + 200 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
         # J2K Metod (4) och Bicubic Subsampling (1)
-        opts.color_lossy_image_recompress_method = 4
-        opts.color_lossy_image_recompress_quality = "[20]"
-        opts.color_lossy_image_subsample_method = 1
-        opts.color_lossy_image_subsample_threshold = 210
-        opts.color_lossy_image_subsample_to = 200
+        for opt_set in ['color_lossy', 'gray_lossy', 'color_lossless', 'gray_lossless']:
+            setattr(opts, f"{opt_set}_image_recompress_method", 4)
+            setattr(opts, f"{opt_set}_image_recompress_quality", "[20]")
+            setattr(opts, f"{opt_set}_image_subsample_method", 1)
+            setattr(opts, f"{opt_set}_image_subsample_threshold", 210)
+            setattr(opts, f"{opt_set}_image_subsample_to", 200)
 
-        # Samma för gråskala
-        opts.gray_lossy_image_recompress_method = 4
-        opts.gray_lossy_image_recompress_quality = "[20]"
-        opts.gray_lossy_image_subsample_method = 1
-        opts.gray_lossy_image_subsample_threshold = 210
-        opts.gray_lossy_image_subsample_to = 200
-
-        # Tvinga även förlustfria bilder till J2K för maximal besparing
-        opts.color_lossless_image_recompress_method = 4
-        opts.color_lossless_image_recompress_quality = "[20]"
-        opts.color_lossless_image_subsample_method = 1
-        opts.color_lossless_image_subsample_threshold = 210
-        opts.color_lossless_image_subsample_to = 200
-        opts.gray_lossless_image_recompress_method = 4
-        opts.gray_lossless_image_recompress_quality = "[20]"
-        opts.gray_lossless_image_subsample_method = 1
-        opts.gray_lossless_image_subsample_threshold = 210
-        opts.gray_lossless_image_subsample_to = 200
-
-        # ⎯⎯ BITONALA BILDER (Svartvitt / 1-bit) ⎯⎯
-        # Vi använder Metod 5 (FAX/CCITT G4) för maximal skärpa och kompatibilitet
         opts.bitonal_image_recompress_method = 5
         opts.bitonal_image_subsample_method = 1
         opts.bitonal_image_subsample_threshold = 630
@@ -66,8 +46,9 @@ def process_file(input_path, output_path):
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # 2. Spara till en minnesbuffert (bytearray) för att tillåta full optimering
-        buffer = doc.tobytes(
+        # 2. Spara direkt till den temporära filen på disk
+        doc.save(
+            temp_optimized,
             garbage=4,           # Maximal rensning av dubletter
             deflate=True,        # Komprimera alla strömmar
             use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
@@ -77,9 +58,6 @@ def process_file(input_path, output_path):
         )
         doc.close()
 
-        # 3. Skriv över originalfilen med den optimerade datan
-        with open(temp_optimized, "wb") as f:
-            f.write(buffer)
         # ⎯⎯ STEG 2: OCRMYPDF (OCR & ARKIVERING) ⎯⎯
         # Eftersom vi redan har optimerat bilderna kan vi sänka kraven i ocrmypdf
         ocrmypdf.ocr(
@@ -98,6 +76,7 @@ def process_file(input_path, output_path):
         tqdm.write(f"!!! Ett fel uppstod vid bearbetning av {os.path.basename(input_path)}: {e}")
         return False
     finally:
+        # Sista städning av temp-filen om den finns kvar
         if os.path.exists(temp_optimized):
             os.remove(temp_optimized)
 

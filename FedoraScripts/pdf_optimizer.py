@@ -82,11 +82,14 @@ def is_already_optimized(doc) -> bool:
 # ⎯⎯ Core Processing Function ⎯⎯
 
 def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: str, force: bool) -> tuple[int, bool, int]:
+    # Skapa ett unikt namn för den temporära filen baserat på process-ID
+    temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
+
     try:
         size_before = os.path.getsize(pdf_path)
         doc = pymupdf.open(pdf_path)
 
-        # Smart Check: Hoppa över om den redan är optimerad (om inte --force används)
+        # Smart Check: Hoppa över om den redan är optimerad
         if not force and is_already_optimized(doc):
             doc.close()
             return PDF_ALREADY_OPTIMIZED, False, 0
@@ -96,33 +99,13 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
         # J2K Metod (4) och Bicubic Subsampling (1)
-        opts.color_lossy_image_recompress_method = 4
-        opts.color_lossy_image_recompress_quality = "[20]"
-        opts.color_lossy_image_subsample_method = 1
-        opts.color_lossy_image_subsample_threshold = 210
-        opts.color_lossy_image_subsample_to = 200
+        for opt_set in ['color_lossy', 'gray_lossy', 'color_lossless', 'gray_lossless']:
+            setattr(opts, f"{opt_set}_image_recompress_method", 4)
+            setattr(opts, f"{opt_set}_image_recompress_quality", "[20]")
+            setattr(opts, f"{opt_set}_image_subsample_method", 1)
+            setattr(opts, f"{opt_set}_image_subsample_threshold", 210)
+            setattr(opts, f"{opt_set}_image_subsample_to", 200)
 
-        # Samma för gråskala
-        opts.gray_lossy_image_recompress_method = 4
-        opts.gray_lossy_image_recompress_quality = "[20]"
-        opts.gray_lossy_image_subsample_method = 1
-        opts.gray_lossy_image_subsample_threshold = 210
-        opts.gray_lossy_image_subsample_to = 200
-
-        # Tvinga även förlustfria bilder till J2K för maximal besparing
-        opts.color_lossless_image_recompress_method = 4
-        opts.color_lossless_image_recompress_quality = "[20]"
-        opts.color_lossless_image_subsample_method = 1
-        opts.color_lossless_image_subsample_threshold = 210
-        opts.color_lossless_image_subsample_to = 200
-        opts.gray_lossless_image_recompress_method = 4
-        opts.gray_lossless_image_recompress_quality = "[20]"
-        opts.gray_lossless_image_subsample_method = 1
-        opts.gray_lossless_image_subsample_threshold = 210
-        opts.gray_lossless_image_subsample_to = 200
-
-        # ⎯⎯ BITONALA BILDER (Svartvitt / 1-bit) ⎯⎯
-        # Vi använder Metod 5 (FAX/CCITT G4) för maximal skärpa och kompatibilitet
         opts.bitonal_image_recompress_method = 5
         opts.bitonal_image_subsample_method = 1
         opts.bitonal_image_subsample_threshold = 630
@@ -131,8 +114,9 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # 2. Spara till en minnesbuffert (bytearray) för att tillåta full optimering
-        buffer = doc.tobytes(
+        # 2. Spara direkt till den temporära filen på disk
+        doc.save(
+            temp_optimized,
             garbage=4,           # Maximal rensning av dubletter
             deflate=True,        # Komprimera alla strömmar
             use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
@@ -142,15 +126,25 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         )
         doc.close()
 
-        # 3. Skriv över originalfilen med den optimerade datan
-        with open(pdf_path, "wb") as f:
-            f.write(buffer)
-        size_after = os.path.getsize(pdf_path)
+        # 3. Kontrollera storlek innan överskrivning
+        size_after = os.path.getsize(temp_optimized)
         bytes_saved = size_before - size_after
 
-        return PDF_SUCCESS, bytes_saved > 0, bytes_saved
+        if bytes_saved > 0:
+            # Filen blev mindre - ersätt originalet
+            shutil.move(temp_optimized, pdf_path)
+            return PDF_SUCCESS, True, bytes_saved
+        else:
+            # Ingen vinst - behåll originalet och ta bort temp-filen
+            if os.path.exists(temp_optimized):
+                os.remove(temp_optimized)
+            return PDF_SKIPPED, False, 0
 
     except Exception as e:
+        # Vid fel: Flytta originalet till corrupt-mappen
+        if 'doc' in locals():
+            doc.close()
+
         filename = os.path.basename(pdf_path)
         dest_path = os.path.join(corrupt_dir, filename)
 
@@ -163,6 +157,10 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
             logging.error(f"ERROR: '{pdf_path}' flyttad. Fel: {e}")
         except: pass
         return PDF_FAIL, False, 0
+    finally:
+        # Sista städning av temp-filen om den finns kvar
+        if os.path.exists(temp_optimized):
+            os.remove(temp_optimized)
 
 def process_directory_recursively(args: argparse.Namespace) -> dict:
     results = {
