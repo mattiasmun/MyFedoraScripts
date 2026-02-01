@@ -12,14 +12,14 @@ Set-Location $HOME
 # ⎯⎯ Custom Executable Paths (REQUIRED IF NOT IN SYSTEM PATH) ⎯⎯
 # Set these paths to your custom installation locations.
 # IMPORTANT: Use the full path to the executable file (e.g., C:\Program Files\qpdf\bin\qpdf.exe)
-$global:QPDFPath = "C:\Users\ai21558\Program\qpdf-12.2.0-mingw64\bin\qpdf.exe"
-$global:RocketPDFPath = "C:\Users\ai21558\AppData\Local\Python\pythoncore-3.14-64\Scripts\rocketpdf.exe"
+$global:QPDFPath = Join-Path $HOME "Program\qpdf-12.2.0-mingw64\bin\qpdf.exe"
+$global:RocketPDFPath = Join-Path $HOME "AppData\Local\Python\pythoncore-3.14-64\Scripts\rocketpdf.exe"
 
 # ⎯⎯ New Paths for Java and VeraPDF Validation ⎯⎯
 # JavaPath should point directly to the java.exe executable.
-$global:JavaPath = "C:\Users\ai21558\Program\jdk-24.0.1\bin\java.exe"
+$global:JavaPath = Join-Path $HOME "Program\jdk-24.0.1\bin\java.exe"
 # VeraPDFPath should point directly to the vera-pdf-cli.jar file.
-$global:VeraPDFPath = "C:\Users\ai21558\Program\verapdf-greenfield-1.28.1\verapdf-gui.bat"
+$global:VeraPDFPath = Join-Path $HOME "Program\verapdf-greenfield-1.28.1\verapdf-gui.bat"
 
 # ⎯⎯ Executable Wrapper Functions ⎯⎯
 
@@ -69,7 +69,7 @@ function verapdf-gui {
 }
 
 # ⎯⎯ Set Default Location for Custom Scripts ⎯⎯
-$ScriptPathPlaceholder = "C:\Users\ai21558\Program"
+$ScriptPathPlaceholder = Join-Path $HOME "Program"
 $PlaceholderCheck = "C:\Your\Path\To\Scripts"
 $DefaultScriptPath = Join-Path $HOME "Documents\PowerShellScripts"
 
@@ -128,8 +128,7 @@ if ($Host.Name -eq 'ConsoleHost') {
     Write-Host "→ Terminal started in: $PWD" -ForegroundColor Gray
     Write-Host "→ Determined Script Path: '$ScriptPath'" -ForegroundColor Yellow
 
-    # Load-CustomScript -FileName "Test-And-Clean-PdfValidity.ps1" -BaseDir $ScriptPath -AnAlias tpdf
-    # Load-CustomScript -FileName "Convert-Docs-And-Validate.ps1" -BaseDir $ScriptPath -AnAlias cdocs
+    # Load-CustomScript -FileName "Example.ps1" -BaseDir $ScriptPath -AnAlias ex
 
     # Check Wrapper Functions inkl. nya pip
     @("verapdf-gui", "pip") | ForEach-Object {
@@ -140,6 +139,6 @@ if ($Host.Name -eq 'ConsoleHost') {
             Write-Host "  ❌ Wrapper Function '$_' is MISSING. Check wrapper function definition." -ForegroundColor Red
         }
     }
-    
+
     Write-Host "⎯⎯ Ready to use 'pip', 'verapdf-gui' ⎯⎯" -ForegroundColor Cyan
 }
