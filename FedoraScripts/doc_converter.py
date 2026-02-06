@@ -105,33 +105,40 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
             os.remove(temp_optimized)
 
 def run_verapdf_batch(directory: str) -> dict:
-    """Kör veraPDF via batch-fil på Windows (Greenfield-version)."""
+    """Kör veraPDF via batch-fil på Windows med rekursiv sökning."""
     results = {}
-    
-    # Vi expanderar $HOME (som i Windows motsvaras av %USERPROFILE%)
-    # Vi lägger även till \verapdf.bat – kontrollera om den ligger direkt här eller i \bin\
+
     home = os.path.expanduser("~")
     verapdf_path = os.path.join(home, "Program", "verapdf-greenfield-1.28.1", "verapdf.bat")
-    
-    # Om filen ligger i en bin-mapp, ändra till:
-    # verapdf_path = os.path.join(home, "Program", "verapdf-greenfield-1.28.1", "bin", "verapdf.bat")
 
     try:
-        # På Windows krävs shell=True för att köra .bat-filer via subprocess
-        cmd = [verapdf_path, "--format", "xml", directory]
+        # 1. Vi lägger till -r för att söka i mappen
+        # 2. Vi behåller --format xml för att kunna parsa resultatet
+        cmd = [verapdf_path, "--format", "xml", "-r", directory]
+
+        # shell=True behövs på Windows för .bat-filer
         process = subprocess.run(cmd, capture_output=True, text=True, shell=True)
 
         if process.returncode != 0:
             logging.error(f"veraPDF exekverades med felkod: {process.returncode}")
+            # Skriv ut stderr för att underlätta felsökning om sökvägen är fel
+            logging.error(f"Felmeddelande: {process.stderr}")
+            return results
+
+        if not process.stdout.strip():
+            logging.warning("veraPDF returnerade ingen data.")
             return results
 
         root = ET.fromstring(process.stdout)
-        # Namespace hantering kan behövas beroende på veraPDF version,
-        # men ofta fungerar findall med wildcard.
-        for item in root.findall('.//item'):
-            name_node = item.find('name')
-            compliant_node = item.find('.//compliant')
+
+        # veraPDF:s XML-rapport (MRR) har ofta ett namespace.
+        # Vi använder en sökning som ignorerar namespace för att vara robusta.
+        for item in root.findall('.//{*}item'):
+            name_node = item.find('{*}name')
+            compliant_node = item.find('.//{*}compliant')
+
             if name_node is not None and compliant_node is not None:
+                # Vi tar bara filnamnet för att matcha mot din stats-logik
                 filename = os.path.basename(name_node.text)
                 is_compliant = compliant_node.text.lower() == 'true'
                 results[filename] = is_compliant
