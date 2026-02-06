@@ -63,9 +63,13 @@ function verapdf-gui {
         return
     }
 
-    # Call java.exe with the -jar argument pointing to the VeraPDF jar,
-    # followed by all arguments passed to verapdf-cli function.
-    & $global:VeraPDFPath @($args)
+    $processParams = @{
+        FilePath     = $global:VeraPDFPath
+        WindowStyle  = 'Hidden'
+        # Vi skickar med eventuella argument som matats in i funktionen
+        ArgumentList = $args
+    }
+    Start-Process @processParams
 }
 
 # ⎯⎯ Set Default Location for Custom Scripts ⎯⎯
