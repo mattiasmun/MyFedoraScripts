@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 import cv2
 import os
 import numpy as np
@@ -138,20 +138,28 @@ def main(input_folder, output_filename, target_dpi=600):
         available_w = p_width - m_west - m_east
         available_h = p_height - m_north - m_south
 
+        # Beräkna bildens storlek i PDF-punkter (1/72 tum) baserat på vald DPI
         draw_w = img_w_px * (72 / dpi)
         draw_h = img_h_px * (72 / dpi)
 
-        # Säkerställ att bilden inte överskrider ritytan (vid avrundningsfel)
+        # Centrera horisontellt (X-axeln)
+        # Vi tar sidans bredd, drar av bildens bredd och delar på två
+        x_pos = (p_width - draw_w) / 2
+
+        # Placera i toppen (Y-axeln)
+        # Vi tar sidans höjd minus den norra marginalen minus bildens egen höjd
+        y_pos = p_height - m_north - draw_h
+
+        # (Valfritt) Kontrollera om bilden är för stor för papperet
         if draw_w > available_w or draw_h > available_h:
+            # Om bilden är fysiskt större än papperet, skala ner den så den får plats
             ratio = min(available_w / draw_w, available_h / draw_h)
             draw_w *= ratio
             draw_h *= ratio
+            x_pos = (p_width - draw_w) / 2
+            y_pos = p_height - m_north - draw_h
 
-        # Centrera position
-        x_pos = m_west + (available_w - draw_w) / 2
-        y_pos = m_south + (available_h - draw_h) / 2
-
-        # Grå ram
+        # Grå ram (frivillig, markerar bildens yta)
         c.setStrokeColorRGB(0.7, 0.7, 0.7)
         c.setLineWidth(0.2)
         c.rect(x_pos, y_pos, draw_w, draw_h, stroke=1, fill=0)

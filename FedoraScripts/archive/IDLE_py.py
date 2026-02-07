@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 exec("""import gmpy2 as gp
 import numpy as np
 from timeit import timeit
