@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 from tsp_solver.greedy_numpy import solve_tsp
 from tsp_solver.demo.tsp import make_dist_matrix
 

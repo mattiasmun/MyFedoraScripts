@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import subprocess
 import os
 import sys
@@ -66,7 +66,7 @@ def convert_to_pdfa3(input_pdf, output_pdf, attachments=None):
         if os.path.exists("temp_pdfa_def.ps"):
             os.remove("temp_pdfa_def.ps")
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) >= 3:
         input_f = sys.argv[1]
         output_f = sys.argv[2]
@@ -75,3 +75,6 @@ if __name__ == "__main__":
     else:
         print("\nAnvändning:")
         print("  python save_as_pdfa.py indata.pdf utdata.pdf [bilaga1 bilaga2 …]\n")
+
+if __name__ == "__main__":
+    main()
