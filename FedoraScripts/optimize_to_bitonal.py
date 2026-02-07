@@ -47,15 +47,19 @@ def process_single_image(args):
         img = cv2.imread(input_path, cv2.IMREAD_GRAYSCALE)
         if img is None: return None
 
-        # Bestäm orientering för skalning
+        # ⎯⎯ DETEKTERING AV TOM SIDA ⎯⎯
+        # Om standardavvikelsen är mycket låg (t.ex. under 8) är bilden troligen tom.
+        if np.std(img) < 8:
+            return "EMPTY"
+
         h_orig, w_orig = img.shape[:2]
         is_landscape = w_orig > h_orig
 
         # Sätt måtten enligt önskemål
         if is_landscape:
-            target_w_mm, target_h_mm = 271.6, 182.3
+            target_w_mm = 271.6
         else:
-            target_w_mm, target_h_mm = 182.3, 271.6
+            target_w_mm = 182.3
 
         # Bestäm läge (Foto vs Dokument)
         if "foto" in filename_lower:
@@ -63,9 +67,7 @@ def process_single_image(args):
         elif "doc" in filename_lower:
             is_photo = False
         else:
-            # Automatisk detektering om inget nyckelord finns
-            std_dev = np.std(img)
-            is_photo = std_dev < 45
+            is_photo = np.std(img) < 45
 
         # Skalning baserat på mål-bredd (mm till inches för DPI-beräkning)
         actual_target_dpi = photo_target_dpi if is_photo else doc_target_dpi
@@ -73,16 +75,26 @@ def process_single_image(args):
         required_pixels_width = int(target_w_inches * actual_target_dpi)
         scale_factor = required_pixels_width / w_orig
 
-        img_resized = cv2.resize(img, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LANCZOS4)
+        # ⎯⎯ SMART SKALNINGSLOGIK ⎯⎯
+        if is_photo:
+            if scale_factor > 1.0: scale_factor = 1.0
+            interp = cv2.INTER_AREA
+        else:
+            if scale_factor > 3.0: scale_factor = 3.0
+            interp = cv2.INTER_LANCZOS4 if scale_factor > 1.0 else cv2.INTER_AREA
+
+        img_resized = cv2.resize(img, None, fx=scale_factor, fy=scale_factor, interpolation=interp)
         img_processed = deskew_image(img_resized)
 
         if is_photo:
             final_img = Image.fromarray(img_processed).convert('L')
         else:
+            # Tvätta bort brus innan bitonal konvertering
+            img_blurred = cv2.medianBlur(img_processed, 3)
             # Adaptiv tröskel för dokument (Ger ren 1-bit för CCITT)
             # block_size=11 och C=2 är bra standardvärden för text
             bitonal = cv2.adaptiveThreshold(
-                img_processed, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                img_blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                 cv2.THRESH_BINARY, 11, 2
             )
             final_img = Image.fromarray(bitonal).convert('1')
@@ -111,14 +123,19 @@ def main(input_folder, output_filename, target_dpi=600):
     tasks = [(f, target_dpi) for f in files]
 
     with ProcessPoolExecutor() as executor:
-        processed_images = list(tqdm(executor.map(process_single_image, tasks), total=len(tasks), desc="Bildbehandling"))
+        results = list(tqdm(executor.map(process_single_image, tasks), total=len(tasks), desc="Bildbehandling"))
 
-    # 2. Skapa PDF med ReportLab
+    # Filtrera bort None och "EMPTY"
+    valid_results = [r for r in results if r is not None and r != "EMPTY"]
+    total_pages = len(valid_results)
+
+    if total_pages == 0:
+        print("Inga sidor kvar efter filtrering av tomma bilder.")
+        return
+
     c = canvas.Canvas(output_filename)
-    total_pages = len([r for r in processed_images if r is not None])
 
-    for i, result in enumerate(processed_images):
-        if result is None: continue
+    for i, result in enumerate(valid_results):
         img_obj, dpi, quality = result
         img_w_px, img_h_px = img_obj.size
         is_landscape = img_w_px > img_h_px
@@ -142,34 +159,26 @@ def main(input_folder, output_filename, target_dpi=600):
         draw_w = img_w_px * (72 / dpi)
         draw_h = img_h_px * (72 / dpi)
 
-        # Centrera horisontellt (X-axeln)
-        # Vi tar sidans bredd, drar av bildens bredd och delar på två
-        x_pos = (p_width - draw_w) / 2
-
-        # Placera i toppen (Y-axeln)
-        # Vi tar sidans höjd minus den norra marginalen minus bildens egen höjd
-        y_pos = p_height - m_north - draw_h
-
-        # (Valfritt) Kontrollera om bilden är för stor för papperet
+        # Skala ner om bilden fysiskt inte får plats på papperet
         if draw_w > available_w or draw_h > available_h:
-            # Om bilden är fysiskt större än papperet, skala ner den så den får plats
             ratio = min(available_w / draw_w, available_h / draw_h)
             draw_w *= ratio
             draw_h *= ratio
-            x_pos = (p_width - draw_w) / 2
-            y_pos = p_height - m_north - draw_h
 
-        # Grå ram (frivillig, markerar bildens yta)
+        # Position: Centrerad horisontellt, toppen av sidan vertikalt
+        x_pos = (p_width - draw_w) / 2
+        y_pos = p_height - m_north - draw_h
+
+        # Grå ram
         c.setStrokeColorRGB(0.7, 0.7, 0.7)
         c.setLineWidth(0.2)
         c.rect(x_pos, y_pos, draw_w, draw_h, stroke=1, fill=0)
 
         # Rita bild
         from reportlab.lib.utils import ImageReader
-        img_reader = ImageReader(img_obj)
-        c.drawImage(img_reader, x_pos, y_pos, width=draw_w, height=draw_h)
+        c.drawImage(ImageReader(img_obj), x_pos, y_pos, width=draw_w, height=draw_h)
 
-        # 3. Sidnumrering och kvalitetsinfo (nere till höger och vänster)
+        # Sidinfo
         c.setFont("Helvetica", 8)
         c.setFillColorRGB(0.5, 0.5, 0.5)
 
