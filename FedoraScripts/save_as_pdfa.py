@@ -10,7 +10,7 @@ def get_icc_paths():
         # För MSYS2 UCRT64 på Windows.
         # Vi försöker hitta msys64-roten dynamiskt eller antar standard C:/msys64
         msys_root = os.environ.get("MSYSTEM_PREFIX", "C:/msys64/ucrt64")
-        # Om vi kör inifrån MSYS2-shell (bash) fungerar /ucrt64/... direkt,
+        # Om vi kör inifrån MSYS2-shell (bash) fungerar /ucrt64/… direkt,
         # men för nativ Python är det säkrast med fullständiga Windows-sökvägar.
         base_path = f"{msys_root}/share/ghostscript/10.05.1/iccprofiles"
 
