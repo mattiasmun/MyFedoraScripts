@@ -3,22 +3,42 @@ import subprocess
 import os
 import sys
 
-def create_pdfa_def(attachment_paths=None, part=3, conformance="B"):
-    """Skapar en temporär PDFA_def.ps fil med stöd för flera bilagor."""
-    ps_content = f"""%!
-[/Value ({part}) /T (part) /DIR {{systemdict /pdfmark get}} cvx /DOCINFO pdfmark
-[/Value ({conformance}) /T (conformance) /DIR {{systemdict /pdfmark get}} cvx /DOCINFO pdfmark
-[/ICCProfile (srgb.icc) /DestOutputProfile {{systemdict /pdfmark get}} cvx /DESTINATION pdfmark
-"""
+# Sökvägar till ICC-profiler
+ICC_RGB = "/usr/share/ghostscript/iccprofiles/srgb.icc"
+ICC_GRAY = "/usr/share/ghostscript/iccprofiles/sgray.icc"
 
+def create_pdfa_def(attachment_paths=None, part=3, conformance="B"):
+    """Skapar PDFA_def.ps med extra tydlig metadata för att tillfredsställa VeraPDF."""
+    icc_rgb_abs = os.path.abspath(ICC_RGB).replace("\\", "/")
+    icc_gray_abs = os.path.abspath(ICC_GRAY).replace("\\", "/")
+
+    ps_content = f"""%!
+% 1. Metadata
+[ /Part {part} /Conformance ({conformance}) /DOCINFO pdfmark
+
+% 2. Define ICC Profile Object
+[/_objdef {{icc_obj}} /type /stream /OBJ pdfmark
+[{{icc_obj}} ({icc_rgb_abs}) (r) file /PUT pdfmark
+[{{icc_obj}} << /N 3 /Alternate /DeviceRGB >> /PUT pdfmark
+
+% 3. Set OutputIntent (Crucial for RGB Validation)
+[ /ICCProfile {{icc_obj}}
+  /Subtype /GTS_PDFA1
+  /OutputConditionIdentifier (sRGB)
+  /RegistryName (http://www.color.org)
+  /Info (sRGB IEC61966-2.1)
+  /DESTINATION pdfmark
+
+% 4. Force Default Color Spaces to use the ICC profiles
+/CurrentStd {{{{ /DefaultRGB /ICCBased {{icc_obj}} /SETPS pdfmark }}}} def
+CurrentStd
+"""
     if attachment_paths:
         ps_content += "\n% --- Inbäddning av bilagor ---\n"
         for i, path in enumerate(attachment_paths):
             file_name = os.path.basename(path)
-            # Vi använder absoluta sökvägar i PS-filen för att undvika problem
             abs_path = os.path.abspath(path).replace("\\", "/")
             obj_name = f"EmbedObj{i}"
-
             ps_content += f"""
 [/_objdef {{{obj_name}}} /type /stream /OBJ pdfmark
 [{{{obj_name}}} << /Type /EmbeddedFile /Subtype (application/octet-stream) >> /PUT pdfmark
@@ -31,37 +51,61 @@ def create_pdfa_def(attachment_paths=None, part=3, conformance="B"):
         f.write(ps_content)
 
 def convert_to_pdfa3(input_pdf, output_pdf, attachments=None):
-    # --- NYHET: Validering av filer innan körning ---
+    if not os.path.exists(input_pdf) or not os.path.exists(ICC_RGB):
+        print("FEL: Indata eller ICC-profil saknas.")
+        return
+
     if attachments:
         missing_files = [f for f in attachments if not os.path.exists(f)]
         if missing_files:
             print(f"FEL: Följande bilagor saknas: {', '.join(missing_files)}")
             return
 
-    if not os.path.exists("srgb.icc"):
-        print("VARNING: srgb.icc saknas i mappen. Validering kan misslyckas.")
-
-    # 1. Skapa definitionsfilen
+    # Skapa definitionsfilen
     create_pdfa_def(attachments)
 
-    # 2. Ghostscript-kommando
+    # Ghostscript-kommando optimerat för PDF/A-3b validering
     gs_command = [
-        "gswin64c", "-dPDFA=3", "-dBATCH", "-dNOPAUSE",
-        "-sColorConversionStrategy=UseDeviceIndependentColor",
+        "gs",
+        "-dPDFA=3",
+        "-dBATCH",
+        "-dNOPAUSE",
+        "-dNOOUTERSAVE",
         "-sDEVICE=pdfwrite",
         "-dPDFACompatibilityPolicy=1",
+        "-sColorConversionStrategy=UseDeviceIndependentColor",
+        "-dProcessColorModel=/DeviceRGB",
+        "-dOverrideICC=true",
+        "-dRenderIntent=1",             # Relative Colorimetric (viktigt för PDF/A)
+        "-dEmbedAllFonts=true",         # Tvingar in Nimbus/Helvetica
+        "-dSubsetFonts=true",           # Minskar filstorlek men behåller inbäddning
+        "-dPDFSETTINGS=/prepress",      # Högsta kvalitet, tvingar inbäddning
         f"-sOutputFile={output_pdf}",
-        "temp_pdfa_def.ps",
-        input_pdf
+        "-f", "temp_pdfa_def.ps",
+        "-f", input_pdf
     ]
 
     try:
-        print("Konverterar…")
-        subprocess.run(gs_command, check=True)
-        status = f"med {len(attachments)} bilagor" if attachments else "utan bilagor"
-        print(f"Klart! '{output_pdf}' är nu en PDF/A-3b {status}.")
+        print(f"Konverterar '{input_pdf}'…")
+        result = subprocess.run(gs_command, capture_output=True, text=True)
+
+        if result.stdout:
+            print("--- Ghostscript Logg ---")
+            print(result.stdout)
+
+        if result.stderr:
+            print("--- Ghostscript Debug/Fel ---")
+            print(result.stderr)
+
+        if result.returncode == 0:
+            print(f"Klart! '{output_pdf}' har skapats.")
+            if attachments:
+                print(f"Bäddade in {len(attachments)} bilagor.")
+        else:
+            print("Ett fel uppstod vid konverteringen.")
+
     except Exception as e:
-        print(f"Ett fel uppstod: {e}")
+        print(f"Ett oväntat fel uppstod: {e}")
     finally:
         if os.path.exists("temp_pdfa_def.ps"):
             os.remove("temp_pdfa_def.ps")
@@ -73,8 +117,7 @@ def main():
         attach_f = sys.argv[3:] if len(sys.argv) > 3 else None
         convert_to_pdfa3(input_f, output_f, attach_f)
     else:
-        print("\nAnvändning:")
-        print("  python save_as_pdfa.py indata.pdf utdata.pdf [bilaga1 bilaga2 …]\n")
+        print("\nAnvändning: python save_as_pdfa.py <indata.pdf> <utdata.pdf> [bilaga1 bilaga2 …]")
 
 if __name__ == "__main__":
     main()

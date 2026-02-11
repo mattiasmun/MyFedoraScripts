@@ -18,7 +18,7 @@ except ImportError as e:
 
 def process_file(pdf_path, output_path):
     """
-    1. Optimerar bilder till 200 DPI via PyMuPDF (J2K + Bicubic).
+    1. Optimerar bilder till 200 DPI via PyMuPDF (JPEG + Bicubic).
     2. Kör OCRmyPDF för textigenkänning och PDF/A-3 arkivering.
     """
     temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
@@ -27,13 +27,13 @@ def process_file(pdf_path, output_path):
         doc = pymupdf.open(pdf_path)
 
         # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
-        # Konfigurera omskrivning av bilder (J2K + Bicubic + 200 DPI)
+        # Konfigurera omskrivning av bilder (JPEG + Bicubic + 200 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
-        # J2K Metod (4) och Bicubic Subsampling (1)
+        # JPEG Metod (3) och Bicubic Subsampling (1)
         for opt_set in ['color_lossy', 'gray_lossy', 'color_lossless', 'gray_lossless']:
-            setattr(opts, f"{opt_set}_image_recompress_method", 4)
-            setattr(opts, f"{opt_set}_image_recompress_quality", "[20]")
+            setattr(opts, f"{opt_set}_image_recompress_method", 3)
+            setattr(opts, f"{opt_set}_image_recompress_quality", "75")
             setattr(opts, f"{opt_set}_image_subsample_method", 1)
             setattr(opts, f"{opt_set}_image_subsample_threshold", 210)
             setattr(opts, f"{opt_set}_image_subsample_to", 200)

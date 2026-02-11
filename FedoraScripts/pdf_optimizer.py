@@ -38,13 +38,13 @@ def setup_logging(source_dir: str) -> str:
         format='%(asctime)s - %(levelname)s - %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
-    logging.info("⎯⎯ PDF Advanced Optimizer Start (Smart Check + J2K + PDF 1.5) ⎯⎯")
+    logging.info("⎯⎯ PDF Advanced Optimizer Start (Smart Check + JPEG + PDF 1.5) ⎯⎯")
     return LOG_FILE
 
 def is_already_optimized(doc) -> bool:
     """
     Kollar om filen redan är optimerad genom att kontrollera version
-    och om bilderna använder JPXDecode (JPEG 2000).
+    och om bilderna använder DCTDecode (JPEG).
     """
     # Kolla version (måste vara 1.5 eller högre)
     v_str = doc.metadata.get("format", "1.0")
@@ -57,7 +57,7 @@ def is_already_optimized(doc) -> bool:
     if version < 1.5:
         return False
 
-    # Stickprov på de första bilderna för att se om de använder J2K (JPXDecode)
+    # Stickprov på de första bilderna för att se om de använder JPEG (DCTDecode)
     try:
         # Sök efter första bilden i hela dokumentet istället för bara sida 0
         found_image = False
@@ -67,7 +67,7 @@ def is_already_optimized(doc) -> bool:
                 found_image = True
                 for img in img_list[:2]: # Kolla de första två bilderna på den sidan
                     xref = img[0]
-                    if "JPXDecode" in doc.xref_object(xref):
+                    if "DCTDecode" in doc.xref_object(xref):
                         return True
                 break # Vi hittade bilder men ingen var JPX, gå till return False
 
@@ -90,18 +90,18 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         doc = pymupdf.open(pdf_path)
 
         # Smart Check: Hoppa över om den redan är optimerad
-        if not force and is_already_optimized(doc):
-            doc.close()
-            return PDF_ALREADY_OPTIMIZED, False, 0
+        #if not force and is_already_optimized(doc):
+        #    doc.close()
+        #    return PDF_ALREADY_OPTIMIZED, False, 0
 
         # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
-        # Konfigurera omskrivning av bilder (J2K + Bicubic + 200 DPI)
+        # Konfigurera omskrivning av bilder (JPEG + Bicubic + 200 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
-        # J2K Metod (4) och Bicubic Subsampling (1)
+        # JPEG Metod (3) och Bicubic Subsampling (1)
         for opt_set in ['color_lossy', 'gray_lossy', 'color_lossless', 'gray_lossless']:
-            setattr(opts, f"{opt_set}_image_recompress_method", 4)
-            setattr(opts, f"{opt_set}_image_recompress_quality", "[20]")
+            setattr(opts, f"{opt_set}_image_recompress_method", 3)
+            setattr(opts, f"{opt_set}_image_recompress_quality", "75")
             setattr(opts, f"{opt_set}_image_subsample_method", 1)
             setattr(opts, f"{opt_set}_image_subsample_threshold", 210)
             setattr(opts, f"{opt_set}_image_subsample_to", 200)
@@ -199,7 +199,7 @@ def process_directory_recursively(args: argparse.Namespace) -> dict:
     return results
 
 def main():
-    parser = argparse.ArgumentParser(description="Smart PDF-optimering med J2K och PDF 1.5.")
+    parser = argparse.ArgumentParser(description="Smart PDF-optimering med JPEG och PDF 1.5.")
     parser.add_argument('-s', '--skip-existing', action='store_true', help="Hoppa över baserat på loggens tidsstämpel.")
     parser.add_argument('-f', '--force', action='store_true', help="Tvinga optimering även om filen ser klar ut.")
     parser.add_argument('-i', '--source-dir', type=str, default=SOURCE_DIR, help="Mapp att bearbeta.")

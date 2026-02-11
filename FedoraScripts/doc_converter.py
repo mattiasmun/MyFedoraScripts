@@ -52,7 +52,7 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool) -
 
 def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
     """
-    Optimerar PDF med J2K, Bicubic subsampling och avancerad ström-kompression.
+    Optimerar PDF med JPEG, Bicubic subsampling och avancerad ström-kompression.
     """
     temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
 
@@ -62,13 +62,13 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
         doc = pymupdf.open(pdf_path)
 
         # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
-        # Konfigurera omskrivning av bilder (J2K + Bicubic + 200 DPI)
+        # Konfigurera omskrivning av bilder (JPEG + Bicubic + 200 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
-        # J2K Metod (4) och Bicubic Subsampling (1)
+        # JPEG Metod (3) och Bicubic Subsampling (1)
         for opt_set in ['color_lossy', 'gray_lossy', 'color_lossless', 'gray_lossless']:
-            setattr(opts, f"{opt_set}_image_recompress_method", 4)
-            setattr(opts, f"{opt_set}_image_recompress_quality", "[20]")
+            setattr(opts, f"{opt_set}_image_recompress_method", 3)
+            setattr(opts, f"{opt_set}_image_recompress_quality", "75")
             setattr(opts, f"{opt_set}_image_subsample_method", 1)
             setattr(opts, f"{opt_set}_image_subsample_threshold", 210)
             setattr(opts, f"{opt_set}_image_subsample_to", 200)
