@@ -43,39 +43,46 @@ def setup_logging(source_dir: str) -> str:
 
 def is_already_optimized(doc) -> bool:
     """
-    Kollar om filen redan är optimerad genom att kontrollera version
-    och om bilderna använder DCTDecode (JPEG).
+    Kollar om filen redan är optimerad genom att kontrollera metadata 
+    och bildernas egenskaper via PyMuPDF:s inbyggda metoder.
     """
-    # Kolla version (måste vara 1.5 eller högre)
+    # 1. Kolla efter vårt eget "fingeravtryck" i metadata
+    # (Vi lägger till detta i doc.save i validate_and_compress_pdf)
+    if doc.metadata.get("keywords") and "OptimizedByPythonScript" in doc.metadata["keywords"]:
+        return True
+
+    # 2. Kontrollera PDF-version (PDF 1.5+ krävs för objektströmmar/optimal komprimering)
     v_str = doc.metadata.get("format", "1.0")
     try:
-        # Extrahera siffrorna (t.ex. från "PDF 1.5" eller "1.5")
         version = float(v_str.replace("PDF ", "").replace("PDF-", ""))
-    except (ValueError, AttributeError):
-        version = 1.0
+        if version < 1.5:
+            return False
+    except:
+        pass
 
-    if version < 1.5:
-        return False
-
-    # Stickprov på de första bilderna för att se om de använder JPEG (DCTDecode)
+    # 3. Analysera bildfilter via objekt-inställningar istället för rå strängmatchning
     try:
-        # Sök efter första bilden i hela dokumentet istället för bara sida 0
         found_image = False
-        for page_index in range(min(doc.page_count, 5)): # Kolla de första 5 sidorna
+        for page_index in range(min(doc.page_count, 3)): # Kolla de första 3 sidorna
             img_list = doc.get_page_images(page_index)
-            if img_list:
+            for img in img_list:
                 found_image = True
-                for img in img_list[:2]: # Kolla de första två bilderna på den sidan
-                    xref = img[0]
-                    if "DCTDecode" in doc.xref_object(xref):
-                        return True
-                break # Vi hittade bilder men ingen var JPX, gå till return False
-
+                xref = img[0]
+                
+                # Hämta bildens egenskaper som en dictionary
+                # 'colorspace' 1 = Grayscale, 3 = RGB
+                # Vi kollar om filtret är ['DCTDecode'] (vilket är JPEG)
+                img_info = doc.extract_image(xref)
+                if img_info and img_info.get("extension") == "jpeg":
+                    # Om bilden redan är JPEG och har rätt upplösning (valfritt att kolla)
+                    return True
+                break 
+        
         if not found_image:
-            return True # Inga bilder hittades alls i stickprovet
+            return True # Inga bilder att optimera
     except Exception as e:
-        logging.error(f"Fel: {e}")
-        return False # Om vi inte kan läsa bilderna, optimera för säkerhets skull
+        logging.error(f"Kunde inte analysera bildegenskaper: {e}")
+        return False
 
     return False
 
@@ -113,6 +120,12 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
+
+        # Lägg till ett nyckelord så vi känner igen filen nästa gång
+        metadata = doc.metadata
+        current_keywords = metadata.get("keywords", "")
+        metadata["keywords"] = f"{current_keywords} OptimizedByPythonScript".strip()
+        doc.set_metadata(metadata)
 
         # 2. Spara direkt till den temporära filen på disk
         doc.save(
