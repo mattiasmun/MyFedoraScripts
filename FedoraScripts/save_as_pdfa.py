@@ -2,10 +2,49 @@
 import subprocess
 import os
 import sys
+import platform
 
-# Sökvägar till ICC-profiler
-ICC_RGB = "/usr/share/ghostscript/iccprofiles/srgb.icc"
-ICC_GRAY = "/usr/share/ghostscript/iccprofiles/sgray.icc"
+def get_icc_paths():
+    """Returnerar rätt sökvägar till ICC-profiler baserat på operativsystem."""
+    if platform.system() == "Windows":
+        # För MSYS2 UCRT64 på Windows.
+        # Vi försöker hitta msys64-roten dynamiskt eller antar standard C:/msys64
+        msys_root = os.environ.get("MSYSTEM_PREFIX", "C:/msys64/ucrt64")
+        # Om vi kör inifrån MSYS2-shell (bash) fungerar /ucrt64/... direkt,
+        # men för nativ Python är det säkrast med fullständiga Windows-sökvägar.
+        base_path = f"{msys_root}/share/ghostscript/10.05.1/iccprofiles"
+
+        # Om miljövariabeln inte pekar rätt, kan vi hårdkoda din önskade sträng:
+        # base_path = "C:/msys64/ucrt64/share/ghostscript/10.05.1/iccprofiles"
+
+        return (
+            f"{base_path}/srgb.icc",
+            f"{base_path}/sgray.icc"
+        )
+    else:
+        # Standard Linux-sökvägar
+        return (
+            "/usr/share/ghostscript/iccprofiles/srgb.icc",
+            "/usr/share/ghostscript/iccprofiles/sgray.icc"
+        )
+
+# Initiera sökvägarna
+ICC_RGB, ICC_GRAY = get_icc_paths()
+
+def check_icc_exists():
+    """Validerar att profilerna finns på disk."""
+    missing = []
+    if not os.path.exists(ICC_RGB): missing.append(ICC_RGB)
+    if not os.path.exists(ICC_GRAY): missing.append(ICC_GRAY)
+
+    if missing:
+        print("\n--- FEL: ICC-PROFILER SAKNAS ---")
+        for p in missing:
+            print(f"Hittade inte: {p}")
+        print("\nKontrollera att Ghostscript är installerat i MSYS2 (pacman -S mingw-w64-ucrt-x86_64-ghostscript)")
+        print(f"Sökväg som letades efter: {os.path.dirname(ICC_RGB)}")
+        return False
+    return True
 
 def create_pdfa_def(attachment_paths=None, part=3, conformance="B"):
     """Skapar PDFA_def.ps med extra tydlig metadata för att tillfredsställa VeraPDF."""
@@ -52,7 +91,10 @@ CurrentStd
 
 def convert_to_pdfa3(input_pdf, output_pdf, attachments=None):
     if not os.path.exists(input_pdf) or not os.path.exists(ICC_RGB):
-        print("FEL: Indata eller ICC-profil saknas.")
+        print(f"FEL: Indatafilen '{input_pdf}' saknas.")
+        return
+
+    if not check_icc_exists():
         return
 
     if attachments:
