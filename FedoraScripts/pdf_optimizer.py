@@ -43,7 +43,7 @@ def setup_logging(source_dir: str) -> str:
 
 def is_already_optimized(doc) -> bool:
     """
-    Kollar om filen redan är optimerad genom att kontrollera metadata 
+    Kollar om filen redan är optimerad genom att kontrollera metadata
     och bildernas egenskaper via PyMuPDF:s inbyggda metoder.
     """
     # 1. Kolla efter vårt eget "fingeravtryck" i metadata
@@ -68,7 +68,7 @@ def is_already_optimized(doc) -> bool:
             for img in img_list:
                 found_image = True
                 xref = img[0]
-                
+
                 # Hämta bildens egenskaper som en dictionary
                 # 'colorspace' 1 = Grayscale, 3 = RGB
                 # Vi kollar om filtret är ['DCTDecode'] (vilket är JPEG)
@@ -76,8 +76,8 @@ def is_already_optimized(doc) -> bool:
                 if img_info and img_info.get("extension") == "jpeg":
                     # Om bilden redan är JPEG och har rätt upplösning (valfritt att kolla)
                     return True
-                break 
-        
+                break
+
         if not found_image:
             return True # Inga bilder att optimera
     except Exception as e:
@@ -97,9 +97,9 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         doc = pymupdf.open(pdf_path)
 
         # Smart Check: Hoppa över om den redan är optimerad
-        #if not force and is_already_optimized(doc):
-        #    doc.close()
-        #    return PDF_ALREADY_OPTIMIZED, False, 0
+        if not force and is_already_optimized(doc):
+            doc.close()
+            return PDF_ALREADY_OPTIMIZED, False, 0
 
         # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
         # Konfigurera omskrivning av bilder (JPEG + Bicubic + 200 DPI)
