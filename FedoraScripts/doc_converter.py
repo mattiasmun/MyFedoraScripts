@@ -80,6 +80,12 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
+        
+        # Lägg till ett nyckelord så vi känner igen filen nästa gång
+        metadata = doc.metadata
+        current_keywords = metadata.get("keywords", "")
+        metadata["keywords"] = f"{current_keywords} OptimizedByPythonScript".strip()
+        doc.set_metadata(metadata)
 
         # 2. Spara direkt till den temporära filen på disk
         doc.save(
