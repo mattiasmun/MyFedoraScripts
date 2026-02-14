@@ -139,6 +139,7 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
             clean=True,          # Sanera innehållsströmmar
             linear=False,        # Prioritera minsta storlek framför webb-streaming
             no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
+            expand_common_fonts=True   # Viktigt för PDF/A: PyMuPDF skapar en ny giltig XMP-metadata
         )
         doc.close()
 
@@ -157,7 +158,10 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
 # ⎯⎯ VeraPDF Logic (Optimized for your Terminal Output) ⎯⎯
 
 def run_verapdf_batch(directory: str) -> dict:
+    """Kör veraPDF CLI via Flatpak med absoluta sökvägar."""
     results = {}
+    # Vi gör mappsökvägen absolut för att Flatpak ska hitta den
+    abs_dir = os.path.abspath(directory)
     if os.name == 'nt':
         home = os.path.expanduser("~")
         cmd_base = [os.path.join(home, "Program", "verapdf", "verapdf.bat")]
@@ -168,30 +172,33 @@ def run_verapdf_batch(directory: str) -> dict:
 
     try:
         # Vi använder -r för rekursiv sökning i mappen och --format xml för att kunna parsa svaret
-        cmd = cmd_base + ["--format", "xml", "-r", directory]
+        cmd = cmd_base + ["--format", "xml", "-r", abs_dir]
 
         # Kör kommandot och fånga resultatet
         process = subprocess.run(cmd, capture_output=True, text=True, shell=shell_mode)
         if process.returncode != 0:
-            logging.error(f"veraPDF felkod: {process.returncode}")
-            logging.error(f"Stderr: {process.stderr}")
+            logging.error(f"veraPDF kraschade med kod {process.returncode}")
+            # Logga stderr men ignorera Java-meddelanden om tmpdir
+            clean_stderr = "\n".join([line for line in process.stderr.split('\n') if "JAVA_TOOL_OPTIONS" not in line])
+            if clean_stderr: logging.error(f"VeraPDF Error: {clean_stderr}")
             return results
 
         if not process.stdout.strip():
             logging.warning("veraPDF returnerade ingen data.")
             return results
 
+        # Parsa XML-resultatet
         root = ET.fromstring(process.stdout)
         for item in root.findall('.//{*}job'):
             name_node = item.find('.//{*}name')
             compliant_node = item.find('.//{*}validationReport')
             if name_node is not None and compliant_node is not None:
-                # Vi rensar bort "./" och andra sökvägsfragment för att matcha korrekt
-                clean_name = os.path.basename(name_node.text.strip())
+                # Vi använder basename för att matcha filnamnet oavsett hur sökvägen ser ut i XML:en
+                filename = os.path.basename(name_node.text.strip())
                 is_compliant = compliant_node.get('isCompliant', 'false').lower() == 'true'
-                results[clean_name] = is_compliant
+                results[filename] = is_compliant
     except Exception as e:
-        logging.error(f"VERAPDF_FAILED: {e}")
+        logging.error(f"Kritiskt fel i valideringssteget: {e}")
     return results
 
 def main():
