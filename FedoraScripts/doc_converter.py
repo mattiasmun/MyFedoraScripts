@@ -138,7 +138,7 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
             use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
             clean=True,          # Sanera innehållsströmmar
             linear=False,        # Prioritera minsta storlek framför webb-streaming
-            no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
+            no_new_id=False,     # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
             expand_common_fonts=True   # Viktigt för PDF/A: PyMuPDF skapar en ny giltig XMP-metadata
         )
         doc.close()
