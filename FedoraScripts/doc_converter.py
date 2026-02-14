@@ -92,7 +92,7 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, u
 
 # ⎯⎯ PDF Optimization ⎯⎯
 
-def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
+def optimize_pdf_with_images(pdf_path: str) -> int:
     temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
     try:
         size_before = os.path.getsize(pdf_path)
@@ -139,12 +139,12 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
 
         if bytes_saved > 0:
             shutil.move(temp_optimized, pdf_path)
-            return True, bytes_saved
+            return bytes_saved
         else:
-            return False, 0
+            return 0
     except Exception as e:
         logging.error(f"OPTIMIZATION_ERROR på {pdf_path}: {e}")
-        return False, 0
+        return 0
     finally:
         if os.path.exists(temp_optimized): os.remove(temp_optimized)
 
@@ -236,7 +236,7 @@ def main():
             stats['skipped'] += 1
         elif status == CONVERSION_SUCCESS:
             stats['conv_ok'] += 1
-            _, saved = optimize_pdf_with_images(dest_path)
+            saved = optimize_pdf_with_images(dest_path)
             stats['saved_bytes'] += saved
         else:
             stats['conv_fail'] += 1
