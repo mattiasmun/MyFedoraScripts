@@ -126,6 +126,10 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
 
         # Lägg till ett nyckelord så vi känner igen filen nästa gång
         metadata = doc.metadata
+        # Vi tvingar fram dagens datum i båda fälten för att tillfredsställa veraPDF
+        now = pymupdf.get_pdf_now()
+        metadata["creationDate"] = now
+        metadata["modDate"] = now
         current_keywords = metadata.get("keywords", "")
         metadata["keywords"] = f"{current_keywords} OptimizedByPythonScript".strip()
         doc.set_metadata(metadata)
@@ -146,10 +150,10 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
 
         # 3. Kontrollera storlek innan överskrivning
         size_after = os.path.getsize(temp_optimized)
+        shutil.move(temp_optimized, pdf_path)
         if size_before > size_after:
-            shutil.move(temp_optimized, pdf_path)
             return size_before - size_after
-        return 0
+        return size_before - size_after
     except Exception as e:
         logging.error(f"OPTIMIZATION_ERROR på {pdf_path}: {e}")
         return 0
