@@ -58,7 +58,7 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, u
     # 1. Försök med unoserver (om den är igång)
     if use_unoserver and shutil.which('unoconvert'):
         try:
-            subprocess.run(['unoconvert', source_path, dest_path], check=True, capture_output=True)
+            subprocess.run(['unoconvert', '--convert-to', 'pdf:writer_pdf_Export:{"SelectPdfVersion":{"type":"long","value":"1"}}', source_path, dest_path], check=True, capture_output=True)
             logging.info(f"SUCCESS (unoserver): '{source_path}'")
             success = True
         except Exception: pass
