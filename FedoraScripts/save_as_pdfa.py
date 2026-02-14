@@ -7,35 +7,37 @@ import platform
 def get_icc_paths():
     """Returnerar rätt sökvägar till ICC-profiler baserat på operativsystem."""
     if platform.system() == "Windows":
+        home = os.path.expanduser("~")
         # För MSYS2 UCRT64 på Windows.
         # Vi försöker hitta msys64-roten dynamiskt eller antar standard C:/msys64
-        msys_root = os.environ.get("MSYSTEM_PREFIX", "C:/msys64/ucrt64")
+        backup_msys_root = os.path.join(home, "msys64", "ucrt64")
+        msys_root = os.environ.get("MSYSTEM_PREFIX", backup_msys_root)
         # Om vi kör inifrån MSYS2-shell (bash) fungerar /ucrt64/… direkt,
         # men för nativ Python är det säkrast med fullständiga Windows-sökvägar.
-        base_path = f"{msys_root}/share/ghostscript/10.05.1/iccprofiles"
+        base_path = os.path.join(msys_root, "share", "texmf-dist", "tex", "generic", "colorprofiles")
 
         # Om miljövariabeln inte pekar rätt, kan vi hårdkoda din önskade sträng:
-        # base_path = "C:/msys64/ucrt64/share/ghostscript/10.05.1/iccprofiles"
+        #base_path = "C:/Users/ai21558/msys64/ucrt64/share/texmf-dist/tex/generic/colorprofiles"
 
         return (
-            f"{base_path}/srgb.icc",
-            f"{base_path}/sgray.icc"
+            os.path.join(base_path, "sRGB.icc")
+            #f"{base_path}/sgray.icc"
         )
     else:
         # Standard Linux-sökvägar
         return (
-            "/usr/share/ghostscript/iccprofiles/srgb.icc",
-            "/usr/share/ghostscript/iccprofiles/sgray.icc"
+            "/usr/share/ghostscript/iccprofiles/srgb.icc"
+            #"/usr/share/ghostscript/iccprofiles/sgray.icc"
         )
 
 # Initiera sökvägarna
-ICC_RGB, ICC_GRAY = get_icc_paths()
+ICC_RGB = get_icc_paths()
 
 def check_icc_exists():
     """Validerar att profilerna finns på disk."""
     missing = []
     if not os.path.exists(ICC_RGB): missing.append(ICC_RGB)
-    if not os.path.exists(ICC_GRAY): missing.append(ICC_GRAY)
+    #if not os.path.exists(ICC_GRAY): missing.append(ICC_GRAY)
 
     if missing:
         print("\n--- FEL: ICC-PROFILER SAKNAS ---")
@@ -49,7 +51,7 @@ def check_icc_exists():
 def create_pdfa_def(attachment_paths=None, part=3, conformance="B"):
     """Skapar PDFA_def.ps med extra tydlig metadata för att tillfredsställa VeraPDF."""
     icc_rgb_abs = os.path.abspath(ICC_RGB).replace("\\", "/")
-    icc_gray_abs = os.path.abspath(ICC_GRAY).replace("\\", "/")
+    #icc_gray_abs = os.path.abspath(ICC_GRAY).replace("\\", "/")
 
     ps_content = f"""%!
 % 1. Metadata
