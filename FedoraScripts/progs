@@ -1035,6 +1035,7 @@ nettle-devel.x86_64 \
 nettle.i686 \
 nfs-utils.x86_64 \
 nmap-ncat.x86_64 \
+nodejs.x86_64 \
 nspr.i686 \
 nss-mdns.x86_64 \
 nss-softokn-freebl.i686 \
