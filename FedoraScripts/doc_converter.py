@@ -222,7 +222,7 @@ def run_verapdf_batch(directory: str) -> dict:
 
         # Kör kommandot och fånga resultatet
         process = subprocess.run(cmd, capture_output=True, text=True, shell=shell_mode)
-        if process.returncode != 0:
+        if process.returncode not in [0, 1]:
             logging.error(f"veraPDF kraschade med kod {process.returncode}")
             # Logga stderr men ignorera Java-meddelanden om tmpdir
             clean_stderr = "\n".join([line for line in process.stderr.split('\n') if "JAVA_TOOL_OPTIONS" not in line])
