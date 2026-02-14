@@ -62,7 +62,7 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, u
         try:
             # Vi tvingar fram PDF/A-1 genom LibreOffice-filter
             subprocess.run([
-                'unoconvert', 
+                'unoconvert',
                 '--convert-to', 'pdf',
                 '--filter-option', 'SelectPdfVersion=1',
                 abs_source, abs_dest
