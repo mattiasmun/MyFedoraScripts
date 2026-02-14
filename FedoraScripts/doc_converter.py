@@ -147,19 +147,21 @@ def run_verapdf_batch(directory: str) -> dict:
     results = {}
     if os.name == 'nt':
         home = os.path.expanduser("~")
-        cmd = [os.path.join(home, "Program", "verapdf", "verapdf.bat"), "--format", "xml", "-r", directory]
+        cmd_base = [os.path.join(home, "Program", "verapdf", "verapdf.bat")]
         shell_mode = True
     else:
-        # Fedora Flatpak-specifik körning
-        cmd = ["flatpak", "run", "org.verapdf.veraPDF", "--format", "xml", "-r", directory]
+        cmd_base = ["flatpak", "run", "--command=verapdf", "org.verapdf.veraPDF"]
         shell_mode = False
 
     try:
+        # Vi använder -r för rekursiv sökning i mappen och --format xml för att kunna parsa svaret
+        cmd = cmd_base + ["--format", "xml", "-r", directory]
+
+        # Kör kommandot och fånga resultatet
         process = subprocess.run(cmd, capture_output=True, text=True, shell=shell_mode)
         if process.returncode != 0:
-            logging.error(f"veraPDF exekverades med felkod: {process.returncode}")
-            # Skriv ut stderr för att underlätta felsökning om sökvägen är fel
-            logging.error(f"Felmeddelande: {process.stderr}")
+            logging.error(f"veraPDF felkod: {process.returncode}")
+            logging.error(f"Stderr: {process.stderr}")
             return results
 
         if not process.stdout.strip():
