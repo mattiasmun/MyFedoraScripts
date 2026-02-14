@@ -28,3 +28,4 @@ shellingham
 termcolor
 tsp-solver2
 typer
+unoserver
