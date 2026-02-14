@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 # ⎯⎯ IMPORT LIBRARIES ⎯⎯
 try:
-    import pymupdf  # Kraftfull motor för PDF-hantering
+    import pymupdf
     try:
         from docx2pdf import convert as docx2pdf_convert
     except ImportError:
@@ -55,20 +55,26 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, u
 
     success = False
 
-    # 1. Försök med unoserver (om den är igång)
+    # 1. Försök med unoserver + PDF/A-flagga (för att klara valideringen)
     if use_unoserver and shutil.which('unoconvert'):
         try:
-            subprocess.run(['unoconvert', '--convert-to', 'pdf:writer_pdf_Export:{"SelectPdfVersion":{"type":"long","value":"1"}}', source_path, dest_path], check=True, capture_output=True)
-            logging.info(f"SUCCESS (unoserver): '{source_path}'")
+            # Vi tvingar fram PDF/A-1 genom LibreOffice-filter
+            subprocess.run([
+                'unoconvert', 
+                '--convert-to', 'pdf:writer_pdf_Export:{"SelectPdfVersion":{"type":"long","value":"1"}}',
+                source_path, dest_path
+            ], check=True, capture_output=True)
+            logging.info(f"SUCCESS (unoserver PDF/A): '{source_path}'")
             success = True
-        except Exception: pass
+        except Exception as e:
+            logging.error(f"unoserver failed: {e}")
 
-    # 2. Försök med LibreOffice Headless (standard på Fedora/Linux)
+    # 2. Fallback: LibreOffice Headless
     if not success and shutil.which('libreoffice'):
         try:
             dest_dir = os.path.dirname(dest_path)
             subprocess.run([
-                'libreoffice', '--headless', '--convert-to', 'pdf',
+                'libreoffice', '--headless', '--convert-to', 'pdf:writer_pdf_Export',
                 '--outdir', dest_dir, source_path
             ], check=True, capture_output=True)
             logging.info(f"SUCCESS (LibreOffice Headless): '{source_path}'")
@@ -135,20 +141,17 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
 
         # 3. Kontrollera storlek innan överskrivning
         size_after = os.path.getsize(temp_optimized)
-        bytes_saved = size_before - size_after
-
-        if bytes_saved > 0:
+        if size_before > size_after:
             shutil.move(temp_optimized, pdf_path)
-            return bytes_saved
-        else:
-            return 0
+            return size_before - size_after
+        return 0
     except Exception as e:
         logging.error(f"OPTIMIZATION_ERROR på {pdf_path}: {e}")
         return 0
     finally:
         if os.path.exists(temp_optimized): os.remove(temp_optimized)
 
-# ⎯⎯ VeraPDF Logic (Flatpak Optimized) ⎯⎯
+# ⎯⎯ VeraPDF Logic (Optimized for your Terminal Output) ⎯⎯
 
 def run_verapdf_batch(directory: str) -> dict:
     results = {}
@@ -176,12 +179,14 @@ def run_verapdf_batch(directory: str) -> dict:
             return results
 
         root = ET.fromstring(process.stdout)
-        for item in root.findall('.//{*}item'):
-            name_node = item.find('{*}name')
-            compliant_node = item.find('.//{*}compliant')
+        for item in root.findall('.//{*}job'):
+            name_node = item.find('.//{*}name')
+            compliant_node = item.find('.//{*}validationReport')
             if name_node is not None and compliant_node is not None:
-                filename = os.path.basename(name_node.text)
-                results[filename] = compliant_node.text.lower() == 'true'
+                # Vi rensar bort "./" och andra sökvägsfragment för att matcha korrekt
+                clean_name = os.path.basename(name_node.text.strip())
+                is_compliant = compliant_node.get('isCompliant', 'false').lower() == 'true'
+                results[clean_name] = is_compliant
     except Exception as e:
         logging.error(f"VERAPDF_FAILED: {e}")
     return results
