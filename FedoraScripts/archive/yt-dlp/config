@@ -1,0 +1,8 @@
+--impersonate chrome
+-f "bestvideo[height<=1440]+bestaudio/best[height<=1440]"
+--write-auto-subs
+--sub-langs "en.*"
+--convert-subs srt
+-o "~/Video/YouTube/%(playlist_title?%(playlist_title)s/| )s%(playlist_index?%(playlist_index)s - |)s%(title)s.%(ext)s"
+--js-runtimes node
+--download-archive "~/Video/YouTube/archive.txt"
