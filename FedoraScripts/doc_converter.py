@@ -135,11 +135,12 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
             temp_optimized,
             garbage=4,           # Maximal rensning av dubletter
             deflate=True,        # Komprimera alla strömmar
+            deflate_images=True, # Komprimera alla bildströmmar
+            deflate_fonts=True,  # Komprimera alla typsnittsfilströmmar
             use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
             clean=True,          # Sanera innehållsströmmar
             linear=False,        # Prioritera minsta storlek framför webb-streaming
-            no_new_id=False,     # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
-            expand_common_fonts=True   # Viktigt för PDF/A: PyMuPDF skapar en ny giltig XMP-metadata
+            no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
         )
         doc.close()
 
@@ -239,7 +240,7 @@ def main():
     # Steg 1: Konvertera och Optimera
     for root, filename in tqdm(all_files, desc="Bearbetar", unit="fil"):
         rel_path = os.path.relpath(root, args.source_dir)
-        dest_dir = os.path.join(args.destination_dir, rel_path)
+        dest_dir = os.path.normpath(os.path.join(args.destination_dir, rel_path))
         os.makedirs(dest_dir, exist_ok=True)
 
         src_path = os.path.join(root, filename)
