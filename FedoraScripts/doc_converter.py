@@ -124,6 +124,13 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
+        # --- MANUELL RENSNING AV GAMMAL METADATA ---
+        # Vi letar upp och raderar XMP-metadataströmmen manuellt
+        # Detta tvingar fram en synkronisering vid sparning
+        for i in range(doc.xref_length()):
+            if doc.xref_get_key(i, "Type")[1] == "/Metadata":
+                doc.update_stream(i, b"") # Tömmer den gamla XML-datan
+
         # Lägg till ett nyckelord så vi känner igen filen nästa gång
         metadata = doc.metadata
         # Vi tvingar fram dagens datum i båda fälten för att tillfredsställa veraPDF
