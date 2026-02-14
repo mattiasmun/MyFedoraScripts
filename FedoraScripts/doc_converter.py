@@ -53,6 +53,8 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, u
     if skip_existing and os.path.exists(dest_path):
         return CONVERSION_SKIPPED
 
+    abs_source = os.path.abspath(source_path)
+    abs_dest = os.path.abspath(dest_path)
     success = False
 
     # 1. Försök med unoserver + PDF/A-flagga (för att klara valideringen)
@@ -61,8 +63,9 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, u
             # Vi tvingar fram PDF/A-1 genom LibreOffice-filter
             subprocess.run([
                 'unoconvert', 
-                '--convert-to', 'pdf:writer_pdf_Export',
-                source_path, dest_path
+                '--convert-to', 'pdf',
+                '--filter-option', 'SelectPdfVersion=1',
+                abs_source, abs_dest
             ], check=True, capture_output=True)
             logging.info(f"SUCCESS (unoserver PDF/A): '{source_path}'")
             success = True
