@@ -3,6 +3,7 @@ import os
 import shutil
 import logging
 import argparse
+import xml.etree.ElementTree as ET
 from datetime import datetime
 from tqdm import tqdm
 
@@ -40,6 +41,32 @@ def setup_logging(source_dir: str) -> str:
     )
     logging.info("⎯⎯ PDF Advanced Optimizer Start (Smart Check + JPEG + PDF 1.5) ⎯⎯")
     return LOG_FILE
+
+def generate_pdfa_xmp(keywords, pdf_date, creator, producer):
+    # Standardisera datumet till en sträng veraPDF accepterar (utan millisekunder)
+    # Vi tvingar +01:00 för att matcha båda ställena
+    iso_date = f"{pdf_date[2:6]}-{pdf_date[6:8]}-{pdf_date[8:10]}T{pdf_date[10:12]}:{pdf_date[12:14]}:{pdf_date[14:16]}+01:00"
+
+    return f"""<?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+ <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/">
+   <pdfaid:part>3</pdfaid:part>
+   <pdfaid:conformance>B</pdfaid:conformance>
+  </rdf:Description>
+  <rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">
+   <pdf:Keywords>{keywords}</pdf:Keywords>
+   <pdf:Producer>{producer}</pdf:Producer>
+  </rdf:Description>
+  <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+   <xmp:CreatorTool>{creator}</xmp:CreatorTool>
+   <xmp:CreateDate>{iso_date}</xmp:CreateDate>
+   <xmp:ModifyDate>{iso_date}</xmp:ModifyDate>
+   <xmp:MetadataDate>{iso_date}</xmp:MetadataDate>
+  </rdf:Description>
+ </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="w"?>"""
 
 def is_already_optimized(doc) -> bool:
     """
@@ -121,21 +148,42 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # Lägg till ett nyckelord så vi känner igen filen nästa gång
-        metadata = doc.metadata
-        current_keywords = metadata.get("keywords", "")
-        metadata["keywords"] = f"{current_keywords} OptimizedByPythonScript".strip()
-        doc.set_metadata(metadata)
+        # 1. Definiera exakta värden (vi hårdkodar för total matchning)
+        # Vi tvingar tidszon +0100 i båda systemen
+        now = datetime.now().strftime("D:%Y%m%d%H%M%S+01'00'")
+        keywords = "OptimizedByPythonScript"
+        creator = "Python Script"
+        producer = "PyMuPDF"
+
+        # 2. Uppdatera Info-Dictionary
+        doc.set_metadata({
+            "creationDate": now,
+            "modDate": now,
+            "keywords": keywords,
+            "creator": creator,
+            "producer": producer,
+            "title": doc.metadata.get("title", ""),
+            "subject": doc.metadata.get("subject", "")
+        })
+
+        # 3. Uppdatera XMP med exakt samma strängar
+        new_xmp = generate_pdfa_xmp(keywords, now, creator, producer)
+        doc.set_xml_metadata(new_xmp)
 
         # 2. Spara direkt till den temporära filen på disk
         doc.save(
             temp_optimized,
             garbage=4,           # Maximal rensning av dubletter
             deflate=True,        # Komprimera alla strömmar
-            use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
+            deflate_images=True, # Komprimera alla bildströmmar
+            deflate_fonts=True,  # Komprimera alla typsnittsfilströmmar
+            use_objstms=1,       # Tillåtet i PDF/A-3
             clean=True,          # Sanera innehållsströmmar
             linear=False,        # Prioritera minsta storlek framför webb-streaming
-            no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
+            no_new_id=False,     # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
+            incremental=False,
+            ascii=False,
+            expand=0
         )
         doc.close()
 
@@ -172,8 +220,7 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         return PDF_FAIL, False, 0
     finally:
         # Sista städning av temp-filen om den finns kvar
-        if os.path.exists(temp_optimized):
-            os.remove(temp_optimized)
+        if os.path.exists(temp_optimized): os.remove(temp_optimized)
 
 def process_directory_recursively(args: argparse.Namespace) -> dict:
     results = {
