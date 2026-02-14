@@ -56,7 +56,7 @@ def generate_pdfa_xmp(keywords, pdf_date, creator, producer):
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/">
-   <pdfaid:part>1</pdfaid:part>
+   <pdfaid:part>3</pdfaid:part>
    <pdfaid:conformance>B</pdfaid:conformance>
   </rdf:Description>
   <rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">
@@ -90,7 +90,7 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, u
             subprocess.run([
                 'unoconvert',
                 '--convert-to', 'pdf',
-                '--filter-option', 'SelectPdfVersion=1',
+                '--filter-option', 'SelectPdfVersion=3',
                 abs_source, abs_dest
             ], check=True, capture_output=True)
             logging.info(f"SUCCESS (unoserver PDF/A): '{source_path}'")
