@@ -1,4 +1,6 @@
 altgraph
+annotated-doc
+curl_cffi
 docx2pdf
 evdev
 fire
