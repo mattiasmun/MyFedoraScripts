@@ -47,13 +47,10 @@ def setup_logging(dest_dir: str):
     )
     return log_path
 
-def generate_pdfa_xmp(keywords, pdf_date):
-    """Skapar en XMP-sträng som matchar Info-dictionary för att undvika veraPDF-fel."""
-    # pdf_date format: D:20260214173059+01'00' -> 2026-02-14T17:30:59+01:00
-    try:
-        iso_date = f"{pdf_date[2:6]}-{pdf_date[6:8]}-{pdf_date[8:10]}T{pdf_date[10:12]}:{pdf_date[12:14]}:{pdf_date[14:16]}+01:00"
-    except:
-        iso_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S+01:00")
+def generate_pdfa_xmp(keywords, pdf_date, creator, producer):
+    # Standardisera datumet till en sträng veraPDF accepterar (utan millisekunder)
+    # Vi tvingar +01:00 för att matcha båda ställena
+    iso_date = f"{pdf_date[2:6]}-{pdf_date[6:8]}-{pdf_date[8:10]}T{pdf_date[10:12]}:{pdf_date[12:14]}:{pdf_date[14:16]}+01:00"
 
     return f"""<?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
@@ -64,9 +61,10 @@ def generate_pdfa_xmp(keywords, pdf_date):
   </rdf:Description>
   <rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">
    <pdf:Keywords>{keywords}</pdf:Keywords>
-   <pdf:Producer>PyMuPDF</pdf:Producer>
+   <pdf:Producer>{producer}</pdf:Producer>
   </rdf:Description>
   <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+   <xmp:CreatorTool>{creator}</xmp:CreatorTool>
    <xmp:CreateDate>{iso_date}</xmp:CreateDate>
    <xmp:ModifyDate>{iso_date}</xmp:ModifyDate>
    <xmp:MetadataDate>{iso_date}</xmp:MetadataDate>
@@ -152,19 +150,26 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # Lägg till ett nyckelord så vi känner igen filen nästa gång
-        # Vi tvingar fram dagens datum i båda fälten för att tillfredsställa veraPDF
-        now = pymupdf.get_pdf_now()
+        # 1. Definiera exakta värden (vi hårdkodar för total matchning)
+        # Vi tvingar tidszon +0100 i båda systemen
+        now = datetime.now().strftime("D:%Y%m%d%H%M%S+01'00'")
         keywords = "OptimizedByPythonScript"
-        metadata = doc.metadata
-        metadata["creationDate"] = now
-        metadata["modDate"] = now
-        metadata["keywords"] = keywords
-        doc.set_metadata(metadata)
+        creator = "Python Script"
+        producer = "PyMuPDF"
 
-        # 3. TVINGA SYNKRONISERING TILL XMP
-        # Detta skriver över den gamla 2017-datan med vår nya sträng
-        new_xmp = generate_pdfa_xmp(keywords, now)
+        # 2. Uppdatera Info-Dictionary
+        doc.set_metadata({
+            "creationDate": now,
+            "modDate": now,
+            "keywords": keywords,
+            "creator": creator,
+            "producer": producer,
+            "title": doc.metadata.get("title", ""),
+            "subject": doc.metadata.get("subject", "")
+        })
+
+        # 3. Uppdatera XMP med exakt samma strängar
+        new_xmp = generate_pdfa_xmp(keywords, now, creator, producer)
         doc.set_xml_metadata(new_xmp)
 
         # 2. Spara direkt till den temporära filen på disk
@@ -174,10 +179,13 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
             deflate=True,        # Komprimera alla strömmar
             deflate_images=True, # Komprimera alla bildströmmar
             deflate_fonts=True,  # Komprimera alla typsnittsfilströmmar
-            use_objstms=1,       # Packa PDF-objekt för mindre storlek (viktigt för PDF 1.5+)
+            use_objstms=0,       # Otillåtet i PDF/A-1
             clean=True,          # Sanera innehållsströmmar
             linear=False,        # Prioritera minsta storlek framför webb-streaming
-            no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
+            no_new_id=False,     # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
+            incremental=False,
+            ascii=False,
+            expand=0
         )
         doc.close()
 
