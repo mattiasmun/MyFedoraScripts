@@ -179,7 +179,7 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
             deflate=True,        # Komprimera alla strömmar
             deflate_images=True, # Komprimera alla bildströmmar
             deflate_fonts=True,  # Komprimera alla typsnittsfilströmmar
-            use_objstms=0,       # Otillåtet i PDF/A-1
+            use_objstms=1,       # Tillåtet i PDF/A-3
             clean=True,          # Sanera innehållsströmmar
             linear=False,        # Prioritera minsta storlek framför webb-streaming
             no_new_id=False,     # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
