@@ -132,9 +132,16 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
             no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
         )
         doc.close()
-        shutil.move(temp_optimized, pdf_path)
-        size_after = os.path.getsize(pdf_path)
-        return True, (size_before - size_after)
+
+        # 3. Kontrollera storlek innan överskrivning
+        size_after = os.path.getsize(temp_optimized)
+        bytes_saved = size_before - size_after
+
+        if bytes_saved > 0:
+            shutil.move(temp_optimized, pdf_path)
+            return True, bytes_saved
+        else:
+            return False, 0
     except Exception as e:
         logging.error(f"OPTIMIZATION_ERROR på {pdf_path}: {e}")
         return False, 0
