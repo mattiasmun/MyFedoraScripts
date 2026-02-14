@@ -4,16 +4,20 @@ import shutil
 import logging
 import argparse
 import subprocess
+import socket
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from tqdm import tqdm
 
 # ⎯⎯ IMPORT LIBRARIES ⎯⎯
 try:
-    from docx2pdf import convert
     import pymupdf  # Kraftfull motor för PDF-hantering
+    try:
+        from docx2pdf import convert as docx2pdf_convert
+    except ImportError:
+        docx2pdf_convert = None
 except ImportError as e:
-    print("Error: Required library not found. Please run 'pip install docx2pdf pymupdf'")
+    print("Error: Required library not found. Please run 'pip install pymupdf'")
     print(f"Details: {e}")
     exit(1)
 
@@ -23,6 +27,12 @@ CONVERSION_SUCCESS = 1
 CONVERSION_SKIPPED = 2
 
 # ⎯⎯ Helper Functions ⎯⎯
+
+def is_unoserver_running(host='127.0.0.1', port=2003):
+    """Kollar om unoserver lyssnar på standardporten."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(1)
+        return s.connect_ex((host, port)) == 0
 
 def format_size(bytes_size):
     return bytes_size / (1024 * 1024)
@@ -37,32 +47,56 @@ def setup_logging(dest_dir: str):
     )
     return log_path
 
-# ⎯⎯ Core Processing Functions ⎯⎯
+# ⎯⎯ Conversion Engine Logic ⎯⎯
 
-def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool) -> int:
+def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, use_unoserver: bool) -> int:
     if skip_existing and os.path.exists(dest_path):
         return CONVERSION_SKIPPED
-    try:
-        convert(source_path, dest_path)
-        logging.info(f"SUCCESS: Converted '{source_path}'")
+
+    success = False
+
+    # 1. Försök med unoserver (om den är igång)
+    if use_unoserver and shutil.which('unoconvert'):
+        try:
+            subprocess.run(['unoconvert', source_path, dest_path], check=True, capture_output=True)
+            logging.info(f"SUCCESS (unoserver): '{source_path}'")
+            success = True
+        except Exception: pass
+
+    # 2. Försök med LibreOffice Headless (standard på Fedora/Linux)
+    if not success and shutil.which('libreoffice'):
+        try:
+            dest_dir = os.path.dirname(dest_path)
+            subprocess.run([
+                'libreoffice', '--headless', '--convert-to', 'pdf',
+                '--outdir', dest_dir, source_path
+            ], check=True, capture_output=True)
+            logging.info(f"SUCCESS (LibreOffice Headless): '{source_path}'")
+            success = True
+        except Exception: pass
+
+    # 3. Försök med docx2pdf (Windows/macow med MS Word)
+    if not success and docx2pdf_convert:
+        try:
+            docx2pdf_convert(source_path, dest_path)
+            logging.info(f"SUCCESS (docx2pdf): '{source_path}'")
+            success = True
+        except Exception as e:
+            logging.error(f"docx2pdf failed: {e}")
+
+    if success:
         return CONVERSION_SUCCESS
-    except Exception as e:
-        logging.error(f"CONVERSION_FAIL: '{source_path}'. Error: {e}")
+    else:
+        logging.error(f"ALL ENGINES FAILED for: '{source_path}'")
         return CONVERSION_FAIL
 
-def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
-    """
-    Optimerar PDF med JPEG, Bicubic subsampling och avancerad ström-kompression.
-    """
-    temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
+# ⎯⎯ PDF Optimization ⎯⎯
 
+def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
+    temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
     try:
         size_before = os.path.getsize(pdf_path)
-
         doc = pymupdf.open(pdf_path)
-
-        # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
-        # Konfigurera omskrivning av bilder (JPEG + Bicubic + 200 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
         # JPEG Metod (3) och Bicubic Subsampling (1)
@@ -80,7 +114,7 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
-        
+
         # Lägg till ett nyckelord så vi känner igen filen nästa gång
         metadata = doc.metadata
         current_keywords = metadata.get("keywords", "")
@@ -98,7 +132,6 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
             no_new_id=False      # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
         )
         doc.close()
-
         shutil.move(temp_optimized, pdf_path)
         size_after = os.path.getsize(pdf_path)
         return True, (size_before - size_after)
@@ -106,25 +139,23 @@ def optimize_pdf_with_images(pdf_path: str) -> tuple[bool, int]:
         logging.error(f"OPTIMIZATION_ERROR på {pdf_path}: {e}")
         return False, 0
     finally:
-        # Sista städning av temp-filen om den finns kvar
-        if os.path.exists(temp_optimized):
-            os.remove(temp_optimized)
+        if os.path.exists(temp_optimized): os.remove(temp_optimized)
+
+# ⎯⎯ VeraPDF Logic (Flatpak Optimized) ⎯⎯
 
 def run_verapdf_batch(directory: str) -> dict:
-    """Kör veraPDF via batch-fil på Windows med rekursiv sökning."""
     results = {}
-
-    home = os.path.expanduser("~")
-    verapdf_path = os.path.join(home, "Program", "verapdf-greenfield-1.28.1", "verapdf.bat")
+    if os.name == 'nt':
+        home = os.path.expanduser("~")
+        cmd = [os.path.join(home, "Program", "verapdf", "verapdf.bat"), "--format", "xml", "-r", directory]
+        shell_mode = True
+    else:
+        # Fedora Flatpak-specifik körning
+        cmd = ["flatpak", "run", "org.verapdf.veraPDF", "--format", "xml", "-r", directory]
+        shell_mode = False
 
     try:
-        # 1. Vi lägger till -r för att söka i mappen
-        # 2. Vi behåller --format xml för att kunna parsa resultatet
-        cmd = [verapdf_path, "--format", "xml", "-r", directory]
-
-        # shell=True behövs på Windows för .bat-filer
-        process = subprocess.run(cmd, capture_output=True, text=True, shell=True)
-
+        process = subprocess.run(cmd, capture_output=True, text=True, shell=shell_mode)
         if process.returncode != 0:
             logging.error(f"veraPDF exekverades med felkod: {process.returncode}")
             # Skriv ut stderr för att underlätta felsökning om sökvägen är fel
@@ -136,42 +167,42 @@ def run_verapdf_batch(directory: str) -> dict:
             return results
 
         root = ET.fromstring(process.stdout)
-
-        # veraPDF:s XML-rapport (MRR) har ofta ett namespace.
-        # Vi använder en sökning som ignorerar namespace för att vara robusta.
         for item in root.findall('.//{*}item'):
             name_node = item.find('{*}name')
             compliant_node = item.find('.//{*}compliant')
-
             if name_node is not None and compliant_node is not None:
-                # Vi tar bara filnamnet för att matcha mot din stats-logik
                 filename = os.path.basename(name_node.text)
-                is_compliant = compliant_node.text.lower() == 'true'
-                results[filename] = is_compliant
+                results[filename] = compliant_node.text.lower() == 'true'
     except Exception as e:
-        logging.error(f"BATCH_VALIDATION_FAILED: {e}")
+        logging.error(f"VERAPDF_FAILED: {e}")
     return results
 
 def main():
-    parser = argparse.ArgumentParser(description="DOCX till PDF med 200 DPI bildoptimering och PDF/A-validering.")
+    parser = argparse.ArgumentParser(description="Multi-engine DOCX/ODT till PDF konverterare.")
     parser.add_argument('-i', '--source-dir', type=str, default='.', help="Ingångsmapp.")
     parser.add_argument('-o', '--destination-dir', type=str, default='.', help="Utgångsmapp.")
     parser.add_argument('-s', '--skip-existing', action='store_true', help="Hoppa över befintliga PDF:er.")
     args = parser.parse_args()
 
     start_time = datetime.now()
+    # Kontrollera unoserver innan start
+    unoserver_active = is_unoserver_running()
+    if not unoserver_active:
+        print("💡 Tips: Starta 'unoserver' i en annan terminal för snabbare konvertering.")
+    else:
+        print("🚀 unoserver hittades och kommer att användas.")
+
     os.makedirs(args.destination_dir, exist_ok=True)
     log_file = setup_logging(args.destination_dir)
 
-    # Hitta filer
     all_files = []
     for root, _, files in os.walk(args.source_dir):
         for f in files:
-            if f.lower().endswith('.docx'):
+            if f.lower().endswith(('.docx', '.odt')):
                 all_files.append((root, f))
 
     if not all_files:
-        print("Inga .docx-filer hittades.")
+        print("Inga dokument hittades.")
         return
 
     stats = {
@@ -182,21 +213,20 @@ def main():
     print(f"Bearbetar {len(all_files)} filer… (Logg: {log_file})")
 
     # Steg 1: Konvertera och Optimera
-    for root, filename in tqdm(all_files, desc="Konverterar", unit="fil"):
+    for root, filename in tqdm(all_files, desc="Bearbetar", unit="fil"):
         rel_path = os.path.relpath(root, args.source_dir)
         dest_dir = os.path.join(args.destination_dir, rel_path)
         os.makedirs(dest_dir, exist_ok=True)
 
         src_path = os.path.join(root, filename)
-        dest_path = os.path.join(dest_dir, filename[:-5] + '.pdf')
+        dest_path = os.path.join(dest_dir, os.path.splitext(filename)[0] + '.pdf')
 
-        status = convert_docx_to_pdf(src_path, dest_path, args.skip_existing)
+        status = convert_docx_to_pdf(src_path, dest_path, args.skip_existing, unoserver_active)
 
         if status == CONVERSION_SKIPPED:
             stats['skipped'] += 1
         elif status == CONVERSION_SUCCESS:
             stats['conv_ok'] += 1
-            # Se till att namnet här matchar din def längre upp!
             _, saved = optimize_pdf_with_images(dest_path)
             stats['saved_bytes'] += saved
         else:
@@ -206,11 +236,9 @@ def main():
     print("Startar PDF/A-validering (Batch)…")
     compliance_report = run_verapdf_batch(args.destination_dir)
 
-    # Matcha resultat
-    for filename_pdf in [f[:-5]+'.pdf' for _, f in all_files]:
+    for filename_pdf in [os.path.splitext(f)[0]+'.pdf' for _, f in all_files]:
         if filename_pdf in compliance_report:
-            if compliance_report[filename_pdf]:
-                stats['pdfa_ok'] += 1
+            if compliance_report[filename_pdf]: stats['pdfa_ok'] += 1
             else:
                 stats['pdfa_fail'] += 1
                 logging.warning(f"COMPLIANCE FAIL: {filename_pdf}")
