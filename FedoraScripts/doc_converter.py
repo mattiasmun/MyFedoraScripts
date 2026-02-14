@@ -47,6 +47,34 @@ def setup_logging(dest_dir: str):
     )
     return log_path
 
+def generate_pdfa_xmp(keywords, pdf_date):
+    """Skapar en XMP-sträng som matchar Info-dictionary för att undvika veraPDF-fel."""
+    # pdf_date format: D:20260214173059+01'00' -> 2026-02-14T17:30:59+01:00
+    try:
+        iso_date = f"{pdf_date[2:6]}-{pdf_date[6:8]}-{pdf_date[8:10]}T{pdf_date[10:12]}:{pdf_date[12:14]}:{pdf_date[14:16]}+01:00"
+    except:
+        iso_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S+01:00")
+
+    return f"""<?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+ <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/">
+   <pdfaid:part>1</pdfaid:part>
+   <pdfaid:conformance>B</pdfaid:conformance>
+  </rdf:Description>
+  <rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">
+   <pdf:Keywords>{keywords}</pdf:Keywords>
+   <pdf:Producer>PyMuPDF</pdf:Producer>
+  </rdf:Description>
+  <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+   <xmp:CreateDate>{iso_date}</xmp:CreateDate>
+   <xmp:ModifyDate>{iso_date}</xmp:ModifyDate>
+   <xmp:MetadataDate>{iso_date}</xmp:MetadataDate>
+  </rdf:Description>
+ </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="w"?>"""
+
 # ⎯⎯ Conversion Engine Logic ⎯⎯
 
 def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, use_unoserver: bool) -> int:
@@ -124,22 +152,20 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # --- MANUELL RENSNING AV GAMMAL METADATA ---
-        # Vi letar upp och raderar XMP-metadataströmmen manuellt
-        # Detta tvingar fram en synkronisering vid sparning
-        for i in range(doc.xref_length()):
-            if doc.xref_get_key(i, "Type")[1] == "/Metadata":
-                doc.update_stream(i, b"") # Tömmer den gamla XML-datan
-
         # Lägg till ett nyckelord så vi känner igen filen nästa gång
-        metadata = doc.metadata
         # Vi tvingar fram dagens datum i båda fälten för att tillfredsställa veraPDF
         now = pymupdf.get_pdf_now()
+        keywords = "OptimizedByPythonScript"
+        metadata = doc.metadata
         metadata["creationDate"] = now
         metadata["modDate"] = now
-        current_keywords = metadata.get("keywords", "")
-        metadata["keywords"] = f"{current_keywords} OptimizedByPythonScript".strip()
+        metadata["keywords"] = keywords
         doc.set_metadata(metadata)
+
+        # 3. TVINGA SYNKRONISERING TILL XMP
+        # Detta skriver över den gamla 2017-datan med vår nya sträng
+        new_xmp = generate_pdfa_xmp(keywords, now)
+        doc.set_xml_metadata(new_xmp)
 
         # 2. Spara direkt till den temporära filen på disk
         doc.save(
@@ -158,8 +184,8 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
         # 3. Kontrollera storlek innan överskrivning
         size_after = os.path.getsize(temp_optimized)
         shutil.move(temp_optimized, pdf_path)
-        if size_before > size_after:
-            return size_before - size_after
+        #if size_before > size_after:
+        #    return size_before - size_after
         return size_before - size_after
     except Exception as e:
         logging.error(f"OPTIMIZATION_ERROR på {pdf_path}: {e}")
