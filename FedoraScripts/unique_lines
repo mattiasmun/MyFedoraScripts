@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 import os
 from pathlib import Path
+import re
 
 def keep_last_unique_bash_history(input_file, output_file):
     """
-    Rensar dubbletter i Bash-historik med tidsstämplar.
-    Behåller den senaste förekomsten och sorterar alfabetiskt.
+    Rensar dubbletter och svartlistade kommandon i Bash-historik.
+    Hanterar tidsstämplar och sorterar resultatet alfabetiskt.
     """
+    # Svartlista: Kommandon som börjar med dessa ord kommer att rensas bort.
+    # Motsvarar din HISTIGNORE: ls, exit, history, pwd, clear 
+    blacklist = ['ls', 'exit', 'history', 'pwd', 'clear']
+    
     try:
         with open(input_file, 'r', errors='replace') as f_in:
             lines = f_in.readlines()
@@ -19,26 +24,33 @@ def keep_last_unique_bash_history(input_file, output_file):
     while i < len(lines):
         line = lines[i].strip()
         
-        # Bash-historik lagrar tidsstämplar på rader som börjar med #
+        # Kontrollera om raden är en tidsstämpel (#123456789)
         if line.startswith('#') and i + 1 < len(lines):
             timestamp = line + "\n"
             command = lines[i+1]
-            # Vi använder kommandot som nyckel för att få bort dubbletter.
-            # Den senaste förekomsten i filen kommer skriva över tidigare.
-            unique_commands[command.strip()] = (timestamp, command)
+            cmd_text = command.strip()
+            
+            # Kolla om kommandot börjar med något i svartlistan
+            first_word = cmd_text.split()[0] if cmd_text else ""
+            if first_word not in blacklist:
+                # Spara/ersätt: senaste förekomsten vinner
+                unique_commands[cmd_text] = (timestamp, command)
+            
             i += 2
         else:
-            # Hanterar rader utan tidsstämplar (om sådana finns)
+            # Hantera rader utan tidsstämpel
             if line:
-                unique_commands[line] = (None, line + "\n")
+                first_word = line.split()[0]
+                if first_word not in blacklist:
+                    unique_commands[line] = (None, line + "\n")
             i += 1
 
-    # Sorterar alfabetiskt baserat på själva kommandot (skiftlägesoberoende)
-    sorted_commands = sorted(unique_commands.items(), key=lambda item: item[0].lower())
+    # Sortera alfabetiskt (case-insensitive)
+    sorted_items = sorted(unique_commands.items(), key=lambda item: item[0].lower())
 
     try:
         with open(output_file, 'w') as f_out:
-            for _, (ts, cmd) in sorted_commands:
+            for _, (ts, cmd) in sorted_items:
                 if ts:
                     f_out.write(ts)
                 f_out.write(cmd)
