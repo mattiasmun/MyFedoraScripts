@@ -1,3 +1,5 @@
+arithmetic --help
+arithmetic -o - -r 2000
 auto_clicker_gui
 bc -lq
 bg
@@ -17,6 +19,7 @@ cd "$HOME/Men of War II/packages/Unit_booster"
 cd "$HOME/Men of War II/packages/Unit_booster/scene/entity"
 cd "$HOME/Men of War II/packages/Unit_booster/scene/set/breed/arena_mp/usa"
 cd "$HOME/Men of War II/packages/editor-local-changes/global"
+cd "$HOME/Men of War II/profiles/player/save/"
 cd -- -vehicle
 cd ..
 clamdscan --stream "$HOME/.clamtk/attachment"
@@ -39,6 +42,8 @@ dnf history info last
 dnf history list
 dnf history list | more
 dnf list installed | grep @
+dnf module list nodejs
+dnf provides unoconv
 dnf repoquery --duplicates
 dnf repoquery --extras
 dnf repoquery --help
@@ -50,6 +55,7 @@ dnf search pikepdf
 dnfsysupgr
 dnfusrins
 doc_converter.py --help
+doc_converter.py -i .
 doc_converter.py -s -i Dokument/Input -o Dokument/Output
 dotool --help
 dotool --list-keys
@@ -70,7 +76,8 @@ echo key leftmeta | dotoolc
 echo key shift+1 x:exclam shift+k:2 | dotoolc
 env
 ex --help
-exiftool portrait-man-cartoon-style.jpg
+exiftool --help
+exiftool screenshot.jpg
 exit
 ffprobe --help
 ffprobe output.mp3
@@ -85,6 +92,7 @@ find_and_sort_files .
 find_and_sort_files female
 flatpak install veraPDF
 flatpak list
+flatpak run --command=verapdf org.verapdf.veraPDF --format xml -r .
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak update -y
 for file in "$HOME/.bash_history" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"; do cp "$HOME/.bash_history2" "$file"; done
@@ -140,9 +148,11 @@ locate "su122+" | while IFS= read -r file; do ls -ld "$file"; done
 locate "supp+" | while IFS= read -r file; do ls -ld "$file"; done
 ls
 ls -Al
+ls -Al $temp_file
 lsattr Dokument/IDLE_py.py
 lsblk
 lspci
+magick identify -format "%Q" screenshot.jpg
 make
 man dotool
 man fzf
@@ -162,6 +172,7 @@ mpg123
 mplayer
 nautilus .
 newton_raphson
+node -v
 nslookup duckduckgo.com
 nslookup google.com
 nslookup google.com 8.26.56.26
@@ -170,14 +181,14 @@ nvidia-smi
 nvtop
 ocr_optimize_cli.py --help
 ocr_optimize_cli.py .
-optimize_to_bitonal.py
 optimize_to_bitonal.py --help
+optimize_to_bitonal.py .
 pdf_optimizer.py --help
 pdf_optimizer.py -i .
-pdfimages -list file-sample_100kB.pdf
-pdfimages -list file-sample_1MB.pdf
-pdfimages -list file-sample_500kB.pdf
-pdfimages -list optimerat_hybrid_arkiv.pdf
+pdfimages -list arkiv_slutversion.pdf
+pdfinfo -isodates file-sample_1MB.pdf
+pdfinfo -meta file-sample_1MB.pdf | more
+pdfinfo file-sample_1MB.pdf
 pgrep firefox
 pgrep flatpak
 pgrep thunderbird
@@ -208,6 +219,8 @@ rm 3553934930/scene/entity_soviet_female.pak 3553934930/global/interface/scene/p
 rm ~/.bash_history-*.tmp
 rocketpdf --help
 rsync -avz --update "$HOME/Men of War II/packages/Unit_booster.7z" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/"
+save_as_pdfa.py --help
+save_as_pdfa.py arkiv_slutversion.pdf arkiv_slutversion2.pdf
 setup-my-env.sh
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
 snap --help
@@ -240,7 +253,10 @@ sudo -A systemctl restart gdm
 sudo -A systemctl status clamav-freshclam
 sudo -A systemctl status clamd@scan.service
 sudo -A updatedb
+systemctl --user daemon-reload
+systemctl --user enable --now unoserver.service
 systemctl --user status dotool.service
+systemctl --user status unoserver.service
 systemctl enable --now dnf5-automatic.timer
 systemctl status
 systemctl status bluetooth
@@ -263,6 +279,7 @@ wc -lL .bash_history
 wc -lL .bash_history2
 wc -lL < .bash_history
 wc -lL < .bash_history2
+webp-convert.py
 wev
 who
 who -a
@@ -277,6 +294,7 @@ wmctrl -xl
 xdg-open "$HOME/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/entity/-vehicle/tank_medium/su122.pak"
 xev
 yev
+yt-dlp --help
 yt-dlp -F https://www.youtube.com/watch?v=E9lVXoezkFM
 yt-dlp -f 140 https://www.youtube.com/watch?v=E9lVXoezkFM
 z --help
