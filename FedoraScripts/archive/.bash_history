@@ -15,10 +15,10 @@ cd
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II"
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/entity"
 cd "$HOME/.local/share/Steam/steamapps/workshop/content/1128860"
+cd "$HOME/Men of War II/packages/editor-local-changes/global"
 cd "$HOME/Men of War II/packages/Unit_booster"
 cd "$HOME/Men of War II/packages/Unit_booster/scene/entity"
 cd "$HOME/Men of War II/packages/Unit_booster/scene/set/breed/arena_mp/usa"
-cd "$HOME/Men of War II/packages/editor-local-changes/global"
 cd "$HOME/Men of War II/profiles/player/save/"
 cd -- -vehicle
 cd ..
@@ -69,8 +69,8 @@ du car
 echo $((1+2))
 echo $PATH
 echo $SHELL
-echo $XDG_SESSION_TYPE
 echo $temp_file
+echo $XDG_SESSION_TYPE
 echo key k:26 k:39 k:40 | dotoolc
 echo key leftmeta | dotoolc
 echo key shift+1 x:exclam shift+k:2 | dotoolc
@@ -110,8 +110,8 @@ git difftool
 git gc
 git gc --prune=now
 git lfs install
-git lfs track "FedoraScripts/dist/*"
 git lfs track "dist/doc_converter_cli"
+git lfs track "FedoraScripts/dist/*"
 git pull
 git push
 git push origin --force --all
@@ -128,6 +128,8 @@ groupadd -f input
 groups
 gs
 gs --help
+#1771163079
+hgrep dnf
 htop
 id -nG
 javacfg
@@ -140,9 +142,9 @@ ln --help
 locate "*.py" | while IFS= read -r file; do ls -ld "$file"; done
 locate "+.def" | while IFS= read -r file; do ls -ld "$file"; done
 locate "1927_cannon" | while IFS= read -r file; do ls -ld "$file"; done
-locate "Men of War II" | while IFS= read -r file; do ls -ld "$file"; done
 locate "bm31+" | while IFS= read -r file; do ls -ld "$file"; done
 locate "m30+" | while IFS= read -r file; do ls -ld "$file"; done
+locate "Men of War II" | while IFS= read -r file; do ls -ld "$file"; done
 locate "rocketpdf" | while IFS= read -r file; do ls -ld "$file"; done
 locate "su122+" | while IFS= read -r file; do ls -ld "$file"; done
 locate "supp+" | while IFS= read -r file; do ls -ld "$file"; done
@@ -158,7 +160,7 @@ man dotool
 man fzf
 man ocrmypdf
 man wlrctl
-meld "$HOME/.bash_history" "$HOME/.bash_history2" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history" &
+meld "$HOME/.bash_history" "$HOME/.bash_history_cleaned" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history" &
 meld "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc" &
 meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py" &
 meld "$temp_file" "$HOME/Bash/MyFedoraScripts/FedoraScripts/doc_converter.py" &
@@ -200,8 +202,8 @@ pip3 list --user
 pip3 list --user --outdated
 pip3update
 pkill -sigkill Civ6
-pkill -sigkill TransportFever2
 pkill -sigkill mow2
+pkill -sigkill TransportFever2
 pkill firefox
 pngquant --version
 py
@@ -227,6 +229,7 @@ snap --help
 snap list
 snap refresh --list
 snap refresh --time
+#1771163065
 source ~/.bashrc
 stat /
 steam steam://rungameid/1128860
@@ -295,8 +298,8 @@ xdg-open "$HOME/.local/share/Steam/steamapps/common/Men of War II/packages/main/
 xev
 yev
 yt-dlp --help
-yt-dlp -F https://www.youtube.com/watch?v=E9lVXoezkFM
 yt-dlp -f 140 https://www.youtube.com/watch?v=E9lVXoezkFM
+yt-dlp -F https://www.youtube.com/watch?v=E9lVXoezkFM
 z --help
 z Fe
 zoxide --help
