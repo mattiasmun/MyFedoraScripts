@@ -3,6 +3,7 @@ import os
 import shutil
 import logging
 import argparse
+import uuid
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from tqdm import tqdm
@@ -43,11 +44,17 @@ def setup_logging(source_dir: str) -> str:
     return LOG_FILE
 
 def generate_pdfa_xmp(keywords, pdf_date, creator, producer):
-    # Standardisera datumet till en sträng veraPDF accepterar (utan millisekunder)
-    # Vi tvingar +01:00 för att matcha båda ställena
-    iso_date = f"{pdf_date[2:6]}-{pdf_date[6:8]}-{pdf_date[8:10]}T{pdf_date[10:12]}:{pdf_date[12:14]}:{pdf_date[14:16]}+01:00"
+    # Om datumet kommer in som "D:2023…", ta bort "D:"
+    clean_date = pdf_date.replace("D:", "").replace("'", "")
 
-    return f"""<?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
+    # ISO-format: YYYY-MM-DDTHH:MM:SS+01:00
+    iso_date = (f"{clean_date[0:4]}-{clean_date[4:6]}-{clean_date[6:8]}T"
+                f"{clean_date[8:10]}:{clean_date[10:12]}:{clean_date[12:14]}+01:00")
+
+    doc_id = f"uuid:{uuid.uuid4()}"
+
+    # Skapa själva XMP-innehållet
+    xmp_content = f"""<?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/">
@@ -64,9 +71,17 @@ def generate_pdfa_xmp(keywords, pdf_date, creator, producer):
    <xmp:ModifyDate>{iso_date}</xmp:ModifyDate>
    <xmp:MetadataDate>{iso_date}</xmp:MetadataDate>
   </rdf:Description>
+  <rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/">
+   <xmpMM:DocumentID>{doc_id}</xmpMM:DocumentID>
+   <xmpMM:InstanceID>{doc_id}</xmpMM:InstanceID>
+  </rdf:Description>
  </rdf:RDF>
-</x:xmpmeta>
-<?xpacket end="w"?>"""
+</x:xmpmeta>"""
+
+    # Lägg till padding (ca 2048 mellanslag)
+    # Detta gör att filen kan redigeras snabbare av t.ex. Adobe Acrobat
+    padding = " " * 2048
+    return f"{xmp_content}\n{padding}\n<?xpacket end=\"w\"?>"
 
 def is_already_optimized(doc) -> bool:
     """
@@ -148,17 +163,18 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
 
-        # 1. Definiera exakta värden (vi hårdkodar för total matchning)
-        # Vi tvingar tidszon +0100 i båda systemen
-        now = datetime.now().strftime("D:%Y%m%d%H%M%S+01'00'")
+        # 2. Definiera värden
+        # Vi skapar en ren tidsstämpel först för att lättare formatera den åt båda håll
+        raw_now = datetime.now()
+        pdf_date_str = raw_now.strftime("D:%Y%m%d%H%M%S+01'00'") # Format för Info-Dict
         keywords = "OptimizedByPythonScript"
         creator = "Python Script"
         producer = "PyMuPDF"
 
-        # 2. Uppdatera Info-Dictionary
+        # 3. Uppdatera Info-Dictionary
         doc.set_metadata({
-            "creationDate": now,
-            "modDate": now,
+            "creationDate": pdf_date_str,
+            "modDate": pdf_date_str,
             "keywords": keywords,
             "creator": creator,
             "producer": producer,
@@ -166,11 +182,12 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
             "subject": doc.metadata.get("subject", "")
         })
 
-        # 3. Uppdatera XMP med exakt samma strängar
-        new_xmp = generate_pdfa_xmp(keywords, now, creator, producer)
+        # 4. Uppdatera XMP (Den nya PDF/A-standarden)
+        # Vi skickar med pdf_date_str. Vår funktion rensar "D:" automatiskt nu.
+        new_xmp = generate_pdfa_xmp(keywords, pdf_date_str, creator, producer)
         doc.set_xml_metadata(new_xmp)
 
-        # 2. Spara direkt till den temporära filen på disk
+        # 5. Spara direkt till den temporära filen på disk
         doc.save(
             temp_optimized,
             garbage=4,           # Maximal rensning av dubletter
@@ -187,7 +204,7 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
         )
         doc.close()
 
-        # 3. Kontrollera storlek innan överskrivning
+        # 6. Kontrollera storlek innan överskrivning
         size_after = os.path.getsize(temp_optimized)
         bytes_saved = size_before - size_after
 
