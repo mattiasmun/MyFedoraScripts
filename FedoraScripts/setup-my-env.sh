@@ -56,6 +56,8 @@ export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # Snabbsök i historiken
 alias hgrep="history | grep -i"
+
+export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
 EOF
 	echo "Hela miljö-blocket har lagts till i '$BASHRC_FILE'."
 fi
