@@ -78,7 +78,6 @@ env
 ex --help
 exiftool --help
 exiftool screenshot.jpg
-exit
 ffprobe --help
 ffprobe output.mp3
 fg
@@ -103,6 +102,7 @@ fzf --multi --cycle
 fzf-select-open.sh
 gedit "$HOME/Men of War II/log/game.log"
 git --help
+#1771164665
 git -C ~/Bash/MyFedoraScripts status
 git add *
 git clone https://git.sr.ht/~geb/dotool
@@ -120,6 +120,7 @@ git rev-list --objects --all | grep "$(git for-each-ref --format='%(objectname) 
 git status
 gitcfg
 gitty ~/529340
+#1771165221
 gitty ~/Bash/MyFedoraScripts
 gnome-shell --version
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
@@ -148,9 +149,6 @@ locate "Men of War II" | while IFS= read -r file; do ls -ld "$file"; done
 locate "rocketpdf" | while IFS= read -r file; do ls -ld "$file"; done
 locate "su122+" | while IFS= read -r file; do ls -ld "$file"; done
 locate "supp+" | while IFS= read -r file; do ls -ld "$file"; done
-ls
-ls -Al
-ls -Al $temp_file
 lsattr Dokument/IDLE_py.py
 lsblk
 lspci
@@ -229,7 +227,7 @@ snap --help
 snap list
 snap refresh --list
 snap refresh --time
-#1771163065
+#1771164881
 source ~/.bashrc
 stat /
 steam steam://rungameid/1128860
