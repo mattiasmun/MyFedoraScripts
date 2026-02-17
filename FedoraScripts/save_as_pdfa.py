@@ -138,6 +138,7 @@ def convert_to_pdfa3(input_pdf, output_pdf, attachments=None):
     # Ghostscript-kommando optimerat för PDF/A-3b validering
     gs_command = [
         gs_exec,
+        "-dPDFSETTINGS=/ebook",
         "-dPDFA=3",
         "-dCompressMode=2",
         "-dBATCH",
@@ -162,7 +163,6 @@ def convert_to_pdfa3(input_pdf, output_pdf, attachments=None):
         "-dRenderIntent=1",             # Relative Colorimetric (viktigt för PDF/A)
         "-dEmbedAllFonts=true",         # Tvingar in Nimbus/Helvetica
         "-dSubsetFonts=true",           # Minskar filstorlek men behåller inbäddning
-        "-dPDFSETTINGS=/ebook",
         f"-sOutputFile={output_pdf}",
         "-f", "temp_pdfa_def.ps",
         "-f", input_pdf
