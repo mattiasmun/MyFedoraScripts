@@ -3,6 +3,7 @@ import ocrmypdf
 import os
 import glob
 import argparse
+import re
 import time
 import uuid
 import xml.etree.ElementTree as ET
@@ -18,8 +19,21 @@ except ImportError as e:
     print(f"Details: {e}")
     exit(1)
 
-def generate_pdfa_xmp(keywords, pdf_date, creator, producer):
-    # Om datumet kommer in som "D:2023…", ta bort "D:"
+def get_pdfa_info_pymupdf(doc):
+    xml_metadata = doc.get_xml_metadata()
+
+    # Vi använder regex för att hitta värdena i XML-strängen
+    part_match = re.search(r'<pdfaid:part>(\d+)</pdfaid:part>', xml_metadata)
+    conf_match = re.search(r'<pdfaid:conformance>(\w+)</pdfaid:conformance>', xml_metadata)
+
+    # Standardvärden om de inte hittas (t.ex. om filen inte är PDF/A från början)
+    pdfa_part = part_match.group(1) if part_match else "3"
+    pdfa_conf = conf_match.group(1) if conf_match else "B"
+
+    return pdfa_part, pdfa_conf
+
+def generate_pdfa_xmp(keywords, pdf_date, creator, producer, pdfa_part, pdfa_conf, title="null", subject="null"):
+    # Rensa datum
     clean_date = pdf_date.replace("D:", "").replace("'", "")
 
     # ISO-format: YYYY-MM-DDTHH:MM:SS+01:00
@@ -28,33 +42,48 @@ def generate_pdfa_xmp(keywords, pdf_date, creator, producer):
 
     doc_id = f"uuid:{uuid.uuid4()}"
 
+    # Om title eller subject saknas, sätt till "null" sträng för att matcha din mall
+    display_title = title if title else "null"
+    display_subject = subject if subject else "null"
+
     # Skapa själva XMP-innehållet
     xmp_content = f"""<?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
-<x:xmpmeta xmlns:x="adobe:ns:meta/">
- <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/">
-   <pdfaid:part>3</pdfaid:part>
-   <pdfaid:conformance>B</pdfaid:conformance>
-  </rdf:Description>
-  <rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">
-   <pdf:Keywords>{keywords}</pdf:Keywords>
-   <pdf:Producer>{producer}</pdf:Producer>
-  </rdf:Description>
-  <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
-   <xmp:CreatorTool>{creator}</xmp:CreatorTool>
-   <xmp:CreateDate>{iso_date}</xmp:CreateDate>
-   <xmp:ModifyDate>{iso_date}</xmp:ModifyDate>
-   <xmp:MetadataDate>{iso_date}</xmp:MetadataDate>
-  </rdf:Description>
-  <rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/">
-   <xmpMM:DocumentID>{doc_id}</xmpMM:DocumentID>
-   <xmpMM:InstanceID>{doc_id}</xmpMM:InstanceID>
-  </rdf:Description>
- </rdf:RDF>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.1.0-jc003">
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about=""
+        xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/"
+        xmlns:pdf="http://ns.adobe.com/pdf/1.3/"
+        xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+        xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+        xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <pdfaid:part>{pdfa_part}</pdfaid:part>
+      <pdfaid:conformance>{pdfa_conf}</pdfaid:conformance>
+      <pdf:Producer>{producer}</pdf:Producer>
+      <pdf:Keywords>{keywords}</pdf:Keywords>
+      <xmp:ModifyDate>{iso_date}</xmp:ModifyDate>
+      <xmp:CreateDate>{iso_date}</xmp:CreateDate>
+      <xmp:MetadataDate>{iso_date}</xmp:MetadataDate>
+      <xmp:CreatorTool>{creator}</xmp:CreatorTool>
+      <xmpMM:DocumentID>{doc_id}</xmpMM:DocumentID>
+      <xmpMM:InstanceID>{doc_id}</xmpMM:InstanceID>
+      <xmpMM:RenditionClass>default</xmpMM:RenditionClass>
+      <xmpMM:VersionID>1</xmpMM:VersionID>
+      <dc:format>application/pdf</dc:format>
+      <dc:title>
+        <rdf:Alt>
+          <rdf:li xml:lang="x-default">{display_title}</rdf:li>
+        </rdf:Alt>
+      </dc:title>
+      <dc:description>
+        <rdf:Alt>
+          <rdf:li xml:lang="x-default">{display_subject}</rdf:li>
+        </rdf:Alt>
+      </dc:description>
+    </rdf:Description>
+  </rdf:RDF>
 </x:xmpmeta>"""
 
-    # Lägg till padding (ca 2048 mellanslag)
-    # Detta gör att filen kan redigeras snabbare av t.ex. Adobe Acrobat
+    # Lägg till padding (ca 2048 tecken) för snabbare filredigering
     padding = " " * 2048
     return f"{xmp_content}\n{padding}\n<?xpacket end=\"w\"?>"
 
@@ -95,6 +124,8 @@ def process_file(pdf_path, output_path):
         keywords = "OptimizedByPythonScript"
         creator = "Python Script"
         producer = "PyMuPDF"
+        curr_title = doc.metadata.get("title", "null")
+        curr_subject = doc.metadata.get("subject", "null")
 
         # 3. Uppdatera Info-Dictionary
         doc.set_metadata({
@@ -103,13 +134,23 @@ def process_file(pdf_path, output_path):
             "keywords": keywords,
             "creator": creator,
             "producer": producer,
-            "title": doc.metadata.get("title", ""),
-            "subject": doc.metadata.get("subject", "")
+            "title": curr_title,
+            "subject": curr_subject
         })
 
         # 4. Uppdatera XMP (Den nya PDF/A-standarden)
         # Vi skickar med pdf_date_str. Vår funktion rensar "D:" automatiskt nu.
-        new_xmp = generate_pdfa_xmp(keywords, pdf_date_str, creator, producer)
+        pdfa_part, pdfa_conf = get_pdfa_info_pymupdf(doc)
+        new_xmp = generate_pdfa_xmp(
+            keywords,
+            pdf_date_str,
+            creator,
+            producer,
+            pdfa_part,
+            pdfa_conf,
+            title=curr_title,
+            subject=curr_subject
+        )
         doc.set_xml_metadata(new_xmp)
 
         # 5. Spara direkt till den temporära filen på disk
