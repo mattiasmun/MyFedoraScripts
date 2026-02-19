@@ -3,7 +3,7 @@
 --write-auto-subs
 --sub-langs "en.*"
 --convert-subs srt
--o "~/Videos/YouTube/%(playlist_title)s/%(playlist_index)02d - %(title)s.%(ext)s"
+-o "~/Video/YouTube/%(playlist_title)s/%(playlist_index)02d - %(title)s.%(ext)s"
 --js-runtimes node
 --download-archive "~/Video/YouTube/archive.txt"
 --match-filter "duration > 60"
