@@ -5,6 +5,7 @@
 --convert-subs srt
 -o "~/Video/YouTube/%(playlist_title)s/%(playlist_index)02d - %(title)s.%(ext)s"
 --js-runtimes node
+--remote-components ejs:github
 --download-archive "~/Video/YouTube/archive.txt"
 --match-filter "duration > 60"
 --match-filter "!is_live"
