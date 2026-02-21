@@ -1,5 +1,6 @@
 altgraph
 annotated-doc
+click
 curl_cffi
 docx2pdf
 evdev
