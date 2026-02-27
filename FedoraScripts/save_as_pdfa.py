@@ -60,7 +60,7 @@ def create_pdfa_def(attachment_paths=None, part=3, conformance="B"):
 
 % 3. OutputIntent (Krävs för RGB-validering)
 [ /ICCProfile {{icc_obj}}
-  /Subtype /GTS_PDFA1
+  /Subtype /GTS_PDFA3
   /OutputConditionIdentifier (sRGB)
   /RegistryName (http://www.color.org)
   /Info (sRGB IEC61966-2.1)

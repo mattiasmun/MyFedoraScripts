@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import os
 import sys
 import subprocess
@@ -6,6 +7,7 @@ import shutil
 import platform
 import logging
 import xml.etree.ElementTree as ET
+import tempfile
 from pathlib import Path
 
 # ============================================================
@@ -18,41 +20,82 @@ logging.basicConfig(
 )
 
 # ============================================================
-# ICC-PROFIL
+# ICC-HANTERING
 # ============================================================
 
 def get_icc_path():
-    if platform.system() == "Windows":
-        return r"C:\msys64\ucrt64\share\texmf-dist\tex\generic\colorprofiles\sRGB.icc"
-    else:
-        return "/usr/share/ghostscript/iccprofiles/srgb.icc"
+    """
+    Prioritet:
+    1. Lokal sRGB.icc i samma mapp som scriptet
+    2. Systemets Ghostscript-ICC (Linux)
+    """
+
+    local_icc = os.path.join(os.path.dirname(__file__), "sRGB.icc")
+    if os.path.exists(local_icc):
+        logging.info("Använder lokal sRGB.icc")
+        return local_icc
+
+    system_icc = "/usr/share/ghostscript/iccprofiles/srgb.icc"
+    if os.path.exists(system_icc):
+        logging.info("Använder systemets Ghostscript sRGB.icc")
+        return system_icc
+
+    logging.error("Ingen sRGB.icc hittades.")
+    logging.error("Placera sRGB.icc i samma mapp som scriptet.")
+    sys.exit(1)
+
+def verify_icc_profile(path: str):
+    """
+    Verifierar att ICC är sRGB IEC61966-2.1
+    """
+
+    if not os.path.exists(path):
+        logging.error(f"ICC-profil saknas: {path}")
+        sys.exit(1)
+
+    try:
+        with open(path, "rb") as f:
+            data = f.read()
+
+        if data[36:40] != b'acsp':
+            raise ValueError("ICC saknar 'acsp'-signatur")
+
+        if data[16:20] != b'RGB ':
+            raise ValueError("ICC är inte RGB")
+
+        if b"sRGB IEC61966-2.1" not in data:
+            raise ValueError("ICC är inte sRGB IEC61966-2.1")
+
+        logging.info("ICC verifierad: sRGB IEC61966-2.1")
+
+    except Exception as e:
+        logging.error(f"Felaktig ICC-profil: {e}")
+        sys.exit(1)
 
 ICC_RGB = get_icc_path()
+verify_icc_profile(ICC_RGB)
 
 # ============================================================
 # GHOSTSCRIPT
 # ============================================================
 
 def find_ghostscript():
-    candidates = ["gs", "gswin64c", "gswin32c"]
-    for c in candidates:
-        if shutil.which(c):
-            return c
+    for candidate in ["gs", "gswin64c", "gswin32c"]:
+        if shutil.which(candidate):
+            return candidate
     logging.error("Ghostscript hittades inte i PATH.")
     sys.exit(1)
 
 GS_EXEC = find_ghostscript()
 
 # ============================================================
-# SKAPA PDF/A-DEFINITION (KORREKT FÖR PDF/A-3)
+# SKAPA TEMPORÄR PDF/A-DEFINITION
 # ============================================================
 
-def create_pdfa_def():
+def create_pdfa_def() -> str:
     icc_abs = os.path.abspath(ICC_RGB).replace("\\", "/")
 
-    ps = f"""%!
-% PDF/A-3B definition
-
+    ps_content = f"""%!
 [/_objdef {{icc_obj}} /type /stream /OBJ pdfmark
 [{{icc_obj}} ({icc_abs}) (r) file /PUT pdfmark
 [{{icc_obj}} << /N 3 >> /PUT pdfmark
@@ -63,21 +106,24 @@ def create_pdfa_def():
   /Subtype /GTS_PDFA3
   /Type /OutputIntent
   /S /GTS_PDFA3
-  /DEST pdfmark
+  /DESTINATION pdfmark
 
 [{{Catalog}} << /OutputIntents [ {{icc_obj}} ] >> /PUT pdfmark
 """
 
-    with open("pdfa_def.ps", "w", encoding="utf-8") as f:
-        f.write(ps)
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".ps")
+    tmp.write(ps_content.encode("utf-8"))
+    tmp.close()
+
+    return tmp.name
 
 # ============================================================
-# KONVERTERA EN FIL
+# KONVERTERING
 # ============================================================
 
 def convert_to_pdfa3b(input_pdf: Path, output_pdf: Path) -> bool:
 
-    create_pdfa_def()
+    pdfa_def_path = create_pdfa_def()
 
     cmd = [
         GS_EXEC,
@@ -94,7 +140,7 @@ def convert_to_pdfa3b(input_pdf: Path, output_pdf: Path) -> bool:
         "-dAutoRotatePages=/None",
         "-dCompatibilityLevel=1.7",
         f"-sOutputFile={output_pdf}",
-        "-f", "pdfa_def.ps",
+        "-f", pdfa_def_path,
         "-f", str(input_pdf)
     ]
 
@@ -102,15 +148,41 @@ def convert_to_pdfa3b(input_pdf: Path, output_pdf: Path) -> bool:
 
     result = subprocess.run(cmd, capture_output=True, text=True)
 
+    os.remove(pdfa_def_path)
+
     if result.returncode != 0:
-        logging.error(f"Ghostscript-fel för {input_pdf.name}")
-        logging.error(result.stderr)
+        logging.error(f"Ghostscript-fel:\n{result.stderr}")
         return False
 
     return True
 
 # ============================================================
-# VALIDERING MED VERAPDF (PDF/A-3B STRICT)
+# STRUKTURKONTROLL AV OUTPUTINTENT
+# ============================================================
+
+def verify_embedded_icc(pdf_path: Path) -> bool:
+    try:
+        with open(pdf_path, "rb") as f:
+            data = f.read()
+
+        if b"/OutputIntents" not in data:
+            raise ValueError("Saknar /OutputIntents")
+
+        if b"/GTS_PDFA3" not in data:
+            raise ValueError("Saknar /GTS_PDFA3")
+
+        if b"/ICCProfile" not in data:
+            raise ValueError("Saknar /ICCProfile")
+
+        logging.info("OutputIntent verifierad.")
+        return True
+
+    except Exception as e:
+        logging.error(f"ICC-kontroll misslyckades: {e}")
+        return False
+
+# ============================================================
+# VERAPDF (STRICT 3B)
 # ============================================================
 
 def validate_pdfa3b(file_path: Path) -> bool:
@@ -129,11 +201,9 @@ def validate_pdfa3b(file_path: Path) -> bool:
 
     if process.returncode > 1:
         logging.error("veraPDF kraschade.")
-        logging.error(process.stderr)
         return False
 
     if not process.stdout.strip():
-        logging.error("veraPDF returnerade tom output.")
         return False
 
     root = ET.fromstring(process.stdout)
@@ -148,14 +218,18 @@ def validate_pdfa3b(file_path: Path) -> bool:
     return report.attrib.get("isCompliant", "false").lower() == "true"
 
 # ============================================================
-# BEARBETA EN FIL
+# BEARBETA FIL
 # ============================================================
 
-def process_file(input_pdf: Path, output_dir: Path):
+def process_file(input_pdf: Path, output_dir: Path) -> bool:
 
     output_pdf = output_dir / input_pdf.name
 
     if not convert_to_pdfa3b(input_pdf, output_pdf):
+        return False
+
+    if not verify_embedded_icc(output_pdf):
+        output_pdf.unlink(missing_ok=True)
         return False
 
     if not validate_pdfa3b(output_pdf):
@@ -167,24 +241,21 @@ def process_file(input_pdf: Path, output_dir: Path):
     return True
 
 # ============================================================
-# BATCH-HANTERING
+# BATCH
 # ============================================================
 
-def process_directory(input_dir: Path, output_dir: Path):
+def process_directory(input_dir: Path, output_dir: Path) -> int:
 
     if not input_dir.exists():
         logging.error("Indatakatalog finns inte.")
-        return
+        return 1
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
     pdf_files = list(input_dir.rglob("*.pdf"))
-
     if not pdf_files:
         logging.warning("Inga PDF-filer hittades.")
-        return
-
-    logging.info(f"Hittade {len(pdf_files)} PDF-filer.")
+        return 0
 
     success = 0
     fail = 0
@@ -200,6 +271,8 @@ def process_directory(input_dir: Path, output_dir: Path):
     logging.info(f"UNDERKÄNDA: {fail}")
     logging.info("===================================")
 
+    return 0 if fail == 0 else 1
+
 # ============================================================
 # MAIN
 # ============================================================
@@ -213,7 +286,8 @@ def main():
     input_dir = Path(sys.argv[1])
     output_dir = Path(sys.argv[2])
 
-    process_directory(input_dir, output_dir)
+    exit_code = process_directory(input_dir, output_dir)
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":
