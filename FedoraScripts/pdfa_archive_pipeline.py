@@ -142,7 +142,7 @@ def generate_pdfa_def(icc_path: Path, level: int) -> Path:
     """
 
     icc_abs = icc_path.resolve().as_posix()
-    gts = "GTS_PDFA3" if level == 3 else "GTS_PDFA2"
+    gts = "GTS_PDFA1"
 
     content = f"""%!
 % Auto-generated PDF/A prefix (deterministisk)
@@ -513,21 +513,28 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         ok, level, method, pdfa_def_hash = process_file_with_level(pdf, pdfa_dir, xml_attachment)
         pdfa_level_str = f"{level}B"
 
+        current_location = pdfa_dir / pdf.name
+
         if ok:
             success += 1
             status = "PASS"
-            pdfa_hash = sha256_file(pdfa_dir / pdf.name)
+            final_location = current_location
+
         else:
             fail += 1
             status = "FAIL"
+            final_location = rejected_dir / pdf.name
 
-        generated_pdf = pdfa_dir / pdf.name
-        if generated_pdf.exists():
-            shutil.move(
-                generated_pdf,
-                rejected_dir / pdf.name
-            )
-            pdfa_hash = sha256_file(rejected_dir / pdf.name)
+        # Flytta till rejected om den finns
+        # Flytta endast om filen är underkänd
+        if not ok and current_location.exists():
+            if final_location.exists():
+                final_location.unlink()
+            shutil.move(current_location, final_location)
+
+        # Räkna hash om filen faktiskt finns
+        if final_location.exists():
+            pdfa_hash = sha256_file(final_location)
         else:
             pdfa_hash = ""
 
