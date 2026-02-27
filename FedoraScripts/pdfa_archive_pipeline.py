@@ -172,31 +172,6 @@ VERAPDF_CMD = find_verapdf()
 # PDFMARK
 # ============================================================
 
-def create_pdfa_def(level: int) -> str:
-    icc_abs = os.path.abspath(ICC_RGB).replace("\\", "/")
-    gts = f"GTS_PDFA{level}"
-
-    ps = f"""%!
-[/_objdef {{icc_obj}} /type /stream /OBJ pdfmark
-[{{icc_obj}} ({icc_abs}) (r) file /PUT pdfmark
-[{{icc_obj}} << /N 3 >> /PUT pdfmark
-
-[ /ICCProfile {{icc_obj}}
-  /OutputConditionIdentifier (sRGB)
-  /Info (sRGB IEC61966-2.1)
-  /Subtype /{gts}
-  /Type /OutputIntent
-  /S /{gts}
-  /DESTINATION pdfmark
-
-[{{Catalog}} << /OutputIntents [ {{icc_obj}} ] >> /PUT pdfmark
-"""
-
-    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".ps")
-    tmp.write(ps.encode("utf-8"))
-    tmp.close()
-    return tmp.name
-
 def create_attachment_pdfmark(xml_path: Path) -> str:
     xml_abs = os.path.abspath(xml_path).replace("\\", "/")
     filename = xml_path.name
@@ -231,15 +206,16 @@ def create_attachment_pdfmark(xml_path: Path) -> str:
     return tmp.name
 
 # ============================================================
-# KONVERTERING
+# KONVERTERING – STABIL 1.5
 # ============================================================
+
+SYSTEM_PDFA_DEF = "/usr/share/ghostscript/lib/PDFA_def.ps"
 
 def convert_to_pdfa(input_pdf: Path,
                     output_pdf: Path,
                     xml_attachment: Path = None) -> tuple[bool, int]:
 
     level = 3 if xml_attachment else 2
-    pdfa_def = create_pdfa_def(level)
     attachment_def = None
 
     if xml_attachment and xml_attachment.exists():
@@ -253,6 +229,7 @@ def convert_to_pdfa(input_pdf: Path,
         "-dNOOUTERSAVE",
         "-sDEVICE=pdfwrite",
         "-dPDFACompatibilityPolicy=1",
+        "-dUseCIEColor",
         "-sColorConversionStrategy=RGB",
         "-sProcessColorModel=DeviceRGB",
         "-dEmbedAllFonts=true",
@@ -260,7 +237,9 @@ def convert_to_pdfa(input_pdf: Path,
         "-dAutoRotatePages=/None",
         "-dCompatibilityLevel=1.7",
         f"-sOutputFile={output_pdf}",
-        "-f", pdfa_def,
+
+        # 🔹 ENDAST Ghostscripts officiella PDFA_def
+        "-f", SYSTEM_PDFA_DEF,
     ]
 
     if attachment_def:
@@ -287,10 +266,56 @@ def convert_to_pdfa(input_pdf: Path,
         return False, level
 
     finally:
-        if os.path.exists(pdfa_def):
-            os.remove(pdfa_def)
         if attachment_def and os.path.exists(attachment_def):
             os.remove(attachment_def)
+
+# ============================================================
+# RASTER FALLBACK – STABIL 1.5
+# ============================================================
+
+def convert_to_pdfa_raster(input_pdf: Path,
+                           output_pdf: Path,
+                           level: int) -> bool:
+
+    cmd = [
+        GS_EXEC,
+        f"-dPDFA={level}",
+        "-dBATCH",
+        "-dNOPAUSE",
+        "-dNOOUTERSAVE",
+        "-sDEVICE=pdfwrite",
+        "-dPDFACompatibilityPolicy=1",
+        "-dUseCIEColor",
+        "-sColorConversionStrategy=RGB",
+        "-sProcessColorModel=DeviceRGB",
+        "-dEmbedAllFonts=true",
+        "-dSubsetFonts=true",
+        "-dAutoRotatePages=/None",
+        "-r300",
+        f"-sOutputFile={output_pdf}",
+
+        # 🔹 Viktigt: även raster behöver PDFA_def
+        "-f", SYSTEM_PDFA_DEF,
+        "-f", str(input_pdf)
+    ]
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=GHOSTSCRIPT_TIMEOUT
+        )
+
+        if result.returncode != 0:
+            logging.error(f"Raster-Ghostscript-fel:\n{result.stderr}")
+            return False
+
+        return True
+
+    except subprocess.TimeoutExpired:
+        logging.error("Raster-konvertering timeout.")
+        return False
 
 # ============================================================
 # VERIFIERING
@@ -360,29 +385,45 @@ def validate_pdfa(file_path: Path, level: int) -> bool:
 
 def process_file_with_level(input_pdf: Path,
                             pdfa_dir: Path,
-                            xml_attachment: Path = None) -> tuple[bool, int]:
+                            xml_attachment: Path = None) -> tuple[bool, int, str]:
 
     output_pdf = pdfa_dir / input_pdf.name
+    level = 3 if xml_attachment else 2
 
-    ok, level = convert_to_pdfa(input_pdf, output_pdf, xml_attachment)
-    if not ok:
-        return False, level
+    # ------------------------------------------------
+    # 1️⃣ Försök normal konvertering
+    # ------------------------------------------------
+    ok, _ = convert_to_pdfa(input_pdf, output_pdf, xml_attachment)
 
-    if not verify_output_intent(output_pdf):
-        output_pdf.unlink(missing_ok=True)
-        return False, level
+    if ok and verify_output_intent(output_pdf):
 
-    if level == 3 and xml_attachment:
-        if not verify_embedded_xml(output_pdf, xml_attachment.name):
-            output_pdf.unlink(missing_ok=True)
-            return False, level
+        if level == 3 and xml_attachment:
+            if not verify_embedded_xml(output_pdf, xml_attachment.name):
+                ok = False
 
-    if not validate_pdfa(output_pdf, level):
-        output_pdf.unlink(missing_ok=True)
-        return False, level
+        if ok and validate_pdfa(output_pdf, level):
+            logging.info(f"GODKÄND PDF/A-{level}B (direkt): {input_pdf.name}")
+            return True, level, "direct"
 
-    logging.info(f"GODKÄND PDF/A-{level}B: {input_pdf.name}")
-    return True, level
+    # ------------------------------------------------
+    # 2️⃣ Fallback: Rasterisering
+    # ------------------------------------------------
+    logging.warning(f"Fallback rasterisering: {input_pdf.name}")
+
+    output_pdf.unlink(missing_ok=True)
+
+    raster_ok = convert_to_pdfa_raster(input_pdf, output_pdf, level)
+
+    if raster_ok and validate_pdfa(output_pdf, level):
+        logging.info(f"GODKÄND PDF/A-{level}B (raster): {input_pdf.name}")
+        return True, level, "rasterized"
+
+    # ------------------------------------------------
+    # 3️⃣ Totalt misslyckande
+    # ------------------------------------------------
+    output_pdf.unlink(missing_ok=True)
+    logging.error(f"UNDERKÄND efter fallback: {input_pdf.name}")
+    return False, level, "failed"
 
 # ============================================================
 # BATCH
@@ -427,7 +468,7 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         original_hash = sha256_file(pdf)
         xml_hash = sha256_file(xml_attachment) if xml_attachment else ""
 
-        ok, level = process_file_with_level(pdf, pdfa_dir, xml_attachment)
+        ok, level, method = process_file_with_level(pdf, pdfa_dir, xml_attachment)
         pdfa_level_str = f"{level}B"
 
         if ok:
@@ -454,6 +495,7 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
             "filename": pdf.name,
             "status": status,
             "pdfa_level": pdfa_level_str,
+            "conversion_method": method,
             "sha256_original": original_hash,
             "sha256_pdfa": pdfa_hash,
             "sha256_xml": xml_hash,
