@@ -133,6 +133,59 @@ verify_icc_profile(LOCAL_ICC)
 ICC_SHA256 = sha256_file(LOCAL_ICC)
 
 # ============================================================
+# DYNAMISK PDFA_def GENERERING (deterministisk)
+# ============================================================
+
+def generate_pdfa_def(icc_path: Path, level: int) -> Path:
+    """
+    Genererar deterministisk PDFA_def med korrekt GTS_PDFA-nivå.
+    """
+
+    icc_abs = icc_path.resolve().as_posix()
+    gts = "GTS_PDFA3" if level == 3 else "GTS_PDFA2"
+
+    content = f"""%!
+% Auto-generated PDF/A prefix (deterministisk)
+
+[ /Title (PDF/A Document)
+  /DOCINFO pdfmark
+
+/ICCProfile ({icc_abs}) def
+
+[/_objdef {{icc_PDFA}} /type /stream /OBJ pdfmark
+[{{icc_PDFA}} <<
+  /N 3
+>> /PUT pdfmark
+
+[
+{{icc_PDFA}}
+{{ICCProfile (r) file}} stopped
+{{
+  (\\nFailed to open ICC profile.\\n) print
+  cleartomark
+}}
+{{
+  /PUT pdfmark
+
+  [/_objdef {{OutputIntent_PDFA}} /type /dict /OBJ pdfmark
+  [{{OutputIntent_PDFA}} <<
+    /Type /OutputIntent
+    /S /{gts}
+    /DestOutputProfile {{icc_PDFA}}
+    /OutputConditionIdentifier (sRGB IEC61966-2.1)
+  >> /PUT pdfmark
+
+  [{{Catalog}} <</OutputIntents [ {{OutputIntent_PDFA}} ]>> /PUT pdfmark
+}} ifelse
+"""
+
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".ps")
+    tmp.write(content.encode("utf-8"))
+    tmp.close()
+
+    return Path(tmp.name)
+
+# ============================================================
 # EXTERNAL TOOLS
 # ============================================================
 
@@ -196,18 +249,14 @@ def create_attachment_pdfmark(xml_path: Path) -> str:
 # ============================================================
 
 PROJECT_ROOT = Path(__file__).parent
-LOCAL_PDFA_DEF = PROJECT_ROOT / "PDFA_def_local.ps"
-if not LOCAL_PDFA_DEF.exists():
-    logging.error("PDFA_def_local.ps saknas.")
-    sys.exit(1)
-PDFA_DEF_SHA256 = sha256_file(LOCAL_PDFA_DEF)
-SYSTEM_PDFA_DEF = str(LOCAL_PDFA_DEF)
 
 def convert_to_pdfa(input_pdf: Path,
                     output_pdf: Path,
-                    xml_attachment: Path = None) -> tuple[bool, int]:
+                    xml_attachment: Path = None) -> tuple[bool, int, str]:
 
     level = 3 if xml_attachment else 2
+    pdfa_def_path = generate_pdfa_def(LOCAL_ICC, level)
+    pdfa_def_sha256 = sha256_file(pdfa_def_path)
     attachment_def = None
 
     if xml_attachment and xml_attachment.exists():
@@ -230,9 +279,7 @@ def convert_to_pdfa(input_pdf: Path,
         "-dCompatibilityLevel=1.7",
         f"--permit-file-read={LOCAL_ICC.resolve()}",
         f"-sOutputFile={output_pdf}",
-
-        # 🔹 ENDAST Ghostscripts officiella PDFA_def
-        "-f", SYSTEM_PDFA_DEF,
+        "-f", str(pdfa_def_path),
     ]
 
     if attachment_def:
@@ -250,17 +297,20 @@ def convert_to_pdfa(input_pdf: Path,
 
         if result.returncode != 0:
             logging.error(f"Ghostscript-fel:\n{result.stderr}")
-            return False, level
+            return False, level, pdfa_def_sha256
 
-        return True, level
+        return True, level, pdfa_def_sha256
 
     except subprocess.TimeoutExpired:
         logging.error(f"Ghostscript timeout efter {GHOSTSCRIPT_TIMEOUT} sekunder.")
-        return False, level
+        return False, level, pdfa_def_sha256
 
     finally:
         if attachment_def and os.path.exists(attachment_def):
             os.remove(attachment_def)
+
+        if pdfa_def_path.exists():
+            pdfa_def_path.unlink(missing_ok=True)
 
 # ============================================================
 # RASTER FALLBACK – STABIL 1.5
@@ -268,7 +318,10 @@ def convert_to_pdfa(input_pdf: Path,
 
 def convert_to_pdfa_raster(input_pdf: Path,
                            output_pdf: Path,
-                           level: int) -> bool:
+                           level: int) -> tuple[bool, str]:
+
+    pdfa_def_path = generate_pdfa_def(LOCAL_ICC, level)
+    pdfa_def_sha256 = sha256_file(pdfa_def_path)
 
     cmd = [
         GS_EXEC,
@@ -287,9 +340,7 @@ def convert_to_pdfa_raster(input_pdf: Path,
         "-r300",
         f"--permit-file-read={LOCAL_ICC.resolve()}",
         f"-sOutputFile={output_pdf}",
-
-        # 🔹 Viktigt: även raster behöver PDFA_def
-        "-f", SYSTEM_PDFA_DEF,
+        "-f", str(pdfa_def_path),
         "-f", str(input_pdf)
     ]
 
@@ -303,13 +354,17 @@ def convert_to_pdfa_raster(input_pdf: Path,
 
         if result.returncode != 0:
             logging.error(f"Raster-Ghostscript-fel:\n{result.stderr}")
-            return False
+            return False, pdfa_def_sha256
 
-        return True
+        return True, pdfa_def_sha256
 
     except subprocess.TimeoutExpired:
         logging.error("Raster-konvertering timeout.")
-        return False
+        return False, pdfa_def_sha256
+
+    finally:
+        if pdfa_def_path.exists():
+            pdfa_def_path.unlink(missing_ok=True)
 
 # ============================================================
 # VERIFIERING
@@ -379,15 +434,15 @@ def validate_pdfa(file_path: Path, level: int) -> bool:
 
 def process_file_with_level(input_pdf: Path,
                             pdfa_dir: Path,
-                            xml_attachment: Path = None) -> tuple[bool, int, str]:
+                            xml_attachment: Path = None) -> tuple[bool, int, str, str]:
 
     output_pdf = pdfa_dir / input_pdf.name
     level = 3 if xml_attachment else 2
 
-    # ------------------------------------------------
-    # 1️⃣ Försök normal konvertering
-    # ------------------------------------------------
-    ok, _ = convert_to_pdfa(input_pdf, output_pdf, xml_attachment)
+    # 1️⃣ Direktförsök
+    ok, _, pdfa_def_hash = convert_to_pdfa(
+        input_pdf, output_pdf, xml_attachment
+    )
 
     if ok and verify_output_intent(output_pdf):
 
@@ -397,27 +452,24 @@ def process_file_with_level(input_pdf: Path,
 
         if ok and validate_pdfa(output_pdf, level):
             logging.info(f"GODKÄND PDF/A-{level}B (direkt): {input_pdf.name}")
-            return True, level, "direct"
+            return True, level, "direct", pdfa_def_hash
 
-    # ------------------------------------------------
-    # 2️⃣ Fallback: Rasterisering
-    # ------------------------------------------------
+    # 2️⃣ Raster fallback
     logging.warning(f"Fallback rasterisering: {input_pdf.name}")
-
     output_pdf.unlink(missing_ok=True)
 
-    raster_ok = convert_to_pdfa_raster(input_pdf, output_pdf, level)
+    raster_ok, pdfa_def_hash = convert_to_pdfa_raster(
+        input_pdf, output_pdf, level
+    )
 
     if raster_ok and validate_pdfa(output_pdf, level):
         logging.info(f"GODKÄND PDF/A-{level}B (raster): {input_pdf.name}")
-        return True, level, "rasterized"
+        return True, level, "rasterized", pdfa_def_hash
 
-    # ------------------------------------------------
-    # 3️⃣ Totalt misslyckande
-    # ------------------------------------------------
+    # 3️⃣ Misslyckande
     output_pdf.unlink(missing_ok=True)
     logging.error(f"UNDERKÄND efter fallback: {input_pdf.name}")
-    return False, level, "failed"
+    return False, level, "failed", pdfa_def_hash
 
 # ============================================================
 # BATCH
@@ -462,7 +514,7 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         original_hash = sha256_file(pdf)
         xml_hash = sha256_file(xml_attachment) if xml_attachment else ""
 
-        ok, level, method = process_file_with_level(pdf, pdfa_dir, xml_attachment)
+        ok, level, method, pdfa_def_hash = process_file_with_level(pdf, pdfa_dir, xml_attachment)
         pdfa_level_str = f"{level}B"
 
         if ok:
@@ -495,7 +547,7 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
             "sha256_xml": xml_hash,
             "icc_profile": "sRGB IEC61966-2.1",
             "icc_sha256": ICC_SHA256,
-            "pdfa_def_sha256": PDFA_DEF_SHA256,
+            "pdfa_def_sha256": pdfa_def_hash,
             "timestamp": datetime.now().isoformat()
         })
 
