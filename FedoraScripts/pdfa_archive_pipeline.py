@@ -47,11 +47,29 @@ def sha256_file(path: Path) -> str:
 # STREAM-SÖK
 # ============================================================
 
-def file_contains(path: Path, needle: bytes) -> bool:
+def file_contains(path: Path, needle: bytes, chunk_size: int = 65536) -> bool:
+    """
+    Minneseffektiv och säker sökning i stora filer.
+    Hanterar matchning över blockgränser.
+    """
+
+    overlap = len(needle) - 1
+    previous = b""
+
     with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(65536), b""):
-            if needle in chunk:
+        while True:
+            chunk = f.read(chunk_size)
+            if not chunk:
+                break
+
+            data = previous + chunk
+
+            if needle in data:
                 return True
+
+            # spara sista delen för nästa varv
+            previous = data[-overlap:] if overlap > 0 else b""
+
     return False
 
 # ============================================================
@@ -73,17 +91,31 @@ def get_icc_path():
     sys.exit(1)
 
 def verify_icc_profile(path: str):
-    with open(path, "rb") as f:
-        data = f.read()
+    """
+    Verifierar att ICC-profilen är sRGB IEC61966-2.1
+    utan att läsa hela filen i onödan.
+    """
 
-    if data[36:40] != b'acsp':
-        raise ValueError("ICC saknar acsp-signatur")
-    if data[16:20] != b'RGB ':
-        raise ValueError("ICC är inte RGB")
-    if b"sRGB IEC61966-2.1" not in data:
+    with open(path, "rb") as f:
+        # ICC-header är 128 byte enligt specifikationen
+        header = f.read(128)
+
+        if len(header) < 40:
+            raise ValueError("ICC-fil för kort")
+
+        if header[36:40] != b'acsp':
+            raise ValueError("ICC saknar acsp-signatur")
+
+        if header[16:20] != b'RGB ':
+            raise ValueError("ICC är inte RGB")
+
+        # Läs en begränsad mängd extra data för att hitta sRGB-strängen
+        remaining = f.read(4096)
+
+    if b"sRGB IEC61966-2.1" not in remaining:
         raise ValueError("ICC är inte sRGB IEC61966-2.1")
 
-    logging.info("ICC verifierad.")
+    logging.info("ICC verifierad: sRGB IEC61966-2.1")
 
 ICC_RGB = get_icc_path()
 verify_icc_profile(ICC_RGB)
