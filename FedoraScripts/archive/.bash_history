@@ -257,7 +257,6 @@ pngquant --version
 py
 pyenv
 pyinstaller --onefile --name doc_converter_cli doc_converter.py
-pyinstaller --onefile --name pdf_optimizer_cli pdf_optimizer.py
 qpdf
 qpdf --help
 qpdf --help=exit-status
