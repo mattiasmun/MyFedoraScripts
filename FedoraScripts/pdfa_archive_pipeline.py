@@ -248,8 +248,6 @@ def create_attachment_pdfmark(xml_path: Path) -> str:
 # KONVERTERING – STABIL 1.5
 # ============================================================
 
-PROJECT_ROOT = Path(__file__).parent
-
 def convert_to_pdfa(input_pdf: Path,
                     output_pdf: Path,
                     xml_attachment: Path = None) -> tuple[bool, int, str]:
