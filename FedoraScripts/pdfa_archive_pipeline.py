@@ -88,47 +88,33 @@ def file_contains(path: Path, needle: bytes, chunk_size: int = 65536) -> bool:
     return False
 
 # ============================================================
-# ICC
+# ICC – ENDAST LOKAL PROFIL (reproducerbar arkivmodell)
 # ============================================================
 
-def get_icc_path():
-    local_icc = Path(__file__).parent / "sRGB.icc"
-    if local_icc.exists():
-        logging.info("Använder lokal sRGB.icc")
-        return str(local_icc)
+PROJECT_ROOT = Path(__file__).parent
+LOCAL_ICC = PROJECT_ROOT / "icc" / "sRGB.icc"
 
-    system_icc = Path("/usr/share/ghostscript/iccprofiles/srgb.icc")
-    if system_icc.exists():
-        logging.info("Använder systemets Ghostscript sRGB.icc")
-        return str(system_icc)
-
-    logging.error("Ingen sRGB.icc hittades.")
+if not LOCAL_ICC.exists():
+    logging.error("Lokal ICC-profil saknas: icc/sRGB.icc")
     sys.exit(1)
 
-def verify_icc_profile(path: str):
+def verify_icc_profile(path: Path):
     """
     Verifierar att ICC-profilen är en giltig RGB-profil
-    lämplig för PDF/A (t.ex. sRGB).
+    lämplig för PDF/A (t.ex. sRGB IEC61966-2.1).
     """
 
     with open(path, "rb") as f:
-        # ICC-header är 128 byte enligt specifikationen
         header = f.read(128)
 
         if len(header) < 128:
             raise ValueError("ICC-fil för kort")
 
-        # ICC-signatur (måste vara 'acsp' på byte 36–39)
         if header[36:40] != b'acsp':
             raise ValueError("ICC saknar giltig 'acsp'-signatur")
 
-        # Device class (t.ex. mntr = monitor profile)
         device_class = header[12:16]
-
-        # Färgrymd
         color_space = header[16:20]
-
-        # PCS (Profile Connection Space)
         pcs = header[20:24]
 
         if color_space != b"RGB ":
@@ -137,14 +123,14 @@ def verify_icc_profile(path: str):
         if pcs != b"XYZ ":
             raise ValueError("ICC PCS är inte XYZ")
 
-        # Vanliga device classes för sRGB
         if device_class not in [b"mntr", b"prtr", b"scnr"]:
             raise ValueError("ICC har oväntad device class")
 
-    logging.info("ICC verifierad: giltig RGB-profil för PDF/A")
+    logging.info("ICC verifierad: giltig lokal RGB-profil för PDF/A")
 
-ICC_RGB = get_icc_path()
-verify_icc_profile(ICC_RGB)
+verify_icc_profile(LOCAL_ICC)
+
+ICC_SHA256 = sha256_file(LOCAL_ICC)
 
 # ============================================================
 # EXTERNAL TOOLS
@@ -209,7 +195,13 @@ def create_attachment_pdfmark(xml_path: Path) -> str:
 # KONVERTERING – STABIL 1.5
 # ============================================================
 
-SYSTEM_PDFA_DEF = "/usr/share/ghostscript/lib/PDFA_def.ps"
+PROJECT_ROOT = Path(__file__).parent
+LOCAL_PDFA_DEF = PROJECT_ROOT / "PDFA_def_local.ps"
+if not LOCAL_PDFA_DEF.exists():
+    logging.error("PDFA_def_local.ps saknas.")
+    sys.exit(1)
+PDFA_DEF_SHA256 = sha256_file(LOCAL_PDFA_DEF)
+SYSTEM_PDFA_DEF = str(LOCAL_PDFA_DEF)
 
 def convert_to_pdfa(input_pdf: Path,
                     output_pdf: Path,
@@ -236,6 +228,7 @@ def convert_to_pdfa(input_pdf: Path,
         "-dSubsetFonts=true",
         "-dAutoRotatePages=/None",
         "-dCompatibilityLevel=1.7",
+        f"--permit-file-read={LOCAL_ICC.resolve()}",
         f"-sOutputFile={output_pdf}",
 
         # 🔹 ENDAST Ghostscripts officiella PDFA_def
@@ -292,6 +285,7 @@ def convert_to_pdfa_raster(input_pdf: Path,
         "-dSubsetFonts=true",
         "-dAutoRotatePages=/None",
         "-r300",
+        f"--permit-file-read={LOCAL_ICC.resolve()}",
         f"-sOutputFile={output_pdf}",
 
         # 🔹 Viktigt: även raster behöver PDFA_def
@@ -499,6 +493,9 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
             "sha256_original": original_hash,
             "sha256_pdfa": pdfa_hash,
             "sha256_xml": xml_hash,
+            "icc_profile": "sRGB IEC61966-2.1",
+            "icc_sha256": ICC_SHA256,
+            "pdfa_def_sha256": PDFA_DEF_SHA256,
             "timestamp": datetime.now().isoformat()
         })
 
