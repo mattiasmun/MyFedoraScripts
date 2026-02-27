@@ -107,30 +107,41 @@ def get_icc_path():
 
 def verify_icc_profile(path: str):
     """
-    Verifierar att ICC-profilen är sRGB IEC61966-2.1
-    utan att läsa hela filen i onödan.
+    Verifierar att ICC-profilen är en giltig RGB-profil
+    lämplig för PDF/A (t.ex. sRGB).
     """
 
     with open(path, "rb") as f:
         # ICC-header är 128 byte enligt specifikationen
         header = f.read(128)
 
-        if len(header) < 40:
+        if len(header) < 128:
             raise ValueError("ICC-fil för kort")
 
+        # ICC-signatur (måste vara 'acsp' på byte 36–39)
         if header[36:40] != b'acsp':
-            raise ValueError("ICC saknar acsp")
+            raise ValueError("ICC saknar giltig 'acsp'-signatur")
 
-        if header[16:20] != b'RGB ':
+        # Device class (t.ex. mntr = monitor profile)
+        device_class = header[12:16]
+
+        # Färgrymd
+        color_space = header[16:20]
+
+        # PCS (Profile Connection Space)
+        pcs = header[20:24]
+
+        if color_space != b"RGB ":
             raise ValueError("ICC är inte RGB")
 
-        profile_size = int.from_bytes(header[0:4], byteorder="big")
-        remaining = f.read(profile_size - 128)
+        if pcs != b"XYZ ":
+            raise ValueError("ICC PCS är inte XYZ")
 
-    if b"sRGB IEC61966-2.1" not in remaining:
-        raise ValueError("ICC är inte sRGB IEC61966-2.1")
+        # Vanliga device classes för sRGB
+        if device_class not in [b"mntr", b"prtr", b"scnr"]:
+            raise ValueError("ICC har oväntad device class")
 
-    logging.info("ICC verifierad: sRGB IEC61966-2.1")
+    logging.info("ICC verifierad: giltig RGB-profil för PDF/A")
 
 ICC_RGB = get_icc_path()
 verify_icc_profile(ICC_RGB)
