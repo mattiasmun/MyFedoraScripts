@@ -246,7 +246,7 @@ def create_attachment_pdfmark(xml_path: Path) -> str:
     return tmp.name
 
 # ============================================================
-# KONVERTERING – STABIL 1.5
+# KONVERTERING
 # ============================================================
 
 def convert_to_pdfa(input_pdf: Path,
@@ -312,7 +312,7 @@ def convert_to_pdfa(input_pdf: Path,
             pdfa_def_path.unlink(missing_ok=True)
 
 # ============================================================
-# RASTER FALLBACK – STABIL 1.5
+# RASTER FALLBACK
 # ============================================================
 
 def convert_to_pdfa_raster(input_pdf: Path,
