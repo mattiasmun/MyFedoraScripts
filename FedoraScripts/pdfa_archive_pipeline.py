@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 PDF/A Archive Pipeline
-Version: 1.4-stable
+Version: 1.0.0-archive
 
 Funktioner:
 - PDF/A-2B som standard
@@ -37,7 +37,7 @@ from datetime import datetime
 # VERSION
 # ============================================================
 
-PIPELINE_VERSION = "1.4-stable"
+PIPELINE_VERSION = "1.0.0-archive"
 GHOSTSCRIPT_TIMEOUT = 300
 VERAPDF_TIMEOUT = 180
 
@@ -437,19 +437,24 @@ def process_file_with_level(input_pdf: Path,
 
     output_pdf = pdfa_dir / input_pdf.name
     level = 3 if xml_attachment else 2
+    pdfa_def_hash = ""
 
     # 1️⃣ Direktförsök
     ok, _, pdfa_def_hash = convert_to_pdfa(
         input_pdf, output_pdf, xml_attachment
     )
 
+    direct_valid = ok
     if ok:
-        if validate_pdfa(output_pdf, level):
+        direct_valid = validate_pdfa(output_pdf, level)
+        if direct_valid:
             logging.info(f"GODKÄND PDF/A-{level}B (direkt): {input_pdf.name}")
             return True, level, "direct", pdfa_def_hash
 
-    # 2️⃣ Raster fallback (endast om direkt misslyckades tekniskt)
-    if not ok:
+    # 2️⃣ Raster fallback om:
+    # - Ghostscript misslyckades
+    # - eller veraPDF underkände direktresultatet
+    if not direct_valid:
         logging.warning(f"Fallback rasterisering: {input_pdf.name}")
 
         raster_ok, pdfa_def_hash = convert_to_pdfa_raster(
@@ -457,7 +462,8 @@ def process_file_with_level(input_pdf: Path,
         )
 
         if raster_ok:
-            if validate_pdfa(output_pdf, level):
+            raster_valid = validate_pdfa(output_pdf, level)
+            if raster_valid:
                 logging.info(f"GODKÄND PDF/A-{level}B (raster): {input_pdf.name}")
                 return True, level, "rasterized", pdfa_def_hash
             else:
