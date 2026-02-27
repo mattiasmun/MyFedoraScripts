@@ -41,18 +41,18 @@ alias pip-upgrade="pip freeze --user | cut -d'=' -f1 | xargs -n1 pip install -U 
 eval "$(zoxide init bash)"
 eval "$(thefuck --alias)"
 
-# Historik-optimering (Uppdaterad via setup-script)
-export HISTSIZE=2000                                          # Antal rader i minnet
-export HISTFILESIZE=2000                                      # Antal rader i filen
-export HISTCONTROL=ignoredups                                 # Skippa dubbletter
+# Historik-optimering
+export HISTSIZE=5000                                          # Antal rader i minnet
+export HISTFILESIZE=10000                                     # Antal rader i filen
+export HISTCONTROL=ignoreboth                                 # Skippa dubbletter
 export HISTIGNORE="ls*:exit:history:pwd:clear"                # Ignorera småkommandon
 export HISTTIMEFORMAT="%F %T  "                               # Lägg till datum och tid
 
-shopt -s histappend                                           # Lägg till i filen, skriv inte över
-shopt -s cmdhist                                              # Spara flerradiga kommandon snyggt
+shopt -s histappend                                  # Lägg till i filen, skriv inte över
+shopt -s cmdhist                                     # Spara flerradiga kommandon snyggt
+shopt -s histverify                                  # Låter dig redigera ett kommando från historiken innan det körs
 
-# Synkar historik aggressivt mellan terminaler
-export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 # Snabbsök i historiken
 alias hgrep="history | grep -i"
