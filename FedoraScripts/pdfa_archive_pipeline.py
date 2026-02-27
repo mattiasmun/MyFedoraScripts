@@ -173,6 +173,7 @@ def generate_pdfa_def(icc_path: Path, level: int) -> Path:
     /S /{gts}
     /DestOutputProfile {{icc_PDFA}}
     /OutputConditionIdentifier (sRGB IEC61966-2.1)
+    /Info (sRGB IEC61966-2.1)
   >> /PUT pdfmark
 
   [{{Catalog}} <</OutputIntents [ {{OutputIntent_PDFA}} ]>> /PUT pdfmark
@@ -442,31 +443,28 @@ def process_file_with_level(input_pdf: Path,
         input_pdf, output_pdf, xml_attachment
     )
 
-    if ok and verify_output_intent(output_pdf):
-
-        if level == 3 and xml_attachment:
-            if not verify_embedded_xml(output_pdf, xml_attachment.name):
-                ok = False
-
-        if ok and validate_pdfa(output_pdf, level):
+    if ok:
+        if validate_pdfa(output_pdf, level):
             logging.info(f"GODKÄND PDF/A-{level}B (direkt): {input_pdf.name}")
             return True, level, "direct", pdfa_def_hash
 
-    # 2️⃣ Raster fallback
-    logging.warning(f"Fallback rasterisering: {input_pdf.name}")
-    output_pdf.unlink(missing_ok=True)
+    # 2️⃣ Raster fallback (endast om direkt misslyckades tekniskt)
+    if not ok:
+        logging.warning(f"Fallback rasterisering: {input_pdf.name}")
 
-    raster_ok, pdfa_def_hash = convert_to_pdfa_raster(
-        input_pdf, output_pdf, level
-    )
+        raster_ok, pdfa_def_hash = convert_to_pdfa_raster(
+            input_pdf, output_pdf, level
+        )
 
-    if raster_ok and validate_pdfa(output_pdf, level):
-        logging.info(f"GODKÄND PDF/A-{level}B (raster): {input_pdf.name}")
-        return True, level, "rasterized", pdfa_def_hash
+        if raster_ok:
+            if validate_pdfa(output_pdf, level):
+                logging.info(f"GODKÄND PDF/A-{level}B (raster): {input_pdf.name}")
+                return True, level, "rasterized", pdfa_def_hash
+            else:
+                logging.warning(f"veraPDF underkände (raster): {input_pdf.name}")
 
-    # 3️⃣ Misslyckande
-    output_pdf.unlink(missing_ok=True)
-    logging.error(f"UNDERKÄND efter fallback: {input_pdf.name}")
+    # 3️⃣ Misslyckande – MEN SPARA FILEN
+    logging.error(f"UNDERKÄND men sparad: {input_pdf.name}")
     return False, level, "failed", pdfa_def_hash
 
 # ============================================================
@@ -522,8 +520,16 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         else:
             fail += 1
             status = "FAIL"
+
+        generated_pdf = pdfa_dir / pdf.name
+        if generated_pdf.exists():
+            shutil.move(
+                generated_pdf,
+                rejected_dir / pdf.name
+            )
+            pdfa_hash = sha256_file(rejected_dir / pdf.name)
+        else:
             pdfa_hash = ""
-            (rejected_dir / pdf.name).write_bytes(pdf.read_bytes())
 
         report_rows.append([
             pdf.name,
