@@ -190,6 +190,8 @@ def create_pdfa_def(level: int) -> str:
   /DESTINATION pdfmark
 
 [{{Catalog}} << /OutputIntents [ {{icc_obj}} ] >> /PUT pdfmark
+
+[/Metadata << >> /PUT pdfmark
 """
 
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".ps")
@@ -253,6 +255,8 @@ def convert_to_pdfa(input_pdf: Path,
         "-dNOOUTERSAVE",
         "-sDEVICE=pdfwrite",
         "-dPDFACompatibilityPolicy=1",
+        "-dUseCIEColor=true",
+        "-dOverrideICC",
         "-sColorConversionStrategy=RGB",
         "-sProcessColorModel=DeviceRGB",
         "-dEmbedAllFonts=true",
