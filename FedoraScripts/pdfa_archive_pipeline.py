@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
+"""
+PDF/A Archive Pipeline
+Version: 1.4-stable
 
+Funktioner:
+- PDF/A-2B som standard
+- PDF/A-3B vid XML-bilagor
+- ISO 19005-2 / ISO 19005-3 kompatibel
+- ICC-verifiering (sRGB IEC61966-2.1)
+- Ghostscript-konvertering
+- veraPDF-validering
+- SHA-256 fixitet
+- Manifest (JSON) + CSV-rapport
+- Batch-hantering
+- Timeout-skydd
+- Säker temporärfilshantering
+
+Arkivmässigt avsedd för kommunal e-arkivleverans.
+"""
+
+import json
 import os
 import sys
 import subprocess
@@ -17,7 +37,9 @@ from datetime import datetime
 # VERSION
 # ============================================================
 
-PIPELINE_VERSION = "1.2-production"
+PIPELINE_VERSION = "1.4-stable"
+GHOSTSCRIPT_TIMEOUT = 300
+VERAPDF_TIMEOUT = 180
 
 # ============================================================
 # LOGGNING
@@ -44,15 +66,10 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 # ============================================================
-# STREAM-SÖK
+# STREAM-SÖK (överlappssäker)
 # ============================================================
 
 def file_contains(path: Path, needle: bytes, chunk_size: int = 65536) -> bool:
-    """
-    Minneseffektiv och säker sökning i stora filer.
-    Hanterar matchning över blockgränser.
-    """
-
     overlap = len(needle) - 1
     previous = b""
 
@@ -63,11 +80,9 @@ def file_contains(path: Path, needle: bytes, chunk_size: int = 65536) -> bool:
                 break
 
             data = previous + chunk
-
             if needle in data:
                 return True
 
-            # spara sista delen för nästa varv
             previous = data[-overlap:] if overlap > 0 else b""
 
     return False
@@ -104,13 +119,13 @@ def verify_icc_profile(path: str):
             raise ValueError("ICC-fil för kort")
 
         if header[36:40] != b'acsp':
-            raise ValueError("ICC saknar acsp-signatur")
+            raise ValueError("ICC saknar acsp")
 
         if header[16:20] != b'RGB ':
             raise ValueError("ICC är inte RGB")
 
-        # Läs en begränsad mängd extra data för att hitta sRGB-strängen
-        remaining = f.read(4096)
+        profile_size = int.from_bytes(header[0:4], byteorder="big")
+        remaining = f.read(profile_size - 128)
 
     if b"sRGB IEC61966-2.1" not in remaining:
         raise ValueError("ICC är inte sRGB IEC61966-2.1")
@@ -143,11 +158,12 @@ GS_EXEC = find_ghostscript()
 VERAPDF_CMD = find_verapdf()
 
 # ============================================================
-# PDFMARK GENERERING
+# PDFMARK
 # ============================================================
 
-def create_pdfa_def() -> str:
+def create_pdfa_def(level: int) -> str:
     icc_abs = os.path.abspath(ICC_RGB).replace("\\", "/")
+    gts = f"GTS_PDFA{level}"
 
     ps = f"""%!
 [/_objdef {{icc_obj}} /type /stream /OBJ pdfmark
@@ -157,9 +173,9 @@ def create_pdfa_def() -> str:
 [ /ICCProfile {{icc_obj}}
   /OutputConditionIdentifier (sRGB)
   /Info (sRGB IEC61966-2.1)
-  /Subtype /GTS_PDFA3
+  /Subtype /{gts}
   /Type /OutputIntent
-  /S /GTS_PDFA3
+  /S /{gts}
   /DESTINATION pdfmark
 
 [{{Catalog}} << /OutputIntents [ {{icc_obj}} ] >> /PUT pdfmark
@@ -187,6 +203,7 @@ def create_attachment_pdfmark(xml_path: Path) -> str:
     /Type /Filespec
     /F ({filename})
     /UF ({filename})
+    /Desc (XML metadata)
     /EF << /F {{xml_file}} >>
     /AFRelationship /Data
 >> /PUT pdfmark
@@ -206,9 +223,12 @@ def create_attachment_pdfmark(xml_path: Path) -> str:
 # KONVERTERING
 # ============================================================
 
-def convert_to_pdfa3b(input_pdf: Path, output_pdf: Path, xml_attachment: Path = None) -> bool:
+def convert_to_pdfa(input_pdf: Path,
+                    output_pdf: Path,
+                    xml_attachment: Path = None) -> tuple[bool, int]:
 
-    pdfa_def = create_pdfa_def()
+    level = 3 if xml_attachment else 2
+    pdfa_def = create_pdfa_def(level)
     attachment_def = None
 
     if xml_attachment and xml_attachment.exists():
@@ -216,7 +236,7 @@ def convert_to_pdfa3b(input_pdf: Path, output_pdf: Path, xml_attachment: Path = 
 
     cmd = [
         GS_EXEC,
-        "-dPDFA=3",
+        f"-dPDFA={level}",
         "-dBATCH",
         "-dNOPAUSE",
         "-dNOOUTERSAVE",
@@ -238,11 +258,23 @@ def convert_to_pdfa3b(input_pdf: Path, output_pdf: Path, xml_attachment: Path = 
     cmd += ["-f", str(input_pdf)]
 
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=GHOSTSCRIPT_TIMEOUT
+        )
+
         if result.returncode != 0:
-            logging.error(result.stderr)
-            return False
-        return True
+            logging.error(f"Ghostscript-fel:\n{result.stderr}")
+            return False, level
+
+        return True, level
+
+    except subprocess.TimeoutExpired:
+        logging.error(f"Ghostscript timeout efter {GHOSTSCRIPT_TIMEOUT} sekunder.")
+        return False, level
+
     finally:
         if os.path.exists(pdfa_def):
             os.remove(pdfa_def)
@@ -253,12 +285,14 @@ def convert_to_pdfa3b(input_pdf: Path, output_pdf: Path, xml_attachment: Path = 
 # VERIFIERING
 # ============================================================
 
-def verify_embedded_icc(pdf_path: Path) -> bool:
-    checks = [b"/OutputIntents", b"/GTS_PDFA3", b"/ICCProfile"]
-    for c in checks:
-        if not file_contains(pdf_path, c):
-            logging.error(f"Saknar {c}")
-            return False
+def verify_output_intent(pdf_path: Path) -> bool:
+    if not file_contains(pdf_path, b"/OutputIntents"):
+        return False
+    if not file_contains(pdf_path, b"/ICCProfile"):
+        return False
+    if not any(file_contains(pdf_path, tag)
+               for tag in [b"/GTS_PDFA2", b"/GTS_PDFA3"]):
+        return False
     return True
 
 def verify_embedded_xml(pdf_path: Path, xml_filename: str) -> bool:
@@ -269,21 +303,27 @@ def verify_embedded_xml(pdf_path: Path, xml_filename: str) -> bool:
         b"/application#2Fxml",
         xml_filename.encode("utf-8")
     ]
-    for c in checks:
-        if not file_contains(pdf_path, c):
-            logging.error(f"Saknar {c}")
-            return False
-    return True
+    return all(file_contains(pdf_path, c) for c in checks)
 
-def validate_pdfa3b(file_path: Path) -> bool:
+def validate_pdfa(file_path: Path, level: int) -> bool:
+    flavour = "3b" if level == 3 else "2b"
 
     cmd = VERAPDF_CMD + [
         "--format", "xml",
-        "--flavour", "3b",
+        "--flavour", flavour,
         str(file_path)
     ]
 
-    process = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        process = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=VERAPDF_TIMEOUT
+        )
+    except subprocess.TimeoutExpired:
+        logging.error(f"veraPDF timeout efter {VERAPDF_TIMEOUT} sekunder.")
+        return False
 
     if process.returncode > 1:
         logging.error("veraPDF kraschade.")
@@ -304,31 +344,34 @@ def validate_pdfa3b(file_path: Path) -> bool:
     return report.attrib.get("isCompliant", "false").lower() == "true"
 
 # ============================================================
-# PROCESS FIL
+# PROCESS
 # ============================================================
 
-def process_file(input_pdf: Path, pdfa_dir: Path, xml_attachment: Path = None) -> bool:
+def process_file_with_level(input_pdf: Path,
+                            pdfa_dir: Path,
+                            xml_attachment: Path = None) -> tuple[bool, int]:
 
     output_pdf = pdfa_dir / input_pdf.name
 
-    if not convert_to_pdfa3b(input_pdf, output_pdf, xml_attachment):
-        return False
+    ok, level = convert_to_pdfa(input_pdf, output_pdf, xml_attachment)
+    if not ok:
+        return False, level
 
-    if not verify_embedded_icc(output_pdf):
+    if not verify_output_intent(output_pdf):
         output_pdf.unlink(missing_ok=True)
-        return False
+        return False, level
 
-    if xml_attachment:
+    if level == 3 and xml_attachment:
         if not verify_embedded_xml(output_pdf, xml_attachment.name):
             output_pdf.unlink(missing_ok=True)
-            return False
+            return False, level
 
-    if not validate_pdfa3b(output_pdf):
+    if not validate_pdfa(output_pdf, level):
         output_pdf.unlink(missing_ok=True)
-        return False
+        return False, level
 
-    logging.info(f"GODKÄND: {input_pdf.name}")
-    return True
+    logging.info(f"GODKÄND PDF/A-{level}B: {input_pdf.name}")
+    return True, level
 
 # ============================================================
 # BATCH
@@ -347,6 +390,8 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
     pdfa_dir = output_root / "pdfa"
     rejected_dir = output_root / "rejected"
     report_file = output_root / "report.csv"
+    manifest_file = output_root / "manifest.json"
+    manifest_entries = []
 
     pdfa_dir.mkdir(parents=True, exist_ok=True)
     rejected_dir.mkdir(parents=True, exist_ok=True)
@@ -363,12 +408,16 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
     for pdf in pdf_files:
 
         xml_candidate = pdf.with_suffix(".xml")
-        xml_attachment = xml_candidate if xml_candidate.exists() else None
+        if xml_candidate.exists() and xml_candidate.stat().st_size > 0:
+            xml_attachment = xml_candidate
+        else:
+            xml_attachment = None
 
         original_hash = sha256_file(pdf)
         xml_hash = sha256_file(xml_attachment) if xml_attachment else ""
 
-        ok = process_file(pdf, pdfa_dir, xml_attachment)
+        ok, level = process_file_with_level(pdf, pdfa_dir, xml_attachment)
+        pdfa_level_str = f"{level}B"
 
         if ok:
             success += 1
@@ -390,6 +439,16 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
             PIPELINE_VERSION
         ])
 
+        manifest_entries.append({
+            "filename": pdf.name,
+            "status": status,
+            "pdfa_level": pdfa_level_str,
+            "sha256_original": original_hash,
+            "sha256_pdfa": pdfa_hash,
+            "sha256_xml": xml_hash,
+            "timestamp": datetime.now().isoformat()
+        })
+
     with open(report_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow([
@@ -402,6 +461,22 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
             "pipeline_version"
         ])
         writer.writerows(report_rows)
+
+    manifest_data = {
+        "package": {
+            "created": datetime.now().isoformat(),
+            "pipeline_version": PIPELINE_VERSION,
+            "total_files": len(pdf_files),
+            "approved": success,
+            "rejected": fail
+        },
+        "files": manifest_entries
+    }
+
+    with open(manifest_file, "w", encoding="utf-8") as f:
+        json.dump(manifest_data, f, indent=2, ensure_ascii=False)
+
+    logging.info(f"Manifest skapad: {manifest_file}")
 
     logging.info(f"GODKÄNDA: {success}")
     logging.info(f"UNDERKÄNDA: {fail}")
@@ -422,8 +497,7 @@ def main():
     input_dir = Path(sys.argv[1])
     output_root = Path(sys.argv[2])
 
-    exit_code = process_directory(input_dir, output_root)
-    sys.exit(exit_code)
+    sys.exit(process_directory(input_dir, output_root))
 
 if __name__ == "__main__":
     main()
