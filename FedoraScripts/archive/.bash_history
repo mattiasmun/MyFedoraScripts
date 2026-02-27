@@ -1,9 +1,13 @@
+#1771170384
+alternatives --list
 arithmetic --help
+#1771621579
 arithmetic -o - -r 2000
 auto_clicker_gui
 bc -lq
 bg
 btop
+#1772138920
 c
 cat "$HOME/.git-credentials"
 cat "$HOME/.gitconfig"
@@ -11,6 +15,7 @@ cat "$HOME/.gitignore_global"
 cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3271667155/scene/set/stuff/rifle"
 cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc"
 cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc"
+#1772233451
 cd
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II"
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/entity"
@@ -21,13 +26,14 @@ cd "$HOME/Men of War II/packages/Unit_booster/scene/entity"
 cd "$HOME/Men of War II/packages/Unit_booster/scene/set/breed/arena_mp/usa"
 cd "$HOME/Men of War II/profiles/player/save/"
 cd -- -vehicle
-cd ..
 clamdscan --stream "$HOME/.clamtk/attachment"
 clamscan_filter.sh
 closeall
 conditional_7z_backup.sh
+#1771447854
 conditional_7z_backup.sh "$HOME/Men of War II/packages/Unit_booster"
 cp requirements.txt $HOME/Bash/MyFedoraScripts/FedoraScripts/archive/requirements.txt
+#1772141515
 d
 d $(tu 21:00:00)
 df
@@ -53,8 +59,10 @@ dnf repoquery --unneeded
 dnf repoquery --userinstalled --queryformat '%{name}.%{arch} \\n'
 dnf search pikepdf
 dnfsysupgr
+#1772209839
 dnfusrins
 doc_converter.py --help
+#1771446916
 doc_converter.py -i .
 doc_converter.py -s -i Dokument/Input -o Dokument/Output
 dotool --help
@@ -67,6 +75,11 @@ du -c
 du -h
 du car
 echo $((1+2))
+#1771167923
+echo $DISPLAY
+#1771170144
+echo $JAVA_HOME
+#1771170142
 echo $PATH
 echo $SHELL
 echo $temp_file
@@ -74,6 +87,7 @@ echo $XDG_SESSION_TYPE
 echo key k:26 k:39 k:40 | dotoolc
 echo key leftmeta | dotoolc
 echo key shift+1 x:exclam shift+k:2 | dotoolc
+#1771168027
 env
 ex --help
 exiftool --help
@@ -82,6 +96,8 @@ ffprobe --help
 ffprobe output.mp3
 fg
 file *
+#1771537707
+file Bilder/PicTool.webp
 find . -name "*~"
 find . -name "*~" -delete
 find . -type f -name '*++*'
@@ -90,8 +106,16 @@ find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do  
 find_and_sort_files .
 find_and_sort_files female
 flatpak install veraPDF
+#1771537669
 flatpak list
+#1771440494
+flatpak run --command=verapdf org.verapdf.veraPDF --format text github-git-cheat-sheet.pdf
+#1771441348
+flatpak run --command=verapdf org.verapdf.veraPDF --format xml github-git-cheat-sheet.pdf
+#1771347008
 flatpak run --command=verapdf org.verapdf.veraPDF --format xml -r .
+#1772209913
+flatpak run --command=verapdf org.verapdf.veraPDF --help
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak update -y
 for file in "$HOME/.bash_history" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"; do cp "$HOME/.bash_history2" "$file"; done
@@ -99,11 +123,13 @@ for file in "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car
 fuck
 fuck --help
 fzf --multi --cycle
+#1772229679
 fzf-select-open.sh
 gedit "$HOME/Men of War II/log/game.log"
 git --help
-#1771164665
+#1772233448
 git -C ~/Bash/MyFedoraScripts status
+#1772227160
 git add *
 git clone https://git.sr.ht/~geb/dotool
 git difftool
@@ -120,7 +146,7 @@ git rev-list --objects --all | grep "$(git for-each-ref --format='%(objectname) 
 git status
 gitcfg
 gitty ~/529340
-#1771165221
+#1772233328
 gitty ~/Bash/MyFedoraScripts
 gnome-shell --version
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
@@ -131,10 +157,17 @@ gs
 gs --help
 #1771163079
 hgrep dnf
+#1772048048
 htop
 id -nG
+#1771170170
+java -version
+#1771170174
+javac -version
 javacfg
+#1771170230
 jedit
+#1772206765
 l
 lame --help
 lame --longhelp
@@ -152,7 +185,8 @@ locate "supp+" | while IFS= read -r file; do ls -ld "$file"; done
 lsattr Dokument/IDLE_py.py
 lsblk
 lspci
-magick identify -format "%Q" screenshot.jpg
+#1771173524
+magick identify -format "%Q" screenshot.webp
 make
 man dotool
 man fzf
@@ -185,15 +219,31 @@ optimize_to_bitonal.py --help
 optimize_to_bitonal.py .
 pdf_optimizer.py --help
 pdf_optimizer.py -i .
+#1772231386
+pdfa_archive_pipeline.py Input/ Output/
+#1772221276
+pdffonts github-git-cheat-sheet.pdf
+#1772220870
+pdffonts output.pdf
+#1771343072
 pdfimages -list arkiv_slutversion.pdf
+#1771441058
+pdfinfo --help
+#1771441092
+pdfinfo -box file-sample_1MB.pdf
 pdfinfo -isodates file-sample_1MB.pdf
+#1771447312
 pdfinfo -meta file-sample_1MB.pdf | more
 pdfinfo file-sample_1MB.pdf
+#1771440253
+pdfinfo github-git-cheat-sheet.pdf
 pgrep firefox
 pgrep flatpak
 pgrep thunderbird
 pip list
+#1771622090
 pip list --user
+#1771708796
 pip list --user | tail -n +3 | awk '{print $1}' > $HOME/Bash/MyFedoraScripts/FedoraScripts/archive/requirements.txt
 pip3 install pip-date pyautogui pynput rocketpdf tsp-solver2
 pip3 list --user
@@ -218,16 +268,15 @@ rm -r 3553934930/global/sound/human/talk/rus_medic_female 3553934930/global/soun
 rm 3553934930/scene/entity_soviet_female.pak 3553934930/global/interface/scene/portrait/rus_sniper_female.png 3553934930/global/interface/scene/portrait/rus_medic_female.png
 rm ~/.bash_history-*.tmp
 rocketpdf --help
+#1771447856
 rsync -avz --update "$HOME/Men of War II/packages/Unit_booster.7z" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/"
-save_as_pdfa.py --help
-save_as_pdfa.py arkiv_slutversion.pdf arkiv_slutversion2.pdf
 setup-my-env.sh
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
 snap --help
 snap list
 snap refresh --list
 snap refresh --time
-#1771164881
+#1771170050
 source ~/.bashrc
 stat /
 steam steam://rungameid/1128860
@@ -275,11 +324,18 @@ unique_lines
 update-alternatives
 update-alternatives --list
 users
+#1771708834
+wc --help
 wc -l "$HOME/Bash/MyFedoraScripts/FedoraScripts/progs"
+#1772048129
+wc -l ~/.bash_history
+#1772233403
+wc -l ~/.bash_history_cleaned
 wc -lL .bash_history
 wc -lL .bash_history2
 wc -lL < .bash_history
 wc -lL < .bash_history2
+#1771175501
 webp-convert.py
 wev
 who
@@ -295,10 +351,14 @@ wmctrl -xl
 xdg-open "$HOME/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/entity/-vehicle/tank_medium/su122.pak"
 xev
 yev
-yt-dlp --help
-yt-dlp -f 140 https://www.youtube.com/watch?v=E9lVXoezkFM
-yt-dlp -F https://www.youtube.com/watch?v=E9lVXoezkFM
+#1771536039
+yt-dlp --help | more
+#1772217915
+yt-dlp -I 95: https://www.youtube.com/playlist?list=PLsT4scrqjQbSp8HzXLV9NRbkDn00fewvG
+#1771537554
+yt-dlp -v
 z --help
+#1772233195
 z Fe
 zoxide --help
 zoxide add "$HOME/Bash/MyFedoraScripts/FedoraScripts"
