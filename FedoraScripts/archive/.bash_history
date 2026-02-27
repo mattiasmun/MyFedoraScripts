@@ -118,7 +118,6 @@ flatpak run --command=verapdf org.verapdf.veraPDF --format xml -r .
 flatpak run --command=verapdf org.verapdf.veraPDF --help
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
 flatpak update -y
-for file in "$HOME/.bash_history" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history"; do cp "$HOME/.bash_history2" "$file"; done
 for file in "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/opel_blitz_highback/opel_blitz_highback+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gmc/gmc_supp+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gmc_inf/gmc_inf+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gaz_aa_untented/gaz_aa_untented+.def"; do cp "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gaz_aa/gaz_aa_supp+.def" "$file"; done
 fuck
 fuck --help
