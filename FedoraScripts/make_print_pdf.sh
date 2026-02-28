@@ -30,10 +30,12 @@ echo "2️⃣ Tvättar med unpaper..."
 for f in "$WORKDIR"/pages/*.png; do
   unpaper \
     --overwrite \
-    --deskew \
-    --no-grayfilter \
     --layout single \
     --threshold 0.55 \
+    --deskew-scan-range 5 \
+    --deskew-scan-step 0.1 \
+    --no-noisefilter \
+    --no-blurfilter \
     "$f" "$WORKDIR/clean/$(basename "$f")"
 done
 
