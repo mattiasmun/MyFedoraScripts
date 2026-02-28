@@ -200,18 +200,21 @@ for sym in sym_files:
         img_data = open(os.path.join(jbig2_dir, pagefile), "rb").read()
 
         img_obj = pikepdf.Stream(out, img_data)
-        img_obj.update({
-            Name.Type: Name.XObject,
-            Name.Subtype: Name.Image,
-            Name.Width: width,
-            Name.Height: height,
-            Name.ColorSpace: Name.DeviceGray,
-            Name.BitsPerComponent: 1,
-            Name.Filter: Name.JBIG2Decode,
-            Name.DecodeParms: Dictionary({
-                Name.JBIG2Globals: globals_stream
-            })
+
+        img_obj["/Type"] = "/XObject"
+        img_obj["/Subtype"] = "/Image"
+        img_obj["/Width"] = width
+        img_obj["/Height"] = height
+        img_obj["/ColorSpace"] = "/DeviceGray"
+        img_obj["/BitsPerComponent"] = 1
+        img_obj["/Filter"] = "/JBIG2Decode"
+
+        # 🔥 SKAPA DecodeParms korrekt
+        decode_dict = out.make_indirect({
+            "/JBIG2Globals": globals_stream
         })
+
+        img_obj["/DecodeParms"] = decode_dict
 
         page.Resources = page.Resources or Dictionary()
         page.Resources[Name.XObject] = {Name("/Im0"): img_obj}
