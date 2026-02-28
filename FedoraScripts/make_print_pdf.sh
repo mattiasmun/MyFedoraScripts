@@ -135,13 +135,14 @@ fi
 cd -
 
 ############################################
-# 4️⃣ Bygg PDF från alla block (ROBUST)
+# 4️⃣ Bygg PDF från alla block (FINAL FIX)
 ############################################
 
 echo "4️⃣ Bygger JBIG2 PDF…"
 
 python3 <<EOF
 import os
+import re
 import pikepdf
 from pikepdf import Pdf, Name, Dictionary, Array
 
@@ -151,61 +152,53 @@ output_pdf = os.path.join("$WORKDIR", "jbig2.pdf")
 
 out = Pdf.new()
 
-# Sorterade PBM (ursprunglig ordning)
 pbm_files = sorted([f for f in os.listdir(clean_dir) if f.endswith(".pbm")])
 
-# Sorterade JBIG2-sidor
-jbig2_pages = sorted([f for f in os.listdir(jbig2_dir) if f.endswith(".0000")])
+jbig2_pages = sorted([
+    f for f in os.listdir(jbig2_dir)
+    if re.search(r"\.\d{4}$", f)
+])
 
-# Sorterade symbolfiler
 sym_files = sorted([f for f in os.listdir(jbig2_dir) if f.endswith(".sym")])
 
-if not pbm_files:
-    raise RuntimeError("Inga PBM-filer hittades.")
-if not jbig2_pages:
-    raise RuntimeError("Inga JBIG2-sidor hittades.")
 if len(pbm_files) != len(jbig2_pages):
-    raise RuntimeError("Antal PBM matchar inte antal JBIG2-sidor.")
+    raise RuntimeError(f"PBM: {len(pbm_files)}  JBIG2: {len(jbig2_pages)}")
 
-# Ladda globals per block
 globals_map = {}
 for sym in sym_files:
-    sym_path = os.path.join(jbig2_dir, sym)
-    globals_map[sym] = pikepdf.Stream(out, open(sym_path, "rb").read())
+    globals_map[sym] = pikepdf.Stream(
+        out,
+        open(os.path.join(jbig2_dir, sym), "rb").read()
+    )
 
 page_index = 0
 
 for sym in sym_files:
-    base = sym.replace(".sym", "")
+    base = sym.replace(".sym","")
     globals_stream = globals_map[sym]
 
-    block_pages = sorted([f for f in jbig2_pages if f.startswith(base)])
+    block_pages = sorted([
+        f for f in jbig2_pages if f.startswith(base)
+    ])
 
     for pagefile in block_pages:
 
         pbm_path = os.path.join(clean_dir, pbm_files[page_index])
         page_index += 1
 
-        # Läs dimensioner från PBM-header
         with open(pbm_path, "rb") as f:
-            magic = f.readline()
-            if not magic.startswith(b"P4"):
-                raise RuntimeError("Fel PBM-format")
-
+            f.readline()
             while True:
                 line = f.readline()
                 if not line.startswith(b"#"):
                     width, height = map(int, line.split())
                     break
 
-        # Skapa sida med explicit MediaBox
         page = out.add_blank_page(page_size=(width, height))
         page.MediaBox = Array([0, 0, width, height])
 
-        # Läs JBIG2-data
         img_data = open(os.path.join(jbig2_dir, pagefile), "rb").read()
 
-        # Skapa bildstream korrekt
         img_obj = pikepdf.Stream(out, img_data)
         img_obj.update({
             Name.Type: Name.XObject,
@@ -220,11 +213,9 @@ for sym in sym_files:
             })
         })
 
-        # Lägg in i resources
         page.Resources = page.Resources or Dictionary()
         page.Resources[Name.XObject] = {Name("/Im0"): img_obj}
 
-        # Rita bilden
         content = f"q {width} 0 0 {height} 0 0 cm /Im0 Do Q"
         page.Contents = out.make_stream(content.encode())
 
