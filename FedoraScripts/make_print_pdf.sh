@@ -26,23 +26,33 @@ gs -dSAFER -dBATCH -dNOPAUSE \
 # 2️⃣ unpaper (musik-optimerad)
 ############################################
 
-echo "2️⃣ Tvättar med unpaper…"
+############################################
+# 2️⃣ unpaper (musik-optimerad, parallell)
+############################################
 
-ls "$WORKDIR"/pages/*.pbm | \
-parallel -j"$(nproc)" \
-'unpaper \
-  --overwrite \
-  --layout single \
-  --deskew-scan-direction left,right \
-  --deskew-scan-range 5 \
-  --deskew-scan-step 0.1 \
-  --border-scan-direction v \
-  --border-scan-size 10 \
-  --border-scan-threshold 5 \
-  --no-blurfilter \
-  --no-grayfilter \
-  --type pbm \
-  {} "'"$WORKDIR"'/clean/{/}"'
+echo "2️⃣ Tvättar med unpaper (parallel)…"
+
+export WORKDIR
+
+find "$WORKDIR/pages" -name "*.pbm" | sort | \
+parallel -j"$(nproc)" --bar '
+  infile={}
+  outfile="$WORKDIR/clean/$(basename {})"
+
+  unpaper \
+    --overwrite \
+    --layout single \
+    --deskew-scan-direction left,right \
+    --deskew-scan-range 5 \
+    --deskew-scan-step 0.1 \
+    --border-scan-direction v \
+    --border-scan-size 10 \
+    --border-scan-threshold 5 \
+    --no-blurfilter \
+    --no-grayfilter \
+    --type pbm \
+    "$infile" "$outfile"
+'
 
 ############################################
 # 3️⃣ JBIG2-komprimering
