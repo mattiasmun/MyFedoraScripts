@@ -16,10 +16,10 @@ mkdir -p "$WORKDIR/pages" "$WORKDIR/clean"
 echo "1️⃣ Renderar 600 dpi mono..."
 
 gs -dSAFER -dBATCH -dNOPAUSE \
-   -sDEVICE=pngmono \
+   -sDEVICE=pbmraw \
    -r600 \
-   -sOutputFile="$WORKDIR/pages/page_%04d.png" \
-   "$INPUT"
+   -sOutputFile=pages/page_%04d.pbm \
+   input.pdf
 
 ############################################
 # 2️⃣ Tvätta med unpaper
@@ -27,15 +27,19 @@ gs -dSAFER -dBATCH -dNOPAUSE \
 
 echo "2️⃣ Tvättar med unpaper..."
 
-for f in "$WORKDIR"/pages/*.png; do
+for f in "$WORKDIR"/pages/*.pbm; do
   unpaper \
     --overwrite \
     --layout single \
-    --threshold 0.55 \
+    --deskew-scan-direction left,right \
     --deskew-scan-range 5 \
     --deskew-scan-step 0.1 \
-    --no-noisefilter \
+    --border-scan-direction v \
+    --border-scan-size 10 \
+    --border-scan-threshold 5 \
     --no-blurfilter \
+    --no-grayfilter \
+    --type pbm \
     "$f" "$WORKDIR/clean/$(basename "$f")"
 done
 
@@ -46,7 +50,7 @@ done
 echo "3️⃣ JBIG2-komprimerar..."
 
 cd "$WORKDIR/clean"
-jbig2 -s -p -v -a page_*.png
+jbig2 -s -p -v -a *.pbm
 cd -
 
 ############################################
