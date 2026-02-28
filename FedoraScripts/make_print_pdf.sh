@@ -151,26 +151,40 @@ output_pdf = os.path.join("$WORKDIR", "jbig2.pdf")
 
 out = Pdf.new()
 
-# Hämta alla block-symboler
-blocks = sorted([f for f in os.listdir(jbig2_dir) if f.endswith(".sym")])
+# Hämta alla PBM i korrekt ordning
+pbm_files = sorted([f for f in os.listdir(clean_dir) if f.endswith(".pbm")])
 
-for block in blocks:
-    base = block.replace(".sym","")
-    sym_path = os.path.join(jbig2_dir, block)
-    globals_stream = pikepdf.Stream(out, open(sym_path,"rb").read())
+# Hämta alla jbig2-sidor i korrekt ordning
+jbig2_pages = sorted([f for f in os.listdir(jbig2_dir)
+                      if f.endswith(".0000")])
 
-    # Hitta alla sidor i blocket
-    pagefiles = sorted([f for f in os.listdir(jbig2_dir)
-                        if f.startswith(base) and f.endswith(".0000")])
+# Hämta symbolfiler
+sym_files = sorted([f for f in os.listdir(jbig2_dir)
+                    if f.endswith(".sym")])
 
-    for pagefile in pagefiles:
+# Ladda globals (single eller flera block)
+globals_streams = {}
+for sym in sym_files:
+    sym_path = os.path.join(jbig2_dir, sym)
+    globals_streams[sym] = pikepdf.Stream(out, open(sym_path,"rb").read())
 
-        # Hitta motsvarande PBM för att läsa dimensioner
-        original_pbm = pagefile.replace(base, "").replace(".0000",".pbm")
-        original_pbm = os.path.join(clean_dir, original_pbm)
+page_index = 0
 
-        # Läs dimension från PBM header manuellt
-        with open(original_pbm, "rb") as f:
+for sym in sym_files:
+    base = sym.replace(".sym","")
+    globals_stream = globals_streams[sym]
+
+    block_pages = sorted([f for f in jbig2_pages if f.startswith(base)])
+
+    for pagefile in block_pages:
+
+        pbm_file = pbm_files[page_index]
+        page_index += 1
+
+        pbm_path = os.path.join(clean_dir, pbm_file)
+
+        # Läs dimension från PBM header
+        with open(pbm_path, "rb") as f:
             header = f.readline()
             while True:
                 line = f.readline()
@@ -180,7 +194,10 @@ for block in blocks:
 
         page = out.add_blank_page(page_size=(width, height))
 
-        img_stream = pikepdf.Stream(out, open(os.path.join(jbig2_dir,pagefile),"rb").read())
+        img_stream = pikepdf.Stream(
+            out,
+            open(os.path.join(jbig2_dir, pagefile),"rb").read()
+        )
 
         img_dict = {
             "/Type": "/XObject",
