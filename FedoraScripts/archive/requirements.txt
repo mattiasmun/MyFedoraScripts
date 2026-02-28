@@ -10,6 +10,8 @@ MouseInfo
 numpy
 opencv-python-headless
 pdf2docx
+pdfminer.six
+pdfplumber
 pip-date
 PyAutoGUI
 PyGetWindow
@@ -18,6 +20,7 @@ pyinstaller-hooks-contrib
 PyMsgBox
 PyMuPDF
 pynput
+pypdfium2
 PyRect
 PyScreeze
 python-docx

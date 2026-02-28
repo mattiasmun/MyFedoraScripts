@@ -1,112 +1,98 @@
 #!/bin/bash
+set -e
 
-# Kontrollera att input finns
-if [ -z "$1" ]; then
-  echo "Användning: $0 input.pdf"
-  exit 1
-fi
+# -----------------------------------------
+# Kontroll
+# -----------------------------------------
 
 INPUT="$1"
-BASENAME=$(basename "$INPUT" .pdf)
-ICC="/usr/share/ghostscript/iccprofiles/default_cmyk.icc"
-WORKDIR="gs_work_$$"
+[ -z "$INPUT" ] && { echo "Ange PDF-fil"; exit 1; }
+[ ! -f "$INPUT" ] && { echo "Filen finns inte: $INPUT"; exit 1; }
 
+BASENAME=$(basename "$INPUT" .pdf)
+WORKDIR="${BASENAME}_PRINTPRO_$$"
 mkdir "$WORKDIR"
 
-# Hämta antal sidor
-PAGES=$(pdfinfo "$INPUT" | awk '/Pages:/ {print $2}')
-LAST=$PAGES
-MIDLAST=$((LAST-1))
+# Marginaler i punkter (15mm ~ 42.5pt)
+MARGIN=42.5
+# A5-punkter
+WIDTH=420
+HEIGHT=595
 
-echo "Antal sidor: $PAGES"
+echo "Splitting $INPUT → $WORKDIR ..."
+pdfcpu split "$INPUT" "$WORKDIR"
 
-############################################
-# Inställningar
-############################################
+# -----------------------------------------
+# Analys + exakt skalning per sida
+# -----------------------------------------
 
-A5W=419    # A5 width in points
-A5H=595    # A5 height in points
-SCALE=0.797   # ≈ 15 mm marginal
+for f in "$WORKDIR"/*.pdf; do
+    echo "Analyserar $f ..."
 
-############################################
-# 1. Första sidan – CMYK
-############################################
+    python3 <<EOF
+import pdfplumber, os, subprocess
 
-gs -dBATCH -dNOPAUSE -dSAFER \
-   -sDEVICE=pdfwrite \
-   -dFirstPage=1 -dLastPage=1 \
-   -sProcessColorModel=DeviceCMYK \
-   -sColorConversionStrategy=CMYK \
-   -dBlackText -dBlackVector \
-   -dFIXEDMEDIA \
-   -dDEVICEWIDTHPOINTS=$A5W \
-   -dDEVICEHEIGHTPOINTS=$A5H \
-   -c "<</BeginPage {$SCALE $SCALE scale}>> setpagedevice" \
-   -o "$WORKDIR/p1.pdf" \
-   "$INPUT"
+f = "$f"
+WORKDIR = "$WORKDIR"
+MARGIN = $MARGIN
+WIDTH = $WIDTH
+HEIGHT = $HEIGHT
+OUTFILE = os.path.join(WORKDIR, "scaled.pdf")
 
-############################################
-# 2. Sista sidan – CMYK
-############################################
+with pdfplumber.open(f) as pdf:
+    page = pdf.pages[0]
+    # bounding box på innehållet
+    bbox = page.bbox  # (x0, top, x1, bottom)
+    content_width = bbox[2] - bbox[0]
+    content_height = bbox[3] - bbox[1]
 
-gs -dBATCH -dNOPAUSE -dSAFER \
-   -sDEVICE=pdfwrite \
-   -dFirstPage=$LAST -dLastPage=$LAST \
-   -sProcessColorModel=DeviceCMYK \
-   -sColorConversionStrategy=CMYK \
-   -dBlackText -dBlackVector \
-   -dFIXEDMEDIA \
-   -dDEVICEWIDTHPOINTS=$A5W \
-   -dDEVICEHEIGHTPOINTS=$A5H \
-   -c "<</BeginPage {$SCALE $SCALE scale}>> setpagedevice" \
-   -o "$WORKDIR/last.pdf" \
-   "$INPUT"
+# Beräkna skalning så innehållet får korrekt marginal
+scale_x = (WIDTH - 2*MARGIN) / content_width
+scale_y = (HEIGHT - 2*MARGIN) / content_height
+scale = min(scale_x, scale_y)
 
-############################################
-# 3. Mitten – JBIG2 1-bit
-############################################
+# Translation för att placera innehållet med marginal
+tx = MARGIN - bbox[0]*scale
+ty = MARGIN - bbox[1]*scale
 
-if [ "$PAGES" -gt 2 ]; then
-gs -dBATCH -dNOPAUSE -dSAFER \
-   -sDEVICE=pdfwrite \
-   -dFirstPage=2 -dLastPage=$MIDLAST \
-   -sProcessColorModel=DeviceGray \
-   -sColorConversionStrategy=Gray \
-   -dMonoImageResolution=300 \
-   -dEncodeMonoImages=true \
-   -dMonoImageFilter=/JBIG2Encode \
-   -dBlackText -dBlackVector \
-   -dFIXEDMEDIA \
-   -dDEVICEWIDTHPOINTS=$A5W \
-   -dDEVICEHEIGHTPOINTS=$A5H \
-   -c "<</BeginPage {$SCALE $SCALE scale}>> setpagedevice" \
-   -o "$WORKDIR/middle.pdf" \
-   "$INPUT"
-fi
+# Ghostscript: skalning + translation
+subprocess.run([
+    "gs", "-dSAFER", "-dBATCH", "-dNOPAUSE",
+    "-sDEVICE=pdfwrite",
+    "-sOutputFile={}".format(OUTFILE),
+    "-dFIXEDMEDIA",
+    "-dDEVICEWIDTHPOINTS={}".format(WIDTH),
+    "-dDEVICEHEIGHTPOINTS={}".format(HEIGHT),
+    "-c","<</Install {{ {} {} translate {} {} scale }}>> setpagedevice".format(tx, ty, scale, scale),
+    "-f", f
+], check=True)
 
-############################################
-# 4. Slå ihop + PDF/A-2B + ICC
-############################################
+if os.path.isfile(OUTFILE):
+    os.rename(OUTFILE, f)
+EOF
 
-if [ "$PAGES" -gt 2 ]; then
-INPUTS="$WORKDIR/p1.pdf $WORKDIR/middle.pdf $WORKDIR/last.pdf"
-else
-INPUTS="$WORKDIR/p1.pdf $WORKDIR/last.pdf"
-fi
+done
 
-gs -dBATCH -dNOPAUSE -dSAFER \
-   --permit-file-read="$ICC" \
-   -sDEVICE=pdfwrite \
-   -dPDFA=2 \
-   -dPDFACompatibilityPolicy=1 \
-   -dOverrideICC \
-   -sOutputICCProfile="$ICC" \
-   -sProcessColorModel=DeviceCMYK \
-   -sColorConversionStrategy=CMYK \
-   -dBlackText -dBlackVector \
-   -o "${BASENAME}_A5_PRINT.pdf" \
-   $INPUTS
+# -----------------------------------------
+# Lägg till ledande nollor på filnamn
+# -----------------------------------------
+cd "$WORKDIR"
+COUNT=1
+for f in *.pdf; do
+    NEW=$(printf "%03d.pdf" $COUNT)
+    mv "$f" "$NEW"
+    ((COUNT++))
+done
+cd -
 
-echo "Klar: ${BASENAME}_A5_PRINT.pdf"
+# -----------------------------------------
+# Slå ihop tillbaka till en PDF med korrekt ordning
+# -----------------------------------------
+OUTPUT="${BASENAME}_MATRIX_MARGIN.pdf"
+echo "Slår ihop alla sidor → $OUTPUT"
+pdfcpu merge -sort "$OUTPUT" "$WORKDIR"/*.pdf
 
+# Rensa upp
 rm -rf "$WORKDIR"
+
+echo "KLAR: $OUTPUT"
