@@ -7,22 +7,23 @@ INPUT="$1"
 
 BASENAME=$(basename "$INPUT" .pdf)
 WORKDIR="${BASENAME}_WORK_$$"
+
 mkdir -p "$WORKDIR/pages" "$WORKDIR/clean"
 
 ############################################
-# 1️⃣ Rendera till 600 dpi mono
+# 1️⃣ Ghostscript → 600 dpi PBM
 ############################################
 
-echo "1️⃣ Renderar 600 dpi mono..."
+echo "1️⃣ Renderar 600 dpi PBM..."
 
 gs -dSAFER -dBATCH -dNOPAUSE \
    -sDEVICE=pbmraw \
    -r600 \
-   -sOutputFile=pages/page_%04d.pbm \
-   input.pdf
+   -sOutputFile="$WORKDIR/pages/page_%04d.pbm" \
+   "$INPUT"
 
 ############################################
-# 2️⃣ Tvätta med unpaper
+# 2️⃣ unpaper (musik-optimerad)
 ############################################
 
 echo "2️⃣ Tvättar med unpaper..."
@@ -44,7 +45,7 @@ for f in "$WORKDIR"/pages/*.pbm; do
 done
 
 ############################################
-# 3️⃣ JBIG2 komprimering
+# 3️⃣ JBIG2-komprimering
 ############################################
 
 echo "3️⃣ JBIG2-komprimerar..."
@@ -54,7 +55,7 @@ jbig2 -s -p -v -a *.pbm
 cd -
 
 ############################################
-# 4️⃣ Bygg PDF från JBIG2
+# 4️⃣ Bygg JBIG2 PDF
 ############################################
 
 echo "4️⃣ Bygger JBIG2 PDF..."
@@ -65,20 +66,21 @@ import pikepdf
 from pikepdf import Pdf
 
 workdir = "$WORKDIR/clean"
-output_jbig = "$WORKDIR/jbig2.pdf"
+output_pdf = "$WORKDIR/jbig2.pdf"
 
 out = Pdf.new()
 
 symbols = os.path.join(workdir, "output.sym")
-
 pages = sorted([f for f in os.listdir(workdir) if f.endswith(".0000")])
 
 for pagefile in pages:
     img_path = os.path.join(workdir, pagefile)
 
-    page = out.add_blank_page(page_size=(420,595))
+    page = out.add_blank_page(page_size=(2480,3508))
 
-    img = pikepdf.Stream(out, open(img_path,"rb").read())
+    img_stream = pikepdf.Stream(out, open(img_path,"rb").read())
+    globals_stream = pikepdf.Stream(out, open(symbols,"rb").read())
+
     img_dict = {
         "/Type": "/XObject",
         "/Subtype": "/Image",
@@ -87,22 +89,21 @@ for pagefile in pages:
         "/ColorSpace": "/DeviceGray",
         "/BitsPerComponent": 1,
         "/Filter": "/JBIG2Decode",
-        "/DecodeParms": {"/JBIG2Globals": pikepdf.Stream(out, open(symbols,"rb").read())}
+        "/DecodeParms": {"/JBIG2Globals": globals_stream}
     }
 
     img_obj = out.make_indirect(img_dict)
     page.Resources = {"/XObject": {"/Im0": img_obj}}
+    page.Contents = out.make_stream(b"q 2480 0 0 3508 0 0 cm /Im0 Do Q")
 
-    page.Contents = out.make_stream(b"q 420 0 0 595 0 0 cm /Im0 Do Q")
-
-out.save(output_jbig)
+out.save(output_pdf)
 EOF
 
 ############################################
-# 5️⃣ Skala till A5 + 15 mm
+# 5️⃣ Skala till A5 + 15 mm + booklet-logik
 ############################################
 
-echo "5️⃣ Skalar till A5..."
+echo "5️⃣ Skalar till A5 och fixar sidantal..."
 
 python3 <<EOF
 import pikepdf
@@ -119,7 +120,6 @@ MAX_H = 510
 pdf = Pdf.open(INPUT)
 out = Pdf.new()
 
-# sista sidan = bakgrund
 back_cover = pdf.pages[-1]
 content_pages = list(pdf.pages[:-1])
 
@@ -152,7 +152,8 @@ def place(page):
 for p in content_pages:
     place(p)
 
-while (len(out.pages)+1) % 4 != 0:
+# Lägg till blanka sidor före bakgrund
+while (len(out.pages) + 1) % 4 != 0:
     out.add_blank_page(page_size=(TARGET_W,TARGET_H))
 
 place(back_cover)
