@@ -99,6 +99,14 @@ for pagefile in pages:
 out.save(output_pdf)
 EOF
 
+echo "4️⃣  Auto-croppar med pdfcropmargins..."
+
+pdfcropmargins \
+  -c gb \
+  -p 0 \
+  -o "$WORKDIR/jbig2_cropped.pdf" \
+  "$WORKDIR/jbig2.pdf"
+
 ############################################
 # 5️⃣ Skala till A5 + 15 mm + booklet-logik
 ############################################
@@ -109,7 +117,7 @@ python3 <<EOF
 import pikepdf
 from pikepdf import Pdf, Name, Dictionary
 
-INPUT = "$WORKDIR/jbig2.pdf"
+INPUT = "$WORKDIR/jbig2_cropped.pdf"
 OUTPUT = "${BASENAME}_PRINT_READY.pdf"
 
 TARGET_W = 420
