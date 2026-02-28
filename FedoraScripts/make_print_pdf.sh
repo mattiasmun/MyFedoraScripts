@@ -210,11 +210,9 @@ for sym in sym_files:
         img_obj["/Filter"] = "/JBIG2Decode"
 
         # 🔥 SKAPA DecodeParms korrekt
-        decode_dict = out.make_indirect({
-            "/JBIG2Globals": globals_stream
+        img_obj["/DecodeParms"] = Dictionary({
+            Name("/JBIG2Globals"): globals_stream
         })
-
-        img_obj["/DecodeParms"] = decode_dict
 
         page.Resources = page.Resources or Dictionary()
         page.Resources[Name.XObject] = {Name("/Im0"): img_obj}
