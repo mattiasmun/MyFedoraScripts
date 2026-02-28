@@ -64,10 +64,10 @@ parallel -j"$(nproc)" --bar '
 '
 
 ############################################
-# 3️⃣ JBIG2 parallell (auto-optimerad)
+# 3️⃣ JBIG2 (smart läge)
 ############################################
 
-echo "3️⃣ JBIG2-komprimerar (auto-optimerad)…"
+echo "3️⃣ JBIG2-komprimerar (smart läge)…"
 
 cd "$WORKDIR/clean"
 
@@ -75,41 +75,62 @@ FILES=($(ls *.pbm | sort))
 TOTAL=${#FILES[@]}
 CPU=$(nproc)
 
-# Räkna blocksize dynamiskt
-if [ "$TOTAL" -le 40 ]; then
-  BLOCKSIZE=$TOTAL
+echo "📊 Sidor: $TOTAL | CPU: $CPU"
+
+mkdir -p "$WORKDIR/jbig2"
+
+############################################
+# 🔹 SMALL MODE (<50 sidor)
+############################################
+
+if [ "$TOTAL" -lt 50 ]; then
+  echo "⚡ Använder single-dictionary (bästa kompression)"
+
+  jbig2 -s -p -v -a \
+        -b "$WORKDIR/jbig2/block_1" \
+        "${FILES[@]}"
+
+############################################
+# 🔹 LARGE MODE (>=50 sidor)
+############################################
+
 else
+  echo "🚀 Använder block-parallellisering"
+
+  # Dynamisk blocksize
   BLOCKS=$(( CPU * 2 ))
   BLOCKSIZE=$(( TOTAL / BLOCKS ))
 
-  # Säkerhetsgränser
   if [ "$BLOCKSIZE" -lt 10 ]; then BLOCKSIZE=10; fi
   if [ "$BLOCKSIZE" -gt 40 ]; then BLOCKSIZE=40; fi
-fi
 
-echo "📊 Sidor: $TOTAL | CPU: $CPU | Blocksize: $BLOCKSIZE"
+  echo "📦 Blocksize: $BLOCKSIZE"
 
-BLOCKS=$(( (TOTAL + BLOCKSIZE - 1) / BLOCKSIZE ))
+  BLOCKS=$(( (TOTAL + BLOCKSIZE - 1) / BLOCKSIZE ))
 
-export WORKDIR BLOCKSIZE TOTAL
-export FILES
+  export WORKDIR BLOCKSIZE TOTAL
+  export FILES
 
-parallel -j"$CPU" --bar '
-  block={#}
-  start=$(( (block-1)*BLOCKSIZE ))
-  end=$(( start+BLOCKSIZE-1 ))
+  parallel -j"$CPU" --bar '
+    block={#}
+    start=$(( (block-1)*BLOCKSIZE ))
+    end=$(( start+BLOCKSIZE-1 ))
 
-  files=()
-  for i in $(seq $start $end); do
-    if [ $i -lt '"$TOTAL"' ]; then
-      files+=("'"${FILES[$i]}"'")
+    files=()
+    for i in $(seq $start $end); do
+      if [ $i -lt '"$TOTAL"' ]; then
+        files+=("'"${FILES[$i]}"'")
+      fi
+    done
+
+    if [ ${#files[@]} -gt 0 ]; then
+      jbig2 -s -p -v -a \
+            -b "$WORKDIR/jbig2/block_${block}" \
+            "${files[@]}"
     fi
-  done
+  ' ::: $(seq 1 $BLOCKS)
 
-  if [ ${#files[@]} -gt 0 ]; then
-    jbig2 -s -p -v -a -b "$WORKDIR/jbig2/block_${block}" "${files[@]}"
-  fi
-' ::: $(seq 1 $BLOCKS)
+fi
 
 cd -
 
@@ -123,31 +144,43 @@ python3 <<EOF
 import os
 import pikepdf
 from pikepdf import Pdf
-from PIL import Image
 
-workdir = "$WORKDIR/jbig2"
+clean_dir = "$WORKDIR/clean"
+jbig2_dir = "$WORKDIR/jbig2"
 output_pdf = os.path.join("$WORKDIR", "jbig2.pdf")
 
 out = Pdf.new()
 
-blocks = sorted([f for f in os.listdir(workdir) if f.endswith(".sym")])
+# Hämta alla block-symboler
+blocks = sorted([f for f in os.listdir(jbig2_dir) if f.endswith(".sym")])
 
 for block in blocks:
     base = block.replace(".sym","")
-    sym_path = os.path.join(workdir, block)
+    sym_path = os.path.join(jbig2_dir, block)
     globals_stream = pikepdf.Stream(out, open(sym_path,"rb").read())
 
-    pagefiles = sorted([f for f in os.listdir(workdir) if f.startswith(base) and f.endswith(".0000")])
+    # Hitta alla sidor i blocket
+    pagefiles = sorted([f for f in os.listdir(jbig2_dir)
+                        if f.startswith(base) and f.endswith(".0000")])
 
     for pagefile in pagefiles:
-        img_path = os.path.join(workdir, pagefile)
 
-        with Image.open(img_path) as im:
-            width, height = im.size
+        # Hitta motsvarande PBM för att läsa dimensioner
+        original_pbm = pagefile.replace(base, "").replace(".0000",".pbm")
+        original_pbm = os.path.join(clean_dir, original_pbm)
+
+        # Läs dimension från PBM header manuellt
+        with open(original_pbm, "rb") as f:
+            header = f.readline()
+            while True:
+                line = f.readline()
+                if not line.startswith(b"#"):
+                    width, height = map(int, line.split())
+                    break
 
         page = out.add_blank_page(page_size=(width, height))
 
-        img_stream = pikepdf.Stream(out, open(img_path,"rb").read())
+        img_stream = pikepdf.Stream(out, open(os.path.join(jbig2_dir,pagefile),"rb").read())
 
         img_dict = {
             "/Type": "/XObject",
