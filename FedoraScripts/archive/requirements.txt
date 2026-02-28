@@ -10,6 +10,7 @@ MouseInfo
 numpy
 opencv-python-headless
 pdf2docx
+pdfCropMargins
 pdfminer.six
 pdfplumber
 pip-date

@@ -1,98 +1,77 @@
 #!/bin/bash
 set -e
 
-# -----------------------------------------
-# Kontroll
-# -----------------------------------------
-
 INPUT="$1"
 [ -z "$INPUT" ] && { echo "Ange PDF-fil"; exit 1; }
 [ ! -f "$INPUT" ] && { echo "Filen finns inte: $INPUT"; exit 1; }
 
 BASENAME=$(basename "$INPUT" .pdf)
-WORKDIR="${BASENAME}_PRINTPRO_$$"
-mkdir "$WORKDIR"
+CROPPED="${BASENAME}_CROPPED.pdf"
+OUTPUT="${BASENAME}_MATRIX_MARGIN.pdf"
 
-# Marginaler i punkter (15mm ~ 42.5pt)
-MARGIN=42.5
-# A5-punkter
-WIDTH=420
-HEIGHT=595
+echo "1️⃣  Tar bort vitkant automatiskt..."
+pdfcropmargins -c gb -p 0 -o "$CROPPED" "$INPUT"
 
-echo "Splitting $INPUT → $WORKDIR ..."
-pdfcpu split "$INPUT" "$WORKDIR"
+echo "2️⃣  Skalar och placerar på A5..."
 
-# -----------------------------------------
-# Analys + exakt skalning per sida
-# -----------------------------------------
+python3 <<EOF
+import pikepdf
+from pikepdf import Pdf, Name, Dictionary
 
-for f in "$WORKDIR"/*.pdf; do
-    echo "Analyserar $f ..."
+INPUT = "$CROPPED"
+OUTPUT = "$OUTPUT"
 
-    python3 <<EOF
-import pdfplumber, os, subprocess
+TARGET_W = 420
+TARGET_H = 595
+MAX_W = 335
+MAX_H = 510
 
-f = "$f"
-WORKDIR = "$WORKDIR"
-MARGIN = $MARGIN
-WIDTH = $WIDTH
-HEIGHT = $HEIGHT
-OUTFILE = os.path.join(WORKDIR, "scaled.pdf")
+pdf = Pdf.open(INPUT)
+out = Pdf.new()
 
-with pdfplumber.open(f) as pdf:
-    page = pdf.pages[0]
-    # bounding box på innehållet
-    bbox = page.bbox  # (x0, top, x1, bottom)
-    content_width = bbox[2] - bbox[0]
-    content_height = bbox[3] - bbox[1]
+for page_number, page in enumerate(pdf.pages, start=1):
+    try:
+        llx, lly, urx, ury = map(float, page.MediaBox)
+        width = urx - llx
+        height = ury - lly
 
-# Beräkna skalning så innehållet får korrekt marginal
-scale_x = (WIDTH - 2*MARGIN) / content_width
-scale_y = (HEIGHT - 2*MARGIN) / content_height
-scale = min(scale_x, scale_y)
+        if width <= 0 or height <= 0:
+            print(f"⚠️  Sida {page_number} är tom → ersätter med blank A5")
+            out.add_blank_page(page_size=(TARGET_W, TARGET_H))
+            continue
 
-# Translation för att placera innehållet med marginal
-tx = MARGIN - bbox[0]*scale
-ty = MARGIN - bbox[1]*scale
+        scale = min(MAX_W / width, MAX_H / height)
 
-# Ghostscript: skalning + translation
-subprocess.run([
-    "gs", "-dSAFER", "-dBATCH", "-dNOPAUSE",
-    "-sDEVICE=pdfwrite",
-    "-sOutputFile={}".format(OUTFILE),
-    "-dFIXEDMEDIA",
-    "-dDEVICEWIDTHPOINTS={}".format(WIDTH),
-    "-dDEVICEHEIGHTPOINTS={}".format(HEIGHT),
-    "-c","<</Install {{ {} {} translate {} {} scale }}>> setpagedevice".format(tx, ty, scale, scale),
-    "-f", f
-], check=True)
+        new_page = out.add_blank_page(page_size=(TARGET_W, TARGET_H))
 
-if os.path.isfile(OUTFILE):
-    os.rename(OUTFILE, f)
+        x_offset = (TARGET_W - width * scale) / 2
+        y_offset = (TARGET_H - height * scale) / 2
+
+        # 🔥 KORREKT sätt
+        xobj = out.copy_foreign(
+            pikepdf.Page(page).as_form_xobject()
+        )
+
+        new_page.Resources = new_page.Resources or Dictionary()
+        new_page.Resources.XObject = new_page.Resources.get("/XObject", Dictionary())
+        new_page.Resources.XObject[Name("/Fm0")] = xobj
+
+        content = f"""
+        q
+        {scale} 0 0 {scale} {x_offset - llx*scale} {y_offset - lly*scale} cm
+        /Fm0 Do
+        Q
+        """
+
+        new_page.Contents = out.make_stream(content.encode("utf-8"))
+
+    except Exception as e:
+        print(f"⚠️  Sida {page_number} kraschade → ersätter med blank A5")
+        out.add_blank_page(page_size=(TARGET_W, TARGET_H))
+
+out.save(OUTPUT)
 EOF
 
-done
-
-# -----------------------------------------
-# Lägg till ledande nollor på filnamn
-# -----------------------------------------
-cd "$WORKDIR"
-COUNT=1
-for f in *.pdf; do
-    NEW=$(printf "%03d.pdf" $COUNT)
-    mv "$f" "$NEW"
-    ((COUNT++))
-done
-cd -
-
-# -----------------------------------------
-# Slå ihop tillbaka till en PDF med korrekt ordning
-# -----------------------------------------
-OUTPUT="${BASENAME}_MATRIX_MARGIN.pdf"
-echo "Slår ihop alla sidor → $OUTPUT"
-pdfcpu merge -sort "$OUTPUT" "$WORKDIR"/*.pdf
-
-# Rensa upp
-rm -rf "$WORKDIR"
+rm "$CROPPED"
 
 echo "KLAR: $OUTPUT"
