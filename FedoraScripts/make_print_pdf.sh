@@ -14,7 +14,7 @@ WORKDIR="gs_work_$$"
 mkdir "$WORKDIR"
 
 # Hämta antal sidor
-PAGES=$(gs -q -dNODISPLAY -c "($INPUT) (r) file runpdfbegin pdfpagecount = quit")
+PAGES=$(pdfinfo "$INPUT" | awk '/Pages:/ {print $2}')
 LAST=$PAGES
 MIDLAST=$((LAST-1))
 
