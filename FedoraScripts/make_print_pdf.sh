@@ -135,7 +135,7 @@ fi
 cd -
 
 ############################################
-# 4️⃣ Bygg PDF från alla block
+# 4️⃣ Bygg PDF från alla block (ROBUST)
 ############################################
 
 echo "4️⃣ Bygger JBIG2 PDF…"
@@ -143,7 +143,7 @@ echo "4️⃣ Bygger JBIG2 PDF…"
 python3 <<EOF
 import os
 import pikepdf
-from pikepdf import Pdf
+from pikepdf import Pdf, Name, Dictionary, Array
 
 clean_dir = "$WORKDIR/clean"
 jbig2_dir = "$WORKDIR/jbig2"
@@ -151,69 +151,80 @@ output_pdf = os.path.join("$WORKDIR", "jbig2.pdf")
 
 out = Pdf.new()
 
-# Hämta alla PBM i korrekt ordning
+# Sorterade PBM (ursprunglig ordning)
 pbm_files = sorted([f for f in os.listdir(clean_dir) if f.endswith(".pbm")])
 
-# Hämta alla jbig2-sidor i korrekt ordning
-jbig2_pages = sorted([f for f in os.listdir(jbig2_dir)
-                      if f.endswith(".0000")])
+# Sorterade JBIG2-sidor
+jbig2_pages = sorted([f for f in os.listdir(jbig2_dir) if f.endswith(".0000")])
 
-# Hämta symbolfiler
-sym_files = sorted([f for f in os.listdir(jbig2_dir)
-                    if f.endswith(".sym")])
+# Sorterade symbolfiler
+sym_files = sorted([f for f in os.listdir(jbig2_dir) if f.endswith(".sym")])
 
-# Ladda globals (single eller flera block)
-globals_streams = {}
+if not pbm_files:
+    raise RuntimeError("Inga PBM-filer hittades.")
+if not jbig2_pages:
+    raise RuntimeError("Inga JBIG2-sidor hittades.")
+if len(pbm_files) != len(jbig2_pages):
+    raise RuntimeError("Antal PBM matchar inte antal JBIG2-sidor.")
+
+# Ladda globals per block
+globals_map = {}
 for sym in sym_files:
     sym_path = os.path.join(jbig2_dir, sym)
-    globals_streams[sym] = pikepdf.Stream(out, open(sym_path,"rb").read())
+    globals_map[sym] = pikepdf.Stream(out, open(sym_path, "rb").read())
 
 page_index = 0
 
 for sym in sym_files:
-    base = sym.replace(".sym","")
-    globals_stream = globals_streams[sym]
+    base = sym.replace(".sym", "")
+    globals_stream = globals_map[sym]
 
     block_pages = sorted([f for f in jbig2_pages if f.startswith(base)])
 
     for pagefile in block_pages:
 
-        pbm_file = pbm_files[page_index]
+        pbm_path = os.path.join(clean_dir, pbm_files[page_index])
         page_index += 1
 
-        pbm_path = os.path.join(clean_dir, pbm_file)
-
-        # Läs dimension från PBM header
+        # Läs dimensioner från PBM-header
         with open(pbm_path, "rb") as f:
-            header = f.readline()
+            magic = f.readline()
+            if not magic.startswith(b"P4"):
+                raise RuntimeError("Fel PBM-format")
+
             while True:
                 line = f.readline()
                 if not line.startswith(b"#"):
                     width, height = map(int, line.split())
                     break
 
+        # Skapa sida med explicit MediaBox
         page = out.add_blank_page(page_size=(width, height))
-        page.MediaBox = pikepdf.Array([0, 0, width, height])
+        page.MediaBox = Array([0, 0, width, height])
 
-        img_stream = pikepdf.Stream(
-            out,
-            open(os.path.join(jbig2_dir, pagefile),"rb").read()
-        )
+        # Läs JBIG2-data
+        img_data = open(os.path.join(jbig2_dir, pagefile), "rb").read()
 
-        img_dict = {
-            "/Type": "/XObject",
-            "/Subtype": "/Image",
-            "/Width": width,
-            "/Height": height,
-            "/ColorSpace": "/DeviceGray",
-            "/BitsPerComponent": 1,
-            "/Filter": "/JBIG2Decode",
-            "/DecodeParms": {"/JBIG2Globals": globals_stream}
-        }
+        # Skapa bildstream korrekt
+        img_obj = pikepdf.Stream(out, img_data)
+        img_obj.update({
+            Name.Type: Name.XObject,
+            Name.Subtype: Name.Image,
+            Name.Width: width,
+            Name.Height: height,
+            Name.ColorSpace: Name.DeviceGray,
+            Name.BitsPerComponent: 1,
+            Name.Filter: Name.JBIG2Decode,
+            Name.DecodeParms: Dictionary({
+                Name.JBIG2Globals: globals_stream
+            })
+        })
 
-        img_obj = out.make_indirect(img_dict)
-        page.Resources = {"/XObject": {"/Im0": img_obj}}
+        # Lägg in i resources
+        page.Resources = page.Resources or Dictionary()
+        page.Resources[Name.XObject] = {Name("/Im0"): img_obj}
 
+        # Rita bilden
         content = f"q {width} 0 0 {height} 0 0 cm /Im0 Do Q"
         page.Contents = out.make_stream(content.encode())
 
