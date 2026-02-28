@@ -450,6 +450,7 @@ go-filesystem.x86_64 \
 go-srpm-macros.noarch \
 gobject-introspection-devel.x86_64 \
 golang-bin.x86_64 \
+golang-github-pdfcpu.x86_64 \
 golang-src.noarch \
 golang.x86_64 \
 google-noto-sans-gurmukhi-fonts.noarch \
