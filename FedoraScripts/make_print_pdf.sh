@@ -193,6 +193,7 @@ for sym in sym_files:
                     break
 
         page = out.add_blank_page(page_size=(width, height))
+        page.MediaBox = pikepdf.Array([0, 0, width, height])
 
         img_stream = pikepdf.Stream(
             out,
