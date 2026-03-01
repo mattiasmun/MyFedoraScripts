@@ -52,7 +52,7 @@ def main():
             str(prefix)
         ]
 
-        print("Building PDF with jbig2topdf.py...")
+        print("Building PDF with jbig2topdf.py…")
 
         with open(output_pdf, "wb") as f:
             subprocess.run(cmd, stdout=f, check=True)

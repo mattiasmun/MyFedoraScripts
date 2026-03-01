@@ -29,20 +29,24 @@ trap "rm -rf '$WORKDIR'" EXIT
 # 1️⃣ Ghostscript → 600 dpi PBM
 ############################################
 
-echo "1️⃣ Renderar 600 dpi PBM…"
+echo "1️⃣ Renderar till 1-bit PBM (A5 fixed mediabox, 400 dpi)…"
 
-gs -dSAFER -dBATCH -dNOPAUSE \
-   -sDEVICE=pbmraw \
-   -r400 \
-   -dUseCropBox \
-   -dTextAlphaBits=4 \
-   -dGraphicsAlphaBits=4 \
-   -dDownScaleFactor=2 \
-   -dAlignToPixels=0 \
-   -dGridFitTT=2 \
-   -sOutputFile="$WORKDIR/pages/page_%04d.pbm" \
-   "$INPUT"
-
+gs \
+  -sDEVICE=pbmraw \
+  -r400 \
+  -dBATCH \
+  -dNOPAUSE \
+  -dFIXEDMEDIA \
+  -dPDFFitPage \
+  -dNOUseCropBox \
+  -dNOUseTrimBox \
+  -dNOUseBleedBox \
+  -dTextAlphaBits=1 \
+  -dGraphicsAlphaBits=1 \
+  -dDEVICEWIDTHPOINTS=420 \
+  -dDEVICEHEIGHTPOINTS=595 \
+  -sOutputFile="$WORKDIR/pages/page_%04d.pbm" \
+  "$INPUT_PDF"
 
 echo "2️⃣ Intelligent trim av PBM…"
 
