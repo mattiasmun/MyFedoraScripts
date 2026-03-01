@@ -38,9 +38,6 @@ gs \
   -dNOPAUSE \
   -dFIXEDMEDIA \
   -dPDFFitPage \
-  -dNOUseCropBox \
-  -dNOUseTrimBox \
-  -dNOUseBleedBox \
   -dTextAlphaBits=1 \
   -dGraphicsAlphaBits=1 \
   -dDEVICEWIDTHPOINTS=420 \
