@@ -132,8 +132,7 @@ OUTPUT_PDF="$WORKDIR/jbig2.pdf"
 
 if ! python3 "$SCRIPT_DIR/build_jbig2_pdf.py" \
         "$WORKDIR/pages" \
-        "$OUTPUT_PDF" \
-        --dpi 400; then
+        "$OUTPUT_PDF"; then
     echo "❌ Fel vid PDF-generering"
     exit 1
 fi
