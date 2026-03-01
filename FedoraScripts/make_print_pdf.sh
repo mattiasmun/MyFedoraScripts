@@ -30,7 +30,8 @@ trap "rm -rf '$WORKDIR'" EXIT
 ############################################
 
 echo "1️⃣ Renderar till 1-bit PBM (A5 fixed mediabox, 400 dpi)…"
-
+echo "INPUT: [$INPUT]"
+echo "WORKDIR: [$WORKDIR]"
 gs \
   -sDEVICE=pbmraw \
   -r400 \
@@ -43,7 +44,7 @@ gs \
   -dDEVICEWIDTHPOINTS=420 \
   -dDEVICEHEIGHTPOINTS=595 \
   -sOutputFile="$WORKDIR/pages/page_%04d.pbm" \
-  "$INPUT_PDF"
+  "$INPUT"
 
 echo "2️⃣ Intelligent trim av PBM…"
 
