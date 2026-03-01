@@ -1,64 +1,64 @@
 #!/usr/bin/env python3
 
-import argparse
-import subprocess
+import os
 import sys
+import subprocess
 from pathlib import Path
-import tempfile
+import pikepdf
+from pikepdf import Name, Dictionary
 
+PAGES_DIR = Path(sys.argv[1])
+OUTPUT_PDF = sys.argv[2]
 
-def run(cmd):
-    print("Running:", " ".join(cmd))
-    subprocess.run(cmd, check=True)
+TARGET_W = 420
+TARGET_H = 595
 
+pbms = sorted(PAGES_DIR.glob("*.pbm"))
+if not pbms:
+    print("Inga PBM-filer hittades")
+    sys.exit(1)
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input_dir")
-    parser.add_argument("output_pdf")
-    args = parser.parse_args()
+# Kör jbig2
+tmp_base = PAGES_DIR / "output"
 
-    input_dir = Path(args.input_dir)
-    output_pdf = Path(args.output_pdf)
+cmd = [
+    "jbig2",
+    "-s", "-a", "-p",
+    "-t", "0.80",
+    "-b", str(tmp_base)
+] + [str(p) for p in pbms]
 
-    pbm_files = sorted(input_dir.glob("*.pbm"))
-    if not pbm_files:
-        sys.exit("❌ No PBM files found")
+print("Running:", " ".join(cmd))
+subprocess.run(cmd, check=True)
 
-    print("Found pages:")
-    for p in pbm_files:
-        print(" ", p.name)
+pdf = pikepdf.Pdf.new()
 
-    with tempfile.TemporaryDirectory() as tmpdir:
-        tmpdir = Path(tmpdir)
-        prefix = tmpdir / "output"
+for i, pbm in enumerate(pbms):
+    page_pdf = pikepdf.Pdf.open(f"{tmp_base}.{i:04d}")
+    img_page = page_pdf.pages[0]
 
-        # 1️⃣ Kör jbig2 på ALLA sidor samtidigt
-        cmd = [
-            "jbig2",
-            "-s",          # symbol mode
-            "-a",          # auto threshold
-            "-p",          # PDF-compatible segments
-            "-t", "0.80",  # bra balans för noter
-            "-v",
-            "-b", str(prefix)
-        ] + [str(p) for p in pbm_files]
+    # Hämta bilddimensioner
+    xobj = next(iter(img_page.Resources.XObject.values()))
+    width = int(xobj.Width)
+    height = int(xobj.Height)
 
-        run(cmd)
+    scale_x = TARGET_W / width
+    scale_y = TARGET_H / height
 
-        # 2️⃣ Bygg PDF via jbig2topdf.py
-        cmd = [
-            "/usr/local/bin/jbig2topdf.py",
-            str(prefix)
-        ]
+    new_page = pdf.add_blank_page(page_size=(TARGET_W, TARGET_H))
 
-        print("Building PDF with jbig2topdf.py…")
+    xobj_ref = pdf.copy_foreign(xobj)
 
-        with open(output_pdf, "wb") as f:
-            subprocess.run(cmd, stdout=f, check=True)
+    new_page.Resources = new_page.Resources or Dictionary()
+    new_page.Resources.XObject = Dictionary({Name("/Im0"): xobj_ref})
 
-    print("✅ PDF created:", output_pdf)
+    content = f"""
+q
+{scale_x} 0 0 {scale_y} 0 0 cm
+/Im0 Do
+Q
+"""
+    new_page.Contents = pdf.make_stream(content.encode())
 
-
-if __name__ == "__main__":
-    main()
+pdf.save(OUTPUT_PDF)
+print("✅ PDF created:", OUTPUT_PDF)
