@@ -137,7 +137,7 @@ def main():
 
             # Tillgängligt utrymme
             available_width = width - 2 * margin_pt
-            available_height = height - 2 * margin_pt
+            available_height = height - margin_pt  # 🔥 endast topp låst
 
             scale = min(
                 1.0,
@@ -145,41 +145,40 @@ def main():
                 available_height / content_height
             )
 
-            if scale < 1.0:
+            # Kör alltid transform (även om scale == 1)
+            contents_obj = page.get("/Contents")
+            content_bytes = b""
 
-                contents_obj = page.get("/Contents")
-                content_bytes = b""
+            if contents_obj is None:
+                continue
 
-                if contents_obj is None:
-                    continue
+            elif isinstance(contents_obj, Array):
+                for obj in contents_obj:
+                    if isinstance(obj, Stream):
+                        content_bytes += obj.read_bytes()
 
-                elif isinstance(contents_obj, Array):
-                    for obj in contents_obj:
-                        if isinstance(obj, Stream):
-                            content_bytes += obj.read_bytes()
+            elif isinstance(contents_obj, Stream):
+                content_bytes = contents_obj.read_bytes()
 
-                elif isinstance(contents_obj, Stream):
-                    content_bytes = contents_obj.read_bytes()
+            scaled_width = content_width * scale
+            scaled_height = content_height * scale
 
-                scaled_width = content_width * scale
-                scaled_height = content_height * scale
+            # Horisontell centrering
+            x_offset = (width - scaled_width) / 2
 
-                # Horisontell centrering
-                x_offset = (width - scaled_width) / 2
+            # 🔒 Exakt toppmarginal
+            y_offset = height - margin_pt - scaled_height
 
-                # Exakt 15 mm toppmarginal
-                y_offset = height - margin_pt - scaled_height
+            # Kompensera för ursprunglig position
+            tx = x_offset - content_llx * scale
+            ty = y_offset - content_lly * scale
 
-                # 🔥 Kompensera för ursprunglig position
-                tx = x_offset - content_llx * scale
-                ty = y_offset - content_lly * scale
-
-                wrapped = f"""
+            wrapped = f"""
 q
 {scale} 0 0 {scale} {tx} {ty} cm
 """.encode() + content_bytes + b"\nQ\n"
 
-                page.Contents = pdf.make_stream(wrapped)
+            page.Contents = pdf.make_stream(wrapped)
 
         pdf.save(args.output)
 
