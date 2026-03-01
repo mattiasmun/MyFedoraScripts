@@ -46,15 +46,15 @@ if not sym_file.exists() or not all(p.exists() for p in page_files):
     sys.exit(1)
 
 # ==========================================================
-# 2️⃣ Bygg PDF via jbig2topdf.py (helt robust)
+# 2️⃣ Bygg PDF via jbig2topdf.py (din stdout-variant)
 # ==========================================================
 
 raw_pdf_path = PAGES_DIR / "jbig2_raw.pdf"
 
 cmd = [
     "/usr/local/bin/jbig2topdf.py",
-    str(sym_file)
-] + [str(p) for p in page_files]
+    str(tmp_base)   # ENDAST basename
+]
 
 print("Running:", " ".join(cmd))
 
@@ -76,7 +76,7 @@ if not raw_pdf_path.exists() or raw_pdf_path.stat().st_size == 0:
     sys.exit(1)
 
 # ==========================================================
-# 3️⃣ Skala korrekt till A5
+# 3️⃣ Skala korrekt till A5 (robust metod)
 # ==========================================================
 
 src_pdf = pikepdf.Pdf.open(raw_pdf_path)
@@ -84,32 +84,27 @@ out_pdf = pikepdf.Pdf.new()
 
 for page in src_pdf.pages:
 
-    # Hämta bild-XObject
-    xobj = next(iter(page.Resources.XObject.values()))
-    width = int(xobj.Width)
-    height = int(xobj.Height)
+    mediabox = page["/MediaBox"]
+    src_w = float(mediabox[2]) - float(mediabox[0])
+    src_h = float(mediabox[3]) - float(mediabox[1])
 
-    scale_x = TARGET_W / width
-    scale_y = TARGET_H / height
+    scale_x = TARGET_W / src_w
+    scale_y = TARGET_H / src_h
 
     new_page = out_pdf.add_blank_page(page_size=(TARGET_W, TARGET_H))
 
-    xobj_ref = out_pdf.copy_foreign(xobj)
+    # Kopiera hela Resources
+    new_page["/Resources"] = out_pdf.copy_foreign(page["/Resources"])
 
-    new_page.Resources = Dictionary({
-        Name("/XObject"): Dictionary({
-            Name("/Im0"): xobj_ref
-        })
-    })
+    # Kopiera original content stream
+    original_content = page.Contents.read_bytes()
 
-    content = f"""
+    # Wrappa originalet i skalning
+    wrapped = f"""
 q
 {scale_x} 0 0 {scale_y} 0 0 cm
-/Im0 Do
-Q
-"""
-    new_page.Contents = out_pdf.make_stream(content.encode())
+""".encode() + original_content + b"\nQ\n"
+
+    new_page.Contents = out_pdf.make_stream(wrapped)
 
 out_pdf.save(OUTPUT_PDF)
-
-print("✅ PDF created:", OUTPUT_PDF)
