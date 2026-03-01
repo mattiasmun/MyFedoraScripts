@@ -18,7 +18,7 @@ from multiprocessing import Pool, cpu_count
 from pathlib import Path
 
 DEFAULT_MARGIN_MM = 15
-DPI = 200
+DPI = 300
 
 # ------------------------------------------------------------
 
@@ -42,12 +42,12 @@ def analyze_page(args):
 
     images = convert_from_bytes(pdf_bytes, dpi=DPI)
     im = images[0].convert("L")
-    arr = np.array(im)
+    arr = np.array(im, dtype=np.uint8)
 
-    mask = arr < 250
-
-    pdf_width_pt = float(page.MediaBox[2])
-    pdf_height_pt = float(page.MediaBox[3])
+    mask = arr < 245
+    box = page.CropBox if "/CropBox" in page else page.MediaBox
+    pdf_width_pt = float(box[2])
+    pdf_height_pt = float(box[3])
 
     if not mask.any():
         return page_index, (0, 0, pdf_width_pt, pdf_height_pt)
@@ -127,7 +127,12 @@ def main():
         for page_index, bbox in results:
             page = pdf.pages[page_index]
 
-            llx, lly, urx, ury = [float(v) for v in page.MediaBox]
+            # Nollställ rotation
+            if "/Rotate" in page:
+                page.Rotate = 0
+
+            box = page.CropBox if "/CropBox" in page else page.MediaBox
+            llx, lly, urx, ury = [float(v) for v in box]
             width = urx - llx
             height = ury - lly
 
@@ -137,7 +142,7 @@ def main():
 
             # Tillgängligt utrymme
             available_width = width - 2 * margin_pt
-            available_height = height - margin_pt  # 🔥 endast topp låst
+            available_height = height - 2 * margin_pt
 
             scale = min(
                 1.0,
@@ -178,7 +183,23 @@ q
 {scale} 0 0 {scale} {tx} {ty} cm
 """.encode() + content_bytes + b"\nQ\n"
 
-            page.Contents = pdf.make_stream(wrapped)
+            transform_stream = pdf.make_stream(f"""
+q
+{scale} 0 0 {scale} {tx} {ty} cm
+""".encode())
+
+            end_stream = pdf.make_stream(b"\nQ\n")
+
+            contents_obj = page.get("/Contents")
+
+            if isinstance(contents_obj, Array):
+                new_contents = Array([transform_stream] + list(contents_obj) + [end_stream])
+            elif isinstance(contents_obj, Stream):
+                new_contents = Array([transform_stream, contents_obj, end_stream])
+            else:
+                continue
+
+            page["/Contents"] = new_contents
 
         pdf.save(args.output)
 
