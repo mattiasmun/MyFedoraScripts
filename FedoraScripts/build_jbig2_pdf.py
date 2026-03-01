@@ -1,24 +1,30 @@
 #!/usr/bin/env python3
 
-import os
 import sys
 import subprocess
 from pathlib import Path
 import pikepdf
 from pikepdf import Name, Dictionary
 
+if len(sys.argv) != 3:
+    print("Usage: build_jbig2_pdf.py <pages_dir> <output_pdf>")
+    sys.exit(1)
+
 PAGES_DIR = Path(sys.argv[1])
 OUTPUT_PDF = sys.argv[2]
 
-TARGET_W = 420
-TARGET_H = 595
+TARGET_W = 420   # A5 width in points
+TARGET_H = 595   # A5 height in points
 
 pbms = sorted(PAGES_DIR.glob("*.pbm"))
 if not pbms:
-    print("Inga PBM-filer hittades")
+    print("❌ Inga PBM-filer hittades")
     sys.exit(1)
 
-# Kör jbig2
+# ==========================================================
+# 1️⃣ Kör jbig2 (utan -p)
+# ==========================================================
+
 tmp_base = PAGES_DIR / "output"
 
 cmd = [
@@ -31,26 +37,70 @@ cmd = [
 print("Running:", " ".join(cmd))
 subprocess.run(cmd, check=True)
 
-pdf = pikepdf.Pdf.new()
+# Kontrollera att jbig2 skapade filer
+sym_file = Path(str(tmp_base) + ".sym")
+page_files = [Path(str(tmp_base) + f".{i:04d}") for i in range(len(pbms))]
 
-for i, pbm in enumerate(pbms):
-    page_pdf = pikepdf.Pdf.open(f"{tmp_base}.{i:04d}")
-    img_page = page_pdf.pages[0]
+if not sym_file.exists() or not all(p.exists() for p in page_files):
+    print("❌ jbig2 skapade inte förväntade filer")
+    sys.exit(1)
 
-    # Hämta bilddimensioner
-    xobj = next(iter(img_page.Resources.XObject.values()))
+# ==========================================================
+# 2️⃣ Bygg PDF via jbig2topdf.py (helt robust)
+# ==========================================================
+
+raw_pdf_path = PAGES_DIR / "jbig2_raw.pdf"
+
+cmd = [
+    "/usr/local/bin/jbig2topdf.py",
+    str(sym_file)
+] + [str(p) for p in page_files]
+
+print("Running:", " ".join(cmd))
+
+with open(raw_pdf_path, "wb") as f:
+    process = subprocess.Popen(
+        cmd,
+        stdout=f,
+        stderr=subprocess.PIPE
+    )
+    _, stderr = process.communicate()
+
+if process.returncode != 0:
+    print("❌ jbig2topdf misslyckades:")
+    print(stderr.decode())
+    sys.exit(1)
+
+if not raw_pdf_path.exists() or raw_pdf_path.stat().st_size == 0:
+    print("❌ jbig2topdf skapade ingen giltig PDF")
+    sys.exit(1)
+
+# ==========================================================
+# 3️⃣ Skala korrekt till A5
+# ==========================================================
+
+src_pdf = pikepdf.Pdf.open(raw_pdf_path)
+out_pdf = pikepdf.Pdf.new()
+
+for page in src_pdf.pages:
+
+    # Hämta bild-XObject
+    xobj = next(iter(page.Resources.XObject.values()))
     width = int(xobj.Width)
     height = int(xobj.Height)
 
     scale_x = TARGET_W / width
     scale_y = TARGET_H / height
 
-    new_page = pdf.add_blank_page(page_size=(TARGET_W, TARGET_H))
+    new_page = out_pdf.add_blank_page(page_size=(TARGET_W, TARGET_H))
 
-    xobj_ref = pdf.copy_foreign(xobj)
+    xobj_ref = out_pdf.copy_foreign(xobj)
 
-    new_page.Resources = new_page.Resources or Dictionary()
-    new_page.Resources.XObject = Dictionary({Name("/Im0"): xobj_ref})
+    new_page.Resources = Dictionary({
+        Name("/XObject"): Dictionary({
+            Name("/Im0"): xobj_ref
+        })
+    })
 
     content = f"""
 q
@@ -58,7 +108,8 @@ q
 /Im0 Do
 Q
 """
-    new_page.Contents = pdf.make_stream(content.encode())
+    new_page.Contents = out_pdf.make_stream(content.encode())
 
-pdf.save(OUTPUT_PDF)
+out_pdf.save(OUTPUT_PDF)
+
 print("✅ PDF created:", OUTPUT_PDF)
