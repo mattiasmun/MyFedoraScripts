@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+DEBUG=1   # sätt till 0 för tyst läge
+
 INPUT="$1"
 [ -z "$INPUT" ] && { echo "Ange PDF-fil"; exit 1; }
 [ ! -f "$INPUT" ] && { echo "Filen finns inte"; exit 1; }
@@ -19,7 +21,7 @@ else
   echo "⚠️  RAM-disk saknas, använder disk"
 fi
 
-mkdir -p "$WORKDIR/pages" "$WORKDIR/clean" "$WORKDIR/jbig2"
+mkdir -p "$WORKDIR/pages" "$WORKDIR/jbig2"
 
 trap "rm -rf '$WORKDIR'" EXIT
 
@@ -31,207 +33,112 @@ echo "1️⃣ Renderar 600 dpi PBM…"
 
 gs -dSAFER -dBATCH -dNOPAUSE \
    -sDEVICE=pbmraw \
-   -r600 \
+   -r400 \
+   -dUseCropBox \
+   -dTextAlphaBits=4 \
+   -dGraphicsAlphaBits=4 \
+   -dDownScaleFactor=2 \
+   -dAlignToPixels=0 \
+   -dGridFitTT=2 \
    -sOutputFile="$WORKDIR/pages/page_%04d.pbm" \
    "$INPUT"
 
-############################################
-# 2️⃣ unpaper parallellt
-############################################
 
-echo "2️⃣ Tvättar med unpaper (parallel)…"
+echo "2️⃣ Intelligent trim av PBM…"
 
-export WORKDIR
+python3 <<EOF
+import numpy as np
+from pathlib import Path
+import sys
 
-find "$WORKDIR/pages" -name "*.pbm" | sort | \
-parallel -j"$(nproc)" --bar '
-  infile={}
-  outfile="$WORKDIR/clean/$(basename {})"
+DEBUG = ${DEBUG}
 
-  unpaper \
-    --overwrite \
-    --layout single \
-    --deskew-scan-direction left,right \
-    --deskew-scan-range 5 \
-    --deskew-scan-step 0.1 \
-    --border-scan-direction v \
-    --border-scan-size 10 \
-    --border-scan-threshold 5 \
-    --no-blurfilter \
-    --no-grayfilter \
-    --type pbm \
-    "$infile" "$outfile"
-'
+PAGES = Path("$WORKDIR/pages")
+DPI = 400
+MARGIN_MM = 3
+margin_px = int(MARGIN_MM * DPI / 25.4)
 
-############################################
-# 3️⃣ JBIG2 (smart läge)
-############################################
+for pbm in sorted(PAGES.glob("*.pbm")):
+    with open(pbm, "rb") as f:
+        magic = f.readline()
+        while True:
+            line = f.readline()
+            if not line.startswith(b"#"):
+                w, h = map(int, line.split())
+                break
+        data = f.read()
 
-echo "3️⃣ JBIG2-komprimerar (smart läge)…"
+    row_bytes = (w + 7) // 8
+    expected_size = row_bytes * h
 
-cd "$WORKDIR/clean"
+    if DEBUG:
+        print(f"\n--- {pbm.name} ---")
+        print("Original size:", w, "x", h)
+        print("Expected bytes:", expected_size, "Actual:", len(data))
 
-FILES=($(ls *.pbm | sort))
-TOTAL=${#FILES[@]}
-CPU=$(nproc)
+    if len(data) != expected_size:
+        print("⚠ Byte size mismatch → skip trim")
+        continue
 
-echo "📊 Sidor: $TOTAL | CPU: $CPU"
+    img = np.frombuffer(data, dtype=np.uint8)
+    img = np.unpackbits(img, bitorder="big")
+    img = img.reshape(h, row_bytes * 8)[:, :w]
 
-mkdir -p "$WORKDIR/jbig2"
+    black_pixels = np.sum(img == 0)
 
-############################################
-# 🔹 SMALL MODE (<50 sidor)
-############################################
+    if DEBUG:
+        print("Black pixels:", black_pixels)
 
-if [ "$TOTAL" -lt 50 ]; then
-  echo "⚡ Använder single-dictionary (bästa kompression)"
+    if black_pixels == 0:
+        print("⚠ No black pixels → skip")
+        continue
 
-  jbig2 -s -p -v -a \
-        -b "$WORKDIR/jbig2/block_1" \
-        "${FILES[@]}"
+    ys, xs = np.where(img == 0)
 
-############################################
-# 🔹 LARGE MODE (>=50 sidor)
-############################################
+    min_x = max(xs.min() - margin_px, 0)
+    max_x = min(xs.max() + margin_px, w-1)
+    min_y = max(ys.min() - margin_px, 0)
+    max_y = min(ys.max() + margin_px, h-1)
 
-else
-  echo "🚀 Använder block-parallellisering"
+    new_w = max_x - min_x + 1
+    new_h = max_y - min_y + 1
 
-  # Dynamisk blocksize
-  BLOCKS=$(( CPU * 2 ))
-  BLOCKSIZE=$(( TOTAL / BLOCKS ))
+    if DEBUG:
+        print("Crop box:", min_x, min_y, max_x, max_y)
+        print("New size:", new_w, "x", new_h)
 
-  if [ "$BLOCKSIZE" -lt 10 ]; then BLOCKSIZE=10; fi
-  if [ "$BLOCKSIZE" -gt 40 ]; then BLOCKSIZE=40; fi
+    cropped = img[min_y:max_y+1, min_x:max_x+1]
 
-  echo "📦 Blocksize: $BLOCKSIZE"
+    padded_w = ((new_w + 7) // 8) * 8
+    padded = np.pad(cropped, ((0,0),(0,padded_w-new_w)), constant_values=1)
 
-  BLOCKS=$(( (TOTAL + BLOCKSIZE - 1) / BLOCKSIZE ))
+    packed = np.packbits(padded, bitorder="big")
 
-  export WORKDIR BLOCKSIZE TOTAL
-  export FILES
+    with open(pbm, "wb") as f:
+        f.write(b"P4\n")
+        f.write(f"{new_w} {new_h}\n".encode())
+        f.write(packed.tobytes())
 
-  parallel -j"$CPU" --bar '
-    block={#}
-    start=$(( (block-1)*BLOCKSIZE ))
-    end=$(( start+BLOCKSIZE-1 ))
-
-    files=()
-    for i in $(seq $start $end); do
-      if [ $i -lt '"$TOTAL"' ]; then
-        files+=("'"${FILES[$i]}"'")
-      fi
-    done
-
-    if [ ${#files[@]} -gt 0 ]; then
-      jbig2 -s -p -v -a \
-            -b "$WORKDIR/jbig2/block_${block}" \
-            "${files[@]}"
-    fi
-  ' ::: $(seq 1 $BLOCKS)
-
-fi
-
-cd -
+EOF
 
 ############################################
-# 4️⃣ Bygg PDF från alla block (FINAL FIX)
+# 4️⃣ Bygg JBIG2 PDF
 ############################################
 
 echo "4️⃣ Bygger JBIG2 PDF…"
 
-python3 <<EOF
-import os
-import re
-import pikepdf
-from pikepdf import Pdf, Name, Dictionary, Array
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+OUTPUT_PDF="$WORKDIR/jbig2.pdf"
 
-clean_dir = "$WORKDIR/clean"
-jbig2_dir = "$WORKDIR/jbig2"
-output_pdf = os.path.join("$WORKDIR", "jbig2.pdf")
+if ! python3 "$SCRIPT_DIR/build_jbig2_pdf.py" \
+        "$WORKDIR/pages" \
+        "$OUTPUT_PDF" \
+        --dpi 400; then
+    echo "❌ Fel vid PDF-generering"
+    exit 1
+fi
 
-out = Pdf.new()
-
-pbm_files = sorted([f for f in os.listdir(clean_dir) if f.endswith(".pbm")])
-
-jbig2_pages = sorted([
-    f for f in os.listdir(jbig2_dir)
-    if re.search(r"\.\d{4}$", f)
-])
-
-sym_files = sorted([f for f in os.listdir(jbig2_dir) if f.endswith(".sym")])
-
-if len(pbm_files) != len(jbig2_pages):
-    raise RuntimeError(f"PBM: {len(pbm_files)}  JBIG2: {len(jbig2_pages)}")
-
-globals_map = {}
-for sym in sym_files:
-    globals_map[sym] = pikepdf.Stream(
-        out,
-        open(os.path.join(jbig2_dir, sym), "rb").read()
-    )
-
-page_index = 0
-
-for sym in sym_files:
-    base = sym.replace(".sym","")
-    globals_stream = globals_map[sym]
-
-    block_pages = sorted([
-        f for f in jbig2_pages if f.startswith(base)
-    ])
-
-    for pagefile in block_pages:
-
-        pbm_path = os.path.join(clean_dir, pbm_files[page_index])
-        page_index += 1
-
-        with open(pbm_path, "rb") as f:
-            f.readline()
-            while True:
-                line = f.readline()
-                if not line.startswith(b"#"):
-                    width, height = map(int, line.split())
-                    break
-
-        page = out.add_blank_page(page_size=(width, height))
-        page.MediaBox = Array([0, 0, width, height])
-
-        img_data = open(os.path.join(jbig2_dir, pagefile), "rb").read()
-
-        img_obj = pikepdf.Stream(out, img_data)
-
-        img_obj["/Type"] = "/XObject"
-        img_obj["/Subtype"] = "/Image"
-        img_obj["/Width"] = width
-        img_obj["/Height"] = height
-        img_obj["/ColorSpace"] = "/DeviceGray"
-        img_obj["/BitsPerComponent"] = 1
-        img_obj["/Filter"] = "/JBIG2Decode"
-
-        # 🔥 SKAPA DecodeParms korrekt
-        img_obj["/DecodeParms"] = Dictionary({
-            Name("/JBIG2Globals"): globals_stream
-        })
-
-        page.Resources = page.Resources or Dictionary()
-        page.Resources[Name.XObject] = {Name("/Im0"): img_obj}
-
-        content = f"q {width} 0 0 {height} 0 0 cm /Im0 Do Q"
-        page.Contents = out.make_stream(content.encode())
-
-out.save(output_pdf)
-EOF
-
-############################################
-# 5️⃣ Auto-crop
-############################################
-
-echo "5️⃣ Auto-croppar…"
-
-pdfcropmargins -c gb -p 0 \
-  -o "$WORKDIR/jbig2_cropped.pdf" \
-  "$WORKDIR/jbig2.pdf"
+echo "✅ PDF klar"
 
 ############################################
 # 6️⃣ A5 + 15mm + booklet
@@ -243,7 +150,7 @@ python3 <<EOF
 import pikepdf
 from pikepdf import Pdf, Name, Dictionary
 
-INPUT = "$WORKDIR/jbig2_cropped.pdf"
+INPUT = "$OUTPUT_PDF"
 OUTPUT = "${BASENAME}_ULTRA_FAST_PRINT_READY.pdf"
 
 TARGET_W = 420
@@ -259,6 +166,8 @@ content_pages = list(pdf.pages[:-1])
 
 def place_scaled(page):
     llx, lly, urx, ury = map(float, page.MediaBox)
+    if urx - llx <= 0 or ury - lly <= 0:
+        page.MediaBox = [0, 0, 1, 1]
     width = urx - llx
     height = ury - lly
 
