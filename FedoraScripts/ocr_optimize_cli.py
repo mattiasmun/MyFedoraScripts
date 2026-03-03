@@ -106,13 +106,13 @@ def process_file(pdf_path, output_path):
             setattr(opts, f"{opt_set}_image_recompress_method", 3)
             setattr(opts, f"{opt_set}_image_recompress_quality", "75")
             setattr(opts, f"{opt_set}_image_subsample_method", 1)
-            setattr(opts, f"{opt_set}_image_subsample_threshold", 210)
-            setattr(opts, f"{opt_set}_image_subsample_to", 200)
+            setattr(opts, f"{opt_set}_image_subsample_threshold", 330)
+            setattr(opts, f"{opt_set}_image_subsample_to", 300)
 
         opts.bitonal_image_recompress_method = 5
         opts.bitonal_image_subsample_method = 1
-        opts.bitonal_image_subsample_threshold = 630
-        opts.bitonal_image_subsample_to = 600
+        opts.bitonal_image_subsample_threshold = 990
+        opts.bitonal_image_subsample_to = 900
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
