@@ -565,6 +565,7 @@ intel-media-driver.x86_64 \
 intel-qpl.x86_64 \
 intel-vsc-firmware.noarch \
 intltool.noarch \
+iperf3.x86_64 \
 iproute.x86_64 \
 iptables-legacy-libs.x86_64 \
 iptables-legacy.x86_64 \
@@ -1518,6 +1519,7 @@ python3-oslo-serialization.noarch \
 python3-oslo-utils.noarch \
 python3-paramiko.noarch \
 python3-pbr.noarch \
+python3-pdf2image.noarch \
 python3-pdfkit.noarch \
 python3-pdfminer.noarch \
 python3-phply.noarch \
