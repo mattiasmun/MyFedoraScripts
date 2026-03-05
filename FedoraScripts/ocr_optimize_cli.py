@@ -89,7 +89,7 @@ def generate_pdfa_xmp(keywords, pdf_date, creator, producer, pdfa_part, pdfa_con
 
 def process_file(pdf_path, output_path):
     """
-    1. Optimerar bilder till 200 DPI via PyMuPDF (JPEG + Bicubic).
+    1. Optimerar bilder till 300 DPI via PyMuPDF (JPEG + Bicubic).
     2. Kör OCRmyPDF för textigenkänning och PDF/A-3 arkivering.
     """
     temp_optimized = f"temp_opt_{os.getpid()}_{os.path.basename(pdf_path)}"
@@ -98,7 +98,7 @@ def process_file(pdf_path, output_path):
         doc = pymupdf.open(pdf_path)
 
         # ⎯⎯ PYMUPDF OPTIMERING ⎯⎯
-        # Konfigurera omskrivning av bilder (JPEG + Bicubic + 200 DPI)
+        # Konfigurera omskrivning av bilder (JPEG + Bicubic + 300 DPI)
         opts = pymupdf.mupdf.PdfImageRewriterOptions()
 
         # JPEG Metod (3) och Bicubic Subsampling (1)
@@ -175,8 +175,10 @@ def process_file(pdf_path, output_path):
         ocrmypdf.ocr(
             temp_optimized,
             output_path,
-            optimize=1,            # Låg nivå eftersom vi redan optimerat med PyMuPDF
-            clean=False,
+            optimize=2,
+            jbig2_threshold=0.85,
+            clean=True,
+            deskew=True,
             output_type='pdfa-3',
             skip_text=True,
             language=['swe', 'eng'],
@@ -194,7 +196,7 @@ def process_file(pdf_path, output_path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Batch-optimerar PDF: PyMuPDF (200 DPI J2K) + OCRmyPDF (PDF/A-3)."
+        description="Batch-optimerar PDF: PyMuPDF (300 DPI JPEG) + OCRmyPDF (PDF/A-3)."
     )
     parser.add_argument('input_dir', type=str, help="Indatamapp")
     parser.add_argument('-o', '--output_dir', type=str, default=None, help="Utdatamapp")
@@ -228,7 +230,7 @@ def main():
     success_count = 0
 
     print(f"\nSTARTAR BATCH-PROCESS (Motor: PyMuPDF + OCRmyPDF)")
-    print(f"Inställning: J2K @ 200 DPI -> PDF/A-3")
+    print(f"Inställning: JPEG @ 300 DPI -> PDF/A-3")
     print(f"Starttid: {start_dt.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Hittade {len(pdf_files)} filer…")
     print("⎯" * 25)
