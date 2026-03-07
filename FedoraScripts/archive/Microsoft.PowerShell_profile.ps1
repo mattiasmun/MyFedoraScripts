@@ -60,14 +60,55 @@ function whereis {
         [string]$Name
     )
 
-    $cmd = Get-Command $Name -All -ErrorAction SilentlyContinue |
-           Select-Object -ExpandProperty Source
+    $cmds = Get-Command $Name -All -ErrorAction SilentlyContinue |
+            Select-Object -ExpandProperty Source
 
-    if ($cmd) {
-        $cmd
-    } else {
+    if (-not $cmds) {
         Write-Warning "$Name not found"
+        return
     }
+
+    $i = 0
+
+    foreach ($cmd in $cmds) {
+
+        $version = ""
+
+        try {
+            $v = & $cmd --version 2>$null | Select-Object -First 1
+            if ($v) { $version = " ($v)" }
+        }
+        catch {}
+
+        if ($i -eq 0) {
+            Write-Host "▶ $cmd$version  [used]" -ForegroundColor Green
+        }
+        else {
+            Write-Host "  $cmd$version" -ForegroundColor DarkGray
+        }
+
+        $i++
+    }
+}
+
+function which-open {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Name
+    )
+
+    $path = Find-ExeCached $Name | Select-Object -First 1
+
+    if ([string]::IsNullOrWhiteSpace($path)) {
+        Write-Warning "$Name not found"
+        return
+    }
+
+    $folder = Split-Path $path
+
+    Write-Host "Opening: $folder" -ForegroundColor Cyan
+
+    Start-Process explorer $folder
 }
 
 # ⎯⎯ Executable Cache ⎯⎯
@@ -109,7 +150,7 @@ function Find-ExeCached {
     $pattern = $Name.ToLower()
 
     $matches = $ExeCache.Keys |
-           Where-Object { $_ -like $pattern } |
+           Where-Object { $_ -like "$pattern*" -or $_ -like "$pattern*.exe" } |
            Sort-Object
 
     if ($matches) {
@@ -121,9 +162,80 @@ function Find-ExeCached {
     }
 }
 
+function tools {
+    param([string]$Filter)
+
+    if ($ExeCache.Count -eq 0) {
+        Write-Warning "Executable cache is empty. Run refresh-exec-cache."
+        return
+    }
+
+    $keys = $ExeCache.Keys | Sort-Object
+
+    if ($Filter) {
+        $keys = $keys | Where-Object { $_ -like "*$Filter*" }
+    }
+
+    $keys |
+    ForEach-Object {
+        [PSCustomObject]@{
+            Tool = $_
+            Path = $ExeCache[$_]
+        }
+    } |
+    Format-Table -AutoSize
+}
+
+function Save-ExecutableCache {
+    $ExeCache | ConvertTo-Json | Set-Content "$HOME\exe-cache.json"
+}
+
+function Load-ExecutableCache {
+
+    $file = "$HOME\exe-cache.json"
+
+    if (Test-Path $file) {
+
+        $data = Get-Content $file | ConvertFrom-Json
+
+        $global:ExeCache = @{}
+
+        $data.psobject.Properties | ForEach-Object {
+            $ExeCache[$_.Name] = $_.Value
+        }
+
+        return $true
+    }
+
+    return $false
+}
+
+function Get-PathHash {
+    $env:PATH.GetHashCode()
+}
+
+function Save-PathHash {
+    Get-PathHash | Set-Content "$HOME\path-hash.txt"
+}
+
+function Load-PathHash {
+    $file = "$HOME\path-hash.txt"
+
+    if (Test-Path $file) {
+        return Get-Content $file
+    }
+
+    return $null
+}
+
 function refresh-exec-cache {
+
     $global:ExeCache.Clear()
+
     Build-ExecutableCache
+    Save-ExecutableCache
+
+    Write-Host "Executable cache rebuilt." -ForegroundColor Green
 }
 
 # ── Better history & autosuggestions ────────────────
@@ -143,6 +255,40 @@ Set-Alias ll Get-ChildItem
 Set-Alias which Find-ExeCached
 
 # ── Small utility functions ─────────────────────────
+
+function addpath {
+    param([string]$dir)
+
+    if (-not (Test-Path $dir)) {
+        Write-Warning "Directory not found: $dir"
+        return
+    }
+
+    if ($env:PATH -notlike "*$dir*") {
+        $env:PATH += ";$dir"
+        Write-Host "Added to PATH: $dir" -ForegroundColor Green
+    }
+    else {
+        Write-Host "Already in PATH: $dir" -ForegroundColor DarkGray
+    }
+}
+
+function path {
+
+    $i = 0
+
+    foreach ($p in ($env:PATH -split ';')) {
+
+        if (Test-Path $p) {
+            Write-Host ("{0,2}: {1}" -f $i, $p)
+        }
+        else {
+            Write-Host ("{0,2}: {1}" -f $i, $p) -ForegroundColor Red
+        }
+
+        $i++
+    }
+}
 
 function reload-profile {
     . $PROFILE
@@ -278,8 +424,20 @@ function Load-CustomScript {
 # ⎯⎯ Main Script Loading Block ⎯⎯
 if ($Host.Name -eq 'ConsoleHost') {
 
-    Write-Host "→ Building executable cache…" -ForegroundColor Gray
-    Build-ExecutableCache
+    $currentHash = Get-PathHash
+    $storedHash = Load-PathHash
+
+    if (-not (Load-ExecutableCache) -or $currentHash -ne $storedHash) {
+
+        Write-Host "Rebuilding executable cache…" -ForegroundColor Gray
+
+        Build-ExecutableCache
+        Save-ExecutableCache
+        Save-PathHash
+    }
+    else {
+        Write-Host "Loaded executable cache." -ForegroundColor DarkGray
+    }
 
     $policy = Get-ExecutionPolicy -Scope CurrentUser
     if ($policy -eq 'Restricted') {
