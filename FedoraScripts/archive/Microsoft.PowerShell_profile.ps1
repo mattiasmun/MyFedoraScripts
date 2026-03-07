@@ -12,14 +12,15 @@ Set-Location $HOME
 # ⎯⎯ Custom Executable Paths (REQUIRED IF NOT IN SYSTEM PATH) ⎯⎯
 # Set these paths to your custom installation locations.
 # IMPORTANT: Use the full path to the executable file (e.g., C:\Program Files\qpdf\bin\qpdf.exe)
-$global:QPDFPath = Join-Path $HOME "Program\qpdf-12.2.0-mingw64\bin\qpdf.exe"
+$global:QPDFPath = Join-Path $HOME "msys64\ucrt64\bin\qpdf.exe"
 $global:RocketPDFPath = Join-Path $HOME "AppData\Local\Python\pythoncore-3.14-64\Scripts\rocketpdf.exe"
 
 # ⎯⎯ New Paths for Java and VeraPDF Validation ⎯⎯
 # JavaPath should point directly to the java.exe executable.
-$global:JavaPath = Join-Path $HOME "Program\jdk-24.0.1\bin\java.exe"
+#$global:JavaPath = java.exe
 # VeraPDFPath should point directly to the vera-pdf-cli.jar file.
-$global:VeraPDFPath = Join-Path $HOME "Program\verapdf-greenfield-1.28.1\verapdf-gui.bat"
+$global:VeraPDFPath1 = Join-Path $HOME "msys64\home\ai21558\verapdf\verapdf-gui.bat"
+$global:VeraPDFPath2 = Join-Path $HOME "msys64\home\ai21558\verapdf\verapdf.bat"
 
 # ⎯⎯ Executable Wrapper Functions ⎯⎯
 
@@ -40,32 +41,34 @@ function rocketpdf {
     }
 }
 
-function java {
-    if (Test-Path -Path $global:JavaPath -PathType Leaf) {
-        & $global:JavaPath @($args)
-    } else {
-        Write-Error "Java executable not found at '$global:JavaPath'."
-    }
-}
-
 # New function for pip that uses python -m pip
 function pip {
     python -m pip @args
 }
 
 function verapdf-gui {
-    if (-not (Test-Path -Path $global:JavaPath -PathType Leaf)) {
-        Write-Error "Java executable not found at '$global:JavaPath'. Cannot run VeraPDF."
-        return
-    }
-    if (-not (Test-Path -Path $global:VeraPDFPath -PathType Leaf)) {
+    if (-not (Test-Path -Path $global:VeraPDFPath1 -PathType Leaf)) {
         Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath'. Cannot run VeraPDF."
         return
     }
 
     $processParams = @{
-        FilePath     = $global:VeraPDFPath
+        FilePath     = $global:VeraPDFPath1
         WindowStyle  = 'Hidden'
+        # Vi skickar med eventuella argument som matats in i funktionen
+        ArgumentList = $args
+    }
+    Start-Process @processParams
+}
+
+function verapdf {
+    if (-not (Test-Path -Path $global:VeraPDFPath2 -PathType Leaf)) {
+        Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath'. Cannot run VeraPDF."
+        return
+    }
+
+    $processParams = @{
+        FilePath     = $global:VeraPDFPath2
         # Vi skickar med eventuella argument som matats in i funktionen
         ArgumentList = $args
     }
@@ -135,7 +138,7 @@ if ($Host.Name -eq 'ConsoleHost') {
     # Load-CustomScript -FileName "Example.ps1" -BaseDir $ScriptPath -AnAlias ex
 
     # Check Wrapper Functions inkl. nya pip
-    @("verapdf-gui", "pip") | ForEach-Object {
+    @("verapdf-gui", "verapdf", "pip") | ForEach-Object {
         $check = Get-Command $_ -ErrorAction SilentlyContinue
         if ($check -is [System.Management.Automation.FunctionInfo]) {
             Write-Host "  🛠️ Wrapper Function '$_' is available." -ForegroundColor DarkCyan
