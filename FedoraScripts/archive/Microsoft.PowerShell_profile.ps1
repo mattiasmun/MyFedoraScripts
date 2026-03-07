@@ -29,11 +29,8 @@ function Find-ExecutableDeep {
         [string]$Name
     )
 
-    # 1. Check PATH first
-    $cmd = Get-Command $Name -ErrorAction SilentlyContinue
-    if ($cmd) {
-        return $cmd.Source
-    }
+    $result = Find-Exe $Name
+    if ($result) { return $result }
 
     # 2. Common search locations
     $searchPaths = @(
@@ -57,20 +54,6 @@ function Find-ExecutableDeep {
     Write-Warning "Executable '$Name' not found."
 }
 
-function which {
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$Name
-    )
-
-    $cmd = Get-Command $Name -ErrorAction SilentlyContinue
-    if ($cmd) {
-        $cmd.Source
-    } else {
-        Write-Warning "$Name not found"
-    }
-}
-
 function whereis {
     param(
         [Parameter(Mandatory=$true)]
@@ -87,6 +70,54 @@ function whereis {
     }
 }
 
+# ⎯⎯ Executable Cache ⎯⎯
+
+$ExeCache = @{}
+
+function Build-ExecutableCache {
+
+    $env:PATH -split ';' | ForEach-Object {
+
+        if (Test-Path $_) {
+
+            Get-ChildItem $_ -File -Include *.exe,*.cmd,*.bat -ErrorAction SilentlyContinue | ForEach-Object {
+
+                $ExeCache[$_.Name.ToLower()] = $_.FullName
+
+            }
+
+        }
+
+    }
+
+}
+
+function Find-ExeCached {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Name
+    )
+
+    $pattern = $Name.ToLower()
+
+    $matches = $ExeCache.Keys |
+           Where-Object { $_ -like $pattern } |
+           Sort-Object
+
+    if ($matches) {
+        foreach ($m in $matches) {
+            $ExeCache[$m]
+        }
+    } else {
+        Write-Warning "$Name not found in executable cache"
+    }
+}
+
+function refresh-exec-cache {
+    $global:ExeCache.Clear()
+    Build-ExecutableCache
+}
+
 # ── Better history & autosuggestions ────────────────
 
 Set-PSReadLineOption -PredictionSource History
@@ -101,7 +132,7 @@ Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 # ── Useful aliases ──────────────────────────────────
 
 Set-Alias ll Get-ChildItem
-Set-Alias where which
+Set-Alias which Find-ExeCached
 
 # ── Small utility functions ─────────────────────────
 
