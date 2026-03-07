@@ -78,11 +78,19 @@ function Build-ExecutableCache {
 
     $env:PATH -split ';' | ForEach-Object {
 
-        if (Test-Path $_) {
+        $dir = $_.Trim()
 
-            Get-ChildItem $_ -File -Include *.exe,*.cmd,*.bat -ErrorAction SilentlyContinue | ForEach-Object {
+        if ($dir -and (Test-Path $dir)) {
 
-                $ExeCache[$_.Name.ToLower()] = $_.FullName
+            Get-ChildItem $dir -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.Extension -in '.exe','.cmd','.bat' } |
+            ForEach-Object {
+
+                $key = $_.Name.ToLower()
+
+                if (-not $ExeCache.ContainsKey($key)) {
+                    $ExeCache[$key] = $_.FullName
+                }
 
             }
 
@@ -269,6 +277,10 @@ function Load-CustomScript {
 
 # ⎯⎯ Main Script Loading Block ⎯⎯
 if ($Host.Name -eq 'ConsoleHost') {
+
+    Write-Host "→ Building executable cache…" -ForegroundColor Gray
+    Build-ExecutableCache
+
     $policy = Get-ExecutionPolicy -Scope CurrentUser
     if ($policy -eq 'Restricted') {
         Write-Host "🛑 WARNING: Execution Policy is '$policy'. Scripts cannot run." -ForegroundColor Red
