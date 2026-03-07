@@ -47,7 +47,7 @@ function Find-ExecutableDeep {
 
     foreach ($path in $searchPaths) {
         if (Test-Path $path) {
-            $result = Get-ChildItem -Path $path -Filter $Name -Recurse -ErrorAction SilentlyContinue -File | Select-Object -First 1
+            $result = Get-ChildItem -Path $path -Filter $Name -Recurse -Depth 4 -ErrorAction SilentlyContinue -File | Select-Object -First 1
             if ($result) {
                 return $result.FullName
             }
@@ -58,16 +58,62 @@ function Find-ExecutableDeep {
 }
 
 function which {
-    param([string]$name)
-    (Get-Command $name -ErrorAction SilentlyContinue).Source
-}
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Name
+    )
 
-Set-Alias where which
+    $cmd = Get-Command $Name -ErrorAction SilentlyContinue
+    if ($cmd) {
+        $cmd.Source
+    } else {
+        Write-Warning "$Name not found"
+    }
+}
 
 function whereis {
-    param([string]$name)
-    Get-Command $name -All | Select-Object -ExpandProperty Source
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Name
+    )
+
+    $cmd = Get-Command $Name -All -ErrorAction SilentlyContinue |
+           Select-Object -ExpandProperty Source
+
+    if ($cmd) {
+        $cmd
+    } else {
+        Write-Warning "$Name not found"
+    }
 }
+
+# ── Better history & autosuggestions ────────────────
+
+Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionViewStyle InlineView
+Set-PSReadLineOption -HistoryNoDuplicates
+Set-PSReadLineOption -MaximumHistoryCount 10000
+
+# Search command history with arrow keys
+Set-PSReadLineKeyHandler -Key UpArrow   -Function HistorySearchBackward
+Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+
+# ── Useful aliases ──────────────────────────────────
+
+Set-Alias ll Get-ChildItem
+Set-Alias where which
+
+# ── Small utility functions ─────────────────────────
+
+function reload-profile {
+    . $PROFILE
+    Write-Host "Profile reloaded." -ForegroundColor Green
+}
+
+function edit-profile {
+    notepad $PROFILE
+}
+
 # ⎯⎯ Custom Executable Paths ⎯⎯
 
 $JavaPath = Find-Exe java.exe
@@ -92,19 +138,19 @@ if (-not $VeraPDFPath2) {
 }
 
 function qpdf {
-    if (Test-Path -Path $global:QPDFPath -PathType Leaf) {
+    if (Test-Path -Path $QPDFPath -PathType Leaf) {
         # The call operator (&) executes the file, and @($args) forwards all parameters.
-        & $global:QPDFPath @($args)
+        & $QPDFPath @($args)
     } else {
-        Write-Error "QPDF executable not found at '$global:QPDFPath'."
+        Write-Error "QPDF executable not found at '$QPDFPath'."
     }
 }
 
 function rocketpdf {
-    if (Test-Path -Path $global:RocketPDFPath -PathType Leaf) {
-        & $global:RocketPDFPath @($args)
+    if (Test-Path -Path $RocketPDFPath -PathType Leaf) {
+        & $RocketPDFPath @($args)
     } else {
-        Write-Error "RocketPDF executable not found at '$global:RocketPDFPath'."
+        Write-Error "RocketPDF executable not found at '$RocketPDFPath'."
     }
 }
 
@@ -114,13 +160,13 @@ function pip {
 }
 
 function verapdf-gui {
-    if (-not (Test-Path -Path $global:VeraPDFPath1 -PathType Leaf)) {
-        Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath1'. Cannot run VeraPDF."
+    if (-not (Test-Path -Path $VeraPDFPath1 -PathType Leaf)) {
+        Write-Error "VeraPDF JAR not found at '$VeraPDFPath1'. Cannot run VeraPDF."
         return
     }
 
     $processParams = @{
-        FilePath     = $global:VeraPDFPath1
+        FilePath     = $VeraPDFPath1
         WindowStyle  = 'Hidden'
         # Vi skickar med eventuella argument som matats in i funktionen
         ArgumentList = $args
@@ -129,13 +175,13 @@ function verapdf-gui {
 }
 
 function verapdf {
-    if (-not (Test-Path -Path $global:VeraPDFPath2 -PathType Leaf)) {
-        Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath2'. Cannot run VeraPDF."
+    if (-not (Test-Path -Path $VeraPDFPath2 -PathType Leaf)) {
+        Write-Error "VeraPDF JAR not found at '$VeraPDFPath2'. Cannot run VeraPDF."
         return
     }
 
     $processParams = @{
-        FilePath     = $global:VeraPDFPath2
+        FilePath     = $VeraPDFPath2
         # Vi skickar med eventuella argument som matats in i funktionen
         ArgumentList = $args
     }
@@ -214,5 +260,8 @@ if ($Host.Name -eq 'ConsoleHost') {
         }
     }
 
-    Write-Host "⎯⎯ Ready to use 'pip', 'verapdf-gui' ⎯⎯" -ForegroundColor Cyan
+    Write-Host "⎯⎯ Ready to use 'verapdf-gui', 'verapdf', 'pip' ⎯⎯" -ForegroundColor Cyan
+
+    Write-Host "PowerShell ready." -ForegroundColor Cyan
+    Write-Host "Profile: $PROFILE" -ForegroundColor DarkGray
 }
