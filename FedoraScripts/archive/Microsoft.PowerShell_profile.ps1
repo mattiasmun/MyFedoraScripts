@@ -6,23 +6,90 @@
 # Starta alltid i användarens hemkatalog
 Set-Location $HOME
 
-# If this file does not exist, you can create it by running this command:
-# New-Item -Path $PROFILE -ItemType File -Force
+# ⎯⎯ Helper Functions ⎯⎯
 
-# ⎯⎯ Custom Executable Paths (REQUIRED IF NOT IN SYSTEM PATH) ⎯⎯
-# Set these paths to your custom installation locations.
-# IMPORTANT: Use the full path to the executable file (e.g., C:\Program Files\qpdf\bin\qpdf.exe)
-$global:QPDFPath = Join-Path $HOME "msys64\ucrt64\bin\qpdf.exe"
-$global:RocketPDFPath = Join-Path $HOME "AppData\Local\Python\pythoncore-3.14-64\Scripts\rocketpdf.exe"
+function Find-Exe {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Name
+    )
 
-# ⎯⎯ New Paths for Java and VeraPDF Validation ⎯⎯
-# JavaPath should point directly to the java.exe executable.
-#$global:JavaPath = java.exe
-# VeraPDFPath should point directly to the vera-pdf-cli.jar file.
-$global:VeraPDFPath1 = Join-Path $HOME "msys64\home\ai21558\verapdf\verapdf-gui.bat"
-$global:VeraPDFPath2 = Join-Path $HOME "msys64\home\ai21558\verapdf\verapdf.bat"
+    $cmd = Get-Command $Name -ErrorAction SilentlyContinue
 
-# ⎯⎯ Executable Wrapper Functions ⎯⎯
+    if ($cmd) {
+        return $cmd.Source
+    } else {
+        Write-Warning "Executable '$Name' not found in PATH"
+    }
+}
+
+function Find-ExecutableDeep {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Name
+    )
+
+    # 1. Check PATH first
+    $cmd = Get-Command $Name -ErrorAction SilentlyContinue
+    if ($cmd) {
+        return $cmd.Source
+    }
+
+    # 2. Common search locations
+    $searchPaths = @(
+        "$env:ProgramFiles",
+        "${env:ProgramFiles(x86)}",
+        "$HOME\AppData\Local",
+        "$HOME\AppData\Roaming",
+        "$HOME\AppData\Local\Programs",
+        "$HOME\AppData\Local\Microsoft\WindowsApps"
+    )
+
+    foreach ($path in $searchPaths) {
+        if (Test-Path $path) {
+            $result = Get-ChildItem -Path $path -Filter $Name -Recurse -ErrorAction SilentlyContinue -File | Select-Object -First 1
+            if ($result) {
+                return $result.FullName
+            }
+        }
+    }
+
+    Write-Warning "Executable '$Name' not found."
+}
+
+function which {
+    param([string]$name)
+    (Get-Command $name -ErrorAction SilentlyContinue).Source
+}
+
+Set-Alias where which
+
+function whereis {
+    param([string]$name)
+    Get-Command $name -All | Select-Object -ExpandProperty Source
+}
+# ⎯⎯ Custom Executable Paths ⎯⎯
+
+$JavaPath = Find-Exe java.exe
+if (-not $JavaPath) {
+    $JavaPath = Find-ExecutableDeep java.exe
+}
+$QPDFPath = Find-Exe qpdf.exe
+if (-not $QPDFPath) {
+    $QPDFPath = Find-ExecutableDeep qpdf.exe
+}
+$RocketPDFPath = Find-Exe rocketpdf.exe
+if (-not $RocketPDFPath) {
+    $RocketPDFPath = Find-ExecutableDeep rocketpdf.exe
+}
+$VeraPDFPath1 = Find-Exe verapdf-gui.bat
+if (-not $VeraPDFPath1) {
+    $VeraPDFPath1 = Find-ExecutableDeep verapdf-gui.bat
+}
+$VeraPDFPath2 = Find-Exe verapdf.bat
+if (-not $VeraPDFPath2) {
+    $VeraPDFPath2 = Find-ExecutableDeep verapdf.bat
+}
 
 function qpdf {
     if (Test-Path -Path $global:QPDFPath -PathType Leaf) {
@@ -43,12 +110,12 @@ function rocketpdf {
 
 # New function for pip that uses python -m pip
 function pip {
-    python -m pip @args
+    python -m pip @($args)
 }
 
 function verapdf-gui {
     if (-not (Test-Path -Path $global:VeraPDFPath1 -PathType Leaf)) {
-        Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath'. Cannot run VeraPDF."
+        Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath1'. Cannot run VeraPDF."
         return
     }
 
@@ -63,7 +130,7 @@ function verapdf-gui {
 
 function verapdf {
     if (-not (Test-Path -Path $global:VeraPDFPath2 -PathType Leaf)) {
-        Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath'. Cannot run VeraPDF."
+        Write-Error "VeraPDF JAR not found at '$global:VeraPDFPath2'. Cannot run VeraPDF."
         return
     }
 
