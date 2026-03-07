@@ -117,25 +117,33 @@ $ExeCache = @{}
 
 function Build-ExecutableCache {
 
-    $env:PATH -split ';' | ForEach-Object {
+    foreach ($dir in ($env:PATH -split ';')) {
 
-        $dir = $_.Trim()
+        $dir = $dir.Trim()
 
-        if ($dir -and (Test-Path $dir)) {
+        if (-not $dir) { continue }
+        if (-not (Test-Path $dir)) { continue }
 
-            Get-ChildItem $dir -File -ErrorAction SilentlyContinue |
-            Where-Object { $_.Extension -in '.exe','.cmd','.bat' } |
-            ForEach-Object {
+        try {
 
-                $key = $_.Name.ToLower()
+            foreach ($file in [System.IO.Directory]::EnumerateFiles($dir)) {
 
-                if (-not $ExeCache.ContainsKey($key)) {
-                    $ExeCache[$key] = $_.FullName
+                $ext = [System.IO.Path]::GetExtension($file)
+
+                if ($ext -in '.exe','.cmd','.bat') {
+
+                    $name = [System.IO.Path]::GetFileName($file).ToLower()
+
+                    if (-not $ExeCache[$name]) {
+                        $ExeCache[$name] = $file
+                    }
+
                 }
 
             }
 
         }
+        catch {}
 
     }
 
@@ -150,7 +158,7 @@ function Find-ExeCached {
     $pattern = $Name.ToLower()
 
     $matches = $ExeCache.Keys |
-           Where-Object { $_ -like "$pattern*" -or $_ -like "$pattern*.exe" } |
+           Where-Object { $_ -like "$pattern*" } |
            Sort-Object
 
     if ($matches) {
@@ -183,7 +191,7 @@ function tools {
             Path = $ExeCache[$_]
         }
     } |
-    Format-Table -AutoSize
+    Sort-Object Tool
 }
 
 function Save-ExecutableCache {
@@ -196,15 +204,21 @@ function Load-ExecutableCache {
 
     if (Test-Path $file) {
 
-        $data = Get-Content $file | ConvertFrom-Json
+        try {
 
-        $global:ExeCache = @{}
+            $data = Get-Content $file | ConvertFrom-Json
 
-        $data.psobject.Properties | ForEach-Object {
-            $ExeCache[$_.Name] = $_.Value
+            $global:ExeCache = @{}
+
+            $data.psobject.Properties | ForEach-Object {
+                $ExeCache[$_.Name] = $_.Value
+            }
+
+            return $true
         }
-
-        return $true
+        catch {
+            Write-Warning "Executable cache corrupted. Rebuilding."
+        }
     }
 
     return $false
@@ -236,6 +250,71 @@ function refresh-exec-cache {
     Save-ExecutableCache
 
     Write-Host "Executable cache rebuilt." -ForegroundColor Green
+}
+
+function ftool {
+
+    if ($ExeCache.Count -eq 0) {
+        Write-Warning "Executable cache empty."
+        return
+    }
+
+    $selection = $ExeCache.Keys |
+        Sort-Object |
+        fzf
+
+    if ($selection) {
+        $ExeCache[$selection]
+    }
+}
+
+function frun {
+
+    $selection = $ExeCache.Keys |
+        Sort-Object |
+        fzf
+
+    if ($selection) {
+        Start-Process $ExeCache[$selection]
+    }
+}
+
+function fpath {
+
+    $dir = ($env:PATH -split ';') | fzf
+
+    if ($dir) {
+        Start-Process explorer $dir
+    }
+}
+
+function fh {
+
+    Get-History |
+    Select-Object -ExpandProperty CommandLine |
+    fzf
+}
+
+function ff {
+
+    $file = Get-ChildItem -Recurse -File |
+        Select-Object -ExpandProperty FullName |
+        fzf
+
+    if ($file) {
+        $file
+    }
+}
+
+function fe {
+
+    $file = Get-ChildItem -Recurse -File |
+        Select-Object -ExpandProperty FullName |
+        fzf
+
+    if ($file) {
+        Start-Process $file
+    }
 }
 
 # ── Better history & autosuggestions ────────────────
@@ -374,15 +453,8 @@ function verapdf {
 }
 
 # ⎯⎯ Set Default Location for Custom Scripts ⎯⎯
-$ScriptPathPlaceholder = Join-Path $HOME "Program"
-$PlaceholderCheck = "C:\Your\Path\To\Scripts"
-$DefaultScriptPath = Join-Path $HOME "Documents\PowerShellScripts"
+$ScriptPath = "$HOME\Program"
 
-$ScriptPath = if ($ScriptPathPlaceholder -eq $PlaceholderCheck) {
-    $DefaultScriptPath
-} else {
-    $ScriptPathPlaceholder
-}
 # ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
 
 # ⎯⎯ Function to Safely Load a Script ⎯⎯
