@@ -109,7 +109,7 @@ def main():
     print("Scanning durations…")
 
     durations = {f: get_duration(f) for f in files}
-    total_duration = sum(durations.values())
+    total_duration = sum(durations.values()) + 0.001
 
     workers = max(1, multiprocessing.cpu_count() // 2)
 
