@@ -53,7 +53,7 @@ def get_duration(file):
 
 def process_file(file):
     if file.stem.endswith("_normalized"):
-        return file
+        return None
 
     info = get_audio_info(file)
 
@@ -61,7 +61,7 @@ def process_file(file):
         codec, sr, ch = info
 
         if codec == "aac" and sr == 32000 and ch == 1:
-            return file
+            return None
 
     output = file.with_name(file.stem + "_normalized.m4a")
     temp = output.with_suffix(".tmp.m4a")
@@ -92,11 +92,12 @@ def process_file(file):
     try:
         subprocess.run(cmd, check=True)
         temp.replace(output)
+        return file
     except subprocess.CalledProcessError:
         if temp.exists():
             temp.unlink()
         print(f"FFmpeg failed: {file}")
-    return file
+        return None
 
 def main():
 
@@ -129,7 +130,8 @@ def main():
         ) as pbar:
 
             for f in results:
-                pbar.update(durations[f])
+                if f:
+                    pbar.update(durations[f])
 
     print("\nAll done.")
 
