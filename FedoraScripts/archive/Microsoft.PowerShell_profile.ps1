@@ -225,7 +225,14 @@ function Load-ExecutableCache {
 }
 
 function Get-PathHash {
-    $env:PATH.GetHashCode()
+    $PathString = $env:PATH
+    $Bytes = [System.Text.Encoding]::UTF8.GetBytes($PathString)
+    $Sha = [System.Security.Cryptography.SHA256]::Create()
+    $HashBytes = $Sha.ComputeHash($Bytes)
+
+    # Konvertera bytes till en läsbar sträng (hex)
+    $Hash = [System.BitConverter]::ToString($HashBytes) -replace '-'
+    return $Hash
 }
 
 function Save-PathHash {
@@ -378,25 +385,43 @@ function edit-profile {
     notepad $PROFILE
 }
 
+$currentHash = Get-PathHash
+$storedHash = Load-PathHash
+$loadedCache = Load-ExecutableCache
+
+#Write-Host "Loaded Cache? " $loadedCache " cH " $currentHash " sH " $storedHash
+
+if (-not (Load-ExecutableCache) -or $currentHash -ne $storedHash) {
+
+    Write-Host "Rebuilding executable cache…" -ForegroundColor Gray
+
+    Build-ExecutableCache
+    Save-ExecutableCache
+    Save-PathHash
+}
+else {
+    Write-Host "Loaded executable cache." -ForegroundColor DarkGray
+}
+
 # ⎯⎯ Custom Executable Paths ⎯⎯
 
-$JavaPath = Find-Exe java.exe
+$JavaPath = which java.exe
 if (-not $JavaPath) {
     $JavaPath = Find-ExecutableDeep java.exe
 }
-$QPDFPath = Find-Exe qpdf.exe
+$QPDFPath = which qpdf.exe
 if (-not $QPDFPath) {
     $QPDFPath = Find-ExecutableDeep qpdf.exe
 }
-$RocketPDFPath = Find-Exe rocketpdf.exe
+$RocketPDFPath = which rocketpdf.exe
 if (-not $RocketPDFPath) {
     $RocketPDFPath = Find-ExecutableDeep rocketpdf.exe
 }
-$VeraPDFPath1 = Find-Exe verapdf-gui.bat
+$VeraPDFPath1 = which verapdf-gui.bat
 if (-not $VeraPDFPath1) {
     $VeraPDFPath1 = Find-ExecutableDeep verapdf-gui.bat
 }
-$VeraPDFPath2 = Find-Exe verapdf.bat
+$VeraPDFPath2 = which verapdf.bat
 if (-not $VeraPDFPath2) {
     $VeraPDFPath2 = Find-ExecutableDeep verapdf.bat
 }
@@ -495,21 +520,6 @@ function Load-CustomScript {
 
 # ⎯⎯ Main Script Loading Block ⎯⎯
 if ($Host.Name -eq 'ConsoleHost') {
-
-    $currentHash = Get-PathHash
-    $storedHash = Load-PathHash
-
-    if (-not (Load-ExecutableCache) -or $currentHash -ne $storedHash) {
-
-        Write-Host "Rebuilding executable cache…" -ForegroundColor Gray
-
-        Build-ExecutableCache
-        Save-ExecutableCache
-        Save-PathHash
-    }
-    else {
-        Write-Host "Loaded executable cache." -ForegroundColor DarkGray
-    }
 
     $policy = Get-ExecutionPolicy -Scope CurrentUser
     if ($policy -eq 'Restricted') {
