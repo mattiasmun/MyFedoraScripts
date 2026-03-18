@@ -71,7 +71,6 @@ function whereis {
     $i = 0
 
     foreach ($cmd in $cmds) {
-
         $version = ""
 
         try {
@@ -116,22 +115,17 @@ function which-open {
 $ExeCache = @{}
 
 function Build-ExecutableCache {
-
     foreach ($dir in ($env:PATH -split ';')) {
-
         $dir = $dir.Trim()
 
         if (-not $dir) { continue }
         if (-not (Test-Path $dir)) { continue }
 
         try {
-
             foreach ($file in [System.IO.Directory]::EnumerateFiles($dir)) {
-
                 $ext = [System.IO.Path]::GetExtension($file)
 
                 if ($ext -in '.exe','.cmd','.bat') {
-
                     $name = [System.IO.Path]::GetFileName($file).ToLower()
 
                     if (-not $ExeCache[$name]) {
@@ -199,13 +193,10 @@ function Save-ExecutableCache {
 }
 
 function Load-ExecutableCache {
-
     $file = "$HOME\exe-cache.json"
 
     if (Test-Path $file) {
-
         try {
-
             $data = Get-Content $file | ConvertFrom-Json
 
             $global:ExeCache = @{}
@@ -250,7 +241,6 @@ function Load-PathHash {
 }
 
 function refresh-exec-cache {
-
     $global:ExeCache.Clear()
 
     Build-ExecutableCache
@@ -260,7 +250,6 @@ function refresh-exec-cache {
 }
 
 function ftool {
-
     if ($ExeCache.Count -eq 0) {
         Write-Warning "Executable cache empty."
         return
@@ -276,7 +265,6 @@ function ftool {
 }
 
 function frun {
-
     $selection = $ExeCache.Keys |
         Sort-Object |
         fzf
@@ -287,7 +275,6 @@ function frun {
 }
 
 function fpath {
-
     $dir = ($env:PATH -split ';') | fzf
 
     if ($dir) {
@@ -296,14 +283,12 @@ function fpath {
 }
 
 function fh {
-
     Get-History |
     Select-Object -ExpandProperty CommandLine |
     fzf
 }
 
 function ff {
-
     $file = Get-ChildItem -Recurse -File |
         Select-Object -ExpandProperty FullName |
         fzf
@@ -314,7 +299,6 @@ function ff {
 }
 
 function fe {
-
     $file = Get-ChildItem -Recurse -File |
         Select-Object -ExpandProperty FullName |
         fzf
@@ -360,11 +344,9 @@ function addpath {
 }
 
 function path {
-
     $i = 0
 
     foreach ($p in ($env:PATH -split ';')) {
-
         if (Test-Path $p) {
             Write-Host ("{0,2}: {1}" -f $i, $p)
         }
@@ -392,7 +374,6 @@ $loadedCache = Load-ExecutableCache
 #Write-Host "Loaded Cache? " $loadedCache ". currentHash: " $currentHash " storedHash: " $storedHash "."
 
 if (-not $loadedCache -or $currentHash -ne $storedHash) {
-
     Write-Host "Rebuilding executable cache…" -ForegroundColor Gray
 
     Build-ExecutableCache
@@ -431,7 +412,7 @@ function qpdf {
         # The call operator (&) executes the file, and @($args) forwards all parameters.
         & $QPDFPath @($args)
     } else {
-        Write-Error "QPDF executable not found at '$QPDFPath'."
+        Write-Error "File not found at '$QPDFPath'."
     }
 }
 
@@ -439,18 +420,17 @@ function rocketpdf {
     if (Test-Path -Path $RocketPDFPath -PathType Leaf) {
         & $RocketPDFPath @($args)
     } else {
-        Write-Error "RocketPDF executable not found at '$RocketPDFPath'."
+        Write-Error "File not found at '$RocketPDFPath'."
     }
 }
 
-# New function for pip that uses python -m pip
 function pip {
     python -m pip @($args)
 }
 
 function verapdf-gui {
     if (-not (Test-Path -Path $VeraPDFPath1 -PathType Leaf)) {
-        Write-Error "VeraPDF JAR not found at '$VeraPDFPath1'. Cannot run VeraPDF."
+        Write-Error "File not found at '$VeraPDFPath1'."
         return
     }
 
@@ -465,7 +445,7 @@ function verapdf-gui {
 
 function verapdf {
     if (-not (Test-Path -Path $VeraPDFPath2 -PathType Leaf)) {
-        Write-Error "VeraPDF JAR not found at '$VeraPDFPath2'. Cannot run VeraPDF."
+        Write-Error "File not found at '$VeraPDFPath2'."
         return
     }
 
@@ -520,7 +500,6 @@ function Load-CustomScript {
 
 # ⎯⎯ Main Script Loading Block ⎯⎯
 if ($Host.Name -eq 'ConsoleHost') {
-
     $policy = Get-ExecutionPolicy -Scope CurrentUser
     if ($policy -eq 'Restricted') {
         Write-Host "🛑 WARNING: Execution Policy is '$policy'. Scripts cannot run." -ForegroundColor Red
