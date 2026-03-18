@@ -389,9 +389,9 @@ $currentHash = Get-PathHash
 $storedHash = Load-PathHash
 $loadedCache = Load-ExecutableCache
 
-#Write-Host "Loaded Cache? " $loadedCache " cH " $currentHash " sH " $storedHash
+#Write-Host "Loaded Cache? " $loadedCache ". currentHash: " $currentHash " storedHash: " $storedHash "."
 
-if (-not (Load-ExecutableCache) -or $currentHash -ne $storedHash) {
+if (-not $loadedCache -or $currentHash -ne $storedHash) {
 
     Write-Host "Rebuilding executable cache…" -ForegroundColor Gray
 
