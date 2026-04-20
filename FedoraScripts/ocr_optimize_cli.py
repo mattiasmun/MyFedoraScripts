@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import ocrmypdf
 import os
 import glob
 import argparse
