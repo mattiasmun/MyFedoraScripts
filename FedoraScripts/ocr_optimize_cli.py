@@ -4,6 +4,7 @@ import os
 import glob
 import argparse
 import re
+import subprocess
 import time
 import uuid
 import xml.etree.ElementTree as ET
@@ -18,8 +19,6 @@ except ImportError as e:
     print("Error: Required library not found. Please run 'pip install pymupdf'")
     print(f"Details: {e}")
     exit(1)
-
-import subprocess
 
 def run_ocr_subprocess(input_path, output_path):
     command = [
