@@ -267,8 +267,7 @@ def run_verapdf_batch(directory: str) -> dict:
     # Vi gör mappsökvägen absolut för att Flatpak ska hitta den
     abs_dir = os.path.abspath(directory)
     if os.name == 'nt':
-        home = os.path.expanduser("~")
-        cmd_base = [os.path.join(home, "Program", "verapdf", "verapdf.bat")]
+        cmd_base = ["verapdf.bat"]
         shell_mode = True
     else:
         cmd_base = ["flatpak", "run", "--command=verapdf", "org.verapdf.veraPDF"]
