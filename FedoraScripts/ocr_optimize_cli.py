@@ -19,6 +19,32 @@ except ImportError as e:
     print(f"Details: {e}")
     exit(1)
 
+import subprocess
+
+def run_ocr_subprocess(input_path, output_path):
+    command = [
+        "ocrmypdf",
+        "--optimize", "2",
+        "--jbig2-threshold", "0.85",
+        "--clean",
+        "--deskew",
+        "--output-type", "pdfa-3",
+        "--skip-text",
+        "-l", "swe+eng",  # Språk separeras med plus i CLI
+        input_path,
+        output_path
+    ]
+
+    try:
+        # check=True gör att den kastar ett fel om kommandot misslyckas
+        # capture_output=True fångar loggar istället för att skriva direkt till terminalen
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        print("OCR färdig!")
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"Ett fel uppstod: {e.stderr}")
+        raise
+
 def get_pdfa_info_pymupdf(doc):
     xml_metadata = doc.get_xml_metadata()
 
@@ -172,18 +198,8 @@ def process_file(pdf_path, output_path):
 
         # ⎯⎯ STEG 2: OCRMYPDF (OCR & ARKIVERING) ⎯⎯
         # Eftersom vi redan har optimerat bilderna kan vi sänka kraven i ocrmypdf
-        ocrmypdf.ocr(
-            temp_optimized,
-            output_path,
-            optimize=2,
-            jbig2_threshold=0.85,
-            clean=True,
-            deskew=True,
-            output_type='pdfa-3',
-            skip_text=True,
-            language=['swe', 'eng'],
-            progress_bar=False
-        )
+        result = run_ocr_subprocess(temp_optimized, output_path)
+        tqdm.write(f"{result}")
 
         return True
     except Exception as e:

@@ -198,8 +198,8 @@ def find_ghostscript():
     sys.exit(1)
 
 def find_verapdf():
-    if shutil.which("verapdf"):
-        return ["verapdf"]
+    if shutil.which("verapdf.bat"):
+        return ["verapdf.bat"]
     if shutil.which("flatpak"):
         return ["flatpak", "run", "--command=verapdf", "org.verapdf.veraPDF"]
     logging.error("veraPDF hittades inte.")
@@ -375,7 +375,7 @@ def verify_output_intent(pdf_path: Path) -> bool:
     if not file_contains(pdf_path, b"/ICCProfile"):
         return False
     if not any(file_contains(pdf_path, tag)
-               for tag in [b"/GTS_PDFA2", b"/GTS_PDFA3"]):
+               for tag in [b"/GTS_PDFA1"]):
         return False
     return True
 
