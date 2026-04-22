@@ -36,6 +36,7 @@ def run_ocr(input_path, output_path, retries=2):
         except subprocess.CalledProcessError as e:
             if i == retries:
                 raise
+            time.sleep(2 * (i + 1))
 
 
 # ⎯⎯ PDF/A info ⎯⎯
@@ -81,6 +82,8 @@ def process_file(args):
     with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
         temp_path = Path(tmp.name)
 
+    tmp.close()
+
     try:
         with pymupdf.open(pdf_path) as doc:
             opts = pymupdf.mupdf.PdfImageRewriterOptions()
@@ -118,6 +121,7 @@ def process_file(args):
 
             doc.save(temp_path, garbage=4, deflate=True, deflate_images=True)
 
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         run_ocr(temp_path, output_path)
         return (True, None)
 
