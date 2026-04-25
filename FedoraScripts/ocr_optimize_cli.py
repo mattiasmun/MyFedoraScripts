@@ -23,10 +23,8 @@ def run_ocr(input_path, output_path, retries=2):
         "--output-type", "pdfa-3",
         "--skip-text",
         "-l", "swe+eng",
-        "--verbosity", "1",
-        "--progress-bar", "off",   # viktigt i multiprocess
         str(input_path),
-        str(output_path),
+        str(output_path)
     ]
 
     for i in range(retries + 1):
