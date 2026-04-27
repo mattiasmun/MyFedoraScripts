@@ -1609,6 +1609,7 @@ qt5-qtwebchannel.x86_64 \
 qt5-qtwebkit.x86_64 \
 qt5-qtxmlpatterns.x86_64 \
 qt5-srpm-macros.noarch \
+qt5pas.x86_64 \
 qt6-qtmultimedia.x86_64 \
 qt6-qtquick3d.x86_64 \
 qt6-qtquicktimeline.x86_64 \
