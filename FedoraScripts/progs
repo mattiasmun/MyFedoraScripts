@@ -39,7 +39,6 @@ adcli.x86_64 \
 add-determinism.x86_64 \
 adobe-source-code-pro-fonts.noarch \
 adoptium-temurin-java-repository.noarch \
-adwaita-gtk2-theme.x86_64 \
 aisleriot.x86_64 \
 akmod-VirtualBox.x86_64 \
 akmod-nvidia.x86_64 \
@@ -61,7 +60,6 @@ ansible-freeipa.noarch \
 ansible-srpm-macros.noarch \
 ansible.noarch \
 ant-lib.noarch \
-ant-openjdk21.noarch \
 ant.noarch \
 appstream-devel.x86_64 \
 aqbanking.x86_64 \
@@ -428,7 +426,6 @@ gnome-system-monitor.x86_64 \
 gnome-terminal-nautilus.x86_64 \
 gnome-terminal.x86_64 \
 gnome-text-editor.x86_64 \
-gnome-themes-extra.x86_64 \
 gnome-tweaks.noarch \
 gnome-user-docs.noarch \
 gnome-user-share.x86_64 \
@@ -479,6 +476,7 @@ grubby.x86_64 \
 gsl.x86_64 \
 gsm.i686 \
 gssdp-devel.x86_64 \
+gst-thumbnailers.x86_64 \
 gst123.x86_64 \
 gstreamer-plugins-espeak.x86_64 \
 gstreamer1-devel.x86_64 \
@@ -533,7 +531,6 @@ hdf5-devel.x86_64 \
 hdf5.x86_64 \
 hexedit.x86_64 \
 hfsplus-tools.x86_64 \
-highcontrast-icon-theme.noarch \
 hivex-libs.x86_64 \
 hostname.x86_64 \
 hplip.x86_64 \
@@ -561,6 +558,7 @@ info.x86_64 \
 inih.i686 \
 intel-audio-firmware.noarch \
 intel-gpu-firmware.noarch \
+intel-lpmd.x86_64 \
 intel-media-driver.x86_64 \
 intel-qpl.x86_64 \
 intel-vsc-firmware.noarch \
@@ -580,8 +578,6 @@ iwlegacy-firmware.noarch \
 iwlwifi-dvm-firmware.noarch \
 iwlwifi-mvm-firmware.noarch \
 jasper-devel.x86_64 \
-java-21-openjdk-devel.x86_64 \
-java-21-openjdk.x86_64 \
 java-latest-openjdk-devel.x86_64 \
 java-latest-openjdk-headless.x86_64 \
 java-latest-openjdk.x86_64 \
@@ -975,7 +971,6 @@ mesa-libGL.i686 \
 mesa-libOpenCL.x86_64 \
 mesa-libgbm-devel.x86_64 \
 mesa-libgbm.i686 \
-mesa-va-drivers.i686 \
 mesa-vulkan-drivers.i686 \
 mesa-vulkan-drivers.x86_64 \
 metacity.x86_64 \
@@ -1038,7 +1033,7 @@ nettle-devel.x86_64 \
 nettle.i686 \
 nfs-utils.x86_64 \
 nmap-ncat.x86_64 \
-nodejs.x86_64 \
+nodejs22.x86_64 \
 nspr.i686 \
 nss-mdns.x86_64 \
 nss-softokn-freebl.i686 \
