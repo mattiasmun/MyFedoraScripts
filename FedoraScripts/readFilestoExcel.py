@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import pandas as pd
 from openpyxl.styles import Font
@@ -42,10 +43,14 @@ def byt_ut_forkortningar(filnamn, forkortningar):
         filnamn = re.sub(pattern, lang, filnamn)
     return filnamn
 
-def skapa_excel_for_mapp(rot, filer, forkortningar):
+def skapa_excel_for_mapp(start_mapp, rot, filer, forkortningar):
     """Skapar en Excel-fil för en specifik mapp med gamla och nya namn."""
     mappnamn = os.path.basename(rot)
-    # Om vi är i root-mappen och basename är tom
+    # Om vi är i en rot-mapp (basename är tomt), använd namnet på startmappen istället
+    if not mappnamn:
+        mappnamn = os.path.basename(start_mapp.rstrip(os.sep))
+
+    # Om det fortfarande är tomt (t.ex. om start_mapp var '/'), kör på "root"
     if not mappnamn:
         mappnamn = "root"
 
@@ -90,7 +95,7 @@ def processa_mappar(start_mapp, forkortningar):
         stats['antal_filer'] += len(rena_filer)
 
         if rena_filer:
-            excel_fil = skapa_excel_for_mapp(rot, rena_filer, forkortningar)
+            excel_fil = skapa_excel_for_mapp(start_mapp, rot, rena_filer, forkortningar)
             print(f'Skapat: "{os.path.relpath(excel_fil, start_mapp)}"')
 
             stats['antal_excel_filer'] += 1
