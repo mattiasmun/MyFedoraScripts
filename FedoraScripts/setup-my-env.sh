@@ -58,7 +58,11 @@ export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 alias hgrep="history | grep -i"
 
 export JAVA_HOME=$(alternatives --list | grep jre_openjdk | awk '{print $3}')
-export PATH=$JAVA_HOME/bin:$PATH
+
+# Kontrollera om Java bin-mappen redan finns i PATH innan den läggs till
+if [[ ":$PATH:" != *":$JAVA_HOME/bin:"* ]]; then
+    export PATH="$JAVA_HOME/bin:$PATH"
+fi
 EOF
 	echo "Hela miljö-blocket har lagts till i '$BASHRC_FILE'."
 fi
