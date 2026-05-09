@@ -3,96 +3,140 @@ import pandas as pd
 from openpyxl.styles import Font
 from datetime import datetime
 import re
+import argparse
+import sys
 
-# Funktion för att läsa in förkortningar från en textfil
 def las_in_forkortningar(filnamn):
+    """Läser in förkortningar från en textfil (format: kort,lang)."""
     forkortningar = {}
-    with open(filnamn, 'r', encoding='utf-8') as fil:
-        for rad in fil:
-            kort, lang = rad.strip().split(',')
-            forkortningar[kort] = lang
+    if not filnamn or not os.path.exists(filnamn):
+        if filnamn:
+            print(f"Varning: Förkortningsfilen '{filnamn}' hittades inte. Hoppar över.")
+        return forkortningar
+
+    try:
+        with open(filnamn, 'r', encoding='utf-8') as fil:
+            for rad in fil:
+                if ',' in rad:
+                    # Hanterar rader med flera kommatecken genom att bara splitta vid första
+                    kort, lang = rad.strip().split(',', 1)
+                    forkortningar[kort.strip()] = lang.strip()
+    except Exception as e:
+        print(f"Fel vid inläsning av förkortningar: {e}")
+
     return forkortningar
 
-# Funktion för att byta ut förkortningar i filnamn
 def byt_ut_forkortningar(filnamn, forkortningar):
-    for kort, lang in forkortningar.items():
-        # Använd reguljära uttryck för att matcha hela ord
-        filnamn = re.sub(r'\b' + re.escape(kort) + r'\b', lang, filnamn)
+    """Byter ut förkortningar i filnamn (hanterar understreck, punkter etc)."""
+    if not forkortningar:
+        return filnamn
+
+    # Sortera förkortningar efter längd (längst först) för att undvika
+    # att korta förkortningar förstör längre (t.ex. 'dok' vs 'dokum')
+    sorterade_kort = sorted(forkortningar.keys(), key=len, reverse=True)
+
+    for kort in sorterade_kort:
+        lang = forkortningar[kort]
+        # Matchar 'kort' om det inte är omgivet av bokstäver eller siffror
+        pattern = r'(?<![a-zA-Z0-9])' + re.escape(kort) + r'(?![a-zA-Z0-9])'
+        filnamn = re.sub(pattern, lang, filnamn)
     return filnamn
 
-# Använd den aktuella arbetsmappen
-huvud_mapp = os.getcwd()
+def skapa_excel_for_mapp(rot, filer, forkortningar):
+    """Skapar en Excel-fil för en specifik mapp med gamla och nya namn."""
+    mappnamn = os.path.basename(rot)
+    # Om vi är i root-mappen och basename är tom
+    if not mappnamn:
+        mappnamn = "root"
 
-# Räknare för antalet skapade Excel-filer och mappar
-antal_excel_filer = 0
-antal_mappar = 0
-antal_filer = 0
-mappar_med_excel_filer = []
+    excel_filpath = os.path.join(rot, f'{mappnamn}_filnamn.xlsx')
 
-# Tidsstämpel för start
-start_tid = datetime.now()
+    # Skapa listan med nya namn baserat på förkortningar
+    nya_namn = [byt_ut_forkortningar(f, forkortningar) for f in filer]
 
-# Läs in förkortningar från textfil
-#forkortningar = las_in_forkortningar('foerkortningar.txt')
+    df = pd.DataFrame({
+        'Gammalt namn': filer,
+        'Nytt namn': nya_namn
+    })
 
-# Gå igenom alla mappar i huvudmappen
-for rot, mappar, filer in os.walk(huvud_mapp):
-    antal_mappar += 1  # Öka mappräknaren
-    # Skapa en lista med filnamn
-    filnamn = [f for f in filer if os.path.isfile(os.path.join(rot, f))]
-    antal_filer += len(filnamn)  # Räkna antalet filer
+    # Spara till Excel
+    df.to_excel(excel_filpath, index=False)
 
-    # Om det finns filer i mappen, skapa en Excel-fil
-    if filnamn:
-        # Hämta mappnamnet
-        mappnamn = os.path.basename(rot)
+    # Formatering av rubriker och kolumner
+    with pd.ExcelWriter(excel_filpath, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
+        workbook = writer.book
+        worksheet = writer.sheets['Sheet1']
+        for cell in worksheet["A1:B1"][0]:
+            cell.font = Font(bold=True)
+        worksheet.column_dimensions['A'].width = 35
+        worksheet.column_dimensions['B'].width = 35
 
-        # Skapa en DataFrame med två kolumner
-        df = pd.DataFrame({
-            'Gammalt namn': filnamn,
-            'Nytt namn': filnamn
-            #'Nytt namn': [byt_ut_forkortningar(f, forkortningar) for f in filnamn]  # Byt ut förkortningar i filnamn
-        })
+    return excel_filpath
 
-        # Skapa Excel-filnamn med mappnamnet som prefix
-        excel_fil = os.path.join(rot, f'{mappnamn}_filnamn.xlsx')  # Namnet på Excel-filen
+def processa_mappar(start_mapp, forkortningar):
+    """Går igenom mappar rekursivt och genererar Excel-filer."""
+    stats = {
+        'antal_excel_filer': 0,
+        'antal_mappar': 0,
+        'antal_filer': 0,
+        'mappar_med_excel_filer': []
+    }
 
-        # Spara DataFrame till Excel
-        df.to_excel(excel_fil, index=False)
+    for rot, mappar, filer in os.walk(start_mapp):
+        # Ignorera redan existerande Excel-listor för att undvika dubbelarbete
+        rena_filer = [f for f in filer if not f.endswith('_filnamn.xlsx')]
 
-        # Öppna Excel-filen för att ställa in fet stil och justera kolumnbredd
-        with pd.ExcelWriter(excel_fil, engine='openpyxl', mode='a') as writer:
-            workbook = writer.book
-            worksheet = writer.sheets['Sheet1']
+        stats['antal_mappar'] += 1
+        stats['antal_filer'] += len(rena_filer)
 
-            # Ställ in rubrikerna som fetstil
-            for cell in worksheet["A1:B1"][0]:  # Första raden
-                cell.font = Font(bold=True)
+        if rena_filer:
+            excel_fil = skapa_excel_for_mapp(rot, rena_filer, forkortningar)
+            print(f'Skapat: "{os.path.relpath(excel_fil, start_mapp)}"')
 
-            # Justera kolumnbredd
-            worksheet.column_dimensions['A'].width = 30  # Justera bredd för kolumn A
-            worksheet.column_dimensions['B'].width = 30  # Justera bredd för kolumn B
+            stats['antal_excel_filer'] += 1
+            stats['mappar_med_excel_filer'].append(rot)
 
-        print(f'Excel-dokumentet "{excel_fil}" har skapats med filnamnen.')
-        
-        # Öka räknaren och spara mappens namn
-        antal_excel_filer += 1
-        mappar_med_excel_filer.append(rot)
+    return stats
 
-# Tidsstämpel för slut
-slut_tid = datetime.now()
+def main():
+    parser = argparse.ArgumentParser(description="Skapa Excel-listor över filer rekursivt.")
 
-# Skriv ut sammanställning av resultat
-print("\nSammanställning av resultat:\n" + "-"*40)
-print(f'Totalt antal skapade Excel-filer: {antal_excel_filer}')
-print(f'Totalt antal mappar genomsökta: {antal_mappar}')
-print(f'Totalt antal filer hittades: {antal_filer}')
+    # Positionellt argument: Mappen som ska skannas
+    parser.add_argument("mapp", nargs="?", default=os.getcwd(),
+                        help="Sökvägen till mappen (default: nuvarande)")
 
-if mappar_med_excel_filer:
-    print(f'Mappar där Excel-filer skapades:\n' + '\n'.join(mappar_med_excel_filer))
-else:
-    print('Inga mappar hade några Excel-filer skapade.')
+    # Valfritt argument: Fil med förkortningar
+    parser.add_argument("-f", "--foerkortningar", type=str,
+                        help="Sökväg till textfil med förkortningar (format: kort,lang)")
 
-print(f'\nProcessen startade: {start_tid.strftime("%Y-%m-%d %H:%M:%S")}')
-print(f'Processen avslutades: {slut_tid.strftime("%Y-%m-%d %H:%M:%S")}')
-print(f'Tid för processen: {slut_tid - start_tid} (ungefär {round((slut_tid - start_tid).total_seconds(), 2)} sekunder)')
+    args = parser.parse_args()
+    target_dir = os.path.abspath(args.mapp)
+
+    if not os.path.isdir(target_dir):
+        print(f"Fel: '{target_dir}' är inte en giltig mapp.")
+        sys.exit(1)
+
+    # Läs in förkortningar om flaggan används
+    forkortningar = {}
+    if args.foerkortningar:
+        forkortningar = las_in_forkortningar(args.foerkortningar)
+        if forkortningar:
+            print(f"Laddat {len(forkortningar)} förkortningar.")
+
+    print(f"Skannar: {target_dir}\n")
+    start_tid = datetime.now()
+
+    resultat = processa_mappar(target_dir, forkortningar)
+
+    slut_tid = datetime.now()
+    tids_delta = slut_tid - start_tid
+
+    print("\n" + "="*40)
+    print("KLART!")
+    print(f"Excel-filer skapade: {resultat['antal_excel_filer']}")
+    print(f"Filer indexerade:     {resultat['antal_filer']}")
+    print(f"Tid:                  {round(tids_delta.total_seconds(), 2)} sekunder")
+    print("="*40)
+
+if __name__ == "__main__":
+    main()
