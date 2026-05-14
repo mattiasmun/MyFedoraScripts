@@ -1512,6 +1512,7 @@ python3-oslo-config.noarch \
 python3-oslo-i18n.noarch \
 python3-oslo-serialization.noarch \
 python3-oslo-utils.noarch \
+python3-pandas.x86_64 \
 python3-paramiko.noarch \
 python3-pbr.noarch \
 python3-pdf2image.noarch \
