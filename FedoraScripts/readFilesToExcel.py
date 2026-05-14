@@ -56,7 +56,6 @@ def skapa_excel_for_mapp(start_mapp, rot, filer, forkortningar):
 
     excel_filpath = os.path.join(rot, f'{mappnamn}_filnamn.xlsx')
 
-    # Skapa listan med nya namn baserat på förkortningar
     nya_namn = [byt_ut_forkortningar(f, forkortningar) for f in filer]
 
     df = pd.DataFrame({
@@ -64,15 +63,29 @@ def skapa_excel_for_mapp(start_mapp, rot, filer, forkortningar):
         'Nytt namn': nya_namn
     })
 
-    # Spara till Excel
     df.to_excel(excel_filpath, index=False)
 
-    # Formatering av rubriker och kolumner
+    # Definiera typsnitt här (t.ex. Calibri, Arial, Liberation Sans)
+    VALT_TYPSNITT = "Liberation Sans"
+
+    rubrik_font = Font(name=VALT_TYPSNITT, size=11, bold=True)
+    data_font = Font(name=VALT_TYPSNITT, size=11, bold=False)
+
+    # Formatering av rubriker, data och kolumner
     with pd.ExcelWriter(excel_filpath, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
         workbook = writer.book
         worksheet = writer.sheets['Sheet1']
-        for cell in worksheet["A1:B1"][0]:
-            cell.font = Font(bold=True)
+
+        # Formatera rubrikraden (Rad 1)
+        for cell in worksheet[1]:
+            cell.font = rubrik_font
+
+        # Formatera resten av cellerna med data (Rad 2 och framåt)
+        for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=1, max_col=2):
+            for cell in row:
+                cell.font = data_font
+
+        # Sätt kolumnbredd
         worksheet.column_dimensions['A'].width = 35
         worksheet.column_dimensions['B'].width = 35
 
