@@ -76,11 +76,17 @@ def skapa_excel_for_mapp(start_mapp, rot, filer, forkortningar):
         workbook = writer.book
         worksheet = writer.sheets['Sheet1']
 
-        # Formatera rubrikraden (Rad 1)
+        # 1. Sätt Liberation Sans som standardtypsnitt för ALLA celler (inklusive tomma)
+        worksheet.views.sheetView[0].showGridLines = True  # Valfritt: Säkerställ att stödlinjer syns
+
+        # Ändra den inbyggda "Normal"-stilen i openpyxl för detta blad
+        workbook.styles.fonts[0] = Font(name=VALT_TYPSNITT, size=11)
+
+        # 2. Formatera rubrikraden (Rad 1) till fetstil
         for cell in worksheet[1]:
             cell.font = rubrik_font
 
-        # Formatera resten av cellerna med data (Rad 2 och framåt)
+        # 3. Formatera datan explicit (för säkerhets skull så att pandas-exporten matchar)
         for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=1, max_col=2):
             for cell in row:
                 cell.font = data_font
