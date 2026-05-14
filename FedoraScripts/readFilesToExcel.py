@@ -79,8 +79,9 @@ def skapa_excel_for_mapp(start_mapp, rot, filer, forkortningar):
         # 1. Sätt Liberation Sans som standardtypsnitt för ALLA celler (inklusive tomma)
         worksheet.views.sheetView[0].showGridLines = True  # Valfritt: Säkerställ att stödlinjer syns
 
-        # Ändra den inbyggda "Normal"-stilen i openpyxl för detta blad
-        workbook.styles.fonts[0] = Font(name=VALT_TYPSNITT, size=11)
+        # 1. Sätt Liberation Sans som standardtypsnitt för ALLA celler (även tomma)
+        # Vi ändrar det första och grundläggande typsnittet i filens interna stil-register
+        workbook._fonts[0] = Font(name=VALT_TYPSNITT, size=11)
 
         # 2. Formatera rubrikraden (Rad 1) till fetstil
         for cell in worksheet[1]:
