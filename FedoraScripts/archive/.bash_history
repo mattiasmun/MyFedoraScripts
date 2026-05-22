@@ -6,7 +6,7 @@ alternatives --list
 alternatives --list | grep jre_openjdk | awk '{print $3}'
 #1771167923
 arithmetic --help
-#1777311249
+#1779134320
 arithmetic -o - -r 2000
 #1771167923
 auto_clicker_gui
@@ -16,7 +16,7 @@ bc -lq
 bg
 #1771167923
 btop
-#1778682318
+#1779477233
 c
 #1771167923
 cat "$HOME/.git-credentials"
@@ -34,9 +34,9 @@ cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scen
 cat /sys/class/dmi/id/bios_date
 #1778345159
 cat /sys/class/dmi/id/bios_version
-#1778419021
+#1779142594
 cd
-#1776906945
+#1778798388
 cd "$HOME/.local/share/Steam/steamapps/common/Farthest Frontier/Farthest Frontier (Mono)/"
 #1771167923
 cd "$HOME/.local/share/Steam/steamapps/common/Men of War II"
@@ -70,7 +70,7 @@ conditional_7z_backup.sh
 conditional_7z_backup.sh "$HOME/Men of War II/packages/Unit_booster"
 #1771167923
 cp requirements.txt $HOME/Bash/MyFedoraScripts/FedoraScripts/archive/requirements.txt
-#1778614606
+#1779399814
 d
 #1771167923
 d $(tu 21:00:00)
@@ -122,7 +122,7 @@ dnf repoquery --whatrequires texlive-context
 dnf search pikepdf
 #1777392159
 dnfsysupgr
-#1778519708
+#1779305711
 dnfusrins
 #1771167923
 doc_converter.py --help
@@ -172,7 +172,7 @@ echo $XDG_SESSION_TYPE
 echo key k:26 k:39 k:40 | dotoolc
 #1771167923
 echo key leftmeta | dotoolc
-#1771167923
+#1779207632
 echo key shift+1 x:exclam shift+k:2 | dotoolc
 #1778350580
 env
@@ -202,7 +202,7 @@ file Bilder/PicTool.webp
 find . -name "*~"
 #1771167923
 find . -name "*~" -delete
-#1778344873
+#1778945739
 find . -type f -exec file {} + | grep "CRLF"
 #1778320653
 find . -type f -exec file {} + | grep "CRLF" | cut -d: -f1 | xargs dos2unix
@@ -214,7 +214,7 @@ find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do  
 find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then          mv -v -- "$old_path" "$new_path";     fi; done
 #1771167923
 find_and_sort_files .
-#1771167923
+#1778800769
 find_and_sort_files female
 #1771167923
 flatpak install veraPDF
@@ -238,11 +238,11 @@ for q in 1 1.5 2 2.5 3; do   ffmpeg -i chapter.m4a -ac 1 -c:a aac -q:a $q chapte
 fuck
 #1771167923
 fuck --help
-#1778594639
+#1779213618
 fwupdmgr get-updates
 #1778349202
 fwupdmgr update
-#1777905414
+#1779140043
 fzf
 #1771167923
 fzf --multi --cycle
@@ -252,7 +252,7 @@ fzf-select-open.sh
 gedit "$HOME/Men of War II/log/game.log"
 #1771167923
 git --help
-#1778519713
+#1779305715
 git -C ~/Bash/MyFedoraScripts status
 #1778320119
 git add *
@@ -288,13 +288,13 @@ git status
 gitcfg
 #1771167923
 gitty ~/529340
-#1778519710
+#1779142486
 gitty ~/Bash/MyFedoraScripts
 #1771167923
 gnome-shell --version
 #1771167923
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
-#1778330480
+#1778798412
 grep -nirI "ammo"
 #1771167923
 groupadd -f input
@@ -308,7 +308,7 @@ gs --help
 hgrep dnf
 #1777113156
 htop
-#1778345135
+#1779299088
 hwclock
 #1771167923
 id -nG
@@ -330,7 +330,7 @@ javacfg
 jedit
 #1774988302
 jshell
-#1776692496
+#1779142093
 l
 #1771167923
 lame --help
@@ -338,28 +338,12 @@ lame --help
 lame --longhelp
 #1773335152
 ljudstat.py .
-#1778350475
+#1779142095
 ll
 #1771167923
 ln --help
 #1771167923
 locate "*.py" | while IFS= read -r file; do ls -ld "$file"; done
-#1771167923
-locate "+.def" | while IFS= read -r file; do ls -ld "$file"; done
-#1771167923
-locate "1927_cannon" | while IFS= read -r file; do ls -ld "$file"; done
-#1771167923
-locate "bm31+" | while IFS= read -r file; do ls -ld "$file"; done
-#1771167923
-locate "m30+" | while IFS= read -r file; do ls -ld "$file"; done
-#1771167923
-locate "Men of War II" | while IFS= read -r file; do ls -ld "$file"; done
-#1771167923
-locate "rocketpdf" | while IFS= read -r file; do ls -ld "$file"; done
-#1771167923
-locate "su122+" | while IFS= read -r file; do ls -ld "$file"; done
-#1771167923
-locate "supp+" | while IFS= read -r file; do ls -ld "$file"; done
 #1771167923
 lsattr Dokument/IDLE_py.py
 #1771167923
@@ -386,12 +370,6 @@ meld "$HOME/.bash_history" "$HOME/.bash_history_cleaned" "$HOME/Bash/MyFedoraScr
 meld "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc" &
 #1771167923
 meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py" &
-#1771167923
-meld "$temp_file" "$HOME/Bash/MyFedoraScripts/FedoraScripts/doc_converter.py" &
-#1771167923
-meld "$temp_file" "$HOME/Bash/MyFedoraScripts/FedoraScripts/ocr_optimize_cli.py" &
-#1771167923
-meld "$temp_file" "$HOME/Bash/MyFedoraScripts/FedoraScripts/pdf_optimizer.py" &
 #1771167923
 meld &
 #1771167923
@@ -456,6 +434,8 @@ pdf_optimizer.py -i .
 pdfa_archive_pipeline.py Input/ Output/
 #1772386089
 pdfcropmargins
+#1779137943
+pdfcropmargins --help
 #1772221276
 pdffonts github-git-cheat-sheet.pdf
 #1772220870
@@ -470,8 +450,6 @@ pdfinfo -box file-sample_1MB.pdf
 pdfinfo -isodates file-sample_1MB.pdf
 #1771447312
 pdfinfo -meta file-sample_1MB.pdf | more
-#1771167923
-pdfinfo file-sample_1MB.pdf
 #1771440253
 pdfinfo github-git-cheat-sheet.pdf
 #1771167923
@@ -490,7 +468,7 @@ pidof thunderbird
 pip list
 #1771622090
 pip list --user
-#1771708796
+#1779142125
 pip list --user | tail -n +3 | awk '{print $1}' > $HOME/Bash/MyFedoraScripts/FedoraScripts/archive/requirements.txt
 #1771167923
 pip3 install pip-date pyautogui pynput rocketpdf tsp-solver2
@@ -540,6 +518,8 @@ rocketpdf --help
 rsync -avz --update "$HOME/Men of War II/packages/Unit_booster.7z" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/mow2/"
 #1772386106
 scale_pdf_margins.py
+#1779137699
+scale_pdf_margins.py --help
 #1772392587
 scale_pdf_margins.py MusikhäfteA5Onumrerad.pdf MusikhäfteA5Onumrerad-2.pdf --mode pixels --value 3
 #1771167923
@@ -562,6 +542,8 @@ stat /
 steam steam://rungameid/1128860
 #1771167923
 strcmp asdfsdf gertergdfg
+#1779141830
+stty size
 #1771167923
 sudo -A ./build.sh install
 #1778259607
@@ -622,7 +604,7 @@ sudo -A updatedb
 systemctl --user daemon-reload
 #1771167923
 systemctl --user enable --now unoserver.service
-#1771167923
+#1779207617
 systemctl --user status dotool.service
 #1771167923
 systemctl --user status unoserver.service
@@ -646,7 +628,7 @@ systemctl status dnf5-automatic.service
 systemctl status dnf5-automatic.timer
 #1777902698
 systemctl status plocate-updatedb.service
-#1777902637
+#1778789135
 systemctl status plocate-updatedb.timer
 #1778325037
 temp_file=$(mktemp); ls $temp_file
@@ -658,7 +640,7 @@ time find_and_sort_files .
 time normalize_audio.py
 #1771167923
 uname -a
-#1778340566
+#1779139305
 uname -r
 #1771167923
 unique_lines
@@ -668,22 +650,16 @@ update-alternatives
 update-alternatives --list
 #1771167923
 users
+#1779462620
+watch -n 1 stty size
 #1771708834
 wc --help
 #1771167923
 wc -l "$HOME/Bash/MyFedoraScripts/FedoraScripts/progs"
-#1778076027
+#1779299137
 wc -l ~/.bash_history
-#1778076024
+#1779299133
 wc -l ~/.bash_history_cleaned
-#1771167923
-wc -lL .bash_history
-#1771167923
-wc -lL .bash_history2
-#1771167923
-wc -lL < .bash_history
-#1771167923
-wc -lL < .bash_history2
 #1771175501
 webp-convert.py
 #1771167923
@@ -726,6 +702,10 @@ wlrctl window focus firefox
 wmctrl -xl
 #1771167923
 xdg-open "$HOME/.local/share/Steam/steamapps/common/Men of War II/packages/main/scene/entity/-vehicle/tank_medium/su122.pak"
+#1779141339
+xdg-settings --help
+#1779141345
+xdg-settings --list
 #1771167923
 xev
 #1771167923
@@ -742,7 +722,7 @@ yt-dlp -I 36: https://www.youtube.com/playlist?list=PLsT4scrqjQbShXj30-vVYXwqUzA
 yt-dlp -v
 #1771167923
 z --help
-#1778419000
+#1779140030
 z Fe
 #1771167923
 zoxide --help
