@@ -5,13 +5,25 @@
 #  Funktioner:
 #
 #  ✔ MRV heuristic (mest begränsad rad först)
-#  ✔ Forward checking
-#  ✔ Kandidatdomäner
-#  ✔ Aggressiv pruning
-#  ✔ Bitmaskoptimering
-#  ✔ Extremt snabb
+#  ✔ Bitmaskbaserad sökning
+#  ✔ Förberäknade mask-summor och kolumner
+#  ✔ Kandidatdomäner per rad
+#  ✔ Aggressiv kolumnpruning
+#  ✔ Min/max interval propagation
+#  ✔ Constraint-baserad pruning
+#  ✔ Cacheade kolumnmöjligheter
+#  ✔ Immutable lookup-tabeller (tuples)
 #  ✔ Stöd för jokrar (None)
-#  ✔ Live-status
+#  ✔ Live-status och statistik
+#  ✔ LibreOffice Calc-integration
+#
+#  Optimeringar:
+#
+#  • Bitmasker istället för bool-matriser
+#  • Förberäknade lookup-tabeller
+#  • Cachevänliga immutable datastrukturer
+#  • Minimal Python-overhead i sökträdet
+#  • Tidig pruning av omöjliga kolumnsummor
 #
 # ============================================================
 
