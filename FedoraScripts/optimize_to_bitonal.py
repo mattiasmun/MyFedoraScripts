@@ -27,7 +27,7 @@ def deskew_image(gray_img):
 
 def process_single_image(args):
     input_path, doc_target_dpi = args
-    photo_target_dpi = 200
+    photo_target_dpi = 300
     filename_lower = os.path.basename(input_path).lower()
 
     try:
@@ -57,9 +57,9 @@ def process_single_image(args):
 
         # Sätt måtten enligt önskemål
         if is_landscape:
-            target_w_mm = 271.6
+            target_w_mm = 267
         else:
-            target_w_mm = 182.3
+            target_w_mm = 180
 
         # Bestäm läge (Foto vs Dokument)
         if "foto" in filename_lower:
@@ -106,7 +106,7 @@ def process_single_image(args):
         print(f"\nFel vid bearbetning av {input_path}: {e}")
         return None
 
-def main(input_folder, output_filename, target_dpi=600):
+def main(input_folder, output_filename, target_dpi=900):
     valid_ext = ('.jpg', '.jpeg', '.png', '.tiff', '.bmp', '.webp')
     files = sorted([os.path.join(input_folder, f) for f in os.listdir(input_folder) if f.lower().endswith(valid_ext)])
 
@@ -145,11 +145,11 @@ def main(input_folder, output_filename, target_dpi=600):
         if is_landscape:
             c.setPageSize(landscape(A4))
             p_width, p_height = landscape(A4)
-            m_north, m_east, m_south, m_west = 15*mm, 12.7*mm, 12.7*mm, 12.7*mm
+            m_north, m_east, m_south, m_west = [15*mm] * 4
         else:
             c.setPageSize(A4)
             p_width, p_height = A4
-            m_north, m_east, m_south, m_west = 12.7*mm, 12.7*mm, 12.7*mm, 15*mm
+            m_north, m_east, m_south, m_west = [15*mm] * 4
 
         # Beräkna rityta och anpassa bild
         available_w = p_width - m_west - m_east
