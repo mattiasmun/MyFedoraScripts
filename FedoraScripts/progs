@@ -973,6 +973,7 @@ mesa-libgbm-devel.x86_64 \
 mesa-libgbm.i686 \
 mesa-vulkan-drivers.i686 \
 mesa-vulkan-drivers.x86_64 \
+meson.noarch \
 metacity.x86_64 \
 metis.x86_64 \
 microcode_ctl.x86_64 \
