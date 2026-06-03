@@ -18,3 +18,12 @@ executable(
   ],
   install : true
 )
+
+lo_macro_dir = get_option('libreoffice_python_dir')
+
+if lo_macro_dir != ''
+  install_data(
+    'libreoffice/kakurasu_macro.py',
+    install_dir : lo_macro_dir
+  )
+endif

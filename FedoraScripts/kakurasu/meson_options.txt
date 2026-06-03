@@ -1,0 +1,6 @@
+option(
+  'libreoffice_python_dir',
+  type : 'string',
+  value : '',
+  description : 'LibreOffice Python macro directory'
+)
