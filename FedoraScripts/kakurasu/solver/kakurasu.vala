@@ -1,3 +1,21 @@
+/*
+ * Kakurasu Solver
+ * Copyright (C) 2026 Mattias Münster
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 using GLib;
 using Json;
 
@@ -10,9 +28,8 @@ public class KakurasuSolver : GLib.Object
     private int[] row_targets;
     private int[] col_targets;
 
-    private int[,] grid;
+    private int[] solution_masks;
 
-    private int[] row_sums;
     private int[] col_sums;
 
     private bool[] row_solved;
@@ -41,9 +58,8 @@ public class KakurasuSolver : GLib.Object
         row_targets = rows.copy();
         col_targets = cols.copy();
 
-        grid = new int[SIZE, SIZE];
+        solution_masks = new int[SIZE];
 
-        row_sums = new int[SIZE];
         col_sums = new int[SIZE];
 
         row_solved = new bool[SIZE];
@@ -72,7 +88,7 @@ public class KakurasuSolver : GLib.Object
 
             for (int bit = 0; bit < SIZE; bit++)
             {
-                if ((mask & (1 << bit)) != 0)
+                if ((mask & bit_values[bit]) != 0)
                     sum += bit + 1;
             }
 
@@ -118,7 +134,7 @@ public class KakurasuSolver : GLib.Object
                     int mask = domains[row, i];
 
                     bool present =
-                        (mask & (1 << col)) != 0;
+                        (mask & bit_values[col]) != 0;
 
                     if (present)
                         possible = true;
@@ -135,6 +151,23 @@ public class KakurasuSolver : GLib.Object
         }
     }
 
+    private int active_domain_size(int row)
+    {
+        int count = 0;
+
+        for (int i = 0; i < domain_size[row]; i++)
+        {
+            if (mask_still_possible(
+                    row,
+                    domains[row,i]))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     private int choose_row()
     {
         int best_row = -1;
@@ -144,7 +177,7 @@ public class KakurasuSolver : GLib.Object
         {
             if (!row_solved[row])
             {
-                int size = domain_size[row];
+                int size = active_domain_size(row);
 
                 if (size < best_size)
                 {
@@ -157,31 +190,52 @@ public class KakurasuSolver : GLib.Object
         return best_row;
     }
 
+    private bool mask_still_possible(int row, int mask)
+    {
+        int row_value = row_values[row];
+    
+        for (int col = 0; col < SIZE; col++)
+        {
+            int target = col_targets[col];
+
+            if (target == WILDCARD)
+                continue;
+
+            bool present =
+                (mask & bit_values[col]) != 0;
+
+            int future =
+                col_sums[col] +
+                (present ? row_value : 0);
+
+            if (future > target)
+                return false;
+        }
+
+        return true;
+    }
+
     private void apply_row(int row, int mask)
     {
+        int row_value = row_values[row];
+        solution_masks[row] = mask;
+
         for (int bit = 0; bit < SIZE; bit++)
         {
-            if ((mask & (1 << bit)) != 0)
-            {
-                grid[row, bit] = 1;
-
-                row_sums[row] += bit + 1;
-                col_sums[bit] += row + 1;
-            }
+            if ((mask & bit_values[bit]) != 0)
+                col_sums[bit] += row_value;
         }
     }
 
     private void remove_row(int row, int mask)
     {
+        int row_value = row_values[row];
+        solution_masks[row] = 0;
+
         for (int bit = 0; bit < SIZE; bit++)
         {
-            if ((mask & (1 << bit)) != 0)
-            {
-                grid[row, bit] = 0;
-
-                row_sums[row] -= bit + 1;
-                col_sums[bit] -= row + 1;
-            }
+            if ((mask & bit_values[bit]) != 0)
+                col_sums[bit] -= row_value;
         }
     }
 
@@ -221,13 +275,13 @@ public class KakurasuSolver : GLib.Object
                 if (row_solved[row])
                     continue;
 
-                int value = row_values[row];
+                int val = row_values[row];
 
                 if (row_col_possible[row,col])
-                    max_possible += value;
+                    max_possible += val;
 
                 if (row_col_mandatory[row,col])
-                    min_possible += value;
+                    min_possible += val;
             }
 
             if (target < min_possible)
@@ -242,17 +296,6 @@ public class KakurasuSolver : GLib.Object
 
     private bool final_validation()
     {
-        for (int r = 0; r < SIZE; r++)
-        {
-            int target = row_targets[r];
-
-            if (target == WILDCARD)
-                continue;
-
-            if (row_sums[r] != target)
-                return false;
-        }
-
         for (int c = 0; c < SIZE; c++)
         {
             int target = col_targets[c];
@@ -282,6 +325,12 @@ public class KakurasuSolver : GLib.Object
         {
             int mask = domains[row, i];
 
+            if (!mask_still_possible(row, mask))
+            {
+                backtracks++;
+                continue;
+            }
+
             apply_row(row, mask);
 
             row_solved[row] = true;
@@ -308,26 +357,29 @@ public class KakurasuSolver : GLib.Object
 
         for (int r = 0; r < SIZE; r++)
         {
+            int mask = solution_masks[r];
+
             for (int c = 0; c < SIZE; c++)
             {
+                bool filled =
+                    (mask & bit_values[c]) != 0;
+
                 stdout.printf(
                     "%s ",
-                    grid[r,c] == 1 ? "■" : "·"
+                    filled ? "■" : "·"
                 );
             }
 
             stdout.printf("\n");
         }
 
-        double elapsed = elapsed_time();
-
         stdout.printf("\n");
         stdout.printf("Rekursioner: %" + uint64.FORMAT + "\n",
                       recursions);
         stdout.printf("Backtracks: %" + uint64.FORMAT + "\n",
                       backtracks);
-        stdout.printf("Tid: %.4f s\n",
-                      elapsed);
+        stdout.printf("Tid: %.6f s\n",
+                      elapsed_time());
     }
 
     public void print_json()
@@ -339,11 +391,18 @@ public class KakurasuSolver : GLib.Object
 
         for (int r = 0; r < SIZE; r++)
         {
+            int mask = solution_masks[r];
+            
             stdout.printf("[");
 
             for (int c = 0; c < SIZE; c++)
             {
-                stdout.printf("%d", grid[r,c]);
+                int val =
+                    (mask & bit_values[c]) != 0
+                    ? 1
+                    : 0;
+
+                stdout.printf("%d", val);
 
                 if (c < SIZE - 1)
                     stdout.printf(",");
@@ -368,7 +427,7 @@ public class KakurasuSolver : GLib.Object
 
         stdout.printf("}\n");
     }
-    
+
     public double elapsed_time()
     {
         return ((double)
@@ -392,7 +451,19 @@ public static int main()
 
     var parser = new Json.Parser();
 
-    parser.load_from_data(json_text);
+    try
+    {
+        parser.load_from_data(json_text);
+    }
+    catch (Error e)
+    {
+        stderr.printf(
+            "{\"ok\":false,\"error\":\"%s\"}\n",
+            e.message
+        );
+
+        return 1;
+    }
 
     var root = parser.get_root();
 
