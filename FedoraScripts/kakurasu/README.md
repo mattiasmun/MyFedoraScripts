@@ -1,3 +1,5 @@
+License: GPL-3.0-or-later
+
 # Kakurasu Solver
 
 En snabb Kakurasu-lösare skriven i Vala med stöd för integration i LibreOffice Calc.
@@ -7,9 +9,11 @@ Programmet löser 9×9 Kakurasu-pussel och kan användas både från kommandorad
 ## Funktioner
 
 * Snabb backtracking-baserad lösare
-* MRV (Minimum Remaining Values)
-* Förberäknade domäner
+* Dynamisk MRV (Minimum Remaining Values)
+* Forward checking
+* Förberäknade kandidatdomäner
 * Aggressiv kolumnpruning
+* Bitmaskbaserad representation
 * Statistik över:
 
   * Rekursioner
@@ -17,6 +21,21 @@ Programmet löser 9×9 Kakurasu-pussel och kan användas både från kommandorad
   * Körtid
 * JSON-baserat gränssnitt
 * LibreOffice Calc-integration
+
+## Algoritm
+
+Lösaren modellerar varje rad som en bitmask där varje bit representerar en kolumn.
+
+För varje rad genereras alla giltiga kandidatmasker vars summa matchar radmålet. Under sökningen används:
+
+* Dynamisk MRV (Minimum Remaining Values)
+* Forward checking
+* Kolumnbaserad pruning
+* Bitmaskoptimeringar
+
+för att minimera antalet rekursioner och backtracks.
+
+Den aktuella implementationen kan lösa de flesta 9×9-pussel på bråkdelar av en millisekund.
 
 ---
 
@@ -120,10 +139,10 @@ Svar:
 ```json
 {
   "ok": true,
-  "grid": [...],
-  "recursions": 123,
-  "backtracks": 45,
-  "time": 0.0012
+  "grid": [[0,1,0,...]],
+  "recursions": 255,
+  "backtracks": 5295,
+  "time": 0.000335
 }
 ```
 
@@ -150,6 +169,7 @@ solve_current_sheet
 ```
 
 Makrot läser ett 9×9 Kakurasu-pussel från det aktiva kalkylbladet.
+Makrot anropar den kompilerade Vala-solvern via JSON över standard input/output.
 
 ### Format
 
@@ -194,8 +214,10 @@ Dessutom visas:
 
 ```text
 .
+├── LICENSE
 ├── meson.build
 ├── meson_options.txt
+├── README.md
 ├── solver/
 │   └── kakurasu.vala
 └── libreoffice/
@@ -206,5 +228,9 @@ Dessutom visas:
 
 ## Licens
 
-Fri att använda, modifiera och distribuera.
+Detta projekt är licensierat under GNU General Public License v3.0 (GPLv3).
+
+Du får använda, studera, modifiera och distribuera programmet enligt villkoren i GPLv3.
+
+Se filen `LICENSE` för fullständig licenstext.
 
