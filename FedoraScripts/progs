@@ -589,6 +589,7 @@ jna.x86_64 \
 js-doxygen.noarch \
 json-c-devel.x86_64 \
 json-c.i686 \
+json-glib-devel.x86_64 \
 json-glib.i686 \
 jsoncpp.x86_64 \
 jwhois.x86_64 \
@@ -729,6 +730,7 @@ libgedit-amtk.x86_64 \
 libgedit-gfls.x86_64 \
 libgedit-gtksourceview.x86_64 \
 libgedit-tepl.x86_64 \
+libgee-devel.x86_64 \
 libgeotiff-devel.x86_64 \
 libgeotiff.x86_64 \
 libgfortran.x86_64 \
