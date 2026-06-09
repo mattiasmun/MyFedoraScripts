@@ -1742,8 +1742,8 @@ sssd-krb5.x86_64 \
 sssd-ldap.x86_64 \
 sssd-proxy.x86_64 \
 sssd.x86_64 \
+steam-arch-transition.noarch \
 steam-devices.noarch \
-steam.i686 \
 strace.x86_64 \
 subunit-devel.x86_64 \
 subunit.x86_64 \
