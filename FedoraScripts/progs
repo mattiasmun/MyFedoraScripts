@@ -1437,6 +1437,7 @@ python3-bcrypt.x86_64 \
 python3-boto.noarch \
 python3-breathe.noarch \
 python3-brotli.x86_64 \
+python3-build.noarch \
 python3-cachetools.noarch \
 python3-certifi.noarch \
 python3-chardet.noarch \
@@ -1450,6 +1451,7 @@ python3-deprecated.noarch \
 python3-deprecation.noarch \
 python3-devel.x86_64 \
 python3-docutils.noarch \
+python3-dogtail.noarch \
 python3-dropbox.noarch \
 python3-fasteners.noarch \
 python3-feedparser.noarch \
@@ -1473,6 +1475,7 @@ python3-img2pdf.noarch \
 python3-imgcreate.x86_64 \
 python3-iniconfig.noarch \
 python3-iniparse.noarch \
+python3-installer.noarch \
 python3-iso8601.noarch \
 python3-isodate.noarch \
 python3-jaraco-classes.noarch \
@@ -1945,6 +1948,7 @@ xorg-x11-fonts-Type1.noarch \
 xorg-x11-fonts-misc.noarch \
 xorg-x11-proto-devel.noarch \
 xorg-x11-server-Xorg.x86_64 \
+xorg-x11-server-Xvfb.x86_64 \
 xorg-x11-server-common.x86_64 \
 xorriso.x86_64 \
 xrandr.x86_64 \
