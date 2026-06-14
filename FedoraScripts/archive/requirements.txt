@@ -2,13 +2,17 @@ altgraph
 annotated-doc
 click
 curl_cffi
+cx_Freeze
 docx2pdf
 evdev
+filelock
 fire
+freeze-core
 git-filter-repo
 MouseInfo
 numpy
 opencv-python-headless
+patchelf
 pdf2docx
 pdfCropMargins
 pdfminer.six
