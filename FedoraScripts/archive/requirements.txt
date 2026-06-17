@@ -10,6 +10,7 @@ fire
 freeze-core
 git-filter-repo
 MouseInfo
+ninja
 numpy
 opencv-python-headless
 patchelf
