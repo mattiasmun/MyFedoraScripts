@@ -3,6 +3,7 @@ import argparse
 import os
 import pymupdf
 import re
+import shutil
 import subprocess
 import tempfile
 import time
@@ -11,8 +12,21 @@ from datetime import datetime
 from pathlib import Path
 from tqdm import tqdm
 
+# ——— Nyckelord ———
+def update_keywords(doc, *new_tags):
+    meta = doc.metadata or {}
+    tags = [
+        t.strip()
+        for t in re.split(r"[;,]", meta.get("keywords", ""))
+        if t.strip()
+    ]
+    for tag in new_tags:
+        if tag and tag not in tags:
+            tags.append(tag)
+    return ", ".join(tags)
 
-# ⎯⎯ OCR ⎯⎯
+
+# ——— OCR ———
 def run_ocr(input_path, output_path, retries=2):
     command = [
         "ocrmypdf",
@@ -26,18 +40,17 @@ def run_ocr(input_path, output_path, retries=2):
         str(input_path),
         str(output_path)
     ]
-
     for i in range(retries + 1):
         try:
             subprocess.run(command, check=True, timeout=600, capture_output=True, text=True)
             return
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             if i == retries:
                 raise
             time.sleep(2 * (i + 1))
 
 
-# ⎯⎯ PDF/A info ⎯⎯
+# ——— PDF/A info ———
 def get_pdfa_info(doc):
     xml = doc.get_xml_metadata() or ""
     part = re.search(r"<pdfaid:part>(\d+)</pdfaid:part>", xml)
@@ -45,11 +58,9 @@ def get_pdfa_info(doc):
     return (part.group(1) if part else "3", conf.group(1) if conf else "B")
 
 
-# ⎯⎯ XMP ⎯⎯
-def generate_xmp(keywords, pdf_date, creator, producer, part, conf, title, subject):
-    clean = pdf_date.replace("D:", "").replace("'", "")
-    iso = f"{clean[0:4]}-{clean[4:6]}-{clean[6:8]}T{clean[8:10]}:{clean[10:12]}:{clean[12:14]}+01:00"
-
+# ——— XMP Generering (Robust med datetime) ———
+def generate_xmp_from_dt(keywords, dt, creator, producer, part, conf, title, subject):
+    iso = dt.isoformat()
     xmp = f"""<?xpacket begin="﻿"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -67,74 +78,129 @@ def generate_xmp(keywords, pdf_date, creator, producer, part, conf, title, subje
       <xmp:MetadataDate>{iso}</xmp:MetadataDate>
       <xmp:CreatorTool>{creator}</xmp:CreatorTool>
       <dc:format>application/pdf</dc:format>
+      <dc:title><rdf:Alt><rdf:li xml:lang="x-default">{title}</rdf:li></rdf:Alt></dc:title>
+      <dc:description><rdf:Alt><rdf:li xml:lang="x-default">{subject}</rdf:li></rdf:Alt></dc:description>
     </rdf:Description>
   </rdf:RDF>
 </x:xmpmeta>"""
     return xmp + "\n" + (" " * 2048) + "\n<?xpacket end=\"w\"?>"
 
 
-# ⎯⎯ Worker ⎯⎯
+# ——— Worker ———
 def process_file(args):
     pdf_path, output_path = args
-
-    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
-        temp_path = Path(tmp.name)
-
-    tmp.close()
+    temp_files = []
 
     try:
+        # 1. Kontrollera om bearbetning behövs
         with pymupdf.open(pdf_path) as doc:
-            opts = pymupdf.mupdf.PdfImageRewriterOptions()
-
-            for opt in ["color_lossy", "gray_lossy", "color_lossless", "gray_lossless"]:
-                setattr(opts, f"{opt}_image_recompress_method", 3)
-                setattr(opts, f"{opt}_image_recompress_quality", "75")
-                setattr(opts, f"{opt}_image_subsample_method", 1)
-                setattr(opts, f"{opt}_image_subsample_threshold", 330)
-                setattr(opts, f"{opt}_image_subsample_to", 300)
-
-            doc.rewrite_images(options=opts)
-
-            now = datetime.now()
-            pdf_date = now.strftime("D:%Y%m%d%H%M%S+01'00'")
             meta = doc.metadata or {}
+            the_keywords = meta.get("keywords", "")
+            tags = {t.strip() for t in re.split(r"[;,]", the_keywords) if t.strip()}
+            
+            optimized = "OptimizedByPython" in tags
+            ocr_done = "OCRByPython" in tags
 
-            title = meta.get("title") or "null"
-            subject = meta.get("subject") or "null"
+            if optimized and ocr_done:
+                if pdf_path != output_path:
+                    output_path.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(pdf_path, output_path)
+                return (True, None)
 
-            doc.set_metadata({
-                "creationDate": pdf_date,
+        # Skapa en bas-tempfil för transformationerna
+        current_input = pdf_path
+
+        # 2. Bildoptimering (om det behövs)
+        if not optimized:
+            fd, tmp_opt = tempfile.mkstemp(suffix="_opt.pdf")
+            os.close(fd)
+            temp_files.append(Path(tmp_opt))
+
+            with pymupdf.open(current_input) as doc:
+                opts = pymupdf.mupdf.PdfImageRewriterOptions()
+                for opt in ["color_lossy", "gray_lossy", "color_lossless", "gray_lossless"]:
+                    setattr(opts, f"{opt}_image_recompress_method", 3)
+                    setattr(opts, f"{opt}_image_recompress_quality", "75")
+                    setattr(opts, f"{opt}_image_subsample_method", 1)
+                    setattr(opts, f"{opt}_image_subsample_threshold", 330)
+                    setattr(opts, f"{opt}_image_subsample_to", 300)
+
+                doc.rewrite_images(options=opts)
+                doc.save(tmp_opt, garbage=4, deflate=True, deflate_images=True)
+
+            current_input = Path(tmp_opt)
+            optimized = True
+
+        # 3. OCR (om det behövs)
+        if not ocr_done:
+            fd, tmp_ocr = tempfile.mkstemp(suffix="_ocr.pdf")
+            os.close(fd)
+            temp_files.append(Path(tmp_ocr))
+
+            run_ocr(current_input, tmp_ocr)
+            current_input = Path(tmp_ocr)
+            ocr_done = True
+
+        # 4. Slutgiltig Metadata- och XMP-skrivning
+        fd, tmp_final = tempfile.mkstemp(suffix="_final.pdf")
+        os.close(fd)
+        temp_files.append(Path(tmp_final))
+
+        with pymupdf.open(current_input) as doc:
+            the_keywords = update_keywords(
+                doc,
+                "OptimizedByPython" if optimized else None,
+                "OCRByPython" if ocr_done else None,
+            )
+
+            now = datetime.now().astimezone()
+            offset = now.strftime("%z")
+            pdf_date = f"D:{now:%Y%m%d%H%M%S}{offset[:3]}'{offset[3:]}'"
+            
+            meta = doc.metadata or {}
+            creation_date = meta.get("creationDate") or pdf_date
+            creator = meta.get("creator") or "Python"
+            producer = meta.get("producer") or "OCRmyPDF"
+            title = meta.get("title") or ""
+            subject = meta.get("subject") or ""
+
+            meta.update({
+                "creationDate": creation_date,
                 "modDate": pdf_date,
-                "keywords": "OptimizedByPython",
-                "creator": "Python",
-                "producer": "PyMuPDF",
+                "keywords": the_keywords,
+                "creator": creator,
+                "producer": producer,
                 "title": title,
-                "subject": subject,
+                "subject": subject
             })
+            doc.set_metadata(meta)
 
             part, conf = get_pdfa_info(doc)
-            xmp = generate_xmp("OptimizedByPython", pdf_date, "Python", "PyMuPDF",
-                               part, conf, title, subject)
+            xmp = generate_xmp_from_dt(the_keywords, now, "Python", "PyMuPDF", part, conf, title, subject)
             doc.set_xml_metadata(xmp)
 
-            doc.save(temp_path, garbage=4, deflate=True, deflate_images=True)
+            doc.save(tmp_final, garbage=4, deflate=True, deflate_images=True)
 
+        # Flytta färdig fil till destinationen
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        run_ocr(temp_path, output_path)
+        shutil.copy2(tmp_final, output_path)
         return (True, None)
 
     except subprocess.CalledProcessError as e:
         return (False, f"{pdf_path.name}: {e.stderr or str(e)}")
-
     except Exception as e:
         return (False, f"{pdf_path.name}: {str(e)}")
-
     finally:
-        if temp_path.exists():
-            temp_path.unlink()
+        # Städa upp ALLA temporära filer som skapades under körningen
+        for f in temp_files:
+            try:
+                if f.exists():
+                    f.unlink()
+            except Exception:
+                pass
 
 
-# ⎯⎯ MAIN ⎯⎯
+# ——— MAIN ———
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input_dir")
@@ -158,10 +224,12 @@ def main():
     print(f"Hittade {len(files)} filer")
 
     start = time.time()
-
     total_before = sum(f.stat().st_size for f in files)
 
-    tasks = [(f, output_dir / f.name) for f in files]
+    tasks = [
+        (f, output_dir / f.relative_to(input_dir))
+        for f in files
+    ]
 
     success = 0
     fail = 0
@@ -182,13 +250,13 @@ def main():
 
     total_after = sum(
         p.stat().st_size
-        for p in map(lambda f: output_dir / f.name, files)
+        for p in (output_dir / f.relative_to(input_dir) for f in files)
         if p.exists()
     )
 
     elapsed = time.time() - start
 
-    print("\n⎯" * 25)
+    print("\n—" * 25)
     print(f"KLAR på {int(elapsed)}s")
     print(f"Status: {success}/{len(files)} lyckade")
     print(f"Misslyckade: {fail}")
@@ -197,11 +265,10 @@ def main():
         error_log = output_dir / "failed_files.txt"
         with open(error_log, "w", encoding="utf-8") as f:
             f.write("\n".join(failed_files))
-
         print(f"\nFel loggade i: {error_log}")
 
     print(f"Sparat: {(total_before - total_after)/1024/1024:.2f} MB")
-    print("⎯" * 25)
+    print("—" * 25)
 
 
 if __name__ == "__main__":
