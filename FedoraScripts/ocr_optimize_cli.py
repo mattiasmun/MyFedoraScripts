@@ -98,8 +98,8 @@ def process_file(args):
             the_keywords = meta.get("keywords", "")
             tags = {t.strip() for t in re.split(r"[;,]", the_keywords) if t.strip()}
             
-            optimized = "OptimizedByPython" in tags
-            ocr_done = "OCRByPython" in tags
+            optimized = "OptimizedByPythonScript" in tags
+            ocr_done = "OCRByPythonScript" in tags
 
             if optimized and ocr_done:
                 if pdf_path != output_path:
@@ -149,8 +149,8 @@ def process_file(args):
         with pymupdf.open(current_input) as doc:
             the_keywords = update_keywords(
                 doc,
-                "OptimizedByPython" if optimized else None,
-                "OCRByPython" if ocr_done else None,
+                "OptimizedByPythonScript" if optimized else None,
+                "OCRByPythonScript" if ocr_done else None,
             )
 
             now = datetime.now().astimezone()
