@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 PDF/A Archive Pipeline
-Version: 1.0.0-archive
+Version: 1.1.0-archive
 
 Funktioner:
 - PDF/A-2B som standard
@@ -12,7 +12,7 @@ Funktioner:
 - veraPDF-validering
 - SHA-256 fixitet
 - Manifest (JSON) + CSV-rapport
-- Batch-hantering
+- Batch-hantering med bibehållen mappstruktur
 - Timeout-skydd
 - Säker temporärfilshantering
 
@@ -37,7 +37,7 @@ from datetime import datetime
 # VERSION
 # ============================================================
 
-PIPELINE_VERSION = "1.0.0-archive"
+PIPELINE_VERSION = "1.1.0-archive"
 GHOSTSCRIPT_TIMEOUT = 300
 VERAPDF_TIMEOUT = 180
 
@@ -432,10 +432,9 @@ def validate_pdfa(file_path: Path, level: int) -> bool:
 # ============================================================
 
 def process_file_with_level(input_pdf: Path,
-                            pdfa_dir: Path,
+                            output_pdf: Path,
                             xml_attachment: Path = None) -> tuple[bool, int, str, str]:
 
-    output_pdf = pdfa_dir / input_pdf.name
     level = 3 if xml_attachment else 2
     pdfa_def_hash = ""
 
@@ -487,14 +486,14 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         logging.error("Indata och utdata får inte vara samma.")
         return 1
 
-    pdfa_dir = output_root / "pdfa"
-    rejected_dir = output_root / "rejected"
+    pdfa_root = output_root / "pdfa"
+    rejected_root = output_root / "rejected"
     report_file = output_root / "report.csv"
     manifest_file = output_root / "manifest.json"
     manifest_entries = []
 
-    pdfa_dir.mkdir(parents=True, exist_ok=True)
-    rejected_dir.mkdir(parents=True, exist_ok=True)
+    pdfa_root.mkdir(parents=True, exist_ok=True)
+    rejected_root.mkdir(parents=True, exist_ok=True)
 
     pdf_files = list(input_dir.rglob("*.pdf"))
     if not pdf_files:
@@ -506,6 +505,15 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
     fail = 0
 
     for pdf in pdf_files:
+        # Räkna ut relativ sökväg från indatamappen för att behålla strukturen
+        relative_path = pdf.relative_to(input_dir)
+        
+        # Bestäm målmappar baserat på den relativa strukturen
+        current_pdfa_dir = pdfa_root / relative_path.parent
+        current_rejected_dir = rejected_root / relative_path.parent
+        
+        # Säkerställ att undermapparna existerar
+        current_pdfa_dir.mkdir(parents=True, exist_ok=True)
 
         xml_candidate = pdf.with_suffix(".xml")
         if xml_candidate.exists() and xml_candidate.stat().st_size > 0:
@@ -516,27 +524,26 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         original_hash = sha256_file(pdf)
         xml_hash = sha256_file(xml_attachment) if xml_attachment else ""
 
-        ok, level, method, pdfa_def_hash = process_file_with_level(pdf, pdfa_dir, xml_attachment)
+        target_pdf = current_pdfa_dir / pdf.name
+        ok, level, method, pdfa_def_hash = process_file_with_level(pdf, target_pdf, xml_attachment)
         pdfa_level_str = f"{level}B"
-
-        current_location = pdfa_dir / pdf.name
 
         if ok:
             success += 1
             status = "PASS"
-            final_location = current_location
-
+            final_location = target_pdf
         else:
             fail += 1
             status = "FAIL"
-            final_location = rejected_dir / pdf.name
 
-        # Flytta till rejected om den finns
-        # Flytta endast om filen är underkänd
-        if not ok and current_location.exists():
-            if final_location.exists():
-                final_location.unlink()
-            shutil.move(current_location, final_location)
+            # Skapa undermappen i rejected vid behov och flytta filen dit
+            current_rejected_dir.mkdir(parents=True, exist_ok=True)
+            final_location = current_rejected_dir / pdf.name
+
+            if target_pdf.exists():
+                if final_location.exists():
+                    final_location.unlink()
+                shutil.move(str(target_pdf), str(final_location))
 
         # Räkna hash om filen faktiskt finns
         if final_location.exists():
@@ -544,8 +551,9 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         else:
             pdfa_hash = ""
 
+        # Vi loggar den relativa sökvägen i rapporterna för bättre spårbarhet
         report_rows.append([
-            pdf.name,
+            str(relative_path),
             status,
             original_hash,
             pdfa_hash,
@@ -555,7 +563,7 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         ])
 
         manifest_entries.append({
-            "filename": pdf.name,
+            "filename": str(relative_path),
             "status": status,
             "pdfa_level": pdfa_level_str,
             "conversion_method": method,
@@ -596,7 +604,6 @@ def process_directory(input_dir: Path, output_root: Path) -> int:
         json.dump(manifest_data, f, indent=2, ensure_ascii=False)
 
     logging.info(f"Manifest skapad: {manifest_file}")
-
     logging.info(f"GODKÄNDA: {success}")
     logging.info(f"UNDERKÄNDA: {fail}")
     logging.info(f"Rapport: {report_file}")
