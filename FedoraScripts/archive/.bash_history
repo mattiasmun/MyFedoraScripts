@@ -6,7 +6,7 @@ alternatives --list
 alternatives --list | grep jre_openjdk | awk '{print $3}'
 #1771167923
 arithmetic --help
-#1779134320
+#1782932062
 arithmetic -o - -r 2000
 #1771167923
 auto_clicker_gui
@@ -14,9 +14,13 @@ auto_clicker_gui
 bc -lq
 #1771167923
 bg
+#1783089908
+binairo.py --solve Dokument/Anteckningar 
+#1783021988
+binairo.py --verify Dokument/Anteckningar 
 #1771167923
 btop
-#1779477233
+#1783262086
 c
 #1771167923
 cat "$HOME/.git-credentials"
@@ -34,7 +38,7 @@ cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scen
 cat /sys/class/dmi/id/bios_date
 #1778345159
 cat /sys/class/dmi/id/bios_version
-#1779142594
+#1783213049
 cd
 #1778798388
 cd "$HOME/.local/share/Steam/steamapps/common/Farthest Frontier/Farthest Frontier (Mono)/"
@@ -70,7 +74,7 @@ conditional_7z_backup.sh
 conditional_7z_backup.sh "$HOME/Men of War II/packages/Unit_booster"
 #1771167923
 cp requirements.txt $HOME/Bash/MyFedoraScripts/FedoraScripts/archive/requirements.txt
-#1779399814
+#1783213078
 d
 #1771167923
 d $(tu 21:00:00)
@@ -90,11 +94,11 @@ dnf check
 dnf check-upgrade
 #1771167923
 dnf group list
-#1778340532
+#1783094620
 dnf history info last
 #1771167923
 dnf history list
-#1771167923
+#1780592388
 dnf history list | more
 #1771167923
 dnf list installed | grep @
@@ -122,7 +126,7 @@ dnf repoquery --whatrequires texlive-context
 dnf search pikepdf
 #1777392159
 dnfsysupgr
-#1779305711
+#1783212959
 dnfusrins
 #1771167923
 doc_converter.py --help
@@ -136,6 +140,8 @@ dos2unix replace_content.py
 dotool --help
 #1771167923
 dotool --list-keys
+#1780417083
+dotool --version
 #1771167923
 dotoold &
 #1772891694
@@ -146,11 +152,11 @@ du $temp_file
 du --help
 #1771167923
 du -c
-#1772891728
+#1781449330
 du -h
 #1771167923
 du car
-#1771167923
+#1781537749
 echo $((1+2))
 #1771167923
 echo $DISPLAY
@@ -158,25 +164,31 @@ echo $DISPLAY
 echo $GS_LIB
 #1771170144
 echo $JAVA_HOME
-#1771170142
+#1781490154
 echo $PATH
+#1781467239
+echo $PWD
 #1771167923
 echo $SHELL
 #1771167923
 echo $temp_file
 #1778350623
 echo $USER
+#1781536030
+echo $WINEPATH 
 #1771167923
 echo $XDG_SESSION_TYPE
 #1771167923
 echo key k:26 k:39 k:40 | dotoolc
 #1771167923
 echo key leftmeta | dotoolc
-#1779207632
+#1780416821
 echo key shift+1 x:exclam shift+k:2 | dotoolc
-#1778350580
+#1781534244
 env
-#1774341160
+#1783015871
+env | grep HOME
+#1783015815
 env | grep PATH
 #1771167923
 ex --help
@@ -184,6 +196,18 @@ ex --help
 exiftool --help
 #1771167923
 exiftool screenshot.jpg
+#1781469393
+export GI_TYPELIB_PATH=$(pwd)/test-root/lib/girepository-1.0
+#1781534919
+export PATH=$PATH:'/usr/x86_64-w64-mingw32/sys-root/mingw/bin'
+#1781480972
+export PKG_CONFIG_LIBDIR=/usr/x86_64-w64-mingw32/sys-root/mingw/lib/pkgconfig:/usr/x86_64-w64-mingw32/sys-root/mingw/share/pkgconfig
+#1781480981
+export PKG_CONFIG_SYSROOT_DIR=/usr/x86_64-w64-mingw32/sys-root/mingw
+#1781534618
+export PYTHONPATH='Z:\home\mmunster\.wine\drive_c\users\mmunster\AppData\Roaming\Python\lib\python3.11\site-packages'
+#1781534291
+export WINEPATH='Z:\home\mmunster\.local\bin;Z:\usr\x86_64-w64-mingw32\sys-root\mingw\bin'
 #1772988781
 ffmpeg -i chapter.m4a -c:a aac -q:a 1.25 chapter_q1.25.m4a
 #1771167923
@@ -192,7 +216,7 @@ ffprobe --help
 ffprobe output.mp3
 #1771167923
 fg
-#1771167923
+#1782155435
 file *
 #1778320404
 file * | grep "CRLF"
@@ -202,7 +226,7 @@ file Bilder/PicTool.webp
 find . -name "*~"
 #1771167923
 find . -name "*~" -delete
-#1778945739
+#1782155114
 find . -type f -exec file {} + | grep "CRLF"
 #1778320653
 find . -type f -exec file {} + | grep "CRLF" | cut -d: -f1 | xargs dos2unix
@@ -214,21 +238,23 @@ find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do  
 find . -type f -name '*++*' -print0 | while IFS= read -r -d $'\0' old_path; do     new_path="${old_path//++/+}";          if [ "$old_path" != "$new_path" ]; then          mv -v -- "$old_path" "$new_path";     fi; done
 #1771167923
 find_and_sort_files .
-#1778800769
+#1782154723
 find_and_sort_files female
 #1771167923
 flatpak install veraPDF
-#1778329020
+#1780070456
 flatpak list
-#1771347008
+#1782314802
+flatpak run --command=verapdf org.verapdf.veraPDF --format text -r .
+#1782314774
 flatpak run --command=verapdf org.verapdf.veraPDF --format xml -r .
 #1771441348
 flatpak run --command=verapdf org.verapdf.veraPDF --format xml github-git-cheat-sheet.pdf
-#1772209913
+#1782314728
 flatpak run --command=verapdf org.verapdf.veraPDF --help
 #1771167923
 flatpak run com.valvesoftware.Steam steam://rungameid/1066780
-#1777475289
+#1782072282
 flatpak update -y
 #1771167923
 for file in "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/opel_blitz/opel_blitz_supp+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/opel_blitz_highback/opel_blitz_highback+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gmc/gmc_supp+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gmc_inf/gmc_inf+.def" "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gaz_aa_untented/gaz_aa_untented+.def"; do cp "$HOME/Men of War II/packages/Unit_booster/scene/entity/-vehicle/car/gaz_aa/gaz_aa_supp+.def" "$file"; done
@@ -238,23 +264,23 @@ for q in 1 1.5 2 2.5 3; do   ffmpeg -i chapter.m4a -ac 1 -c:a aac -q:a $q chapte
 fuck
 #1771167923
 fuck --help
-#1779213618
+#1781806533
 fwupdmgr get-updates
 #1778349202
 fwupdmgr update
-#1779140043
+#1781447211
 fzf
 #1771167923
 fzf --multi --cycle
-#1777905422
+#1780596172
 fzf-select-open.sh
 #1771167923
 gedit "$HOME/Men of War II/log/game.log"
 #1771167923
 git --help
-#1779305715
+#1783212965
 git -C ~/Bash/MyFedoraScripts status
-#1778320119
+#1780585296
 git add *
 #1771167923
 git clone https://git.sr.ht/~geb/dotool
@@ -272,7 +298,7 @@ git lfs install
 git lfs track "FedoraScripts/dist/*"
 #1772894272
 git pull
-#1772894293
+#1783015126
 git pull --rebase
 #1772412685
 git push
@@ -282,19 +308,19 @@ git push origin --force --all
 git reflog expire --expire=now --all
 #1771167923
 git rev-list --objects --all | grep "$(git for-each-ref --format='%(objectname) %(refname)' refs/heads | cut -d' ' -f1)" | git cat-file --batch-check='%(objecttype) %(objectsize) %(rest)' | sort -n -k2 | tail -10
-#1772992183
+#1783015120
 git status
 #1771167923
 gitcfg
-#1771167923
+#1780070428
 gitty ~/529340
-#1779142486
+#1783212951
 gitty ~/Bash/MyFedoraScripts
 #1771167923
 gnome-shell --version
 #1771167923
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
-#1778798412
+#1782154740
 grep -nirI "ammo"
 #1771167923
 groupadd -f input
@@ -306,7 +332,7 @@ gs
 gs --help
 #1771163079
 hgrep dnf
-#1777113156
+#1779724956
 htop
 #1779299088
 hwclock
@@ -326,11 +352,19 @@ java -version
 javac -version
 #1771167923
 javacfg
+#1780085878
+jbig2
+#1783015480
+jbig2 --version
+#1780085881
+jbig2 -V
 #1771170230
 jedit
 #1774988302
 jshell
-#1779142093
+#1780508383
+kakurasu.py
+#1781477651
 l
 #1771167923
 lame --help
@@ -352,28 +386,26 @@ lsblk
 lspci
 #1771173524
 magick identify -format "%Q" screenshot.webp
-#1771167923
+#1783213055
+mahjong.py 
+#1780067045
 make
-#1771167923
-man dotool
-#1771167923
-man fzf
-#1777904701
-man locate
-#1771167923
-man ocrmypdf
-#1771167923
-man wlrctl
 #1774451340
 meld "$HOME/.bash_history" "$HOME/.bash_history_cleaned" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history" &
 #1771167923
 meld "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/easy.inc" "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scene/set/difficulty/novice.inc" &
 #1771167923
-meld "$HOME/Dokument/IDLE_py.py" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/IDLE_py.py" &
-#1771167923
 meld &
 #1771167923
 meld * &
+#1780085222
+meson --help
+#1780584043
+meson compile -C build
+#1783015403
+meson install -C build
+#1780068660
+meson setup build --prefix=$HOME/.local
 #1771167923
 mkdir --help
 #1771167923
@@ -388,6 +420,16 @@ mplayer
 nautilus .
 #1771167923
 newton_raphson
+#1781481862
+ninja
+#1780085513
+ninja --help
+#1781488249
+ninja --version
+#1783015311
+ninja -C build
+#1780086031
+ninja -C build -n uninstall
 #1771167923
 node -v
 #1772985214
@@ -402,11 +444,13 @@ nslookup google.com 8.26.56.26
 numeric_derivative
 #1771167923
 nvidia-smi
-#1778344947
+#1781532384
 nvtop
-#1771167923
+#1781490680
+objdump -p ~/.local/bin/cmake.exe | grep 'DLL'
+#1779802748
 ocr_optimize_cli.py --help
-#1777111122
+#1779802795
 ocr_optimize_cli.py .
 #1772395396
 ocrmypdf   --redo-ocr   -l swe+eng   --optimize 1   --jobs 6 --output-type pdfa-2  MusikhäfteA5Onumrerad.pdf   MusikhäfteA5Onumrerad_2.pdf
@@ -422,7 +466,7 @@ ocrmypdf --help
 ocrmypdf --list-plugins
 #1771167923
 optimize_to_bitonal.py --help
-#1771167923
+#1779802318
 optimize_to_bitonal.py .
 #1772386499
 pdf2image
@@ -432,6 +476,8 @@ pdf_optimizer.py --help
 pdf_optimizer.py -i .
 #1772231386
 pdfa_archive_pipeline.py Input/ Output/
+#1781440495
+pdfarranger 
 #1772386089
 pdfcropmargins
 #1779137943
@@ -440,7 +486,7 @@ pdfcropmargins --help
 pdffonts github-git-cheat-sheet.pdf
 #1772220870
 pdffonts output.pdf
-#1771343072
+#1779802809
 pdfimages -list arkiv_slutversion.pdf
 #1771441058
 pdfinfo --help
@@ -464,19 +510,21 @@ pidof firefox
 pidof flatpak
 #1776103311
 pidof thunderbird
-#1771167923
+#1781452676
+pip --help
+#1781487937
 pip list
-#1771622090
+#1781539424
 pip list --user
-#1779142125
+#1781718498
 pip list --user | tail -n +3 | awk '{print $1}' > $HOME/Bash/MyFedoraScripts/FedoraScripts/archive/requirements.txt
+#1781539363
+pip uninstall cmake
 #1771167923
-pip3 install pip-date pyautogui pynput rocketpdf tsp-solver2
-#1776103080
-pip3 list --user
-#1778338272
-pip3 list --user --outdated
-#1771167923
+pip install pip-date pyautogui pynput rocketpdf tsp-solver2
+#1782072247
+pip list --user --outdated
+#1781361371
 pip3update
 #1771167923
 pkill -sigkill Civ6
@@ -488,7 +536,7 @@ pkill -sigkill TransportFever2
 pkill firefox
 #1771167923
 pngquant --version
-#1771167923
+#1781361422
 py
 #1771167923
 pyenv
@@ -558,7 +606,7 @@ sudo -A dmidecode -t bios
 sudo -A dmidecode -t memory | grep -i speed
 #1771167923
 sudo -A dnf -y system-upgrade download --refresh --allowerasing --releasever=43 &
-#1778321215
+#1783088205
 sudo -A dnf autoremove
 #1771167923
 sudo -A dnf check
@@ -568,11 +616,11 @@ sudo -A dnf check-update --refresh
 sudo -A dnf clean all
 #1771167923
 sudo -A dnf system-upgrade reboot
-#1778594553
+#1780167801
 sudo -A dnf upgrade
 #1771167923
 sudo -A dnf upgrade --best --allowerasing
-#1771167923
+#1782835227
 sudo -A dnf-automatic
 #1771167923
 sudo -A gedit /etc/clamd.d/scan.conf &
@@ -580,8 +628,10 @@ sudo -A gedit /etc/clamd.d/scan.conf &
 sudo -A gedit /etc/dnf/automatic.conf &
 #1771167923
 sudo -A gedit /etc/freshclam.conf &
-#1772373391
+#1780067146
 sudo -A make install
+#1780068402
+sudo -A make uninstall
 #1771167923
 sudo -A meld /etc/dnf/automatic.conf /usr/share/dnf5/dnf5-plugins/automatic.conf
 #1771167923
@@ -592,13 +642,13 @@ sudo -A snap install powershell
 sudo -A systemctl reset-failed
 #1771167923
 sudo -A systemctl restart gdm
-#1776906497
+#1781546458
 sudo -A systemctl start plocate-updatedb.service
 #1771167923
 sudo -A systemctl status clamav-freshclam
 #1771167923
 sudo -A systemctl status clamd@scan.service
-#1771167923
+#1780596254
 sudo -A updatedb
 #1771167923
 systemctl --user daemon-reload
@@ -628,19 +678,19 @@ systemctl status dnf5-automatic.service
 systemctl status dnf5-automatic.timer
 #1777902698
 systemctl status plocate-updatedb.service
-#1778789135
+#1780067588
 systemctl status plocate-updatedb.timer
-#1778325037
+#1782307764
 temp_file=$(mktemp); ls $temp_file
 #1772395358
 tesseract --list-langs
-#1778351462
+#1780416503
 time find_and_sort_files .
 #1773756596
 time normalize_audio.py
 #1771167923
 uname -a
-#1779139305
+#1781531517
 uname -r
 #1771167923
 unique_lines
@@ -650,20 +700,30 @@ update-alternatives
 update-alternatives --list
 #1771167923
 users
+#1780515559
+valac --pkg json-glib-1.0 kakurasu.vala
+#1780506131
+valac --version
 #1779462620
 watch -n 1 stty size
-#1771708834
+#1781559846
 wc --help
 #1771167923
 wc -l "$HOME/Bash/MyFedoraScripts/FedoraScripts/progs"
-#1779299137
+#1783089112
 wc -l ~/.bash_history
-#1779299133
+#1783089115
 wc -l ~/.bash_history_cleaned
+#1781559878
+wc -w ~/.bash_history
+#1781559883
+wc -w ~/.bash_history_cleaned 
 #1771175501
 webp-convert.py
 #1771167923
 wev
+#1781440363
+whereis python
 #1772896215
 which
 #1772986790
@@ -672,11 +732,13 @@ which ffmpeg
 which gs
 #1776784602
 which java
-#1772373488
+#1780069191
 which jbig2
 #1772895280
 which jbig2topdf.py
-#1776784593
+#1781440384
+which python
+#1782314723
 which verapdf
 #1771167923
 who
@@ -690,14 +752,6 @@ who -u
 whoami
 #1777476417
 winetricks
-#1771167923
-wlrctl --help
-#1771167923
-wlrctl keyboard type "Hello, world!"
-#1771167923
-wlrctl pointer move 50 -70
-#1771167923
-wlrctl window focus firefox
 #1771167923
 wmctrl -xl
 #1771167923
@@ -722,7 +776,7 @@ yt-dlp -I 36: https://www.youtube.com/playlist?list=PLsT4scrqjQbShXj30-vVYXwqUzA
 yt-dlp -v
 #1771167923
 z --help
-#1779140030
+#1783213046
 z Fe
 #1771167923
 zoxide --help
