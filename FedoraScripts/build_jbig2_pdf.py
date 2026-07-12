@@ -1,5 +1,5 @@
-#!/usr/bin/env encoding=utf-8
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import sys
 import shutil
@@ -24,8 +24,8 @@ if not pbms:
 def get_pbm_dimensions(pbm_path: Path) -> tuple[float, float]:
     """Läser PBM-headern på ett robust sätt oavsett radbrytningar och kommentarer."""
     with open(pbm_path, "rb") as f:
-        # Läs de första 200 bytesen (mer än väl för att täcka headern)
-        chunk = f.read(200)
+        # Ökat till 2048 bytes för att vara 100% säker mot långa kommentarer i headern
+        chunk = f.read(2048)
 
         # Ta bort eventuella kommentarer som börjar med # och sträcker sig till radslut
         chunk_clean = re.sub(b"#.*?\n", b"\n", chunk)
