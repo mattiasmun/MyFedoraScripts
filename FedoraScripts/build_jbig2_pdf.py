@@ -22,26 +22,30 @@ if not pbms:
     sys.exit(1)
 
 def get_pbm_dimensions(pbm_path: Path) -> tuple[float, float]:
-    """Läser PBM-headern för att få exakta pixelmått och konverterar till punkter (pt)."""
+    """Läser PBM-headern på ett robust sätt oavsett radbrytningar och kommentarer."""
     with open(pbm_path, "rb") as f:
-        # PBM-filer startar med P4, sen eventuella kommentarer, sen "bredd höjd"
-        header = f.readline().decode('ascii', errors='ignore').strip()
-        if header != "P4":
-            raise ValueError("Inte en giltig P4 PBM-fil")
+        # Läs de första 200 bytesen (mer än väl för att täcka headern)
+        chunk = f.read(200)
 
-        while True:
-            line = f.readline().decode('ascii', errors='ignore').strip()
-            if line.startswith("#"):
-                continue
-            match = re.match(r"^(\d+)\s+(\d+)$", line)
-            if match:
-                pixels_w = int(match.group(1))
-                pixels_h = int(match.group(2))
-                # Konvertera pixlar till PostScript points (1 tum = 72 points)
-                pt_w = (pixels_w / DPI) * 72.0
-                pt_h = (pixels_h / DPI) * 72.0
-                return pt_w, pt_h
-            raise ValueError("Kunde inte tolka dimensioner i PBM")
+        # Ta bort eventuella kommentarer som börjar med # och sträcker sig till radslut
+        chunk_clean = re.sub(b"#.*?\n", b"\n", chunk)
+
+        # Dela upp headern i tokens baserat på whitespace
+        tokens = chunk_clean.split()
+
+        if not tokens or tokens[0] != b"P4":
+            raise ValueError(f"Inte en giltig P4 PBM-fil: {pbm_path.name}")
+
+        if len(tokens) < 3:
+            raise ValueError(f"Kunde inte hitta dimensioner i headern för {pbm_path.name}")
+
+        pixels_w = int(tokens[1])
+        pixels_h = int(tokens[2])
+
+        # Konvertera pixlar till PostScript points (1 tum = 72 points)
+        pt_w = (pixels_w / DPI) * 72.0
+        pt_h = (pixels_h / DPI) * 72.0
+        return pt_w, pt_h
 
 # ==========================================================
 # 1️⃣ Kör jbig2
