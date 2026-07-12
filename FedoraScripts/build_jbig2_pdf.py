@@ -4,17 +4,15 @@ import sys
 import subprocess
 from pathlib import Path
 import pikepdf
-from pikepdf import Name, Dictionary
 
-if len(sys.argv) != 3:
-    print("Usage: build_jbig2_pdf.py <pages_dir> <output_pdf>")
+if len(sys.argv) != 5:
+    print("Usage: build_jbig2_pdf.py <pages_dir> <output_pdf> <target_width> <target_height>")
     sys.exit(1)
 
 PAGES_DIR = Path(sys.argv[1])
 OUTPUT_PDF = sys.argv[2]
-
-TARGET_W = 420   # A5 width in points
-TARGET_H = 595   # A5 height in points
+TARGET_W = float(sys.argv[3])
+TARGET_H = float(sys.argv[4])
 
 pbms = sorted(PAGES_DIR.glob("*.pbm"))
 if not pbms:
@@ -46,7 +44,7 @@ if not sym_file.exists() or not all(p.exists() for p in page_files):
     sys.exit(1)
 
 # ==========================================================
-# 2️⃣ Bygg PDF via jbig2topdf.py (din stdout-variant)
+# 2️⃣ Bygg PDF via jbig2topdf.py
 # ==========================================================
 
 raw_pdf_path = PAGES_DIR / "jbig2_raw.pdf"
@@ -76,7 +74,7 @@ if not raw_pdf_path.exists() or raw_pdf_path.stat().st_size == 0:
     sys.exit(1)
 
 # ==========================================================
-# 3️⃣ Skala korrekt till A5 (robust metod)
+# 3️⃣ Skala korrekt till dynamisk storlek
 # ==========================================================
 
 src_pdf = pikepdf.Pdf.open(raw_pdf_path)
@@ -91,6 +89,7 @@ for page in src_pdf.pages:
     scale_x = TARGET_W / src_w
     scale_y = TARGET_H / src_h
 
+    # Skapa ny blank sida med måtten från original-PDF:en
     new_page = out_pdf.add_blank_page(page_size=(TARGET_W, TARGET_H))
 
     # Kopiera hela Resources
