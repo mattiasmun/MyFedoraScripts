@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 def get_pdf_dimensions_and_dpi(pdf_path: Path) -> tuple[float, float, int]:
-    """Hämtar den första sidans storlek för att räkna ut en smart DPI-nivå."""
+    """Hämtar den första sidans storlek och räknar ut en hög bitonal DPI."""
     try:
         result = subprocess.run(
             ["pdfinfo", str(pdf_path)],
@@ -26,23 +26,24 @@ def get_pdf_dimensions_and_dpi(pdf_path: Path) -> tuple[float, float, int]:
             width = float(match.group(1))
             height = float(match.group(2))
 
-            # Smart DPI-beräkning baserat på sidans area
-            # A4 är ca 501 157 points² -> ger ~424 DPI
-            # A5 är ca 250 578 points² -> ger ~600 DPI
-            # A3 är ca 1 002 314 points² -> ger ~300 DPI
             area = width * height
             if area <= 0:
-                return 595.0, 842.0, 424
+                return 595.0, 842.0, 1200  # Fallback till 1200 DPI
 
-            calculated_dpi = round(424.264 * ((501157 / area) ** 0.5))
-            # Håll DPI inom rimliga gränser (minst 300, max 600)
-            dpi = max(300, min(600, calculated_dpi))
+            # Höjd upplösning anpassad för bitonal (1-bit) rendering.
+            # En standard A4 (ca 501 157 pt²) ger nu ~1200 DPI.
+            # Mindre sidor (A5) skalar upp mot ~1700 DPI, större (A3) landar runt ~850 DPI.
+            calculated_dpi = round(1200.0 * ((501157 / area) ** 0.5))
+
+            # Sätter ett tak på 1800 DPI för att inte spränga RAM-minnet vid extremt små format,
+            # och ett golv på 600 DPI för att garantera bitonal skärpa på stora ritningar.
+            dpi = max(600, min(1800, calculated_dpi))
 
             return width, height, dpi
     except Exception as e:
-        print(f"⚠️ Kunde inte läsa PDF-info ({e}), använder standard 424 DPI.")
+        print(f"⚠️ Kunde inte läsa PDF-info ({e}), använder standard 1200 DPI för säkerhets skull.")
 
-    return 595.0, 842.0, 424
+    return 595.0, 842.0, 1200
 
 
 def main() -> int:
