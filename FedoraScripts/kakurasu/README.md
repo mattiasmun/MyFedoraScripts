@@ -128,10 +128,7 @@ Programmet läser JSON från standard input.
 Exempel:
 
 ```bash
-echo '{
-  "rows":[17,18,16,12,24,23,8,15,22],
-  "cols":[16,26,20,11,26,24,17,8,7]
-}' | kakurasu
+echo '{"rows":[20,17,5,22,5,27,12,15,0],"cols":[-1,19,14,25,-1,18,18,-1,0]}' | kakurasu
 ```
 
 Svar:
@@ -180,16 +177,16 @@ Radsummor placeras i första kolumnen.
 Exempel:
 
 ```text
-     16 26 20 11 26 24 17 8 7
+     ? 19 14 25 ? 18 18 ? 0
+20
 17
-18
-16
-12
-24
-23
- 8
-15
+5
 22
+5
+27
+12
+15
+0
 ```
 
 Tomma värden eller `?` behandlas som okända mål.
