@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 def get_pdf_dimensions_and_dpi(pdf_path: Path) -> tuple[float, float, int]:
-    """Hämtar sidstorlek i points från pdfinfo och räknar ut en smart DPI."""
+    """Hämtar den första sidans storlek för att räkna ut en smart DPI-nivå."""
     try:
         result = subprocess.run(
             ["pdfinfo", str(pdf_path)],
@@ -25,24 +25,24 @@ def get_pdf_dimensions_and_dpi(pdf_path: Path) -> tuple[float, float, int]:
         if match:
             width = float(match.group(1))
             height = float(match.group(2))
-            
+
             # Smart DPI-beräkning baserat på sidans area
             # A4 är ca 501 157 points² -> ger ~424 DPI
             # A5 är ca 250 578 points² -> ger ~600 DPI
             # A3 är ca 1 002 314 points² -> ger ~300 DPI
             area = width * height
             if area <= 0:
-                return 595.0, 842.0, 424  # Fallback till A4-ish
-                
+                return 595.0, 842.0, 424
+
             calculated_dpi = round(424.264 * ((501157 / area) ** 0.5))
             # Håll DPI inom rimliga gränser (minst 300, max 600)
             dpi = max(300, min(600, calculated_dpi))
-            
+
             return width, height, dpi
     except Exception as e:
-        print(f"⚠️ Kunde inte läsa PDF-info ({e}), använder standard A4-mått och 400 DPI.")
-    
-    return 595.0, 842.0, 424  # Standard fallback (A4)
+        print(f"⚠️ Kunde inte läsa PDF-info ({e}), använder standard 424 DPI.")
+
+    return 595.0, 842.0, 424
 
 
 def main() -> int:
@@ -55,17 +55,15 @@ def main() -> int:
         print("Filen finns inte")
         return 1
 
-    # Hämta dynamiska mått och DPI
+    # Vi hämtar mått (för loggning och fallback) samt den smarta upplösningen
     width, height, dpi = get_pdf_dimensions_and_dpi(input_path)
-    print(f"📐 Detekterad storlek: {width}x{height} pt | 🧠 Smart upplösning: {dpi} DPI")
+    print(f"📐 Basstorlek: {width}x{height} pt | 🧠 Smart upplösning: {dpi} DPI")
 
     base_name = input_path.stem
     ramdisk = Path("/dev/shm")
 
     if ramdisk.is_dir():
-        workdir = Path(
-            tempfile.mkdtemp(prefix=f"{base_name}_WORK_", dir=str(ramdisk))
-        )
+        workdir = Path(tempfile.mkdtemp(prefix=f"{base_name}_WORK_", dir=str(ramdisk)))
         print(f"⚡ Använder RAM-disk: {workdir}")
     else:
         workdir = Path(tempfile.mkdtemp(prefix=f"{base_name}_WORK_"))
@@ -75,7 +73,9 @@ def main() -> int:
     pages_dir.mkdir(parents=True, exist_ok=True)
 
     try:
-        print(f"1️⃣ Renderar till 1-bit PBM ({width}x{height} pt, {dpi} dpi)…")
+        # Genom att ta bort -dFIXEDMEDIA tillåter vi Ghostscript att hantera
+        # varierande sidstorlekar och stående/liggande format helt automatiskt per sida!
+        print(f"1️⃣ Renderar till 1-bit PBM ({dpi} dpi, dynamisk sidstorlek)…")
         subprocess.run(
             [
                 "gs",
@@ -83,9 +83,6 @@ def main() -> int:
                 f"-r{dpi}",
                 "-dBATCH",
                 "-dNOPAUSE",
-                "-dFIXEDMEDIA",
-                f"-dDEVICEWIDTHPOINTS={width}",
-                f"-dDEVICEHEIGHTPOINTS={height}",
                 f"-sOutputFile={pages_dir / 'page_%04d.pbm'}",
                 str(input_path),
             ],
@@ -116,4 +113,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

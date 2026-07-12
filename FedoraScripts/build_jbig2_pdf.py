@@ -1,6 +1,8 @@
+#!/usr/bin/env encoding=utf-8
 #!/usr/bin/env python3
 
 import sys
+import shutil
 import subprocess
 from pathlib import Path
 import pikepdf
@@ -44,14 +46,17 @@ if not sym_file.exists() or not all(p.exists() for p in page_files):
     sys.exit(1)
 
 # ==========================================================
-# 2️⃣ Bygg PDF via jbig2topdf.py
+# 2️⃣ Bygg PDF via jbig2topdf.py (Smart sökning efter skriptet)
 # ==========================================================
 
 raw_pdf_path = PAGES_DIR / "jbig2_raw.pdf"
 
+# Leta efter jbig2topdf.py i PATH, annars fallback till den gamla sökvägen
+jbig2topdf_path = shutil.which("jbig2topdf.py") or "/usr/local/bin/jbig2topdf.py"
+
 cmd = [
-    "/usr/local/bin/jbig2topdf.py",
-    str(tmp_base)   # ENDAST basename
+    jbig2topdf_path,
+    str(tmp_base)
 ]
 
 print("Running:", " ".join(cmd))
@@ -81,17 +86,20 @@ src_pdf = pikepdf.Pdf.open(raw_pdf_path)
 out_pdf = pikepdf.Pdf.new()
 
 for page in src_pdf.pages:
-
     mediabox = page["/MediaBox"]
     src_w = float(mediabox[2]) - float(mediabox[0])
     src_h = float(mediabox[3]) - float(mediabox[1])
 
-    scale_x = TARGET_W / src_w
-    scale_y = TARGET_H / src_h
+    # Om Ghostscript spottade ut sidor med varierande dimensioner (t.ex landscape),
+    # ser vi till att vi skalar proportionellt mot den aktuella sidans mål.
+    # Om indata-PDF:en är helt enhetlig kommer TARGET_W/H stämma exakt.
+    current_target_w = TARGET_W if src_w <= src_h or TARGET_W > TARGET_H else TARGET_H
+    current_target_h = TARGET_H if src_w <= src_h or TARGET_W > TARGET_H else TARGET_W
 
-    # Skapa ny blank sida med måtten från original-PDF:en
-    new_page = out_pdf.add_blank_page(page_size=(TARGET_W, TARGET_H))
+    scale_x = current_target_w / src_w
+    scale_y = current_target_h / src_h
 
+    new_page = out_pdf.add_blank_page(page_size=(current_target_w, current_target_h))
     # Kopiera hela Resources
     new_page["/Resources"] = out_pdf.copy_foreign(page["/Resources"])
 
