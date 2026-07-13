@@ -11,7 +11,7 @@ import tempfile
 from pathlib import Path
 
 
-def get_pdf_dimensions_and_dpi(pdf_path: Path) -> int:
+def get_pdf_dpi(pdf_path: Path) -> int:
     """Hämtar den första sidans storlek och räknar ut en hög bitonal DPI."""
     try:
         result = subprocess.run(
@@ -27,14 +27,14 @@ def get_pdf_dimensions_and_dpi(pdf_path: Path) -> int:
 
             area = width * height
             if area <= 0:
-                return 1200
+                return 600
 
-            calculated_dpi = round(1200.0 * ((501157 / area) ** 0.5))
-            return max(600, min(1800, calculated_dpi))
+            calculated_dpi = round(600.0 * ((501157 / area) ** 0.5))
+            return max(400, min(900, calculated_dpi))
     except Exception as e:
-        print(f"⚠️ Kunde inte läsa PDF-info ({e}), använder standard 1200 DPI.")
+        print(f"⚠️ Kunde inte läsa PDF-info ({e}), använder standard 600 DPI.")
 
-    return 1200
+    return 600
 
 
 def main() -> int:
@@ -47,7 +47,7 @@ def main() -> int:
         print("Filen finns inte")
         return 1
 
-    dpi = get_pdf_dimensions_and_dpi(input_path)
+    dpi = get_pdf_dpi(input_path)
     print(f"🧠 Beräknad smart upplösning: {dpi} DPI (dynamisk per sida)")
 
     base_name = input_path.stem
