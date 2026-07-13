@@ -8,6 +8,8 @@ alternatives --list | grep jre_openjdk | awk '{print $3}'
 arithmetic --help
 #1782932062
 arithmetic -o - -r 2000
+#1783943294
+arithmetic -o - -r 4000
 #1771167923
 auto_clicker_gui
 #1771167923
@@ -20,7 +22,7 @@ binairo.py --solve Dokument/Anteckningar
 binairo.py --verify Dokument/Anteckningar
 #1771167923
 btop
-#1783262086
+#1783936663
 c
 #1771167923
 cat "$HOME/.git-credentials"
@@ -38,7 +40,7 @@ cat "$HOME/.local/share/Steam/steamapps/workshop/content/1128860/3360488425/scen
 cat /sys/class/dmi/id/bios_date
 #1778345159
 cat /sys/class/dmi/id/bios_version
-#1783213049
+#1783970582
 cd
 #1778798388
 cd "$HOME/.local/share/Steam/steamapps/common/Farthest Frontier/Farthest Frontier (Mono)/"
@@ -74,13 +76,13 @@ conditional_7z_backup.sh
 conditional_7z_backup.sh "$HOME/Men of War II/packages/Unit_booster"
 #1771167923
 cp requirements.txt $HOME/Bash/MyFedoraScripts/FedoraScripts/archive/requirements.txt
-#1783213078
+#1783891872
 d
 #1771167923
 d $(tu 21:00:00)
 #1771167923
 df
-#1771167923
+#1783626335
 df -h
 #1771167923
 dnf --help
@@ -126,7 +128,7 @@ dnf repoquery --whatrequires texlive-context
 dnf search pikepdf
 #1777392159
 dnfsysupgr
-#1783212959
+#1783869364
 dnfusrins
 #1771167923
 doc_converter.py --help
@@ -178,6 +180,8 @@ echo $USER
 echo $WINEPATH
 #1771167923
 echo $XDG_SESSION_TYPE
+#1783886534
+echo '{"rows":[20,17,5,22,5,27,12,15,0],"cols":[-1,19,14,25,-1,18,18,-1,0]}' | kakurasu
 #1771167923
 echo key k:26 k:39 k:40 | dotoolc
 #1771167923
@@ -264,7 +268,7 @@ for q in 1 1.5 2 2.5 3; do   ffmpeg -i chapter.m4a -ac 1 -c:a aac -q:a $q chapte
 fuck
 #1771167923
 fuck --help
-#1781806533
+#1783444019
 fwupdmgr get-updates
 #1778349202
 fwupdmgr update
@@ -278,7 +282,7 @@ fzf-select-open.sh
 gedit "$HOME/Men of War II/log/game.log"
 #1771167923
 git --help
-#1783212965
+#1783970581
 git -C ~/Bash/MyFedoraScripts status
 #1780585296
 git add *
@@ -298,7 +302,7 @@ git lfs install
 git lfs track "FedoraScripts/dist/*"
 #1772894272
 git pull
-#1783015126
+#1783875959
 git pull --rebase
 #1772412685
 git push
@@ -314,12 +318,14 @@ git status
 gitcfg
 #1780070428
 gitty ~/529340
-#1783212951
+#1783970522
 gitty ~/Bash/MyFedoraScripts
 #1771167923
 gnome-shell --version
 #1771167923
 grep -Ii -d skip dead_greek /usr/share/X11/locale/en_US.UTF-8/Compose
+#1783970526
+grep -nirI " $"
 #1782154740
 grep -nirI "ammo"
 #1771167923
@@ -390,6 +396,8 @@ magick identify -format "%Q" screenshot.webp
 mahjong.py
 #1780067045
 make
+#1783877134
+make_print_pdf.py github-git-cheat-sheet.pdf
 #1774451340
 meld "$HOME/.bash_history" "$HOME/.bash_history_cleaned" "$HOME/Bash/MyFedoraScripts/FedoraScripts/archive/.bash_history" &
 #1771167923
@@ -444,7 +452,7 @@ nslookup google.com 8.26.56.26
 numeric_derivative
 #1771167923
 nvidia-smi
-#1781532384
+#1783435194
 nvtop
 #1781490680
 objdump -p ~/.local/bin/cmake.exe | grep 'DLL'
@@ -486,7 +494,7 @@ pdfcropmargins --help
 pdffonts github-git-cheat-sheet.pdf
 #1772220870
 pdffonts output.pdf
-#1779802809
+#1783877254
 pdfimages -list arkiv_slutversion.pdf
 #1771441058
 pdfinfo --help
@@ -496,7 +504,7 @@ pdfinfo -box file-sample_1MB.pdf
 pdfinfo -isodates file-sample_1MB.pdf
 #1771447312
 pdfinfo -meta file-sample_1MB.pdf | more
-#1771440253
+#1783877201
 pdfinfo github-git-cheat-sheet.pdf
 #1771167923
 pgrep firefox
@@ -512,18 +520,18 @@ pidof flatpak
 pidof thunderbird
 #1781452676
 pip --help
+#1771167923
+pip install pip-date pyautogui pynput rocketpdf tsp-solver2
 #1781487937
 pip list
 #1781539424
 pip list --user
+#1782072247
+pip list --user --outdated
 #1781718498
 pip list --user | tail -n +3 | awk '{print $1}' > $HOME/Bash/MyFedoraScripts/FedoraScripts/archive/requirements.txt
 #1781539363
 pip uninstall cmake
-#1771167923
-pip install pip-date pyautogui pynput rocketpdf tsp-solver2
-#1782072247
-pip list --user --outdated
 #1781361371
 pip3update
 #1771167923
@@ -536,7 +544,7 @@ pkill -sigkill TransportFever2
 pkill firefox
 #1771167923
 pngquant --version
-#1781361422
+#1783871727
 py
 #1771167923
 pyenv
@@ -570,13 +578,15 @@ scale_pdf_margins.py
 scale_pdf_margins.py --help
 #1772392587
 scale_pdf_margins.py MusikhäfteA5Onumrerad.pdf MusikhäfteA5Onumrerad-2.pdf --mode pixels --value 3
+#1783970635
+sed -i 's/[[:space:]]*$//' .bash_history
 #1771167923
 setup-my-env.sh
 #1771167923
 sha256sum Hämtningar/Fedora-Workstation-Live-42-1.1.x86_64.iso
 #1772387992
 snap --help
-#1772387999
+#1783877038
 snap list
 #1771167923
 snap refresh --list
@@ -680,7 +690,7 @@ systemctl status dnf5-automatic.timer
 systemctl status plocate-updatedb.service
 #1780067588
 systemctl status plocate-updatedb.timer
-#1782307764
+#1783869876
 temp_file=$(mktemp); ls $temp_file
 #1772395358
 tesseract --list-langs
@@ -690,7 +700,7 @@ time find_and_sort_files .
 time normalize_audio.py
 #1771167923
 uname -a
-#1781531517
+#1783626405
 uname -r
 #1771167923
 unique_lines
@@ -776,7 +786,7 @@ yt-dlp -I 36: https://www.youtube.com/playlist?list=PLsT4scrqjQbShXj30-vVYXwqUzA
 yt-dlp -v
 #1771167923
 z --help
-#1783213046
+#1783970016
 z Fe
 #1771167923
 zoxide --help
