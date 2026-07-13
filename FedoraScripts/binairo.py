@@ -7,11 +7,11 @@ class Z3Solver:
         self.board = board_strings
         self.R = len(board_strings)
         self.C = len(board_strings[0])
-        
+
         # 1. Använd Bool istället för Int
         self.grid = [[Bool(f"r{r}c{c}") for c in range(self.C)] for r in range(self.R)]
         self.solver = Solver()
-        
+
         self._build_constraints()
         self._add_clues()
 
@@ -77,27 +77,27 @@ class Z3Solver:
 def verify_solution(board):
     R = len(board)
     C = len(board[0])
-    
+
     # Konvertera till int-matris
     grid = [[int(char) for char in row.strip()] for row in board]
-    
+
     # Kolla rader (balans och tre i rad)
     for r in range(R):
         if sum(grid[r]) != C / 2: return False, f"Obalans i rad {r+1}"
         for c in range(C - 2):
             if grid[r][c] == grid[r][c+1] == grid[r][c+2]: return False, f"Tre i rad i rad {r+1}"
-            
+
     # Kolla kolumner (balans och tre i rad)
     for c in range(C):
         col_sum = sum(grid[r][c] for r in range(R))
         if col_sum != R / 2: return False, f"Obalans i kolumn {c+1}"
         for r in range(R - 2):
             if grid[r][c] == grid[r+1][c] == grid[r+2][c]: return False, f"Tre i rad i kolumn {c+1}"
-            
+
     # Kolla unika rader/kolumner
     if len(set(tuple(row) for row in grid)) != R: return False, "Dubbletter av rader finns"
     if len(set(tuple(grid[r][c] for r in range(R)) for c in range(C))) != C: return False, "Dubbletter av kolumner finns"
-    
+
     return True, "Lösningen är helt korrekt!"
 
 # --- CLI-hantering ---

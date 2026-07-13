@@ -10,7 +10,7 @@ def clean_string(text, is_stem=True):
         'Å': 'AA', 'Ä': 'AE', 'Ö': 'OE',
         ' ': '_'
     }
-    
+
     for char, rep in replacements.items():
         text = text.replace(char, rep)
 
@@ -18,7 +18,7 @@ def clean_string(text, is_stem=True):
     if is_stem:
         # Tillåt endast a-z, 0-9, understreck och bindestreck i själva filnamnet
         text = re.sub(r'[^a-zA-Z0-9_-]', '', text)
-    
+
     return text
 
 def rename_recursively(root_directory):
@@ -32,16 +32,16 @@ def rename_recursively(root_directory):
     for root, dirs, files in os.walk(root_directory, topdown=False):
         for name in files + dirs:
             old_path = os.path.join(root, name)
-            
+
             # Dela upp i namn och ändelse
             stem, ext = os.path.splitext(name)
-            
+
             # Tvätta filnamnet (is_stem=True tar bort alla punkter)
             new_stem = clean_string(stem, is_stem=True)
-            
+
             # Tvätta ändelsen (behåller punkten, men rensar eventuella konstiga tecken i den)
             new_ext = "." + clean_string(ext.replace('.', ''), is_stem=False).lower() if ext else ""
-            
+
             new_name = new_stem + new_ext
 
             # Din viktiga rättning: Använd 'oe' istället för 'ö'
@@ -50,7 +50,7 @@ def rename_recursively(root_directory):
 
             if new_name != name:
                 new_path = os.path.join(root, new_name)
-                
+
                 if not os.path.exists(new_path):
                     os.rename(old_path, new_path)
                     print(f"Omdöpt: '{name}' -> '{new_name}'")

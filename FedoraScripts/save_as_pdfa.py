@@ -199,11 +199,11 @@ def check_dependencies():
     global gs_exec
     gs_exec = "gs"
     if platform.system() == "Windows":
-        # På Windows kan exe-filen ibland heta gswin64c eller gswin32c 
+        # På Windows kan exe-filen ibland heta gswin64c eller gswin32c
         # beroende på installation, men i MSYS2 är det oftast bara 'gs'
         if not shutil.which(gs_exec):
             gs_exec = "gswin64c"
-    
+
     path = shutil.which(gs_exec)
     if not path:
         print("\n--- FEL: GHOSTSCRIPT SAKNAS ---")

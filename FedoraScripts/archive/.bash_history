@@ -15,9 +15,9 @@ bc -lq
 #1771167923
 bg
 #1783089908
-binairo.py --solve Dokument/Anteckningar 
+binairo.py --solve Dokument/Anteckningar
 #1783021988
-binairo.py --verify Dokument/Anteckningar 
+binairo.py --verify Dokument/Anteckningar
 #1771167923
 btop
 #1783262086
@@ -175,7 +175,7 @@ echo $temp_file
 #1778350623
 echo $USER
 #1781536030
-echo $WINEPATH 
+echo $WINEPATH
 #1771167923
 echo $XDG_SESSION_TYPE
 #1771167923
@@ -387,7 +387,7 @@ lspci
 #1771173524
 magick identify -format "%Q" screenshot.webp
 #1783213055
-mahjong.py 
+mahjong.py
 #1780067045
 make
 #1774451340
@@ -477,7 +477,7 @@ pdf_optimizer.py -i .
 #1772231386
 pdfa_archive_pipeline.py Input/ Output/
 #1781440495
-pdfarranger 
+pdfarranger
 #1772386089
 pdfcropmargins
 #1779137943
@@ -717,7 +717,7 @@ wc -l ~/.bash_history_cleaned
 #1781559878
 wc -w ~/.bash_history
 #1781559883
-wc -w ~/.bash_history_cleaned 
+wc -w ~/.bash_history_cleaned
 #1771175501
 webp-convert.py
 #1771167923

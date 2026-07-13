@@ -193,7 +193,7 @@ public class KakurasuSolver : GLib.Object
     private bool mask_still_possible(int row, int mask)
     {
         int row_value = row_values[row];
-    
+
         for (int col = 0; col < SIZE; col++)
         {
             int target = col_targets[col];
@@ -392,7 +392,7 @@ public class KakurasuSolver : GLib.Object
         for (int r = 0; r < SIZE; r++)
         {
             int mask = solution_masks[r];
-            
+
             stdout.printf("[");
 
             for (int c = 0; c < SIZE; c++)

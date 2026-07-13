@@ -10,30 +10,30 @@ class Board:
     def __init__(self, matrix):
         self.raw_rows = len(matrix)
         self.raw_cols = len(matrix[0])
-        
+
         self.grid = [[EMPTY] * (self.raw_cols + 2)]
         for row in matrix:
             self.grid.append([EMPTY] + row + [EMPTY])
         self.grid.append([EMPTY] * (self.raw_cols + 2))
-        
+
         self.height = len(self.grid)
         self.width = len(self.grid[0])
-        
+
         self.alive_tiles = defaultdict(set)
         for r in range(1, self.raw_rows + 1):
             for c in range(1, self.raw_cols + 1):
                 val = self.grid[r][c]
                 if val != EMPTY:
                     self.alive_tiles[val].add((r, c))
-                    
+
         self.remaining_pairs = sum(len(pos) for pos in self.alive_tiles.values()) // 2
-        
+
         rng = random.Random(0)
         self.zobrist_table = {}
         for val, positions in self.alive_tiles.items():
             for pos in positions:
                 self.zobrist_table[(pos, val)] = rng.getrandbits(64)
-                
+
         self.current_hash = 0
         for val, positions in self.alive_tiles.items():
             for pos in positions:
@@ -63,16 +63,16 @@ class Board:
     def find_path(self, p1, p2):
         """
         C. Rita själva vägen.
-        Modifierad BFS som returnerar den exakta vägen (lista med koordinater) 
+        Modifierad BFS som returnerar den exakta vägen (lista med koordinater)
         om p1 och p2 kan kopplas, annars None.
         """
         r1, c1 = p1
         r2, c2 = p2
-        
+
         # Kön lagrar (r, c, path_so_far)
         queue = deque([(r1, c1, [(r1, c1)])])
         visited = [[[3] * 4 for _ in range(self.width)] for _ in range(self.height)]
-        
+
         for d, (dr, dc) in enumerate(DIRS):
             nr, nc = r1 + dr, c1 + dc
             if 0 <= nr < self.height and 0 <= nc < self.width:
@@ -85,7 +85,7 @@ class Board:
         while queue:
             r, c, path = queue.popleft()
             turns = min(visited[r][c])
-            
+
             if turns >= 2:
                 for curr_dir in range(4):
                     if visited[r][c][curr_dir] == 2:
@@ -107,12 +107,12 @@ class Board:
                     base_turns = visited[r][c][curr_dir]
                     if base_turns > 2:
                         continue
-                        
+
                     is_turn = (next_dir != curr_dir)
                     next_turns = base_turns + (1 if is_turn else 0)
                     if next_turns > 2:
                         continue
-                        
+
                     nr, nc = r + dr, c + dc
                     current_path = list(path)
                     while 0 <= nr < self.height and 0 <= nc < self.width:
@@ -121,11 +121,11 @@ class Board:
                             return current_path
                         if self.grid[nr][nc] != EMPTY:
                             break
-                            
+
                         if next_turns < visited[nr][nc][next_dir]:
                             visited[nr][nc][next_dir] = next_turns
                             queue.append((nr, nc, current_path))
-                            
+
                         nr += dr
                         nc += dc
         return None
@@ -141,10 +141,10 @@ class Board:
                 for j in range(i + 1, n):
                     p1 = tiles_list[i]
                     p2 = tiles_list[j]
-                    
+
                     if stats:
                         stats["connectable_calls"] += 1
-                        
+
                     # Använder find_path istället för connectable för att kunna spara vägen vid behov
                     if self.find_path(p1, p2) is not None:
                         moves[val].append((p1, p2))
@@ -167,7 +167,7 @@ class Solver:
         self.solution_path = []
         self.transposition_table = set()
         self.legal_moves_cache = {}
-        
+
         # D. Statistikinsamling
         self.stats = {
             "dfs_nodes": 0,
@@ -187,14 +187,14 @@ class Solver:
                 dist_p2 = min(p2[0], self.board.height - 1 - p2[0], p2[1], self.board.width - 1 - p2[1])
                 edge_priority = min(dist_p1, dist_p2)
                 flat_moves.append((type_flexibility, edge_priority, p1, p2, val))
-                
+
         flat_moves.sort(key=lambda x: (x[0], x[1]))
         return [(m[2], m[3], m[4]) for m in flat_moves]
 
     def solve(self, current_depth=0):
         if current_depth == 0:
             self.stats["start_time"] = time.time()
-            
+
         self.stats["dfs_nodes"] += 1
         if current_depth > self.stats["max_depth"]:
             self.stats["max_depth"] = current_depth
@@ -205,14 +205,14 @@ class Solver:
         board_hash = self.board.current_hash
         if board_hash in self.transposition_table:
             return False
-            
+
         if board_hash in self.legal_moves_cache:
             self.stats["cache_hits"] += 1
             legal_moves_dict = self.legal_moves_cache[board_hash]
         else:
             legal_moves_dict = self.board.get_legal_moves(self.stats)
             self.legal_moves_cache[board_hash] = legal_moves_dict
-        
+
         if not legal_moves_dict:
             self.stats["backtracks"] += 1
             self.transposition_table.add(board_hash)
@@ -256,29 +256,29 @@ def verify_and_animate_solution(original_matrix, solution_path, delay=0.2):
     """
     print("Inleder verifiering och animering...\n")
     sim_board = Board(original_matrix)
-    
+
     for idx, (p1, p2, val) in enumerate(solution_path):
         # 1. Hämta den exakta vägen innan vi tar bort brickorna
         path = sim_board.find_path(p1, p2)
-        
+
         if path is None:
             print(f"❌ KORREKTHETSBUGG: Drag {idx+1} Matcha par {val} på {p1} och {p2} är INTE tillåtet!")
             return False
-            
+
         # Konvertera koordinater till det inre brädets index för användarvänlig utskrift
         user_p1 = (p1[0]-1, p1[1]-1)
         user_p2 = (p2[0]-1, p2[1]-1)
-        
+
         print(f"Drag {idx+1:02d}: Matcha par {val} mellan {user_p1} och {user_p2}")
         print(f"-> Laserlinje: {' -> '.join(str((r-1, c-1)) for r, c in path)}")
-        
+
         # Verkställ draget
         sim_board.remove(p1, p2, val)
-        
+
         # Visa brädet efter draget
         sim_board.print_ascii()
         time.sleep(delay)
-        
+
     if sim_board.is_empty():
         print("✅ VERIFIERING LYCKADES: Alla drag var giltiga och brädet är helt tomt!")
         return True
