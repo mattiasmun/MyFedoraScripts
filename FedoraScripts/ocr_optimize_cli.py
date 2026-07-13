@@ -32,7 +32,6 @@ def run_ocr(input_path, output_path, retries=2):
         "ocrmypdf",
         "--optimize", "2",
         "--jbig2-threshold", "0.85",
-        "--clean",
         "--deskew",
         "--output-type", "pdfa-3",
         "--skip-text",
@@ -97,7 +96,7 @@ def process_file(args):
             meta = doc.metadata or {}
             the_keywords = meta.get("keywords", "")
             tags = {t.strip() for t in re.split(r"[;,]", the_keywords) if t.strip()}
-            
+
             optimized = "OptimizedByPythonScript" in tags
             ocr_done = "OCRByPythonScript" in tags
 
@@ -124,6 +123,11 @@ def process_file(args):
                     setattr(opts, f"{opt}_image_subsample_method", 1)
                     setattr(opts, f"{opt}_image_subsample_threshold", 330)
                     setattr(opts, f"{opt}_image_subsample_to", 300)
+
+                opts.bitonal_image_recompress_method = 5
+                opts.bitonal_image_subsample_method = 1
+                opts.bitonal_image_subsample_threshold = 660
+                opts.bitonal_image_subsample_to = 600
 
                 doc.rewrite_images(options=opts)
                 doc.save(tmp_opt, garbage=4, deflate=True, deflate_images=True)
@@ -156,7 +160,7 @@ def process_file(args):
             now = datetime.now().astimezone()
             offset = now.strftime("%z")
             pdf_date = f"D:{now:%Y%m%d%H%M%S}{offset[:3]}'{offset[3:]}'"
-            
+
             meta = doc.metadata or {}
             creation_date = meta.get("creationDate") or pdf_date
             creator = meta.get("creator") or "Python"

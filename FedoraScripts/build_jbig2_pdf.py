@@ -55,7 +55,7 @@ tmp_base = PAGES_DIR / "output"
 cmd = [
     "jbig2",
     "-s", "-a", "-p",
-    "-t", "0.80",
+    "-t", "0.85",
     "-b", str(tmp_base)
 ] + [str(p) for p in pbms]
 

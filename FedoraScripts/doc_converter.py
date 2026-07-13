@@ -188,8 +188,8 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
 
         opts.bitonal_image_recompress_method = 5
         opts.bitonal_image_subsample_method = 1
-        opts.bitonal_image_subsample_threshold = 990
-        opts.bitonal_image_subsample_to = 900
+        opts.bitonal_image_subsample_threshold = 660
+        opts.bitonal_image_subsample_to = 600
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
@@ -370,7 +370,7 @@ def main():
         abs_pdf_path = os.path.abspath(dest_path)
 
         if abs_pdf_path in compliance_report:
-            if compliance_report[abs_pdf_path]: 
+            if compliance_report[abs_pdf_path]:
                 stats['pdfa_ok'] += 1
             else:
                 stats['pdfa_fail'] += 1

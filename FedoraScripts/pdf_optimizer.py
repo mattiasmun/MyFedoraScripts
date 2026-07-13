@@ -186,8 +186,8 @@ def validate_and_compress_pdf(pdf_path: str, skip_existing: bool, corrupt_dir: s
 
         opts.bitonal_image_recompress_method = 5
         opts.bitonal_image_subsample_method = 1
-        opts.bitonal_image_subsample_threshold = 990
-        opts.bitonal_image_subsample_to = 900
+        opts.bitonal_image_subsample_threshold = 660
+        opts.bitonal_image_subsample_to = 600
 
         # 1. Optimera bilderna i minnet
         doc.rewrite_images(options=opts)
