@@ -24,7 +24,7 @@ PyGetWindow
 pyinstaller
 pyinstaller-hooks-contrib
 PyMsgBox
-PyMuPDF
+pymupdf
 pynput
 pypdfium2
 PyRect
