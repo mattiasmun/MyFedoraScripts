@@ -76,7 +76,7 @@ if [ ! -f "$DESKTOP_FILE" ]; then
 else
 	mkdir -p "$AUTOSTART_DIR"
 	cp -f "$DESKTOP_FILE" "$AUTOSTART_DIR"
-	
+
 	mkdir -p "$APPLICATIONS_DIR"
 	cp -f "$DESKTOP_FILE" "$APPLICATIONS_DIR"
 	echo "Desktop-filer kopierade till autostart och applikationer."
