@@ -1,4 +1,0 @@
-#!/bin/bash
-x="$(pidof -s bash)"
-y="$(pidof -s bash -o $x)"
-kill "$y"
