@@ -13,7 +13,7 @@ echo "Söker efter CLI-verktyg i $USER_SITE..."
 
 # Skapa temporära filer för lista över paket
 USER_PACKAGES=$(mktemp)
-python3 -c "import pkg_resources; print('\n'.join([p.project_name for p in pkg_resources.find_distributions('$USER_SITE')]))" > "$USER_PACKAGES"
+python3 -c "import importlib.metadata as m; print('\n'.join(d.metadata['Name'] for d in m.distributions(path=['$USER_SITE'])))" > "$USER_PACKAGES"
 
 MIGRATED=()
 
