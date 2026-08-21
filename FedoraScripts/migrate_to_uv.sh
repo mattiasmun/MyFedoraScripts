@@ -22,7 +22,7 @@ while IFS= read -r pkg; do
 
     # Hitta executable-filer kopplade till paketet via metadata (dist-info/egg-info)
     DIST_INFO=$(find "$USER_SITE" -maxdepth 1 -iname "${pkg//-/_}-*.dist-info" -o -iname "${pkg}-*.dist-info" | head -n 1)
-    
+
     HAS_BIN=0
     if [ -n "$DIST_INFO" ] && [ -f "$DIST_INFO/entry_points.txt" ]; then
         if grep -q "\[console_scripts\]" "$DIST_INFO/entry_points.txt"; then
@@ -34,7 +34,7 @@ while IFS= read -r pkg; do
     if [ "$HAS_BIN" -eq 1 ]; then
         echo "----------------------------------------"
         echo "Hittade CLI-verktyg: $pkg"
-        
+
         # Installera med uv tool
         if uv tool install "$pkg" --force; then
             MIGRATED+=("$pkg")
