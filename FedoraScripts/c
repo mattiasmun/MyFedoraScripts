@@ -2,20 +2,20 @@
 
 while read -r line
 do
-    center "$line"
+    echo "$line"
 done < <(cat /etc/motd.d/dnf5-automatic)
 
 str="$(stat -c %y /etc/motd.d/dnf5-automatic)"
 str="${str::19}"
 str="Modified: $str"
-center "$str"
+echo "$str"
 
 while read -r line
 do
-    center "$line"
+    echo "$line"
 done < <(systemctl list-timers dnf5-a* --all)
 
 while read -r line
 do
-    center "$line"
+    echo "$line"
 done < <(dnf -C repoquery --unneeded)
