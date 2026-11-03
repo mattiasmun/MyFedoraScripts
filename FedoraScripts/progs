@@ -8,12 +8,12 @@ NetworkManager-adsl.x86_64 \
 NetworkManager-bluetooth.x86_64 \
 NetworkManager-config-connectivity-fedora.noarch \
 NetworkManager-libnm.i686 \
+NetworkManager-libreswan-gnome.x86_64 \
 NetworkManager-openconnect-gnome.x86_64 \
 NetworkManager-openvpn-gnome.x86_64 \
 NetworkManager-ppp.x86_64 \
 NetworkManager-pptp-gnome.x86_64 \
 NetworkManager-ssh-gnome.x86_64 \
-NetworkManager-vpnc-gnome.x86_64 \
 NetworkManager-wifi.x86_64 \
 NetworkManager-wwan.x86_64 \
 NetworkManager.x86_64 \
@@ -159,7 +159,6 @@ check-devel.x86_64 \
 check-static.x86_64 \
 check.x86_64 \
 cheese-libs.x86_64 \
-cheese.x86_64 \
 chrony.x86_64 \
 chrpath.x86_64 \
 cifs-utils.x86_64 \
@@ -350,7 +349,6 @@ gdbm-libs.i686 \
 gdcm.x86_64 \
 gdisk.x86_64 \
 gdk-pixbuf2-devel.x86_64 \
-gdk-pixbuf2-modules-extra.x86_64 \
 gdk-pixbuf2.i686 \
 gdk-pixbuf2.x86_64 \
 gdm.x86_64 \
@@ -514,13 +512,12 @@ gupnp-igd-devel.x86_64 \
 gutenprint-cups.x86_64 \
 gutenprint.x86_64 \
 gvfs-afc.x86_64 \
-gvfs-afp.x86_64 \
-gvfs-archive.x86_64 \
 gvfs-fuse.x86_64 \
 gvfs-goa.x86_64 \
 gvfs-gphoto2.x86_64 \
 gvfs-mtp.x86_64 \
 gvfs-smb.x86_64 \
+gvfs.x86_64 \
 gwenhywfar-gui-gtk3.x86_64 \
 gwenhywfar.x86_64 \
 harfbuzz-cairo.x86_64 \
@@ -614,6 +611,7 @@ khmer-os-system-fonts.noarch \
 kid3-common.x86_64 \
 kmod-nvidia.x86_64 \
 kmodtool.noarch \
+kmscon.x86_64 \
 krb5-devel.x86_64 \
 krb5-libs.i686 \
 ladspa.x86_64 \
@@ -753,7 +751,6 @@ libguestfs-xfs.x86_64 \
 libguestfs.x86_64 \
 libgusb.i686 \
 libharu.x86_64 \
-libheif-freeworld.x86_64 \
 libicu-devel.x86_64 \
 libicu.i686 \
 libid3tag.x86_64 \
@@ -816,7 +813,7 @@ libreoffice-calc.x86_64 \
 libreoffice-draw.x86_64 \
 libreoffice-emailmerge.x86_64 \
 libreoffice-graphicfilter.x86_64 \
-libreoffice-help-sv.x86_64 \
+libreoffice-help-sv.noarch \
 libreoffice-impress.x86_64 \
 libreoffice-langpack-sv.x86_64 \
 libreoffice-math.x86_64 \
@@ -1548,7 +1545,6 @@ python3-pluggy.noarch \
 python3-plumbum.noarch \
 python3-pooch.noarch \
 python3-progressbar2.noarch \
-python3-protobuf.noarch \
 python3-psutil.x86_64 \
 python3-pyasn1-modules.noarch \
 python3-pyasn1.noarch \
@@ -1612,7 +1608,6 @@ python3-vobject.noarch \
 python3-websockets.x86_64 \
 python3-wheel.noarch \
 python3-wrapt.x86_64 \
-python3-yui.x86_64 \
 python3-z3.noarch \
 python3-zombie-imp.noarch \
 qadwaitadecorations-qt5.x86_64 \
