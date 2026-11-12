@@ -18,6 +18,13 @@ try:
         from docx2pdf import convert as docx2pdf_convert
     except ImportError:
         docx2pdf_convert = None
+
+    # För direkt kommunikation med Microsoft Word på Windows
+    try:
+        import comtypes.client
+    except ImportError:
+        comtypes.client = None
+
 except ImportError as e:
     print("Error: Required library not found. Please run 'pip install pymupdf'")
     print(f"Details: {e}")
@@ -35,6 +42,10 @@ def is_unoserver_running(host='127.0.0.1', port=2003):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(1)
         return s.connect_ex((host, port)) == 0
+
+def is_libreoffice_installed() -> bool:
+    """Kollar om LibreOffice finns i systemets PATH."""
+    return bool(shutil.which('libreoffice') or shutil.which('soffice'))
 
 def format_size(bytes_size):
     return bytes_size / (1024 * 1024)
@@ -119,18 +130,41 @@ def generate_pdfa_xmp(keywords, pdf_date, creator, producer, pdfa_part, pdfa_con
 
 # ⎯⎯ Conversion Engine Logic ⎯⎯
 
-def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, use_unoserver: bool) -> int:
+def convert_doc_to_pdf(source_path: str, dest_path: str, skip_existing: bool, use_unoserver: bool) -> int:
     if skip_existing and os.path.exists(dest_path):
         return CONVERSION_SKIPPED
 
     abs_source = os.path.abspath(source_path)
     abs_dest = os.path.abspath(dest_path)
+    ext = os.path.splitext(source_path)[1].lower()
     success = False
 
-    # 1. Försök med unoserver + PDF/A-flagga (för att klara valideringen)
-    if use_unoserver and shutil.which('unoconvert'):
+    # 1. Försök med direkt kommunikation via COM (Microsoft Word) om det är en .doc/.docx och comtypes finns (Windows)
+    if not success and comtypes.client and ext in ['.doc', '.docx']:
+        word = None
+        doc = None
         try:
-            # Vi tvingar fram PDF/A-1 genom LibreOffice-filter
+            word = comtypes.client.CreateObject("Word.Application")
+            word.Visible = False
+            doc = word.Documents.Open(abs_source)
+            # 17 motsvarar wdFormatPDF i Word COM API
+            doc.SaveAs2(abs_dest, FileFormat=17)
+            success = True
+            logging.info(f"SUCCESS (MS Word COM): '{source_path}'")
+        except Exception as e:
+            logging.error(f"MS Word COM failed for {source_path}: {e}")
+        finally:
+            try:
+                if doc:
+                    doc.Close(False)
+                if word:
+                    word.Quit()
+            except Exception:
+                pass
+
+    # 2. Försök med unoserver + PDF/A-flagga (stöder både .doc, .docx, .odt)
+    if not success and use_unoserver and shutil.which('unoconvert'):
+        try:
             subprocess.run([
                 'unoconvert',
                 '--convert-to', 'pdf',
@@ -142,20 +176,21 @@ def convert_docx_to_pdf(source_path: str, dest_path: str, skip_existing: bool, u
         except Exception as e:
             logging.error(f"unoserver failed: {e}")
 
-    # 2. Fallback: LibreOffice Headless
-    if not success and shutil.which('libreoffice'):
+    # 3. Fallback: LibreOffice Headless
+    lo_bin = shutil.which('libreoffice') or shutil.which('soffice')
+    if not success and lo_bin:
         try:
             dest_dir = os.path.dirname(dest_path)
             subprocess.run([
-                'libreoffice', '--headless', '--convert-to', 'pdf:writer_pdf_Export',
+                lo_bin, '--headless', '--convert-to', 'pdf:writer_pdf_Export',
                 '--outdir', dest_dir, source_path
             ], check=True, capture_output=True)
             logging.info(f"SUCCESS (LibreOffice Headless): '{source_path}'")
             success = True
         except Exception: pass
 
-    # 3. Försök med docx2pdf (Windows/macow med MS Word)
-    if not success and docx2pdf_convert:
+    # 4. Försök med docx2pdf (endast om det är .docx och MS Word finns tillgängligt via paketet)
+    if not success and ext == '.docx' and docx2pdf_convert:
         try:
             docx2pdf_convert(source_path, dest_path)
             logging.info(f"SUCCESS (docx2pdf): '{source_path}'")
@@ -195,9 +230,8 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
         doc.rewrite_images(options=opts)
 
         # 2. Definiera värden
-        # Vi skapar en ren tidsstämpel först för att lättare formatera den åt båda håll
         raw_now = datetime.now()
-        pdf_date_str = raw_now.strftime("D:%Y%m%d%H%M%S+01'00'") # Format för Info-Dict
+        pdf_date_str = raw_now.strftime("D:%Y%m%d%H%M%S+01'00'")
         keywords = "OptimizedByPythonScript"
         creator = "Python Script"
         producer = "PyMuPDF"
@@ -215,8 +249,7 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
             "subject": curr_subject
         })
 
-        # 4. Uppdatera XMP (Den nya PDF/A-standarden)
-        # Vi skickar med pdf_date_str. Vår funktion rensar "D:" automatiskt nu.
+        # 4. Uppdatera XMP
         pdfa_part, pdfa_conf = get_pdfa_info_pymupdf(doc)
         new_xmp = generate_pdfa_xmp(
             keywords,
@@ -233,25 +266,22 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
         # 5. Spara direkt till den temporära filen på disk
         doc.save(
             temp_optimized,
-            garbage=4,           # Maximal rensning av dubletter
-            deflate=True,        # Komprimera alla strömmar
-            deflate_images=True, # Komprimera alla bildströmmar
-            deflate_fonts=True,  # Komprimera alla typsnittsfilströmmar
-            use_objstms=1,       # Tillåtet i PDF/A-3
-            clean=True,          # Sanera innehållsströmmar
-            linear=False,        # Prioritera minsta storlek framför webb-streaming
-            no_new_id=False,     # Skapar/uppdaterar fil-ID (viktigt för PDF/A)
+            garbage=4,
+            deflate=True,
+            deflate_images=True,
+            deflate_fonts=True,
+            use_objstms=1,
+            clean=True,
+            linear=False,
+            no_new_id=False,
             incremental=False,
             ascii=False,
             expand=0
         )
         doc.close()
 
-        # 6. Kontrollera storlek innan överskrivning
         size_after = os.path.getsize(temp_optimized)
         shutil.move(temp_optimized, pdf_path)
-        #if size_before > size_after:
-        #    return size_before - size_after
         return size_before - size_after
     except Exception as e:
         logging.error(f"OPTIMIZATION_ERROR på {pdf_path}: {e}")
@@ -259,12 +289,11 @@ def optimize_pdf_with_images(pdf_path: str) -> int:
     finally:
         if os.path.exists(temp_optimized): os.remove(temp_optimized)
 
-# ⎯⎯ VeraPDF Logic (Optimized for your Terminal Output) ⎯⎯
+# ⎯⎯ VeraPDF Logic ⎯⎯
 
 def run_verapdf_batch(directory: str) -> dict:
     """Kör veraPDF CLI via Flatpak med absoluta sökvägar."""
     results = {}
-    # Vi gör mappsökvägen absolut för att Flatpak ska hitta den
     abs_dir = os.path.abspath(directory)
     if os.name == 'nt':
         cmd_base = ["verapdf.bat"]
@@ -274,14 +303,10 @@ def run_verapdf_batch(directory: str) -> dict:
         shell_mode = False
 
     try:
-        # Vi använder -r för rekursiv sökning i mappen och --format xml för att kunna parsa svaret
         cmd = cmd_base + ["--format", "xml", "-r", abs_dir]
-
-        # Kör kommandot och fånga resultatet
         process = subprocess.run(cmd, capture_output=True, text=True, shell=shell_mode)
         if process.returncode not in [0, 1]:
             logging.error(f"veraPDF kraschade med kod {process.returncode}")
-            # Logga stderr men ignorera Java-meddelanden om tmpdir
             clean_stderr = "\n".join([line for line in process.stderr.split('\n') if "JAVA_TOOL_OPTIONS" not in line])
             if clean_stderr: logging.error(f"VeraPDF Error: {clean_stderr}")
             return results
@@ -290,13 +315,11 @@ def run_verapdf_batch(directory: str) -> dict:
             logging.warning("veraPDF returnerade ingen data.")
             return results
 
-        # Parsa XML-resultatet
         root = ET.fromstring(process.stdout)
         for item in root.findall('.//{*}job'):
             name_node = item.find('.//{*}name')
             compliant_node = item.find('.//{*}validationReport')
             if name_node is not None and compliant_node is not None:
-                # Vi använder basename för att matcha filnamnet oavsett hur sökvägen ser ut i XML:en
                 full_path = name_node.text.strip()
                 is_compliant = compliant_node.get('isCompliant', 'false').lower() == 'true'
                 results[full_path] = is_compliant
@@ -305,19 +328,19 @@ def run_verapdf_batch(directory: str) -> dict:
     return results
 
 def main():
-    parser = argparse.ArgumentParser(description="Multi-engine DOCX/ODT till PDF konverterare.")
+    parser = argparse.ArgumentParser(description="Multi-engine DOC/DOCX/ODT till PDF konverterare.")
     parser.add_argument('-i', '--source-dir', type=str, default='.', help="Ingångsmapp.")
     parser.add_argument('-o', '--destination-dir', type=str, default='.', help="Utgångsmapp.")
     parser.add_argument('-s', '--skip-existing', action='store_true', help="Hoppa över befintliga PDF:er.")
     args = parser.parse_args()
 
     start_time = datetime.now()
-    # Kontrollera unoserver innan start
     unoserver_active = is_unoserver_running()
-    if not unoserver_active:
-        print("💡 Tips: Starta 'unoserver' i en annan terminal för snabbare konvertering.")
-    else:
+
+    if unoserver_active:
         print("🚀 unoserver hittades och kommer att användas.")
+    elif is_libreoffice_installed():
+        print("💡 Tips: Starta 'unoserver' i en annan terminal för snabbare konvertering.")
 
     os.makedirs(args.destination_dir, exist_ok=True)
     log_file = setup_logging(args.destination_dir)
@@ -325,7 +348,7 @@ def main():
     all_files = []
     for root, _, files in os.walk(args.source_dir):
         for f in files:
-            if f.lower().endswith(('.docx', '.odt')):
+            if f.lower().endswith(('.doc', '.docx', '.odt')):
                 all_files.append((root, f))
 
     if not all_files:
@@ -348,7 +371,7 @@ def main():
         src_path = os.path.join(root, filename)
         dest_path = os.path.join(dest_dir, os.path.splitext(filename)[0] + '.pdf')
 
-        status = convert_docx_to_pdf(src_path, dest_path, args.skip_existing, unoserver_active)
+        status = convert_doc_to_pdf(src_path, dest_path, args.skip_existing, unoserver_active)
 
         if status == CONVERSION_SKIPPED:
             stats['skipped'] += 1
@@ -363,7 +386,6 @@ def main():
     print("Startar PDF/A-validering (Batch)…")
     compliance_report = run_verapdf_batch(args.destination_dir)
 
-    # Vi mappar om för att kontrollera mot de absoluta sökvägarna
     for root, filename in all_files:
         rel_path = os.path.relpath(root, args.source_dir)
         dest_path = os.path.join(args.destination_dir, rel_path, os.path.splitext(filename)[0] + '.pdf')
