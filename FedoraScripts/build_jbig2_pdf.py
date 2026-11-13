@@ -75,7 +75,12 @@ if not sym_file.exists() or not all(p.exists() for p in page_files):
 raw_pdf_path = PAGES_DIR / "jbig2_raw.pdf"
 jbig2topdf_path = shutil.which("jbig2topdf.py") or "/usr/local/bin/jbig2topdf.py"
 
-cmd = [jbig2topdf_path, str(tmp_base)]
+if sys.platform == "win32":
+    jbig2topdf_script = r"C:\Users\ai21558\msys64\home\ai21558\Projekt\jbig2enc\jbig2topdf.py"
+    cmd = [sys.executable, jbig2topdf_script, str(tmp_base)]
+else:
+    cmd = [jbig2topdf_path, str(tmp_base)]
+
 print("Running:", " ".join(cmd))
 
 with open(raw_pdf_path, "wb") as f:
